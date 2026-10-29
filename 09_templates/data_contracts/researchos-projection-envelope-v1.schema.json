@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://researchos.local/schemas/researchos-projection-envelope-v1.schema.json",
+  "title": "ResearchOS Projection Envelope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "version", "plugin_id", "projection_id", "source", "sensitivity", "freshness", "status", "error", "payload"],
+  "properties": {
+    "schema_id": {"const": "researchos-projection-envelope-v1"},
+    "version": {"const": "1"},
+    "plugin_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "projection_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "source": {"type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)*$"},
+    "sensitivity": {"enum": ["public", "public_safe", "internal", "private", "local_only", "not_exportable"]},
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "observed_at", "state"],
+      "properties": {
+        "mode": {"enum": ["snapshot", "live"]},
+        "observed_at": {"type": "string"},
+        "state": {"enum": ["known", "unknown"]}
+      }
+    },
+    "status": {"enum": ["ready", "empty", "error"]},
+    "error": {"type": "string"},
+    "payload": {}
+  }
+}

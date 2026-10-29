@@ -1,0 +1,75 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard 共享组件样式原子「buttons」；只放跨视图复用的组件规则。
+ * English: Shared component style atom for buttons in the ResearchOS dashboard; only cross-view reusable component rules belong here.
+ */
+
+button,
+.inline-preview-button,
+.preview-collapse,
+.preview-show-button,
+.focus-action-button {
+  min-height: 40px;
+  padding: 0 18px;
+  border: 1px solid rgba(60, 60, 67, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink-strong);
+  box-shadow: var(--shadow-button);
+  font-size: 13px;
+  font-weight: 540;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+button:hover,
+.inline-preview-button:hover,
+.preview-collapse:hover,
+.preview-show-button:hover,
+.focus-action-button:hover {
+  border-color: var(--control-hover-border);
+  background: #fff;
+  color: var(--blue);
+  text-decoration: none;
+  transform: none;
+}
+
+button.primary,
+.primary,
+.focus-action-button.primary,
+[data-unified-inbox-generate] {
+  border-color: rgba(27, 116, 210, 0.38);
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.24) inset, 0 5px 12px rgba(27, 116, 210, 0.14);
+}
+
+button.primary:hover,
+.primary:hover,
+.focus-action-button.primary:hover,
+[data-unified-inbox-generate]:hover {
+  color: #fff;
+  background: var(--blue-strong);
+}
+
+button.primary strong,
+button.primary small {
+  color: inherit;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.45;
+  transform: none;
+}
+
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: var(--control-focus-outline);
+  outline-offset: 2px;
+}

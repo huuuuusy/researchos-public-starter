@@ -1,0 +1,121 @@
+{
+  "schema_id": "researchos-task-extension-v1",
+  "core_api_version": "1",
+  "id": "codex_thread_handoff",
+  "version": "1.0.0",
+  "enabled": false,
+  "available_in": [
+    "private",
+    "public_starter",
+    "personal_vault"
+  ],
+  "public_safe": true,
+  "sensitivity_default": "local_only",
+  "documentation": {"readme": "docs/plugins/codex-thread-handoff/README.md"},
+  "governance": {
+    "schema_id": "researchos-plugin-governance-v1",
+    "contract_id": "researchos.contribution.codex_thread_handoff",
+    "archetype": "task_led",
+    "distribution": {"variant": "universal", "parity_policy": "exact", "allowed_divergence_fields": []},
+    "lineage": {"prototype_id": "researchos_plugin_task_v1", "derivation_mode": "native", "reuse_policy": "native", "source_refs": [], "external_runtime_dependency": "runtime_required", "transformation_summary": "Native ResearchOS handoff protocol that consumes a separately configured, read-only MCP connector without copying private thread data or provider credentials into the plugin.", "current_placement": "plugin", "proposed_absorption_target": "none", "absorption_gate": "review_required"},
+    "task_contract": {
+      "task_id": "codex_thread_handoff",
+      "user_job": "Continue a local Codex task in another AI client from a bounded, redacted, provenance-aware thread projection.",
+      "inputs": ["Canonical Codex UUID or codex://threads/<UUID>", "A separately configured connector exposing list_codex_threads and read_codex_thread", "The user's continuation question"],
+      "outputs": ["Connector readiness state", "Context receipt", "Bounded continuation briefing", "Named omissions and next action"],
+      "invariants": ["The local Codex session remains source authority", "Only user and assistant text is required", "Developer/system content, reasoning, raw events, and tool payloads remain excluded", "Plugin installation never implies connector readiness", "Durable ResearchOS writeback remains a separate Review action"],
+      "confirmation_gates": ["The user chooses the thread reference", "The user confirms before any durable ResearchOS writeback or public reuse"],
+      "completion_criteria": ["Thread identity and connector readiness are explicit", "All pages needed for the requested scope are accounted for", "Redaction and truncation limits are reported", "The continuation answer distinguishes source content from new inference"],
+      "failure_modes": ["Plugin is installed but the connector is not configured", "Connector schema is stale or missing a required tool", "Thread UUID is invalid or absent from allowed storage", "A page is truncated, cursor-bound to another thread, or cannot be verified"],
+      "recovery": ["Run the connector readiness checks", "Reconnect or refresh the ChatGPT connector after a tool-schema change", "Request a canonical UUID or codex://threads URI", "Continue pagination with the returned cursor and preserve receipts", "Fall back to user-pasted excerpts when local access is unavailable"],
+      "comparison_target": "current_model_without_task_workflow",
+      "comparison_status": "planned",
+      "expected_deltas": ["reliability", "evidence_boundary", "recoverability", "efficiency"],
+      "expected_burdens": ["dependency_risk", "maintenance_cost", "privacy_risk", "context_cost"],
+      "evidence_refs": [],
+      "retention_rule": "Retain only if real handoffs reduce manual context loss without broadening local read authority or obscuring truncation and redaction."
+    },
+    "effects": {"default_effect": "read_only", "allowed_effects": ["read_only", "answer", "artifact"]},
+    "data_policy": {"default_sensitivity": "inherit_runtime", "default_export_policy": "local_only"},
+    "composition": {"requires": ["researchos_core"], "provides": ["codex_thread_handoff"], "optional_integrations": [], "conflicts_with": []},
+    "routing": {"trigger_intents": ["codex_thread_handoff", "continue_codex_thread", "read_codex_thread"], "non_goals": ["arbitrary_codex_home_read", "hidden_reasoning_export", "tool_payload_export", "thread_mutation", "agent_execution", "automatic_memory_writeback"], "handoff_to": [{"kind": "core_route", "id": "review", "availability": "if_available"}]},
+    "admission": {"maturity": "instrumented", "proof_refs": ["evals/test_codex_thread_handoff_extension.py"], "last_reviewed": "2026-08-14", "revalidation_triggers": ["codex_storage_format_change", "mcp_tool_contract_change", "connector_auth_change", "public_variant_change", "real_handoff_evidence"], "retirement_condition": "Retire if a supported host-native handoff provides equal local-only authority, bounded pagination, redaction receipts, and public/private parity with lower maintenance cost."}
+  },
+  "authority": {
+    "source": "The selected local Codex session and the connector's redacted context receipts remain source authority.",
+    "candidate": "Continuation summaries, inferred decisions, and proposed ResearchOS updates remain candidates until reviewed.",
+    "confirmation": "Human confirmation is required before durable ResearchOS writeback or public reuse of thread-derived content.",
+    "save_target": "Use answer or artifact by default; any durable memory uses the existing Review flow and this plugin owns no storage.",
+    "requires_human_confirmation": true,
+    "writeback_route": "review",
+    "storage_owner": "researchos_core",
+    "locales": {
+      "en": {
+        "source": "The selected local Codex session and the connector's redacted context receipts remain source authority.",
+        "candidate": "Continuation summaries, inferred decisions, and proposed ResearchOS updates remain candidates until reviewed.",
+        "confirmation": "Human confirmation is required before durable ResearchOS writeback or public reuse of thread-derived content.",
+        "save_target": "Use answer or artifact by default; any durable memory uses the existing Review flow and this plugin owns no storage."
+      },
+      "zh-CN": {
+        "source": "用户选定的本地 Codex session 与连接器返回的脱敏 context receipt 保留来源权威。",
+        "candidate": "续接摘要、推断出的决策和候选 ResearchOS 更新在审核前保持候选状态。",
+        "confirmation": "把 thread 派生内容持久写入 ResearchOS 或公开复用前必须由用户确认。",
+        "save_target": "默认只返回 answer 或 artifact；任何长期记忆沿用既有 Review 流程，本插件不拥有存储。"
+      }
+    }
+  },
+  "task": {
+    "aliases": [
+      "continue_codex_thread",
+      "resume_codex_task"
+    ],
+    "workspace": "agent",
+    "result_modes": [
+      "answer",
+      "artifact"
+    ],
+    "default_result_mode": "answer",
+    "budget": "quick/standard/evidence; page only until the named continuation question is supported",
+    "read": {
+      "quick": [
+        "docs/plugins/codex-thread-handoff/README.md"
+      ],
+      "standard": [
+        "docs/plugins/codex-thread-handoff/README.md",
+        "docs/plugins/codex-thread-handoff/BRIDGE_CONTRACT.md",
+        "docs/plugins/codex-thread-handoff/SETUP.md"
+      ],
+      "evidence": [
+        "docs/plugins/codex-thread-handoff/README.md",
+        "docs/plugins/codex-thread-handoff/BRIDGE_CONTRACT.md",
+        "docs/plugins/codex-thread-handoff/SETUP.md",
+        "docs/plugins/codex-thread-handoff/SECURITY.md",
+        "docs/plugins/codex-thread-handoff/TROUBLESHOOTING.md"
+      ]
+    },
+    "locales": {
+      "en": {
+        "name": "Continue a Codex thread",
+        "goal": "Continue a selected local Codex task through a bounded, redacted, receipt-bearing connector without exposing arbitrary local files.",
+        "user_input_hint": "Provide a canonical UUID or codex://threads/<UUID>, the continuation question, and the configured connector name if more than one is available.",
+        "output": "readiness state + context receipt + bounded continuation briefing + omissions + next action",
+        "next_steps": [
+          "Check that the plugin is installed and the connector is configured and verified",
+          "Read only the pages needed for the continuation question",
+          "Report redaction, truncation, and inference boundaries before continuing"
+        ]
+      },
+      "zh-CN": {
+        "name": "续接 Codex task",
+        "goal": "通过有边界、会脱敏并返回 receipt 的连接器续接指定本地 Codex task，同时不开放任意本地文件读取。",
+        "user_input_hint": "提供 canonical UUID 或 codex://threads/<UUID>、希望继续的问题；若配置了多个连接器，再说明连接器名称。",
+        "output": "就绪状态 + context receipt + 有边界的续接简报 + 省略项 + 下一步",
+        "next_steps": [
+          "确认插件已安装，连接器已配置且验证通过",
+          "只分页读取回答当前续接问题所需的内容",
+          "继续前报告脱敏、截断和推断边界"
+        ]
+      }
+    }
+  }
+}

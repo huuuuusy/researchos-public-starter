@@ -1,0 +1,59 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard unified inbox 的来源与动作 tone 映射；只放 source/item 语义 accent 变量。
+ * English: Source and action tone map for the unified inbox dashboard view; only source/item semantic accent variables belong here.
+ */
+
+.unified-inbox-source.source-paper_field_update,
+.unified-inbox-item.paper_field_update {
+  --source-accent-rgb: var(--accent-paper-rgb);
+  --inbox-accent-rgb: var(--accent-paper-rgb);
+}
+
+.unified-inbox-source.source-feedback,
+.unified-inbox-source.source-preview_feedback,
+.unified-inbox-item.preview_feedback {
+  --source-accent-rgb: var(--accent-feedback-rgb);
+  --inbox-accent-rgb: var(--accent-feedback-rgb);
+}
+
+.unified-inbox-source.source-confirmation,
+.unified-inbox-item.confirmation {
+  --source-accent-rgb: var(--accent-confirmation-rgb);
+  --inbox-accent-rgb: var(--accent-confirmation-rgb);
+}
+
+.unified-inbox-source.source-material_intake,
+.unified-inbox-item.material_intake {
+  --source-accent-rgb: var(--accent-intake-rgb);
+  --inbox-accent-rgb: var(--accent-intake-rgb);
+}
+
+.unified-inbox-source.source-upgrade,
+.unified-inbox-item.upgrade {
+  --source-accent-rgb: var(--accent-upgrade-rgb);
+  --inbox-accent-rgb: var(--accent-upgrade-rgb);
+}
+
+.unified-inbox-source.source-scout,
+.unified-inbox-item.scout {
+  --source-accent-rgb: var(--accent-scout-rgb);
+  --inbox-accent-rgb: var(--accent-scout-rgb);
+}
+
+.unified-inbox-source.source-group,
+.unified-inbox-item.group {
+  --source-accent-rgb: var(--accent-group-rgb);
+  --inbox-accent-rgb: var(--accent-group-rgb);
+}
+
+.unified-inbox-source.source-dissolution,
+.unified-inbox-item.dissolution {
+  --source-accent-rgb: var(--accent-danger-rgb);
+  --inbox-accent-rgb: var(--accent-danger-rgb);
+}
+
+.unified-inbox-source.source-task,
+.unified-inbox-item.task {
+  --source-accent-rgb: var(--accent-task-rgb);
+  --inbox-accent-rgb: var(--accent-task-rgb);
+}

@@ -1,0 +1,135 @@
+{
+  "version": "researchos-primitive-contract-v1",
+  "purpose": "Compatibility role vocabulary and projection contract. Records carry identity, typed references and versioned attributes; rules specify operations, actions retain application histories, and views are derived observations. These role labels are not six irreducible entity types; source, authorization and execution owners remain separate.",
+  "primitive_types": [
+    "atom",
+    "edge",
+    "state",
+    "action",
+    "view",
+    "rule"
+  ],
+  "state_axes": {
+    "L": [
+      "L0_route",
+      "L1_capsule",
+      "L2_canonical",
+      "L3_evidence"
+    ],
+    "M": [
+      "M1_registered",
+      "M2_refined_read",
+      "M3_cross_project_deepening"
+    ],
+    "G": [
+      "G0_atom",
+      "G1_basic_group",
+      "G2_direction_abstraction",
+      "R_research_mainline"
+    ],
+    "I": [
+      "I0_assessment",
+      "I1_sandbox",
+      "I2_active_mount",
+      "I3_independent_project",
+      "I_hold",
+      "I_archive"
+    ],
+    "Priority": [
+      "P0",
+      "P1",
+      "P2",
+      "P3"
+    ],
+    "Workflow": [
+      "active",
+      "processed",
+      "archived",
+      "withdrawn"
+    ],
+    "EvidenceState": [
+      "candidate",
+      "needs_evidence",
+      "supported",
+      "contradicted",
+      "bounded",
+      "blocked"
+    ],
+    "Authority": [
+      "proposed",
+      "approved",
+      "written_back",
+      "validated",
+      "reverted"
+    ],
+    "Sensitivity": [
+      "public_safe",
+      "internal",
+      "private",
+      "local_only"
+    ],
+    "EvidenceKind": [
+      "fact",
+      "judgment",
+      "inference",
+      "preference",
+      "agent_guess"
+    ]
+  },
+  "dashboard_required_top_level_keys": [
+    "generated_at",
+    "repo",
+    "version",
+    "config",
+    "layers",
+    "key_entries",
+    "source_overview",
+    "asset_graph",
+    "home_command_center",
+    "preview_documents",
+    "active_context",
+    "tasks",
+    "health"
+  ],
+  "dynamic_graph_required_keys": [
+    "version",
+    "role",
+    "summary",
+    "metrics",
+    "mining_lanes",
+    "recommendation_paths",
+    "uncertainty_edges",
+    "network_diagnostics",
+    "impact_notes",
+    "codex_handoff_prompt"
+  ],
+  "required_task_ids": [
+    "material_understanding",
+    "self_evolution",
+    "system_maintenance",
+    "new_project_intake"
+  ],
+  "rules": {
+    "generated_projection_is_authority": false,
+    "candidate_requires_confirmation": true,
+    "relation_requires_evidence_boundary": true,
+    "public_export_requires_public_safe": true
+  },
+  "product_model": {
+    "primary_interaction": "conversation",
+    "minimum_core_requires_dashboard": false,
+    "dashboard_role": "optional_projection_and_handoff",
+    "plugin_tiers": {
+      "foundation_projection": "Ships the optional Dashboard's Now/Library projection and item-local execution drawer; it owns no conversation task or canonical authority.",
+      "bundled_capability": "Reviewed capability shipped with a repository distribution; disabling it leaves the minimum conversation loop intact.",
+      "optional_extension": "Installed only on explicit user intent; local, reversible, and never a prerequisite for first use."
+    }
+  },
+  "invariants": [
+    "One state axis has one meaning.",
+    "Frontend records intent; source writes require Codex or explicit user action.",
+    "Candidate relations must not be mixed with confirmed memory.",
+    "Durable action records belong in active context files, not only localStorage.",
+    "Dynamic graph is an explanation surface, not a full editable network."
+  ]
+}

@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-task-extension-v2.schema.json",
+  "title": "ResearchOS Task Extension v2 (scheduler rule descriptor)",
+  "description": "One meta-task per descriptor: r = (P⁻ ← I → P⁺; Pre, Check). The kernel's rule table is the only reader that executes these; `scripts/validate_task_extensions.py` is the only gate that admits them.",
+  "x_researchos_meta_task": {
+    "canon": "05_workflows/research_management/researchos-primitive-rule-model.md#One Meta-task: Conditioned Graph Transformation",
+    "input_pattern": "trigger",
+    "preserved_part": "preserve",
+    "expected_result": "expect",
+    "precondition": "pre",
+    "check": "check"
+  },
+  "x_researchos_owner": {
+    "registry": "scripts/researchos_kernel/rules.py::load_registry",
+    "gate": "scripts/validate_task_extensions.py",
+    "directory": "config/extensions/rules"
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "id",
+    "version",
+    "family",
+    "kind",
+    "summary_zh",
+    "summary_en",
+    "evaluates",
+    "scope_selector",
+    "trigger",
+    "preserve",
+    "expect",
+    "pre",
+    "executor",
+    "resolver",
+    "check",
+    "budget",
+    "available_in"
+  ],
+  "properties": {
+    "schema_id": {
+      "const": "researchos-task-extension-v2"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "family": {
+      "enum": [
+        "basis_changed",
+        "time_elapsed",
+        "revisit",
+        "system"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "maintenance",
+        "research"
+      ]
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "summary_zh": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary_en": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trigger": {
+      "type": "object",
+      "required": [
+        "when"
+      ],
+      "properties": {
+        "when": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "preserve": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "expect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result",
+        "write_scope"
+      ],
+      "properties": {
+        "result": {
+          "enum": [
+            "decision",
+            "writeback",
+            "artifact",
+            "answer"
+          ]
+        },
+        "write_scope": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "pre": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "auto_start_max"
+      ],
+      "properties": {
+        "auto_start_max": {
+          "enum": [
+            "public",
+            "internal",
+            "private"
+          ]
+        }
+      }
+    },
+    "executor": {
+      "enum": [
+        "script",
+        "model",
+        "human"
+      ]
+    },
+    "resolver": {
+      "enum": [
+        "script",
+        "human"
+      ]
+    },
+    "check": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_runs"
+      ],
+      "properties": {
+        "model_runs": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "available_in": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "private",
+          "public_starter",
+          "personal_vault"
+        ]
+      }
+    },
+    "evaluates": {
+      "description": "Which collections this rule matches over. The kernel reads it to compute the in-scope domain: a key in that domain which was not evaluated is coverage unknown, not a pass.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "judgments",
+          "commitments",
+          "nodes"
+        ]
+      }
+    },
+    "scope_selector": {
+      "description": "own_scope: the rule matches only inside the episode's frozen scope (the default). global: it matches regardless of containment — such rules are counted separately because they break the independence of disjoint scopes.",
+      "enum": [
+        "own_scope",
+        "global"
+      ]
+    }
+  }
+}

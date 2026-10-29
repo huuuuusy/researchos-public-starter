@@ -1,0 +1,50 @@
+{
+  "schema_id": "researchos-task-extension-v2",
+  "id": "status_verify",
+  "version": "1.0.0",
+  "family": "time_elapsed",
+  "kind": "maintenance",
+  "evaluates": [
+    "commitments"
+  ],
+  "scope_selector": "own_scope",
+  "summary_zh": "承诺的 last_verified 超过它自己的 stale_after_days；脚本先查来源是否在核实后有更新，再交给你核实。",
+  "summary_en": "A commitment's last_verified is older than its own stale_after_days; the script checks whether its source changed since, then hands it to you.",
+  "trigger": {
+    "when": "last_verified_older_than_stale_after_days",
+    "states": [
+      "mainline",
+      "waiting",
+      "queued",
+      "conditional"
+    ]
+  },
+  "preserve": [
+    "commitment:responsibility",
+    "commitment:state",
+    "commitment:priority",
+    "commitment:question"
+  ],
+  "expect": {
+    "result": "writeback",
+    "write_scope": [
+      "commitment:last_verified",
+      "commitment:current_stage"
+    ]
+  },
+  "pre": {
+    "auto_start_max": "internal"
+  },
+  "executor": "script",
+  "resolver": "human",
+  "check": [
+    "last_verified_within_stale_after_days"
+  ],
+  "budget": {
+    "model_runs": 0
+  },
+  "available_in": [
+    "private",
+    "public_starter"
+  ]
+}

@@ -1,0 +1,47 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard 共享组件样式原子「cards」；只放跨视图复用的组件规则。
+ * English: Shared component style atom for cards in the ResearchOS dashboard; only cross-view reusable component rules belong here.
+ */
+
+.simple-paper-card,
+.paper-upgrade-card,
+.simple-project-card,
+.simple-person-card,
+.simple-route-card,
+.upgrade-candidate-card,
+.upgrade-inbox-item {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 20px;
+  border: var(--chrome-card-border);
+  border-radius: var(--radius-md);
+  background: var(--chrome-card-surface);
+  box-shadow: none;
+}
+
+.simple-paper-card:hover,
+.paper-upgrade-card:hover,
+.simple-project-card:hover,
+.simple-person-card:hover,
+.simple-route-card:hover,
+.upgrade-candidate-card:hover,
+.upgrade-inbox-item:hover {
+  border-color: rgba(27, 116, 210, 0.13);
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.simple-paper-card p,
+.paper-upgrade-card p,
+.simple-project-card p,
+.simple-person-card p {
+  font-size: 13px;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+

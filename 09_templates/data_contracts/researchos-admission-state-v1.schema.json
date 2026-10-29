@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-admission-state-v1.schema.json",
+  "title": "ResearchOS Orthogonal Admission State v1",
+  "description": "Four independent axes for a proposed durable change. Machine result mode and the shorthand confirmed are deliberately absent.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "decision_state", "mutation_state", "validation_state", "authority_role"],
+  "properties": {
+    "schema_id": {"const": "researchos-admission-state-v1"},
+    "decision_state": {"enum": ["unproposed", "proposed", "accepted", "revised", "rejected", "deferred"]},
+    "mutation_state": {"enum": ["not_requested", "staged", "applied", "rolled_back"]},
+    "validation_state": {"enum": ["unvalidated", "pending", "passed", "failed"]},
+    "authority_role": {"enum": ["none", "informative", "interpretive", "normative"]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"decision_state": {"not": {"enum": ["accepted", "revised"]}}}},
+      "then": {"properties": {"mutation_state": {"const": "not_requested"}}}
+    },
+    {
+      "if": {"properties": {"mutation_state": {"const": "not_requested"}}},
+      "then": {"properties": {"validation_state": {"const": "unvalidated"}}}
+    },
+    {
+      "if": {"properties": {"mutation_state": {"const": "staged"}}},
+      "then": {"properties": {"validation_state": {"enum": ["unvalidated", "pending"]}}}
+    },
+    {
+      "if": {"properties": {"mutation_state": {"const": "applied"}}},
+      "then": {"properties": {"validation_state": {"enum": ["pending", "passed", "failed"]}}}
+    },
+    {
+      "if": {"properties": {"mutation_state": {"const": "rolled_back"}}},
+      "then": {"properties": {"validation_state": {"enum": ["unvalidated", "pending", "passed", "failed"]}}}
+    }
+  ]
+}

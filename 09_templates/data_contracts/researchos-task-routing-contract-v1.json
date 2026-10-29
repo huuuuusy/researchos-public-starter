@@ -1,0 +1,95 @@
+{
+  "schema_id": "researchos-task-routing-contract-v1",
+  "version": "1.0.0-public",
+  "runtime_scope": "public_starter",
+  "families": [
+    {
+      "id": "understanding",
+      "context_route_id": "material_understanding",
+      "fallback_context_route_id": "material_intake",
+      "keywords": ["read this", "understand this", "material", "理解", "阅读", "材料"],
+      "capabilities": ["material_intake", "research_context_routing"],
+      "default_adapters": ["source_identity"],
+      "default_tier": "standard",
+      "authority_owner": "user_selected_source",
+      "validation_profile": ["source_identity", "fact_inference_unknown", "coverage_receipt"]
+    },
+    {
+      "id": "portfolio",
+      "context_route_id": "new_project_intake",
+      "fallback_context_route_id": "card_upgrade",
+      "keywords": ["project status", "next step", "priority", "项目状态", "下一步", "优先级"],
+      "capabilities": ["research_portfolio_attention", "research_context_routing"],
+      "default_adapters": ["local_portfolio_candidate"],
+      "default_tier": "quick",
+      "authority_owner": "user_confirmed_personal_vault",
+      "validation_profile": ["registered_state_only", "responsibility_not_inferred"]
+    },
+    {
+      "id": "ideation",
+      "context_route_id": "idea_diagnosis",
+      "fallback_context_route_id": "material_understanding",
+      "keywords": ["research idea", "research direction", "experiment plan", "研究想法", "研究路线", "实验方案"],
+      "capabilities": ["research_context_routing", "cross_domain_scientific_entry"],
+      "default_adapters": [],
+      "default_tier": "standard",
+      "authority_owner": "user_goal_and_cited_sources",
+      "validation_profile": ["strongest_baseline", "counterexample", "evidence_gap", "stop_condition"]
+    },
+    {
+      "id": "expression",
+      "context_route_id": "paper_writing",
+      "fallback_context_route_id": "material_understanding",
+      "keywords": ["write paper", "revise manuscript", "proposal", "presentation", "figure", "论文", "proposal", "报告", "图表"],
+      "capabilities": ["research_expression", "paper_writing", "proposal_framing", "visual_style_support"],
+      "default_adapters": ["artifact_format"],
+      "default_tier": "standard",
+      "authority_owner": "user_source_and_artifact_owner",
+      "validation_profile": ["claim_evidence", "citation_preservation", "render_or_format_check"]
+    },
+    {
+      "id": "coordination",
+      "context_route_id": "external_demand_response",
+      "fallback_context_route_id": "relationship_opportunity",
+      "keywords": ["external request", "collaboration", "student feedback", "meeting", "外部请求", "合作", "学生反馈", "会议"],
+      "capabilities": ["collaborative_alignment", "research_expression"],
+      "default_adapters": ["coordination"],
+      "default_tier": "standard",
+      "authority_owner": "user_and_supplied_relationship_evidence",
+      "validation_profile": ["confirmed_facts", "sharing_boundary", "action_owner"]
+    },
+    {
+      "id": "stewardship",
+      "context_route_id": "research_audit",
+      "fallback_context_route_id": "maintenance_check",
+      "keywords": ["audit", "reflect", "maintain", "system evolution", "审计", "反思", "维护", "系统演化"],
+      "capabilities": ["research_audit", "system_reflection", "collaborative_alignment", "self_evolution"],
+      "default_adapters": ["local_repository"],
+      "default_tier": "evidence",
+      "authority_owner": "current_repository_and_human_review",
+      "validation_profile": ["baseline", "counterexample", "rollback", "public_private_boundary"]
+    }
+  ],
+  "effects": {
+    "answer": {"result_mode": "answer", "risk_profile": "R0", "phases": ["route", "understand", "produce"]},
+    "artifact": {"result_mode": "artifact", "risk_profile": "R1", "phases": ["route", "understand", "decide", "produce", "verify"]},
+    "durable_change": {"result_mode": "writeback", "risk_profile": "R2", "phases": ["route", "understand", "decide", "produce", "verify", "review_candidate"]},
+    "external_action": {"result_mode": "writeback", "risk_profile": "R3", "phases": ["route", "understand", "decide", "produce", "verify", "review_candidate"]}
+  },
+  "modality_adapters": {
+    "pdf": "pdf",
+    "docx": "documents",
+    "document": "documents",
+    "latex": "latex",
+    "code": "code",
+    "repository": "local_repository",
+    "web": "primary_sources",
+    "url": "primary_sources",
+    "data": "data_analysis",
+    "notebook": "data_analysis",
+    "slides": "presentations",
+    "figure": "visualization",
+    "email": "coordination",
+    "meeting": "coordination"
+  }
+}

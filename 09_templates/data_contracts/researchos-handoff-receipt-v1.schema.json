@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-handoff-receipt-v1.schema.json",
+  "title": "ResearchOS HandoffReceipt v1",
+  "description": "A deterministic semantic handoff bound to one source revision and ContextReceipt. It is not a transcript, delivery proof, authorization, or human-adoption record.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "handoff_id", "task_id", "runtime_scope", "producer", "source_revision", "context_receipt_ref", "last_judgment", "open_boundary", "next_safe_action", "forbidden_actions", "target_client", "rejected_claims"],
+  "properties": {
+    "schema_id": {"const": "researchos-handoff-receipt-v1"},
+    "handoff_id": {"type": "string", "pattern": "^handoff:[0-9a-f]{64}$"},
+    "task_id": {"type": "string", "pattern": "^task:[0-9a-f]{64}$"},
+    "runtime_scope": {"enum": ["private", "public_starter", "personal_vault"]},
+    "producer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "surface", "evidence_class"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1, "maxLength": 120},
+        "surface": {"type": "string", "minLength": 1, "maxLength": 120},
+        "evidence_class": {"enum": ["client_asserted", "server_recorded", "tool_recorded", "human_attested"]}
+      }
+    },
+    "source_revision": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "source_id", "scheme", "value_digest", "evidence_ref"],
+      "properties": {
+        "state": {"enum": ["unknown", "verified"]},
+        "source_id": {"type": "string", "maxLength": 68},
+        "scheme": {"type": "string", "maxLength": 40},
+        "value_digest": {"type": "string", "maxLength": 64},
+        "evidence_ref": {"type": "string", "maxLength": 160}
+      },
+      "allOf": [
+        {"if": {"properties": {"state": {"const": "unknown"}}}, "then": {"properties": {"source_id": {"const": ""}, "scheme": {"const": ""}, "value_digest": {"const": ""}, "evidence_ref": {"const": ""}}}},
+        {"if": {"properties": {"state": {"const": "verified"}}}, "then": {"properties": {"source_id": {"pattern": "^src:[0-9a-f]{64}$"}, "scheme": {"enum": ["sha256", "git_commit", "etag", "version"]}, "value_digest": {"pattern": "^[0-9a-f]{64}$"}, "evidence_ref": {"minLength": 1}}}}
+      ]
+    },
+    "context_receipt_ref": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_id", "receipt_id", "receipt_digest", "binding_state"],
+      "properties": {
+        "schema_id": {"const": "researchos-context-receipt-v1"},
+        "receipt_id": {"type": "string", "pattern": "^ctx:[0-9a-f]{64}$"},
+        "receipt_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "binding_state": {"enum": ["claimed", "verified"]}
+      }
+    },
+    "last_judgment": {"$ref": "#/$defs/lastJudgment"},
+    "open_boundary": {"$ref": "#/$defs/openBoundary"},
+    "next_safe_action": {"$ref": "#/$defs/nextSafeAction"},
+    "forbidden_actions": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "items", "evidence_ref"],
+      "properties": {
+        "state": {"enum": ["unknown", "recorded"]},
+        "items": {"type": "array", "maxItems": 8, "items": {"type": "string", "minLength": 1, "maxLength": 500}},
+        "evidence_ref": {"type": "string", "maxLength": 160}
+      },
+      "allOf": [
+        {"if": {"properties": {"state": {"const": "unknown"}}}, "then": {"properties": {"items": {"maxItems": 0}, "evidence_ref": {"const": ""}}}},
+        {"if": {"properties": {"state": {"const": "recorded"}}}, "then": {"properties": {"items": {"minItems": 1}, "evidence_ref": {"minLength": 1}}}}
+      ]
+    },
+    "target_client": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "surface", "binding_state"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1, "maxLength": 120},
+        "surface": {"type": "string", "minLength": 1, "maxLength": 120},
+        "binding_state": {"const": "requested"}
+      }
+    },
+    "rejected_claims": {
+      "type": "array", "maxItems": 6,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["field", "code"],
+        "properties": {
+          "field": {"enum": ["source_revision", "context_receipt_ref", "last_judgment", "open_boundary", "next_safe_action", "forbidden_actions"]},
+          "code": {"const": "untrusted_claim_rejected"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "statementBase": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "text", "evidence_ref"],
+      "properties": {
+        "state": {"type": "string"},
+        "text": {"type": "string", "maxLength": 2000},
+        "evidence_ref": {"type": "string", "maxLength": 160}
+      }
+    },
+    "lastJudgment": {
+      "allOf": [
+        {"$ref": "#/$defs/statementBase"},
+        {"properties": {"state": {"enum": ["unknown", "candidate", "human_recorded"]}}},
+        {"if": {"properties": {"state": {"const": "unknown"}}}, "then": {"properties": {"text": {"const": ""}, "evidence_ref": {"const": ""}}}},
+        {"if": {"properties": {"state": {"enum": ["candidate", "human_recorded"]}}}, "then": {"properties": {"text": {"minLength": 1}, "evidence_ref": {"minLength": 1}}}},
+        {"if": {"properties": {"state": {"const": "human_recorded"}}}, "then": {"properties": {"evidence_ref": {"pattern": "^decision:"}}}}
+      ]
+    },
+    "openBoundary": {
+      "allOf": [
+        {"$ref": "#/$defs/statementBase"},
+        {"properties": {"state": {"enum": ["unknown", "recorded"]}}},
+        {"if": {"properties": {"state": {"const": "unknown"}}}, "then": {"properties": {"text": {"const": ""}, "evidence_ref": {"const": ""}}}},
+        {"if": {"properties": {"state": {"const": "recorded"}}}, "then": {"properties": {"text": {"minLength": 1}, "evidence_ref": {"minLength": 1}}}}
+      ]
+    },
+    "nextSafeAction": {
+      "allOf": [
+        {"$ref": "#/$defs/statementBase"},
+        {"properties": {"state": {"enum": ["unknown", "recommended"]}}},
+        {"if": {"properties": {"state": {"const": "unknown"}}}, "then": {"properties": {"text": {"const": ""}, "evidence_ref": {"const": ""}}}},
+        {"if": {"properties": {"state": {"const": "recommended"}}}, "then": {"properties": {"text": {"minLength": 1}, "evidence_ref": {"minLength": 1}}}}
+      ]
+    }
+  }
+}

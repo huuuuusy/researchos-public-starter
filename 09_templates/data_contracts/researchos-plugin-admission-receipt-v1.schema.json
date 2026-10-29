@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-plugin-admission-receipt-v1.schema.json",
+  "title": "ResearchOS Plugin Human Admission Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "capability_id", "decision", "decided_at", "authority_role", "real_use_refs", "baseline_evidence_ref", "accepted_scope", "known_failures", "revalidation_triggers"],
+  "properties": {
+    "schema_id": {"const": "researchos-plugin-admission-receipt-v1"},
+    "capability_id": {"description": "Canonical claim id from researchos-capability-registry-v1.json; never a plugin or contribution id.", "type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "decision": {"const": "admit"},
+    "decided_at": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+    "authority_role": {"type": "string", "minLength": 1},
+    "real_use_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "baseline_evidence_ref": {"type": "string", "minLength": 1},
+    "accepted_scope": {"type": "string", "minLength": 1},
+    "known_failures": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "revalidation_triggers": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}}
+  }
+}

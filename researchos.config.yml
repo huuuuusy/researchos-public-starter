@@ -1,0 +1,5 @@
+dashboard:
+  host: 127.0.0.1
+  port: 8880
+  language: en
+available_languages: [en, zh-CN]

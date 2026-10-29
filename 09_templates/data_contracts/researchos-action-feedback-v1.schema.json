@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-action-feedback-v1.schema.json",
+  "title": "ResearchOS Ephemeral Action Feedback v1",
+  "description": "Immediate browser feedback from ActionGateway. It is not a durable receipt, authority record, or recovery coordinate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "feedback_id", "gateway_instance_id", "sequence", "request_id", "action", "effect", "status", "ok", "outcome", "reason", "reversible", "timestamp", "durability", "limitations"],
+  "properties": {
+    "schema_id": {"const": "researchos-action-feedback-v1"},
+    "feedback_id": {"type": "string", "pattern": "^action-feedback:[A-Za-z0-9._-]+:[1-9][0-9]*$"},
+    "gateway_instance_id": {"type": "string", "minLength": 1, "maxLength": 96},
+    "sequence": {"type": "integer", "minimum": 1},
+    "request_id": {"type": "string", "minLength": 1},
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plugin_id", "action_id"],
+      "properties": {
+        "plugin_id": {"type": "string"},
+        "action_id": {"type": "string"}
+      }
+    },
+    "effect": {"type": "string"},
+    "status": {"enum": ["rejected", "cancelled", "failed", "completed"]},
+    "ok": {"type": "boolean"},
+    "outcome": {},
+    "reason": {"type": "string"},
+    "reversible": {"type": "boolean"},
+    "timestamp": {"type": "string"},
+    "durability": {"const": "ephemeral_ui_feedback"},
+    "limitations": {
+      "type": "array",
+      "uniqueItems": true,
+      "allOf": [
+        {"contains": {"const": "not_durable_receipt"}},
+        {"contains": {"const": "not_authority"}},
+        {"contains": {"const": "not_recovery_coordinate"}}
+      ],
+      "items": {"enum": ["not_durable_receipt", "not_authority", "not_recovery_coordinate"]}
+    }
+  }
+}

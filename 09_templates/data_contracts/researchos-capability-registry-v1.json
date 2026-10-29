@@ -1,0 +1,234 @@
+{
+  "schema_id": "researchos-capability-registry-v1",
+  "version": "2026-08-25",
+  "authority": "05_workflows/research_management/researchos-plugin-standard-v1.2.md",
+  "purpose": "Own canonical public-safe capability claims separately from plugin contributions, task projections, and legacy implementation records.",
+  "core_chain": [
+    "Intent",
+    "Task Episode",
+    "Skill or Harness Configuration",
+    "Result or Error",
+    "Evidence",
+    "Judgment",
+    "Candidate",
+    "Decision",
+    "Mutation",
+    "Validation",
+    "Receipt",
+    "Review"
+  ],
+  "required_fields": [
+    "id",
+    "user_intent",
+    "candidate_output",
+    "confirmation_required",
+    "sensitivity_rule"
+  ],
+  "implementation_records_status": {
+    "role": "legacy_client_compatibility",
+    "capability_authority": "none",
+    "headless_consumption": "forbidden",
+    "retirement": "explicit_versioned_client_migration_required"
+  },
+  "capability_groups": [
+    {
+      "id": "foundation",
+      "purpose": "Group material, asset, and portfolio projections without merging their owners.",
+      "claim_ids": ["material_intake", "research_asset_navigation", "research_portfolio_attention"],
+      "ownership_boundary": "Display and routing group only; every claim and manifest keeps its owner."
+    },
+    {
+      "id": "research_work",
+      "purpose": "Group public-safe context and expression capabilities used by research routes.",
+      "claim_ids": ["research_context_routing", "research_expression", "paper_writing", "proposal_framing", "visual_style_support"],
+      "ownership_boundary": "Composition group only; it does not create a capability or writer."
+    },
+    {
+      "id": "stewardship",
+      "purpose": "Expose audit, reflection, alignment, and system evolution as one operator group.",
+      "claim_ids": ["research_audit", "system_reflection", "collaborative_alignment", "self_evolution"],
+      "ownership_boundary": "User-surface group only; the four manifests remain distinct semantic owners."
+    },
+    {
+      "id": "experimental",
+      "purpose": "Keep experiments outside bundled routing until their evidence gate passes.",
+      "claim_ids": ["cross_domain_scientific_entry"],
+      "ownership_boundary": "Evaluation group only; registration or installation does not imply adoption."
+    }
+  ],
+  "capability_claims": [
+    {
+      "id": "material_intake",
+      "intended_transformation": "Turn a user-selected material lead into an evidence-bounded candidate without silently promoting it into durable memory.",
+      "unit_of_analysis": "one material lead and its candidate transition",
+      "context_envelope": ["user-selected source", "declared sensitivity", "current material lifecycle contract"],
+      "evidence_criteria": ["source boundary is explicit", "candidate and authority states remain separate", "save target and next gate are named"],
+      "known_failures": ["source metadata is mistaken for source content", "registration is mistaken for understanding", "candidate output is written as fact"],
+      "authority_boundary": "Sources retain factual authority and the researcher retains admission authority.",
+      "review_triggers": ["material_contract_change", "authority_change", "privacy_boundary_change"],
+      "retirement_condition": "Retire when the same bounded transition is provided by a smaller canonical owner with equal source and authority protection."
+    },
+    {
+      "id": "research_asset_navigation",
+      "intended_transformation": "Make heterogeneous research assets and their relations selectively discoverable without turning a projection into authority.",
+      "unit_of_analysis": "one task-conditioned asset and relation view",
+      "context_envelope": ["registered assets", "typed relations", "task-conditioned read scope"],
+      "evidence_criteria": ["asset identity resolves to a canonical owner", "relation state and sensitivity are preserved", "projection can be rebuilt"],
+      "known_failures": ["generated cards become authority", "private relations enter public projection", "asset breadth replaces task relevance"],
+      "authority_boundary": "Canonical Markdown and source records own facts; asset views are read-only projections.",
+      "review_triggers": ["asset_contract_change", "relation_semantics_change", "public_projection_change"],
+      "retirement_condition": "Retire when selective asset discovery is absorbed by a smaller foundation owner without losing provenance or sensitivity boundaries."
+    },
+    {
+      "id": "research_portfolio_attention",
+      "intended_transformation": "Turn registered project state into one bounded attention decision while preserving responsibility, support engagement, lifecycle, action state, and evidential freshness as separate distinctions.",
+      "unit_of_analysis": "one project portfolio snapshot and one selected next attention item",
+      "context_envelope": ["registered portfolio authority", "current lifecycle and action states", "explicit responsibility, support engagement, date, and coverage evidence"],
+      "evidence_criteria": ["lead and support remain distinct", "ongoing and temporary support remain inspectable without changing accountability", "one next item is traceable to its project", "projection does not mutate project authority"],
+      "known_failures": ["project lists are counted as responsibilities", "support engagement is flattened into responsibility or action state", "whole projects become calendar tasks", "stale or incomplete projections become current complete state"],
+      "authority_boundary": "The canonical portfolio owns responsibility and lifecycle; attention surfaces only project a current choice.",
+      "review_triggers": ["portfolio_contract_change", "responsibility_vocabulary_change", "engagement_vocabulary_change", "attention_projection_change"],
+      "retirement_condition": "Retire when portfolio-to-attention projection is provided by a smaller owner with identical responsibility and lifecycle semantics."
+    },
+    {
+      "id": "research_context_routing",
+      "intended_transformation": "Select the smallest public-safe or user-selected context needed for a task without discovering unrelated local or private material.",
+      "unit_of_analysis": "one research request and its bounded context receipt",
+      "context_envelope": ["task intent", "quick-standard-evidence budget", "public-safe or explicitly selected local sources"],
+      "evidence_criteria": ["read set is bounded", "authority level is reported", "unselected local layers remain unread"],
+      "known_failures": ["whole-repository reading", "route treated as capability proof", "private sibling discovery"],
+      "authority_boundary": "Routing selects sources but cannot change their authority or grant read permission.",
+      "review_triggers": ["routing_change", "public_boundary_change", "model_baseline_change"],
+      "retirement_condition": "Retire when current models achieve equal context precision and privacy discipline without this contribution."
+    },
+    {
+      "id": "research_expression",
+      "intended_transformation": "Convert evidence-bounded research judgment into audience-appropriate expression while preserving claims, citations, uncertainty, and author authority.",
+      "unit_of_analysis": "one research communication artifact and its claim-evidence mapping",
+      "context_envelope": ["named audience", "user-selected evidence", "genre constraints"],
+      "evidence_criteria": ["claims remain traceable", "uncertainty is preserved", "style changes do not alter evidence state"],
+      "known_failures": ["polish upgrades evidence", "generic prose replaces judgment", "citations disappear"],
+      "authority_boundary": "The user owns substantive judgment and external release; the public capability produces candidates only.",
+      "review_triggers": ["writing_contract_change", "audience_change", "evidence_boundary_change"],
+      "retirement_condition": "Retire when equivalent expression quality and evidence preservation are native with lower governance burden."
+    },
+    {
+      "id": "paper_writing",
+      "intended_transformation": "Produce or revise manuscript text that preserves the exact evidence boundary, citation structure, and argumentative role of each passage.",
+      "unit_of_analysis": "one manuscript move or bounded revision",
+      "context_envelope": ["user-supplied manuscript", "verified evidence", "venue and collaborator constraints"],
+      "evidence_criteria": ["claim-evidence alignment", "citation preservation", "reviewer-safe uncertainty"],
+      "known_failures": ["unsupported novelty", "citation loss", "style smoothing changes meaning"],
+      "authority_boundary": "Drafts remain candidates until accepted by the author and relevant collaborators.",
+      "review_triggers": ["manuscript_scope_change", "evidence_change", "collaborator_constraint_change"],
+      "retirement_condition": "Retire when a smaller expression owner preserves the same manuscript boundaries."
+    },
+    {
+      "id": "proposal_framing",
+      "intended_transformation": "Turn a research direction or external demand into a feasible, evidence-bounded proposal narrative and evaluation plan.",
+      "unit_of_analysis": "one proposal opportunity and its bounded fit claim",
+      "context_envelope": ["user-supplied call", "user-declared research context", "project evidence", "institutional constraints"],
+      "evidence_criteria": ["fit is source-grounded", "feasibility and unknowns are separated", "external claims require release authority"],
+      "known_failures": ["aspiration becomes achievement", "generic work packages hide gaps", "call constraints are ignored"],
+      "authority_boundary": "The applicant owns fit, commitment, and submission decisions; outputs remain candidates.",
+      "review_triggers": ["call_change", "project_evidence_change", "external_commitment_change"],
+      "retirement_condition": "Retire when an equivalent owner preserves fit, feasibility, and release boundaries."
+    },
+    {
+      "id": "visual_style_support",
+      "intended_transformation": "Translate a research mechanism and evidence boundary into a legible visual structure without decorative or semantic distortion.",
+      "unit_of_analysis": "one figure, diagram, caption, or presentation segment",
+      "context_envelope": ["target claim", "audience", "source evidence", "declared visual grammar"],
+      "evidence_criteria": ["visual elements map to semantic roles", "caption matches evidence", "uncertainty remains visible"],
+      "known_failures": ["decoration replaces mechanism", "one arrow conflates relations", "visual completion overstates proof"],
+      "authority_boundary": "Visual candidates cannot upgrade claims or external-use status.",
+      "review_triggers": ["claim_change", "audience_change", "visual_contract_change"],
+      "retirement_condition": "Retire when a smaller expression owner supplies the same semantic fidelity."
+    },
+    {
+      "id": "research_audit",
+      "intended_transformation": "Diagnose a bounded claim or transition with independent evidence, counterevidence, and the smallest reversible repair.",
+      "unit_of_analysis": "one claim, authority transition, or repository lifecycle boundary",
+      "context_envelope": ["explicit trigger", "exact scope", "baseline", "change budget", "stop rule"],
+      "evidence_criteria": ["independent evidence path", "strongest counterexample", "disposition and owner are explicit"],
+      "known_failures": ["finding count replaces consequence", "audit summary becomes authority", "audit creates parallel storage"],
+      "authority_boundary": "Audit exposes or proposes repair but cannot admit research judgment or public claims.",
+      "review_triggers": ["audit_contract_change", "authority_change", "model_baseline_change"],
+      "retirement_condition": "Retire or absorb when the invariant belongs to a smaller stable owner."
+    },
+    {
+      "id": "system_reflection",
+      "intended_transformation": "Turn one bounded episode into a causal lesson, changed rule, executable gate, and one absorption owner.",
+      "unit_of_analysis": "one completed, failed, interrupted, or corrected episode",
+      "context_envelope": ["episode receipts", "observable outcome", "counterexample", "existing rule owner"],
+      "evidence_criteria": ["cause differs from chronology", "rule change is falsifiable", "one owner and reopen trigger are named"],
+      "known_failures": ["retelling without mechanism", "one-off event becomes stable rule", "reflection artifacts accumulate without value"],
+      "authority_boundary": "Reflection proposes lessons; durable cognition and rules still require human Review.",
+      "review_triggers": ["reflection_contract_change", "rule_owner_change", "model_baseline_change"],
+      "retirement_condition": "Retire after the useful invariant is absorbed and no distinct reflection behavior remains."
+    },
+    {
+      "id": "collaborative_alignment",
+      "intended_transformation": "Recover a purpose-bounded shared task model after a semantic discontinuity without constructing a psychological profile.",
+      "unit_of_analysis": "one consequential human-agent alignment checkpoint",
+      "context_envelope": ["current user statement", "live evidence", "relevant supplied history", "consequence boundary"],
+      "evidence_criteria": ["working assumptions are exposed", "one high-value question is asked at a time", "reopen trigger is explicit"],
+      "known_failures": ["generic clarification", "silence treated as agreement", "historical preference overrides current judgment"],
+      "authority_boundary": "The user retains goal, value, and consequence authority; alignment forms only a current working model.",
+      "review_triggers": ["alignment_contract_change", "human_authority_change", "model_baseline_change"],
+      "retirement_condition": "Retire when equivalent consequence prediction occurs with lower alignment burden."
+    },
+    {
+      "id": "self_evolution",
+      "intended_transformation": "Convert bounded system evidence into candidate rules, trials, dispositions, and reversible evolution without autonomous authority expansion.",
+      "unit_of_analysis": "one proposed ResearchOS rule or system transition",
+      "context_envelope": ["evidence receipts", "counterexamples", "current rule owner", "rollback target"],
+      "evidence_criteria": ["candidate and admitted rule remain distinct", "trial is bounded", "human disposition and rollback are recorded"],
+      "known_failures": ["test success becomes rule authority", "maintenance becomes research progress", "self-modification bypasses Review"],
+      "authority_boundary": "ResearchOS may propose evolution; the researcher admits consequential durable rules.",
+      "review_triggers": ["evolution_contract_change", "authority_change", "model_baseline_change"],
+      "retirement_condition": "Retire when the stable kernel directly supplies the same bounded evolution protocol."
+    },
+    {
+      "id": "cross_domain_scientific_entry",
+      "intended_transformation": "Turn entry into an unfamiliar scientific field into a bounded, replayable case that separates search, admission, human learning, retention, and domain results.",
+      "unit_of_analysis": "one frozen cross-domain research case",
+      "context_envelope": ["local phenomenon or problem", "minimum source set", "evidence obligation", "domain-admission route", "budget"],
+      "evidence_criteria": ["problem status is verified", "candidate methods remain bounded", "domain result and retained capability are evaluated separately"],
+      "known_failures": ["search fluency becomes domain authority", "solution claims outrun expert admission", "case artifacts become general transfer claims"],
+      "authority_boundary": "Domain sources and experts retain domain authority; ResearchOS governs the case and transfer evidence only.",
+      "review_triggers": ["case_protocol_change", "domain_admission_change", "model_baseline_change"],
+      "retirement_condition": "Retire when the process can no longer separate search, admission, learning, retention, and domain outcomes."
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "material_intake",
+      "user_intent": "register new material with source and boundary",
+      "candidate_output": "M1 registration",
+      "confirmation_required": true,
+      "sensitivity_rule": "private/submitted/sensitive defaults to local_only"
+    },
+    {
+      "id": "card_creation",
+      "user_intent": "create or upgrade a ResearchOS card",
+      "candidate_output": "Markdown card candidate",
+      "confirmation_required": true,
+      "sensitivity_rule": "card inherits strictest source boundary"
+    },
+    {
+      "id": "relation_explanation",
+      "user_intent": "explain relations among cards",
+      "candidate_output": "candidate relation or group card",
+      "confirmation_required": true,
+      "sensitivity_rule": "relations involving people remain candidate until confirmed"
+    },
+    {
+      "id": "safe_export_check",
+      "user_intent": "check whether content can be public",
+      "candidate_output": "safe export report",
+      "confirmation_required": true,
+      "sensitivity_rule": "unknown boundary blocks export"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-run-state-v1.schema.json",
+  "title": "ResearchOS Run State v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "runtime_scope", "client_request_id", "idempotency_key", "run_id", "task_id",
+    "state", "side_effects", "created_at", "updated_at"
+  ],
+  "properties": {
+    "schema_id": {"const": "researchos-run-state-v1"},
+    "runtime_scope": {"enum": ["private", "personal_vault"]},
+    "client_request_id": {"type": "string", "maxLength": 160},
+    "idempotency_key": {"type": "string", "pattern": "^idem:[0-9a-f]{64}$"},
+    "run_id": {"type": "string", "minLength": 1, "maxLength": 160},
+    "task_id": {"type": "string", "pattern": "^task:[0-9a-f]{64}$"},
+    "state": {"enum": ["submitted", "queued", "running", "completed", "failed"]},
+    "side_effects": {"enum": ["none", "unknown", "confirmed"]},
+    "created_at": {"type": "string", "minLength": 1, "maxLength": 80},
+    "updated_at": {"type": "string", "minLength": 1, "maxLength": 80}
+  }
+}

@@ -1,0 +1,272 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-plugin-governance-v1.schema.json",
+  "title": "ResearchOS Plugin Governance v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "contract_id",
+    "archetype",
+    "distribution",
+    "lineage",
+    "effects",
+    "data_policy",
+    "composition",
+    "routing",
+    "admission"
+  ],
+  "properties": {
+    "schema_id": {"const": "researchos-plugin-governance-v1"},
+    "contract_id": {"type": "string", "pattern": "^researchos\\.contribution\\.[a-z][a-z0-9_]*$"},
+    "archetype": {"enum": ["task_led", "capability_led"]},
+    "distribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["variant", "parity_policy", "allowed_divergence_fields"],
+      "properties": {
+        "variant": {"enum": ["universal", "private", "public"]},
+        "parity_policy": {"enum": ["exact", "scoped_variant", "private_only"]},
+        "allowed_divergence_fields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)*$"}
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prototype_id", "derivation_mode", "reuse_policy", "source_refs", "external_runtime_dependency", "transformation_summary", "current_placement", "proposed_absorption_target", "absorption_gate"],
+      "properties": {
+        "prototype_id": {"enum": ["researchos_plugin_task_v1", "researchos_plugin_capability_v1"]},
+        "derivation_mode": {"enum": ["native", "adapted_external", "composed_external"]},
+        "reuse_policy": {"enum": ["native", "link_and_transform"]},
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["candidate_id", "kind", "name", "url", "version", "license", "reuse_mode"],
+            "properties": {
+              "candidate_id": {"$ref": "#/$defs/id"},
+              "kind": {"enum": ["skill", "repository", "paper", "workflow"]},
+              "name": {"type": "string", "minLength": 1},
+              "url": {"type": "string", "pattern": "^https://"},
+              "version": {"type": "string", "minLength": 1},
+              "license": {"type": "string", "minLength": 1},
+              "reuse_mode": {"enum": ["reference_only", "adapted", "composed"]}
+            }
+          }
+        },
+        "external_runtime_dependency": {"enum": ["none", "optional", "runtime_required"]},
+        "transformation_summary": {"type": "string", "minLength": 1},
+        "current_placement": {"enum": ["plugin", "foundation_capability"]},
+        "proposed_absorption_target": {"enum": ["none", "foundation_capability", "stable_kernel"]},
+        "absorption_gate": {"const": "review_required"}
+      }
+    },
+    "capability_value": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["comparison_target", "comparison_status", "expected_deltas", "expected_burdens", "evidence_refs", "placement_decision", "retention_rule"],
+      "properties": {
+        "comparison_target": {"enum": ["current_model_without_capability", "host_without_capability"]},
+        "comparison_status": {"enum": ["planned", "evaluated", "stale"]},
+        "expected_deltas": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["quality", "reliability", "evidence_boundary", "authority_safety", "efficiency", "recoverability", "personal_fit"]}
+        },
+        "expected_burdens": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["context_cost", "trigger_risk", "maintenance_cost", "dependency_risk", "privacy_risk"]}
+        },
+        "evidence_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "placement_decision": {"enum": ["pending_comparison", "retain_plugin", "retain_foundation", "retire"]},
+        "retention_rule": {"type": "string", "minLength": 1}
+      }
+    },
+    "task_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task_id",
+        "user_job",
+        "inputs",
+        "outputs",
+        "invariants",
+        "confirmation_gates",
+        "completion_criteria",
+        "failure_modes",
+        "recovery",
+        "comparison_target",
+        "comparison_status",
+        "expected_deltas",
+        "expected_burdens",
+        "evidence_refs",
+        "retention_rule"
+      ],
+      "properties": {
+        "task_id": {"$ref": "#/$defs/id"},
+        "user_job": {"type": "string", "minLength": 1},
+        "inputs": {"$ref": "#/$defs/non_empty_strings"},
+        "outputs": {"$ref": "#/$defs/non_empty_strings"},
+        "invariants": {"$ref": "#/$defs/non_empty_strings"},
+        "confirmation_gates": {"$ref": "#/$defs/non_empty_strings"},
+        "completion_criteria": {"$ref": "#/$defs/non_empty_strings"},
+        "failure_modes": {"$ref": "#/$defs/non_empty_strings"},
+        "recovery": {"$ref": "#/$defs/non_empty_strings"},
+        "comparison_target": {"const": "current_model_without_task_workflow"},
+        "comparison_status": {"enum": ["planned", "evaluated", "stale"]},
+        "expected_deltas": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["quality", "reliability", "evidence_boundary", "authority_safety", "efficiency", "recoverability", "personal_fit"]}
+        },
+        "expected_burdens": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["context_cost", "trigger_risk", "maintenance_cost", "dependency_risk", "privacy_risk"]}
+        },
+        "evidence_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "retention_rule": {"type": "string", "minLength": 1}
+      }
+    },
+    "deployment_mode": {"enum": ["embedded_foundation", "bundled_default_on", "local_installable"], "description": "Optional legacy assertion. The host derives this from the enclosing product_tier, rejects a conflicting explicit value, and always includes it in normalized output. Compact source manifests require the updated host; older hosts need the explicit derived field."},
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_effect", "allowed_effects"],
+      "properties": {
+        "default_effect": {"$ref": "#/$defs/effect"},
+        "allowed_effects": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/effect"}}
+      }
+    },
+    "data_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_sensitivity", "default_export_policy"],
+      "properties": {
+        "default_sensitivity": {"enum": ["public", "internal", "sensitive", "private", "inherit_runtime"]},
+        "default_export_policy": {"enum": ["public_safe", "local_only", "not_exportable", "inherit_runtime"]}
+      }
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requires", "provides", "optional_integrations", "conflicts_with"],
+      "properties": {
+        "requires": {"$ref": "#/$defs/non_empty_ids"},
+        "provides": {"$ref": "#/$defs/non_empty_ids"},
+        "optional_integrations": {"$ref": "#/$defs/ids"},
+        "conflicts_with": {"$ref": "#/$defs/ids"}
+      }
+    },
+    "capability_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["contribution_id", "claim_ids"],
+        "properties": {
+          "contribution_id": {"$ref": "#/$defs/id"},
+          "claim_ids": {"$ref": "#/$defs/non_empty_ids"}
+        }
+      }
+    },
+    "task_projections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["task_id", "contribution_id", "capability_id", "role"],
+        "properties": {
+          "task_id": {"$ref": "#/$defs/id"},
+          "contribution_id": {"$ref": "#/$defs/id"},
+          "capability_id": {"$ref": "#/$defs/id"},
+          "role": {"enum": ["entrypoint", "workflow_adapter", "evaluation_probe"]}
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trigger_intents", "non_goals", "handoff_to"],
+      "properties": {
+        "trigger_intents": {"$ref": "#/$defs/non_empty_ids"},
+        "non_goals": {"$ref": "#/$defs/non_empty_ids"},
+        "handoff_to": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/handoff"}
+        }
+      }
+    },
+    "admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maturity", "proof_refs", "last_reviewed", "revalidation_triggers", "retirement_condition"],
+      "properties": {
+        "maturity": {"enum": ["draft", "candidate", "instrumented", "task_validated", "locally_validated", "user_adopted", "human_admitted", "deprecated"]},
+        "proof_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "last_reviewed": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+        "revalidation_triggers": {"$ref": "#/$defs/non_empty_ids"},
+        "retirement_condition": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"archetype": {"const": "capability_led"}}},
+      "then": {
+        "required": ["capability_value", "capability_bindings", "task_projections"],
+        "not": {"required": ["task_contract"]},
+        "properties": {
+          "lineage": {"properties": {"prototype_id": {"const": "researchos_plugin_capability_v1"}}},
+          "admission": {"properties": {"maturity": {"enum": ["candidate", "instrumented", "locally_validated", "human_admitted", "deprecated"]}}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"archetype": {"const": "task_led"}}},
+      "then": {
+        "required": ["task_contract"],
+        "not": {"anyOf": [{"required": ["capability_value"]}, {"required": ["capability_bindings"]}, {"required": ["task_projections"]}]},
+        "properties": {
+          "lineage": {"properties": {"prototype_id": {"const": "researchos_plugin_task_v1"}}},
+          "admission": {"properties": {"maturity": {"enum": ["draft", "instrumented", "task_validated", "user_adopted", "deprecated"]}}}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "non_empty_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "non_empty_strings": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "effect": {
+      "enum": [
+        "read_only",
+        "answer",
+        "artifact",
+        "bounded_runtime_state",
+        "reversible_workspace_write",
+        "review_candidate",
+        "external_state_change"
+      ]
+    },
+    "handoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "availability"],
+      "properties": {
+        "kind": {"enum": ["capability", "task", "core_route", "workflow"]},
+        "id": {"$ref": "#/$defs/id"},
+        "availability": {"enum": ["required", "if_available"]}
+      }
+    }
+  }
+}

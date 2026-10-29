@@ -1,0 +1,70 @@
+name: Bug report
+description: Report a reproducible public-starter bug.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please keep the report public-safe: do not include secrets, private research memory, unpublished work, personal data, or local absolute paths.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong?
+      placeholder: "The dashboard fails to load after running..."
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include the smallest reproducible command or UI path.
+      placeholder: |
+        1. Run `python3 scripts/build_public_starter_data.py --write`
+        2. Run `python3 scripts/start_researchos.py --mode dashboard --port 8880`
+        3. Open `http://127.0.0.1:8880/`
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead?
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, Python version, browser, and relevant runtime mode.
+      placeholder: "macOS 15, Python 3.13, Chrome, dashboard mode"
+  - type: dropdown
+    id: demo_cases
+    attributes:
+      label: Demo case state
+      options:
+        - Demo cases enabled
+        - Demo cases disabled
+        - Not sure
+  - type: textarea
+    id: logs
+    attributes:
+      label: Redacted logs or screenshots
+      description: Include only the shortest useful redacted output. Do not include secrets or private paths.
+      render: text
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Public-safety check
+      options:
+        - label: I removed secrets, credentials, private research memory, unpublished material, personal data, and local absolute paths.
+          required: true

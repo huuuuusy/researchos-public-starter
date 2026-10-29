@@ -1,0 +1,289 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-plugin-v1.schema.json",
+  "title": "ResearchOS Plugin Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "core_api_version",
+    "id",
+    "version",
+    "enabled",
+    "available_in",
+    "execution_profile",
+    "product_tier",
+    "public_safe",
+    "sensitivity_default",
+    "documentation",
+    "authority",
+    "permissions",
+    "contributions",
+    "state_namespace",
+    "lifecycle",
+    "validation"
+  ],
+  "properties": {
+    "schema_id": {"const": "researchos-plugin-v1"},
+    "core_api_version": {"const": "1"},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "enabled": {"type": "boolean"},
+    "available_in": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["private", "public_starter", "personal_vault"]}
+    },
+    "execution_profile": {"enum": ["declarative", "trusted_local", "external_bridge"]},
+    "product_tier": {"enum": ["foundation_projection", "bundled_capability", "optional_extension"]},
+    "public_safe": {"type": "boolean"},
+    "sensitivity_default": {
+      "enum": ["public", "public_safe", "internal", "private", "local_only", "not_exportable"]
+    },
+    "documentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["readme"],
+      "properties": {
+        "readme": {"type": "string", "pattern": "^docs/plugins/[a-z][a-z0-9-]*/README\\.md$"}
+      }
+    },
+    "governance": {"$ref": "researchos-plugin-governance-v1.schema.json"},
+    "authority": {"$ref": "#/$defs/authority"},
+    "permissions": {"$ref": "#/$defs/permissions"},
+    "contributions": {"$ref": "#/$defs/contributions"},
+    "state_namespace": {"type": "string", "pattern": "^researchos\\.plugin\\.[a-z][a-z0-9_]*$"},
+    "lifecycle": {"$ref": "#/$defs/lifecycle"},
+    "validation": {"$ref": "#/$defs/validation"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"execution_profile": {"const": "declarative"}}, "required": ["execution_profile"]},
+      "then": {"properties": {"permissions": {"properties": {"network_domains": {"maxItems": 0}, "command_ids": {"maxItems": 0}}}}}
+    },
+    {
+      "if": {"properties": {"execution_profile": {"const": "trusted_local"}}, "required": ["execution_profile"]},
+      "then": {"properties": {
+        "permissions": {"properties": {"network_domains": {"maxItems": 0}, "command_ids": {"minItems": 1}}},
+        "contributions": {"properties": {"actions": {"items": {"properties": {"execution": {"const": "platform_registered"}}}}}}
+      }}
+    },
+    {
+      "if": {"properties": {"execution_profile": {"const": "external_bridge"}}, "required": ["execution_profile"]},
+      "then": {"properties": {
+        "permissions": {"properties": {"network_domains": {"minItems": 1}, "command_ids": {"maxItems": 0}}},
+        "contributions": {"properties": {"actions": {"items": {"properties": {"execution": {"const": "platform_registered"}}}}}}
+      }}
+    }
+  ],
+  "$defs": {
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "candidate",
+        "confirmation",
+        "save_target",
+        "requires_human_confirmation",
+        "writeback_route",
+        "storage_owner"
+      ],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "candidate": {"type": "string", "minLength": 1},
+        "confirmation": {"type": "string", "minLength": 1},
+        "save_target": {"type": "string", "minLength": 1},
+        "locales": {"$ref": "#/$defs/authority_locales"},
+        "requires_human_confirmation": {"const": true},
+        "writeback_route": {"const": "review"},
+        "storage_owner": {"const": "researchos_core"}
+      }
+    },
+    "authority_locales": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["en", "zh-CN"],
+      "properties": {
+        "en": {"$ref": "#/$defs/authority_locale"},
+        "zh-CN": {"$ref": "#/$defs/authority_locale"}
+      }
+    },
+    "authority_locale": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "candidate", "confirmation", "save_target"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "candidate": {"type": "string", "minLength": 1},
+        "confirmation": {"type": "string", "minLength": 1},
+        "save_target": {"type": "string", "minLength": 1}
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["read_paths", "network_domains", "command_ids", "state_access", "canonical_write"],
+      "properties": {
+        "read_paths": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "network_domains": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "command_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
+        "state_access": {"enum": ["none", "namespaced_local"]},
+        "canonical_write": {"const": false}
+      }
+    },
+    "contribution": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}
+      }
+    },
+    "task_contribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "task"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "task": {"type": "object"}
+      }
+    },
+    "action_contribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "handler", "surface", "execution", "effect"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "handler": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "surface": {"enum": ["start", "library", "overlay", "utility", "review", "workbench"]},
+        "execution": {"enum": ["client", "platform_registered", "review"]},
+        "effect": {"enum": ["read_only", "answer", "artifact", "bounded_runtime_state", "reversible_workspace_write", "review_candidate", "external_state_change"]},
+        "confirmation_mode": {"enum": ["inline", "review"]},
+        "risk": {"enum": ["low", "medium", "high"]},
+        "write_scope": {"enum": ["none", "session_state", "attention_state", "lifecycle_state", "durable_content"]},
+        "reversible": {"type": "boolean"},
+        "public_behavior": {"enum": ["enabled", "demo_only", "disabled"]}
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": ["confirmation_mode"],
+            "properties": {"confirmation_mode": {"const": "inline"}}
+          },
+          "then": {
+            "required": ["risk", "write_scope", "reversible", "public_behavior"],
+            "properties": {
+              "execution": {"const": "platform_registered"},
+              "write_scope": {"enum": ["session_state", "attention_state", "lifecycle_state"]},
+              "reversible": {"const": true},
+              "public_behavior": {"enum": ["demo_only", "disabled"]}
+            }
+          }
+        }
+      ]
+    },
+    "work_item_provider_contribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "projection_id", "adapter", "optional", "public_behavior"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "projection_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "adapter": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "optional": {"type": "boolean"},
+        "public_behavior": {"enum": ["enabled", "demo_only", "disabled"]}
+      }
+    },
+    "projection_contribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source", "schema_id", "version", "sensitivity", "freshness", "export_fields"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "source": {"type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)*$"},
+        "optional": {"type": "boolean"},
+        "schema_id": {"const": "researchos-projection-envelope-v1"},
+        "version": {"const": "1"},
+        "sensitivity": {"enum": ["public", "public_safe", "internal", "private", "local_only", "not_exportable"]},
+        "freshness": {"enum": ["snapshot", "live"]},
+        "export_fields": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^(?:\\$|[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)*)$"}
+        }
+      }
+    },
+    "ui_slot_locale": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "hint"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "hint": {"type": "string", "minLength": 1}
+      }
+    },
+    "ui_slot_contribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "slot", "surface", "region", "adapter", "order", "projection_ids", "action_ids", "locales"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "slot": {"enum": ["utility", "review", "workbench", "library"]},
+        "surface": {"enum": ["start", "library", "overlay"]},
+        "region": {"enum": ["primary", "context", "task", "governance", "utility"]},
+        "adapter": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "order": {"type": "integer", "minimum": 0, "maximum": 1000},
+        "projection_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
+        "action_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
+        "locales": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["en", "zh-CN"],
+          "properties": {
+            "en": {"$ref": "#/$defs/ui_slot_locale"},
+            "zh-CN": {"$ref": "#/$defs/ui_slot_locale"}
+          }
+        }
+      }
+    },
+    "contributions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tasks", "actions", "candidate_types", "asset_types", "source_adapters", "previewers", "projections", "ui_slots"],
+      "properties": {
+        "tasks": {"type": "array", "items": {"$ref": "#/$defs/task_contribution"}},
+        "actions": {"type": "array", "items": {"$ref": "#/$defs/action_contribution"}},
+        "candidate_types": {"type": "array", "items": {"$ref": "#/$defs/contribution"}},
+        "asset_types": {"type": "array", "items": {"$ref": "#/$defs/contribution"}},
+        "source_adapters": {"type": "array", "items": {"$ref": "#/$defs/contribution"}},
+        "previewers": {"type": "array", "items": {"$ref": "#/$defs/contribution"}},
+        "projections": {"type": "array", "items": {"$ref": "#/$defs/projection_contribution"}},
+        "work_item_providers": {"type": "array", "items": {"$ref": "#/$defs/work_item_provider_contribution"}},
+        "ui_slots": {"type": "array", "items": {"$ref": "#/$defs/ui_slot_contribution"}}
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["install", "enable", "disable", "uninstall", "migrations"],
+      "properties": {
+        "install": {"enum": ["core_bundled", "release_bundled", "manifest_present"]},
+        "enable": {"enum": ["runtime_scope", "manifest_flag"]},
+        "disable": {"enum": ["runtime_scope", "manifest_flag"]},
+        "uninstall": {"enum": ["core_release_change", "release_change", "remove_manifest"]},
+        "migrations": {"type": "array", "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}}
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commands", "behavior_tests"],
+      "properties": {
+        "commands": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "behavior_tests": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

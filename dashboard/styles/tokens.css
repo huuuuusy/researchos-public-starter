@@ -1,0 +1,117 @@
+/* ResearchOS maintenance header.
+ * 中文：全局设计 token 层，集中管理颜色、半径、阴影、宽度和语义状态变量。
+ * English: Global design-token layer for colors, radius, shadows, widths, and semantic status variables.
+ */
+
+:root {
+  color-scheme: light;
+  --page: #f2f2f7;
+  --page-soft: #f8f8fb;
+  --surface: rgba(255, 255, 255, 0.9);
+  --surface-solid: #ffffff;
+  --surface-muted: #ffffff;
+  --chrome-panel-border: 1px solid rgba(60, 60, 67, 0.105);
+  --chrome-panel-border-top: rgba(255, 255, 255, 0.96);
+  --chrome-panel-surface: rgba(255, 255, 255, 0.9);
+  --chrome-card-border: 1px solid rgba(60, 60, 67, 0.1);
+  --chrome-card-surface: rgba(255, 255, 255, 0.78);
+  --chrome-subtle-border: 1px solid rgba(60, 60, 67, 0.08);
+  --ink: #3d3d43;
+  --ink-strong: #303035;
+  --muted: #62646d;
+  --muted-soft: #6b6d76;
+  --hairline: rgba(60, 60, 67, 0.095);
+  --hairline-strong: rgba(60, 60, 67, 0.16);
+  --blue: #1b74d2;
+  --blue-strong: #155fae;
+  --blue-soft: rgba(27, 116, 210, 0.085);
+  --control-accent: #0a6fc8;
+  --control-accent-rgb: 10, 132, 255;
+  --control-accent-border: rgba(var(--control-accent-rgb), 0.28);
+  --control-accent-soft: rgba(var(--control-accent-rgb), 0.06);
+  --control-hover-border: rgba(var(--control-accent-rgb), 0.18);
+  --control-focus-outline: 2px solid rgb(var(--control-accent-rgb)); /* solid accent: about 3.7:1 on white, the 3:1 WCAG asks of a focus indicator */
+  --control-focus-halo: 0 0 0 4px rgba(var(--control-accent-rgb), 0.12);
+  --control-progress-gradient: linear-gradient(90deg, rgba(var(--control-accent-rgb), 0.54), rgba(var(--accent-intake-rgb), 0.38));
+  --green: #22865f;
+  --red: #b14a3d;
+  --status-ok: var(--green);
+  --status-ok-rgb: 34, 134, 95;
+  --status-warn-rgb: 184, 102, 23;
+  --status-risk: var(--red);
+  --status-risk-rgb: 177, 74, 61;
+  --status-info-rgb: var(--control-accent-rgb);
+  --status-info-text: #276cae;
+  --status-info-border: rgba(var(--status-info-rgb), 0.18);
+  --status-info-soft: rgba(var(--status-info-rgb), 0.075);
+  --status-warn-text: #9a5a12;
+  --status-warn-border: rgba(255, 149, 0, 0.18);
+  --status-warn-soft: rgba(255, 149, 0, 0.08);
+  --status-success-text: #24683f;
+  --status-warning-text: var(--status-warn-text);
+  --status-risk-text: #a33a32;
+  --accent-paper: #007aff;
+  --accent-paper-rgb: 0, 122, 255;
+  --accent-feedback: #ff9f0a;
+  --accent-feedback-rgb: 255, 159, 10;
+  --accent-confirmation: #30b0c7;
+  --accent-confirmation-rgb: 48, 176, 199;
+  --accent-intake: #5e5ce6;
+  --accent-intake-rgb: 94, 92, 230;
+  --accent-upgrade: #5856d6;
+  --accent-upgrade-rgb: 88, 86, 214;
+  --accent-scout: #34c759;
+  --accent-scout-rgb: 52, 199, 89;
+  --accent-group: #af52de;
+  --accent-group-rgb: 175, 82, 222;
+  --accent-danger: #ff453a;
+  --accent-danger-rgb: 255, 69, 58;
+  --accent-task: #64a7ff;
+  --accent-task-rgb: 100, 167, 255;
+  --accent-archive: #8e8e93;
+  --accent-archive-rgb: 142, 142, 147;
+  --accent-project-rgb: 76, 126, 92;
+  --graph-primary-rgb: 0, 113, 227;
+  --graph-bridge-rgb: 52, 199, 89;
+  --radius-xs: 10px;
+  --radius-sm: 16px;
+  --radius-md: 20px;
+  --radius-lg: 26px;
+  --shadow-soft: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 1px 2px rgba(0, 0, 0, 0.035);
+  --shadow-lift: 0 1px 0 rgba(255, 255, 255, 0.94) inset, 0 12px 28px rgba(0, 0, 0, 0.075);
+  --shadow-button: 0 1px 0 rgba(255, 255, 255, 0.92) inset, 0 1px 2px rgba(0, 0, 0, 0.035);
+  --font: ui-rounded, "SF Pro Rounded", "SF Pro Text", -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+  /* Compatibility aliases keep legacy view modules on the canonical semantic palette. */
+  --line: var(--hairline);
+  --panel: var(--surface-solid);
+  --text: var(--ink);
+  --accent: var(--blue);
+  --accent-soft: var(--blue-soft);
+  --warning-soft: var(--status-warn-soft);
+  --content: 1228px;
+  --topbar-height: 58px;
+}
+
+html[data-theme],
+html[data-theme="green"],
+html[data-theme="violet"],
+html[data-theme="slate"],
+html[data-theme="warm"],
+html[data-theme="paper"],
+html[data-theme="mist"],
+html[data-theme="sage"],
+html[data-theme="clay"],
+html[data-theme="midnight"] {
+  --page: #f2f2f7;
+  --page-soft: #f8f8fb;
+  --surface: rgba(255, 255, 255, 0.9);
+  --surface-muted: #ffffff;
+  --ink: #3d3d43;
+  --ink-strong: #303035;
+  --muted: #62646d;
+  --muted-soft: #6b6d76;
+  --hairline: rgba(60, 60, 67, 0.095);
+  --blue: #1b74d2;
+  --blue-strong: #155fae;
+}

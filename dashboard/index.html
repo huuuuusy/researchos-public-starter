@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en" data-client-profile="public_explanatory_v1" data-default-language="en" data-server-url="http://127.0.0.1:8880/">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ResearchOS</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="src/core/edition-profile.js"></script>
+    <script src="src/core/contracts.js"></script>
+    <script src="src/core/state.js"></script>
+    <script src="src/core/storage-contract.js"></script>
+    <script src="src/core/surface-contract.js"></script>
+    <script src="src/services/action-gateway.js"></script>
+    <script src="src/core/view-state.js"></script>
+    <script src="src/core/ui-preferences.js"></script>
+    <script src="src/core/service-mode.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#mainContent" data-action-kind="navigation" data-i18n="a11y.skipToMain">跳到主要内容</a>
+    <header class="topbar">
+      <div>
+        <h1>ResearchOS</h1>
+        <p id="subtitle">Local dashboard</p>
+      </div>
+      <div class="top-actions">
+        <div class="theme-picker" id="themePicker" aria-label="Theme color"></div>
+        <nav class="workspace-switcher" aria-label="兼容工作区（Unified Desk 已接管）" data-i18n-aria-label="a11y.workspaceNav" role="tablist" hidden aria-hidden="true">
+          <button type="button" id="workspace-tab-now" role="tab" aria-controls="workspace-panel-now" aria-selected="true" tabindex="-1" data-action-kind="navigation" aria-label="现在">现在</button>
+          <button type="button" id="workspace-tab-library" role="tab" aria-controls="workspace-panel-library" aria-selected="false" tabindex="-1" data-action-kind="navigation" aria-label="资料">资料</button>
+        </nav>
+        <label class="language-select">
+          <span data-i18n="controls.language">Interface language</span>
+          <select id="languageSelect" data-i18n-aria-label="controls.language" aria-label="Interface language"></select>
+        </label>
+        <div class="status" id="generatedAt">Loading</div>
+      </div>
+    </header>
+    <div class="service-mode-banner" id="serviceModeBanner" hidden>
+      <span data-i18n="serviceMode.fileTitle">当前是文件预览模式</span>
+      <p data-i18n="serviceMode.fileBody">自动更新、自动调研和 Markdown 预览需要通过本地服务访问。</p>
+      <a href="http://127.0.0.1:8880/" data-action-kind="navigation" data-i18n="serviceMode.openServer">打开服务版</a>
+    </div>
+
+    <main id="mainContent" tabindex="-1">
+      <div class="dashboard-shell simplified-shell clarity-shell">
+        <div class="dashboard-content">
+      <div class="workspace-layout" data-public-unified-desk data-research-desk-root>
+        <section class="unified-desk" data-unified-desk data-runtime-scope="public_starter" data-self-person-aliases="You|你" data-authority-owner="User confirmation + public-safe local Markdown owners" aria-labelledby="desk-heading">
+          <header class="desk-heading">
+            <div><p class="eyebrow" data-desk-copy="workspaceLabel">安排 · 探索 · 接续</p><h2 id="desk-heading" data-desk-copy="deskTitle">研究事项时间台</h2></div>
+            <div class="desk-controls">
+              <div class="calendar-view-switch" aria-label="日历视图" data-desk-copy-aria="calendarView"><button type="button" data-action-kind="direct" data-calendar-view="day" data-desk-copy="day">日</button><button type="button" data-action-kind="direct" data-calendar-view="week" aria-pressed="true" data-desk-copy="week">周</button><button type="button" data-action-kind="direct" data-calendar-view="month" data-desk-copy="month">月</button></div>
+              <div class="desk-navigation"><button id="previous-period" type="button" data-action-kind="direct" aria-label="上一个时间段" data-desk-copy-aria="previous">‹</button><button id="current-period" type="button" data-action-kind="direct" data-desk-copy="today">今天</button><button id="next-period" type="button" data-action-kind="direct" aria-label="下一个时间段" data-desk-copy-aria="next">›</button></div>
+            </div>
+          </header>
+          <output id="prototype-status" class="unified-desk-status" aria-live="polite">正在读取本地投影…</output>
+          <div class="desk-planning-grid">
+          <section class="desk-tray" aria-labelledby="tray-heading">
+            <header><div><h3 id="tray-heading">未安排在本周</h3><p data-desk-copy="trayHint">卡片只显示题目。拖到下面某一天，或点开后选择日期。</p></div><strong id="tray-count">0</strong></header>
+            <label class="desk-search"><span data-desk-copy="taskSearch">搜索研究事项</span><input id="desk-task-search" type="search" data-desk-copy-aria="taskSearch" aria-label="搜索研究事项" autocomplete="off" /></label>
+            <div class="desk-segment" aria-label="事项筛选" data-desk-copy-aria="taskScope"><button type="button" data-task-filter="outside" aria-pressed="true" data-desk-copy="outside" data-action-kind="direct">本期之外</button><button type="button" data-task-filter="all" aria-pressed="false" data-desk-copy="all" data-action-kind="direct">全部</button><button type="button" data-task-filter="attention" aria-pressed="false" data-desk-copy="attention" data-action-kind="direct">需关注</button></div>
+            <div id="desk-tray" class="title-card-tray"></div>
+          </section>
+          <section class="desk-calendar" aria-labelledby="calendar-heading">
+            <header><div><h3 id="calendar-heading">本周</h3><p id="calendar-range">—</p></div><p class="calendar-boundary" data-desk-copy="calendarBoundary">拖拽只安排 attention，不改变 deadline 或项目状态。</p></header>
+            <div id="desk-calendar" class="calendar-week-grid" data-research-calendar></div>
+          </section>
+          </div>
+          <section id="resource-library" class="resource-library" aria-labelledby="resource-library-heading">
+            <header><div><p class="eyebrow" data-desk-copy="materialsLabel">从已有积累出发</p><h3 id="resource-library-heading" data-desk-copy="libraryTitle">资源库</h3><p data-desk-copy="libraryHint">卡牌盒子是可复用组件库。选中事项后会标出已联动、关系候选与未关联组件；点卡牌只查看关系。</p></div></header>
+            <div class="desk-segment resource-scope" aria-label="资源范围" data-desk-copy-aria="resourceScope"><button type="button" data-resource-filter="all" aria-pressed="true" data-desk-copy="all" data-action-kind="direct">全部</button><button type="button" data-resource-filter="related" aria-pressed="false" data-desk-copy="related" disabled data-action-kind="direct">相关</button><button type="button" data-resource-filter="selected" aria-pressed="false" data-desk-copy="selected" data-action-kind="direct">本轮选取</button></div>
+            <p class="resource-library-status"><span><span data-desk-copy="linked">已联动</span> <strong id="resource-linked-count">0</strong></span><span><span data-desk-copy="candidate">候选</span> <strong id="resource-candidate-count">0</strong></span><span><span data-desk-copy="handoff">本轮交接</span> <strong id="resource-count">0</strong>/3</span><span id="resource-context-note">选择事项查看组成，也可直接点组件反查事项。</span></p>
+            <div id="resource-card-boxes"></div>
+            <p id="resource-empty" class="empty-state" data-desk-copy="emptyResources" hidden>没有匹配的资源。切换全部或清空搜索继续浏览。</p>
+            <section id="exploration-bar" class="exploration-bar" hidden aria-labelledby="exploration-label">
+              <div><h4 id="exploration-label"><span data-desk-copy="exploration">本轮探索</span> <span id="exploration-count">0</span>/3</h4><p id="exploration-selection"></p><small data-desk-copy="explorationHint">尚未绑定事项 · 仅在本页保留选取与草稿</small></div>
+              <label class="desk-search"><span data-desk-copy="explorationIntent">这次想了解什么？</span><textarea id="exploration-intent" rows="2" maxlength="2000" data-desk-copy-aria="explorationIntent" aria-label="这次想了解什么？"></textarea></label>
+              <div class="drawer-actions"><button id="prepare-exploration" type="button" class="primary" data-desk-copy="previewExploration" disabled data-action-kind="direct">预览探索交接</button><button id="clear-exploration" type="button" data-desk-copy="clearSelection" data-action-kind="direct">清空选取</button></div>
+            </section>
+          </section>
+        </section>
+        <aside id="item-drawer" class="item-drawer" aria-labelledby="drawer-title" hidden>
+          <header><div><p id="drawer-lens-label" class="eyebrow">Product lens</p><h2 id="drawer-title" data-desk-copy="itemDetails">事项详情</h2></div><div class="drawer-header-actions"><button id="back-to-item" type="button" data-action-kind="navigation" hidden data-desk-copy="back">返回事项</button><button id="close-drawer" type="button" data-action-kind="direct" aria-label="关闭详情" data-desk-copy-aria="closeDetails" data-desk-copy="close">关闭</button></div></header>
+          <div class="drawer-content">
+            <section data-lens-section="item" data-drawer-field="what"><small data-desk-copy="currentState">当前研究状态</small><div id="drawer-what"></div></section>
+            <section data-lens-section="item" data-drawer-field="how"><small data-desk-copy="nextAction">下一步与完成标准</small><div id="drawer-how"></div></section>
+            <section class="composition-panel" data-lens-section="item" data-drawer-field="with-what"><small data-desk-copy="researchContext">相关依据与资源</small><div id="drawer-composition-summary"></div><div class="component-group"><header><h3 data-desk-copy="linkedComponents">已联动组件</h3><strong id="confirmed-component-count">0</strong></header><div id="drawer-confirmed-components" class="component-list"></div></div><div class="component-group"><header><h3 data-desk-copy="candidateComponents">可增加组件</h3><strong id="candidate-component-count">0</strong></header><div id="drawer-candidate-components" class="component-list"></div></div><div class="component-group handoff-group"><header><h3 data-desk-copy="toCodex">本轮交给 Agent 客户端</h3><strong><span id="handoff-component-count">0</span>/3</strong></header><div id="drawer-handoff-components" class="component-list"></div></div><a href="#resource-library" data-action-kind="navigation" data-desk-copy="browse">浏览下方全部组件</a></section>
+            <section data-lens-section="item" data-drawer-field="when"><small data-desk-copy="attentionPlan">安排关注时间</small><div id="drawer-when"></div></section>
+            <section data-lens-section="item" data-drawer-field="who"><small data-desk-copy="responsibility">责任与协作</small><div id="drawer-who"></div></section>
+
+            <section data-lens-section="component" hidden><small data-desk-copy="cardContent">卡片内容</small><div id="component-content"></div></section><section data-lens-section="component" hidden><small data-desk-copy="cardLevel">等级与增强</small><div id="component-maturity"></div></section><section class="component-lens-panel" data-lens-section="component" hidden><small data-desk-copy="componentIdentity">来源与关系</small><div id="component-identity"></div><div class="component-group"><header><h3 data-desk-copy="supported">已对应或支持的事项</h3></header><div id="component-confirmed-items" class="component-list"></div></div><div class="component-group"><header><h3 data-desk-copy="possible">可能支持的事项</h3></header><div id="component-candidate-items" class="component-list"></div></div><div id="component-current-relation"></div><div id="component-actions" class="drawer-actions"></div></section>
+          </div>
+          <footer><button id="open-item-review" type="button" data-action-kind="navigation" data-desk-copy="reviewResults">结果与审阅</button><button id="prepare-handoff" class="primary primary-action" type="button" data-action-kind="preview-confirm" data-desk-copy="prepare">预览 Agent 交接包</button></footer>
+        </aside>
+      </div>
+
+      <dialog id="handoff-dialog" class="handoff-dialog" aria-labelledby="handoff-title">
+        <header><div><p class="eyebrow" data-desk-copy="prepareContext">准备研究上下文</p><h2 id="handoff-title" data-desk-copy="handoffTitle">Agent 交接预览</h2></div><button id="close-handoff" type="button" data-action-kind="direct" data-desk-copy="close">关闭</button></header>
+        <div id="handoff-overview" class="handoff-overview"></div><div id="route-summary" class="route-summary"></div><details class="handoff-technical"><summary data-desk-copy="completePacket">查看完整交接文本与技术信息</summary><pre id="handoff-preview" tabindex="0"></pre></details>
+        <footer><output id="copy-status" aria-live="polite"></output><button id="copy-handoff" class="primary primary-action" type="button" data-action-kind="handoff" data-desk-copy="copy">复制交接文本</button></footer>
+      </dialog>
+
+      <section class="workspace-panel assets-home-panel" id="workspace-panel-library" role="tabpanel" aria-labelledby="workspace-tab-library" tabindex="-1" data-workspace-panel="library" hidden>
+        <article class="panel asset-overview-panel">
+          <div class="panel-head">
+            <h2 data-i18n="sections.assetOverview">资料</h2>
+            <span data-i18n="sections.assetOverviewHint">按明确事项查看并组合相关研究对象；这里只补上下文，不承载日历或项目状态</span>
+          </div>
+          <div id="assetOverview" class="asset-overview-view" data-plugin-slot-host="library"></div>
+        </article>
+
+        <div id="pluginUtilitySlots" data-plugin-slot-host="utility" hidden></div>
+      </section>
+
+      <section class="workspace-panel active-home-panel clarity-home-panel" id="workspace-panel-now" role="tabpanel" aria-labelledby="workspace-tab-now" tabindex="-1" data-workspace-panel="now" hidden aria-hidden="true">
+        <article class="panel command-panel judgment-panel">
+          <div class="panel-head">
+            <h2 data-i18n="sections.commandCenter">现在</h2>
+            <span data-i18n="sections.commandCenterHint">扫描多个研究承诺；每一项只保留一个当前处置和下一步</span>
+          </div>
+          <div id="homeCommandCenter" class="home-command-center"></div>
+        </article>
+      </section>
+
+      <details class="panel work-surface-panel item-execution-drawer" data-item-execution-drawer data-execution-panel="work">
+        <summary><div><strong data-i18n="sections.unifiedInbox">事项执行与复核</strong><small data-execution-item-summary aria-live="polite">请从 Now 或 Library 选择一个明确事项；未选择时不会猜测当前项目，也不会启用长期写入。</small></div><span class="item-execution-mode" data-execution-panel-label>Work</span></summary>
+        <div class="item-execution-identity" data-execution-item-identity hidden></div>
+        <div class="item-execution-tabs" data-execution-tabs role="tablist" aria-label="Item Work and Review" hidden><button type="button" id="itemExecutionWorkTab" role="tab" aria-controls="workSessionSurface" aria-selected="true" data-action-kind="direct" data-execution-tab="work">Work</button><button type="button" id="itemExecutionReviewTab" role="tab" aria-controls="unifiedInbox" aria-selected="false" data-action-kind="direct" data-execution-tab="review" tabindex="-1">Review</button></div>
+        <div class="work-surface-content"><div id="workSessionSurface" class="work-session-surface" role="tabpanel" aria-labelledby="itemExecutionWorkTab"></div><div id="unifiedInbox" class="unified-inbox-view" role="tabpanel" aria-labelledby="itemExecutionReviewTab" hidden></div></div>
+      </details>
+        </div>
+
+        <button
+          type="button"
+          class="preview-resize-handle"
+          id="previewResizeHandle"
+          data-action-kind="direct"
+          aria-label="调整预览宽度"
+          data-i18n-aria-label="preview.resizeHandle"
+          aria-controls="markdownPreviewPanel"
+          title="拖动调整预览宽度"
+          data-i18n-title="preview.resizeHandle"
+        ></button>
+
+        <aside class="markdown-preview-panel" id="markdownPreviewPanel">
+          <div class="panel-head">
+            <div>
+              <h2 data-i18n="preview.title">证据预览</h2>
+              <span data-i18n="preview.hint">按需审阅本地证据</span>
+            </div>
+            <button type="button" class="preview-collapse" id="previewCollapse" data-action-kind="direct" data-i18n="preview.hide" aria-controls="markdownPreview" aria-expanded="false">隐藏</button>
+          </div>
+          <div id="markdownPreview" class="markdown-preview"></div>
+        </aside>
+      </div>
+      <footer class="legal-footer" aria-label="ResearchOS copyright and license">
+        <div>
+          <strong>Copyright © 2026 Shiyu Hu. All rights reserved.</strong>
+          <p>
+            ResearchOS is source-available for personal, academic, and non-commercial use only.
+            Commercial use requires prior written permission from Shiyu Hu.
+          </p>
+          <p>
+            版权所有 © 2026 Shiyu Hu。仅限个人、学术与非商业使用；商用须事先获得 Shiyu Hu 书面授权。
+          </p>
+        </div>
+        <div class="legal-footer-links">
+          <span>Developer: Shiyu Hu</span>
+          <a href="https://huuuuusy.github.io/" target="_blank" rel="noreferrer" data-action-kind="navigation">huuuuusy.github.io</a>
+          <a href="mailto:shiyu.hu@ntu.edu.sg" data-action-kind="navigation">shiyu.hu@ntu.edu.sg</a>
+          <span>License: ResearchOS Source-Available Research License</span>
+          <a href="../LICENSE.md" target="_blank" rel="noreferrer" data-action-kind="navigation">LICENSE.md</a>
+          <small>Patent and other proprietary rights reserved unless separately granted.</small>
+        </div>
+      </footer>
+    </main>
+
+    <script src="src/core/ui.js"></script>
+    <script src="src/services/request-auth.js"></script>
+    <script src="src/services/clipboard-workbench.js"></script>
+    <script src="src/services/app-copy-actions.js"></script>
+    <script src="src/core/interactions.js"></script>
+    <script src="src/core/ui-copy-profile.js"></script>
+    <script src="src/core/i18n.js"></script>
+    <script src="src/core/ui-copy-work-session.js"></script>
+    <script src="src/core/ui-copy.js"></script>
+    <script src="src/core/i18n-runtime.js"></script>
+    <script src="src/core/theme.js"></script>
+    <script src="src/core/workspace-routing.js"></script>
+    <script src="src/services/confirmation-state.js"></script>
+    <script src="src/services/confirmation-client.js"></script>
+    <script src="src/services/inbox.js"></script>
+    <script src="src/services/runtime-profile-projection.js"></script>
+    <script src="src/services/result-envelope.js"></script>
+    <script src="src/services/codex-runner-client.js"></script>
+    <script src="src/services/model-catalog.js"></script>
+    <script src="src/services/preview.js"></script>
+    <script src="src/services/preview-content-client.js"></script>
+    <script src="src/services/preview-markdown.js"></script>
+    <script src="src/services/preview-feedback.js"></script>
+    <script src="src/services/feedback-client.js"></script>
+    <script src="src/services/preview-feedback-workflow.js"></script>
+    <script src="src/services/preview-documents.js"></script>
+    <script src="src/core/preview-state.js"></script>
+    <script src="src/services/preview-session-state.js"></script>
+    <script src="src/services/preview-surface-workbench.js"></script>
+    <script src="src/services/preview-pdf-workbench.js"></script>
+    <script src="src/services/maintenance-workbench.js"></script>
+    <script src="src/services/maintenance-client.js"></script>
+    <script src="src/services/command-list-workbench.js"></script>
+    <script src="src/services/markdown-preview-workbench.js"></script>
+    <script src="src/services/preview-workbench.js"></script>
+    <script src="src/services/material-intake-workbench.js"></script>
+    <script src="src/services/onboarding-workbench.js"></script>
+    <script src="src/services/action-inbox-state.js"></script>
+    <script src="src/services/queue-sync.js"></script>
+    <script src="src/services/doing-board-state.js"></script>
+    <script src="src/services/codex-run-router.js"></script>
+    <script src="src/services/task-intent.js"></script>
+    <script src="src/services/handoff-receipt-projection.js"></script>
+    <script src="src/services/handoff-admit-surface.js"></script>
+    <script src="src/services/work-session-router.js"></script>
+    <script src="src/services/work-session-client.js"></script>
+    <script src="src/services/work-session-state.js"></script>
+    <script src="src/services/context-pack-projection.js"></script>
+    <script src="src/services/work-session-workbench.js"></script>
+    <script src="src/services/asset-overview-model.js"></script>
+    <script src="src/services/item-composition-model.js"></script>
+    <script src="src/services/codex-thread-router.js"></script>
+    <script src="src/services/handoff-composer.js"></script>
+    <script src="src/services/asset-overview-workbench.js"></script>
+    <script src="src/services/paper-field-rules.js"></script>
+    <script src="src/services/workspace-shell-workbench.js"></script>
+    <script src="src/services/plugin-runtime.js"></script>
+    <script src="src/services/plugin-host.js"></script>
+    <script src="src/services/dashboard-render-plan.js"></script>
+    <script src="src/services/dashboard-lifecycle-adapter.js"></script>
+    <script src="src/services/dashboard-data-client.js"></script>
+    <script src="src/services/daily-profile-refresh-client.js"></script>
+    <script src="src/services/agent-prompt.js"></script>
+    <script src="src/services/card-group-seeds.js"></script>
+    <script src="src/services/card-groups.js"></script>
+    <script src="src/services/card-group-state.js"></script>
+    <script src="src/services/unified-inbox-workbench.js"></script>
+    <script src="src/components/buttons.js"></script>
+    <script src="src/components/empty-state.js"></script>
+    <script src="src/components/preview-links.js"></script>
+    <script src="src/components/metric-primitives.js"></script>
+    <script src="src/components/segmented-control.js"></script>
+    <script src="src/views/error-page.js"></script>
+    <script src="src/views/markdown-preview.js"></script>
+    <script src="src/views/pdf-preview.js"></script>
+    <script src="src/views/maintenance.js"></script>
+    <script src="src/views/handoff-receipt.js"></script>
+    <script src="src/views/handoff-admit-surface.js"></script>
+    <script src="src/views/work-session.js"></script>
+    <script src="src/views/home-command-center.js"></script>
+    <script src="src/views/external-evidence.js"></script>
+    <script src="src/views/material-intake.js"></script>
+    <script src="src/views/onboarding.js"></script>
+    <script src="src/views/asset-overview.js"></script>
+    <script src="src/views/runtime-profile.js"></script>
+    <script src="src/views/unified-inbox.js"></script>
+    <script src="src/plugins/system-stewardship.js"></script>
+    <script src="src/plugins/material-pipeline.js"></script>
+    <script src="src/plugins/research-assets.js"></script>
+    <script src="src/plugins/research-portfolio-copy.js"></script>
+    <script src="src/plugins/research-portfolio-model.js"></script>
+    <script src="src/plugins/research-portfolio-view.js"></script>
+    <script src="src/plugins/research-portfolio-workbench.js"></script>
+    <script src="src/plugins/research-portfolio.js"></script>
+    <script src="src/plugins/unified-desk-calendar.js"></script>
+    <script src="src/plugins/unified-desk-handoff.js"></script>
+    <script src="src/plugins/unified-research-desk.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

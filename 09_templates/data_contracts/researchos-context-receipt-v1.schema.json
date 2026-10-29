@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-context-receipt-v1.schema.json",
+  "title": "ResearchOS ContextReceipt v1",
+  "description": "A digest-only audit receipt that keeps requested, authorized, selected, delivered, observed, cited, excluded, and egress evidence separate. It is not an authorization input.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "receipt_id", "task_id", "run_id", "runtime_scope", "producer", "sources", "rejected_claims"],
+  "properties": {
+    "schema_id": {"const": "researchos-context-receipt-v1"},
+    "receipt_id": {"type": "string", "pattern": "^ctx:[0-9a-f]{64}$"},
+    "task_id": {"type": "string", "pattern": "^task:[0-9a-f]{64}$"},
+    "run_id": {"type": "string", "minLength": 1, "maxLength": 160},
+    "runtime_scope": {"enum": ["private", "public_starter", "personal_vault"]},
+    "producer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "surface", "evidence_class"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1, "maxLength": 120},
+        "surface": {"type": "string", "minLength": 1, "maxLength": 120},
+        "evidence_class": {"enum": ["client_asserted", "server_recorded", "instrumented", "human_attested"]}
+      }
+    },
+    "sources": {
+      "type": "array", "maxItems": 20,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["source_id", "kind", "ref_digest", "label_digest", "requested", "authorization", "selection", "delivery", "observation", "citation", "exclusion", "egress"],
+        "properties": {
+          "source_id": {"type": "string", "pattern": "^src:[0-9a-f]{64}$"},
+          "kind": {"type": "string", "minLength": 1, "maxLength": 80},
+          "ref_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "label_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "requested": {"type": "boolean"},
+          "authorization": {"$ref": "#/$defs/authorization"},
+          "selection": {"$ref": "#/$defs/selection"},
+          "delivery": {"$ref": "#/$defs/delivery"},
+          "observation": {"$ref": "#/$defs/observation"},
+          "citation": {"$ref": "#/$defs/citation"},
+          "exclusion": {"$ref": "#/$defs/exclusion"},
+          "egress": {"$ref": "#/$defs/egress"}
+        }
+      }
+    },
+    "rejected_claims": {
+      "type": "array", "maxItems": 140,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["source_id", "axis", "code"],
+        "properties": {
+          "source_id": {"type": "string", "pattern": "^src:[0-9a-f]{64}$"},
+          "axis": {"enum": ["authorization", "selection", "delivery", "observation", "citation", "exclusion", "egress"]},
+          "code": {"const": "untrusted_claim_rejected"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "axisBase": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "evidence_ref"],
+      "properties": {
+        "state": {"type": "string"},
+        "evidence_ref": {"type": "string", "maxLength": 160}
+      }
+    },
+    "authorization": {"allOf": [{"$ref": "#/$defs/axisBase"}, {"properties": {"state": {"enum": ["unknown", "unauthorized", "authorized"]}}}]},
+    "selection": {"allOf": [{"$ref": "#/$defs/axisBase"}, {"properties": {"state": {"enum": ["unknown", "not_selected", "selected"]}}}]},
+    "delivery": {"allOf": [{"$ref": "#/$defs/axisBase"}, {"properties": {"state": {"enum": ["unknown", "not_delivered", "delivered"]}}}]},
+    "observation": {"allOf": [{"$ref": "#/$defs/axisBase"}, {"properties": {"state": {"enum": ["unknown", "not_observed", "observed"]}}}]},
+    "citation": {"allOf": [{"$ref": "#/$defs/axisBase"}, {"properties": {"state": {"enum": ["unknown", "not_cited", "cited"]}}}]},
+    "exclusion": {"allOf": [{"$ref": "#/$defs/axisBase"}, {"properties": {"state": {"enum": ["unknown", "not_excluded", "excluded"]}}}]},
+    "egress": {"allOf": [{"$ref": "#/$defs/axisBase"}, {"properties": {"state": {"enum": ["unknown", "not_egressed", "egressed"]}}}]}
+  }
+}

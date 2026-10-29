@@ -1,0 +1,37 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard 样式入口；只声明 CSS layer 与 import 顺序，具体样式归属 dashboard/styles。
+ * English: ResearchOS dashboard style entrypoint; declares CSS layers and import order while concrete styles live under dashboard/styles.
+ */
+
+@import url("./styles/tokens.css") layer(tokens);
+@import url("./styles/base.css") layer(reset);
+@import url("./styles/shell.css") layer(shell);
+@import url("./styles/shell/topbar.css") layer(shell);
+@import url("./styles/shell/workspace.css") layer(shell);
+@import url("./styles/components/panels.css") layer(components);
+@import url("./styles/components/empty-state.css") layer(components);
+@import url("./styles/components/badges.css") layer(components);
+@import url("./styles/components/cards.css") layer(components);
+@import url("./styles/components/drawers.css") layer(components);
+@import url("./styles/components/forms.css") layer(components);
+@import url("./styles/components/progress.css") layer(components);
+@import url("./styles/components/buttons.css") layer(components);
+@import url("./styles/views/work-session.css") layer(views);
+@import url("./styles/views/today-review.css") layer(views);
+@import url("./styles/views/research-portfolio.css") layer(views);
+@import url("./styles/views/maintenance.css") layer(views);
+@import url("./styles/views/asset-overview.css") layer(views);
+@import url("./styles/views/onboarding.css") layer(views);
+@import url("./styles/views/unified-inbox.css") layer(views);
+@import url("./styles/views/unified-inbox/sources.css") layer(views);
+@import url("./styles/views/unified-inbox/ledger.css") layer(views);
+@import url("./styles/views/unified-inbox/tones.css") layer(views);
+@import url("./styles/views/external-evidence.css") layer(views);
+@import url("./styles/unified-desk.css") layer(views);
+@import url("./styles/preview.css") layer(preview);
+@import url("./styles/preview/markdown.css") layer(preview);
+@import url("./styles/preview/pdf.css") layer(preview);
+@import url("./styles/utilities.css") layer(utilities);
+@import url("./styles/responsive.css") layer(responsive);
+
+@layer tokens, reset, shell, components, views, preview, utilities, responsive;

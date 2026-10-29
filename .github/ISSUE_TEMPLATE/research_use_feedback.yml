@@ -1,0 +1,62 @@
+name: Research-use feedback
+description: Share public-safe feedback about using the starter in a research workflow.
+title: "[Feedback]: "
+labels:
+  - feedback
+  - research-use
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This public issue form is only for non-sensitive feedback. Do not include personal research data, private notes, unpublished work, relationship information, or identifiable participant information.
+  - type: dropdown
+    id: route
+    attributes:
+      label: How did you start?
+      options:
+        - README first-run prompt
+        - Dashboard first
+        - Onboarding guide
+        - AGENTS.md / LLM assistant
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Research workflow goal
+      description: Describe the kind of workflow you tried, using public-safe terms only.
+      placeholder: "I tried to organize public reading notes for a small literature review..."
+    validations:
+      required: true
+  - type: textarea
+    id: useful
+    attributes:
+      label: What was useful?
+      description: Which part helped you move forward?
+  - type: textarea
+    id: friction
+    attributes:
+      label: What was confusing or heavy?
+      description: Where did you slow down, get stuck, or feel unsure?
+  - type: textarea
+    id: expectation
+    attributes:
+      label: What did you expect the system to do?
+      description: This helps separate documentation issues from workflow-design issues.
+  - type: dropdown
+    id: would_continue
+    attributes:
+      label: Would you continue using or adapting it?
+      options:
+        - Yes
+        - Maybe
+        - No
+        - Too early to tell
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Public-safety check
+      options:
+        - label: I understand this is a public issue and did not include sensitive or identifiable research material.
+          required: true

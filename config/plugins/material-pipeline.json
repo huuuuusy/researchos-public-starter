@@ -1,0 +1,131 @@
+{
+  "schema_id": "researchos-plugin-v1",
+  "core_api_version": "1",
+  "id": "material_pipeline",
+  "version": "1.1.0",
+  "enabled": true,
+  "available_in": [
+    "private",
+    "public_starter",
+    "personal_vault"
+  ],
+  "execution_profile": "declarative",
+  "product_tier": "foundation_projection",
+  "public_safe": true,
+  "sensitivity_default": "local_only",
+  "documentation": {"readme": "docs/plugins/material-pipeline/README.md"},
+  "governance": {
+    "schema_id": "researchos-plugin-governance-v1",
+    "contract_id": "researchos.contribution.material_pipeline",
+    "archetype": "capability_led",
+    "distribution": {"variant": "universal", "parity_policy": "exact", "allowed_divergence_fields": []},
+    "lineage": {"prototype_id": "researchos_plugin_capability_v1", "derivation_mode": "native", "reuse_policy": "native", "source_refs": [], "external_runtime_dependency": "none", "transformation_summary": "Native ResearchOS intake capability derived from the shared plugin prototype; no external skill was copied.", "current_placement": "foundation_capability", "proposed_absorption_target": "none", "absorption_gate": "review_required"},
+    "capability_value": {"comparison_target": "host_without_capability", "comparison_status": "planned", "expected_deltas": ["evidence_boundary", "authority_safety", "recoverability"], "expected_burdens": ["context_cost", "maintenance_cost"], "evidence_refs": [], "placement_decision": "pending_comparison", "retention_rule": "Retain as foundation only if intake tests show clearer candidate authority and recovery than the host without this projection."},
+    "effects": {"default_effect": "review_candidate", "allowed_effects": ["read_only", "artifact", "review_candidate"]},
+    "data_policy": {"default_sensitivity": "inherit_runtime", "default_export_policy": "local_only"},
+    "composition": {"requires": ["researchos_core"], "provides": ["material_intake_pipeline"], "optional_integrations": ["research_asset_navigation"], "conflicts_with": []},
+    "capability_bindings": [{"contribution_id": "material_intake_pipeline", "claim_ids": ["material_intake"]}],
+    "task_projections": [],
+    "routing": {"trigger_intents": ["material_intake", "material_upgrade", "source_scout"], "non_goals": ["canonical_direct_write", "unreviewed_publication"], "handoff_to": [{"kind": "core_route", "id": "review", "availability": "required"}, {"kind": "capability", "id": "research_asset_navigation", "availability": "if_available"}]},
+    "admission": {"maturity": "locally_validated", "proof_refs": ["evals/test_material_pipeline_plugin_contract.js"], "last_reviewed": "2026-08-14", "revalidation_triggers": ["candidate_contract_change", "public_runtime_change", "core_api_change"], "retirement_condition": "Retire only after another reviewed capability preserves candidate authority, bilingual intake, and public-safe projection behavior."}
+  },
+  "authority": {
+    "source": "User-provided material references and confirmed ResearchOS files remain source authority.",
+    "candidate": "Material intake, upgrade, and scouting records remain candidates until Review confirmation.",
+    "confirmation": "Human confirmation is required before any candidate changes canonical ResearchOS memory.",
+    "save_target": "Candidates use the existing Review writeback route; this plugin owns no canonical storage.",
+    "locales": {
+      "en": {
+        "source": "User-provided material references and confirmed ResearchOS files remain source authority.",
+        "candidate": "Material intake, upgrade, and scouting records remain candidates until Review confirmation.",
+        "confirmation": "Human confirmation is required before any candidate changes canonical ResearchOS memory.",
+        "save_target": "Candidates use the existing Review writeback route; this plugin owns no canonical storage."
+      },
+      "zh-CN": {
+        "source": "用户提供的材料线索与已确认的 ResearchOS 文件保留来源权威。",
+        "candidate": "新材料、材料升级和调研记录在 Review 确认前保持候选状态。",
+        "confirmation": "任何候选改变 canonical ResearchOS 记忆前都必须由用户确认。",
+        "save_target": "候选沿用既有 Review 写回路径；本插件不拥有 canonical storage。"
+      }
+    },
+    "requires_human_confirmation": true,
+    "writeback_route": "review",
+    "storage_owner": "researchos_core"
+  },
+  "permissions": {
+    "read_paths": [],
+    "network_domains": [],
+    "command_ids": [],
+    "state_access": "namespaced_local",
+    "canonical_write": false
+  },
+  "contributions": {
+    "tasks": [],
+    "actions": [],
+    "candidate_types": [
+      {"id": "material_intake"},
+      {"id": "upgrade"},
+      {"id": "scout"}
+    ],
+    "asset_types": [],
+    "source_adapters": [],
+    "previewers": [],
+    "projections": [],
+    "ui_slots": [
+      {
+        "id": "material_pipeline_onboarding",
+        "slot": "workbench",
+        "surface": "start",
+        "region": "primary",
+        "adapter": "material_pipeline_onboarding",
+        "order": 10,
+        "projection_ids": [],
+        "action_ids": [],
+        "locales": {
+          "en": {
+            "title": "First-run setup",
+            "hint": "Build a private local profile from a CV and public research links."
+          },
+          "zh-CN": {
+            "title": "首次接入",
+            "hint": "用简历和公开学术链接建立本地私人研究档案。"
+          }
+        }
+      },
+      {
+        "id": "material_pipeline_library_intake",
+        "slot": "library",
+        "surface": "library",
+        "region": "context",
+        "adapter": "material_pipeline_library_intake",
+        "order": 110,
+        "projection_ids": [],
+        "action_ids": [],
+        "locales": {
+          "en": {"title": "Add material", "hint": "Register a material lead for Review."},
+          "zh-CN": {"title": "新建资产", "hint": "登记一条材料线索并送入 Review。"}
+        }
+      }
+    ]
+  },
+  "state_namespace": "researchos.plugin.material_pipeline",
+  "lifecycle": {
+    "install": "core_bundled",
+    "enable": "runtime_scope",
+    "disable": "runtime_scope",
+    "uninstall": "core_release_change",
+    "migrations": [
+      "legacy_inbox_type_branches_to_candidate_adapters"
+    ]
+  },
+  "validation": {
+    "commands": [
+      "python3 scripts/validate_plugins.py",
+      "python3 scripts/validate_agent_architecture.py"
+    ],
+    "behavior_tests": [
+      "node evals/test_material_pipeline_plugin_contract.js",
+      "node evals/test_candidate_authority_contract.js"
+    ]
+  }
+}

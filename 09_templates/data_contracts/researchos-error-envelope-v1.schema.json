@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-error-envelope-v1.schema.json",
+  "title": "ResearchOS ErrorEnvelope v1",
+  "description": "A public-safe failure receipt. It never contains raw exception text, provider bodies, prompts, paths, credentials, or authority claims.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "error_id", "client_request_id", "task_id", "run_id", "error_type",
+    "stage", "impact", "retryable", "last_safe_point", "side_effects", "recovery_action", "message"
+  ],
+  "properties": {
+    "schema_id": {"const": "researchos-error-envelope-v1"},
+    "error_id": {"type": "string", "pattern": "^error:server:[0-9a-f]{64}$|^error:client:[0-9a-f]{32}$"},
+    "client_request_id": {"type": "string", "maxLength": 160},
+    "task_id": {"type": "string", "maxLength": 80},
+    "run_id": {"type": "string", "maxLength": 160},
+    "error_type": {"type": "string", "minLength": 1, "maxLength": 120},
+    "stage": {"enum": ["intake", "normalization", "policy", "provider_preflight", "dispatch", "execution", "result_normalization", "projection", "client_transport", "unknown"]},
+    "impact": {"enum": ["terminal", "warning"]},
+    "retryable": {"type": "boolean"},
+    "last_safe_point": {"enum": ["client_pre_submit", "request_delivery_unknown", "server_pre_dispatch", "server_queued", "provider_started", "provider_finished", "result_recorded", "effects_confirmed", "unknown"]},
+    "side_effects": {"enum": ["none", "unknown", "confirmed"]},
+    "recovery_action": {"enum": ["correct_request", "choose_provider", "configure_provider", "copy_task", "inspect", "rebuild_projection", "request_authorization", "retry_same", "wait", "none"]},
+    "message": {"type": "string", "minLength": 1, "maxLength": 240}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"retryable": {"const": true}}, "required": ["retryable"]},
+      "then": {
+        "properties": {
+          "side_effects": {"const": "none"},
+          "recovery_action": {"const": "retry_same"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"side_effects": {"enum": ["unknown", "confirmed"]}}, "required": ["side_effects"]},
+      "then": {"properties": {"retryable": {"const": false}}}
+    },
+    {
+      "if": {
+        "properties": {
+          "error_type": {
+            "enum": [
+              "transport_delivery_unknown", "invalid_server_response", "submit_rejected",
+              "runner_execution_failed", "queue_execution_failed", "runner_stale"
+            ]
+          }
+        },
+        "required": ["error_type"]
+      },
+      "then": {
+        "properties": {
+          "retryable": {"const": false},
+          "side_effects": {"const": "unknown"},
+          "recovery_action": {"const": "inspect"}
+        }
+      }
+    }
+  ]
+}

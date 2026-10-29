@@ -1,0 +1,38 @@
+{
+  "schema_id": "researchos-task-extension-v2",
+  "id": "confirm_judgment_change",
+  "version": "1.0.0",
+  "family": "system",
+  "kind": "maintenance",
+  "evaluates": [
+    "judgments"
+  ],
+  "scope_selector": "own_scope",
+  "summary_zh": "发现没有准入回执的判断块（新增或改动）；文件不回滚，请确认。",
+  "summary_en": "A judgment block has no admission receipt (new or edited); files are not rolled back; please confirm.",
+  "trigger": {
+    "when": "judgment_block_without_admission_receipt"
+  },
+  "preserve": [
+    "all_content"
+  ],
+  "expect": {
+    "result": "decision",
+    "write_scope": []
+  },
+  "pre": {
+    "auto_start_max": "private"
+  },
+  "executor": "script",
+  "resolver": "human",
+  "check": [
+    "judgment_block_hash_admitted"
+  ],
+  "budget": {
+    "model_runs": 0
+  },
+  "available_in": [
+    "private",
+    "public_starter"
+  ]
+}

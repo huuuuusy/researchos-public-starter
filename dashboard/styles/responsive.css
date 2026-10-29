@@ -1,0 +1,43 @@
+/* ResearchOS maintenance header.
+ * 中文：全局响应式布局 owner，只处理 shell/base 级断点，不承接局部视图规则。
+ * English: Global responsive-layout owner for shell/base breakpoints, not local view rules.
+ */
+
+@media (max-width: 1180px) {
+  :root {
+    --content: 100%;
+  }
+
+  .dashboard-shell:has(.markdown-preview-panel:not(.collapsed)) {
+    grid-template-columns: minmax(0, 1fr);
+    width: min(var(--content), calc(100% - 36px));
+    margin-left: auto;
+    transform: none;
+  }
+}
+
+@media (max-width: 860px) {
+  main {
+    width: min(100% - 20px, var(--content));
+    padding-top: 16px;
+  }
+
+}
+
+@media (max-width: 640px) {
+  button,
+  summary,
+  select,
+  input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+  .inline-preview-button,
+  .preview-collapse,
+  .preview-show-button,
+  .focus-action-button {
+    min-height: 44px;
+  }
+
+  h3 {
+    font-size: 22px;
+  }
+
+}

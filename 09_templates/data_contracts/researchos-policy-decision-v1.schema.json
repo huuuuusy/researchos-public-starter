@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-policy-decision-v1.schema.json",
+  "title": "ResearchOS PolicyDecision v1",
+  "description": "A server-issued execution-policy decision. It evaluates an untrusted task request but never records raw prompt text or confers research-memory authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "decision_id", "policy_version", "issuer", "runtime_scope",
+    "task_id", "run_id", "idempotency_key", "capability_id", "action_id",
+    "operation", "outcome", "reason_code", "risk_class", "target_binding",
+    "diff_binding", "issued_at"
+  ],
+  "properties": {
+    "schema_id": {"const": "researchos-policy-decision-v1"},
+    "decision_id": {"type": "string", "pattern": "^policy:[0-9a-f]{64}$"},
+    "policy_version": {"const": "researchos-policy-gateway-v1"},
+    "issuer": {"const": "researchos_adapters.policy_gateway"},
+    "runtime_scope": {"enum": ["private", "public_starter", "personal_vault"]},
+    "task_id": {"type": "string", "pattern": "^task:[0-9a-f]{64}$"},
+    "run_id": {"type": "string", "minLength": 1, "maxLength": 160},
+    "idempotency_key": {"type": "string", "pattern": "^idem:[0-9a-f]{64}$"},
+    "capability_id": {"enum": ["research.analysis", "research.candidate_plan", "research.execution"]},
+    "action_id": {"type": "string", "minLength": 1, "maxLength": 120},
+    "operation": {"enum": ["read_only", "create_artifact"]},
+    "outcome": {"const": "allow"},
+    "reason_code": {"enum": ["registered_read_only", "registered_bounded_artifact"]},
+    "risk_class": {"enum": ["read_only", "bounded_write"]},
+    "target_binding": {"$ref": "#/$defs/target_binding"},
+    "diff_binding": {"$ref": "#/$defs/diff_binding"},
+    "issued_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "target_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "digest", "targets"],
+      "properties": {
+        "state": {"enum": ["none", "bounded"]},
+        "digest": {"type": "string", "pattern": "^$|^[0-9a-f]{64}$"},
+        "targets": {
+          "type": "array", "maxItems": 8,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["path", "mode"],
+            "properties": {
+              "path": {"type": "string", "minLength": 1, "maxLength": 512},
+              "mode": {"enum": ["exact", "subtree"]}
+            }
+          }
+        }
+      }
+    },
+    "diff_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "digest"],
+      "properties": {
+        "state": {"enum": ["none", "request_digest"]},
+        "digest": {"type": "string", "pattern": "^$|^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

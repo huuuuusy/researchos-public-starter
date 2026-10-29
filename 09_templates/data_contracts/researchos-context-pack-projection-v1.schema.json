@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-context-pack-projection-v1",
+  "title": "ResearchOS Context Pack Projection v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "version", "status", "active", "task", "included", "excluded", "egress", "boundary"],
+  "properties": {
+    "schema_id": {"const": "researchos-context-pack-projection-v1"},
+    "version": {"const": "1"},
+    "status": {"enum": ["ready", "empty"]},
+    "active": {"type": "boolean"},
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "logical_task_id", "session_id", "identity_kind", "provider_id", "item_id", "next_step_signature", "title", "goal"],
+      "properties": {
+        "id": {"type": "string"},
+        "logical_task_id": {"type": "string"},
+        "session_id": {"type": "string"},
+        "identity_kind": {"enum": ["none", "registered_item_step", "unbound_session"]},
+        "provider_id": {"type": "string"},
+        "item_id": {"type": "string"},
+        "next_step_signature": {"type": "string"},
+        "title": {"type": "string"},
+        "goal": {"type": "string"}
+      }
+    },
+    "included": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "path", "preview_path", "preview_state", "requested_path", "title", "type", "type_label"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "path": {"type": "string"},
+          "preview_path": {"type": "string"},
+          "preview_state": {"enum": ["exact", "relocated", "ambiguous", "unavailable"]},
+          "requested_path": {"type": "string"},
+          "title": {"type": "string", "minLength": 1},
+          "type": {"type": "string", "minLength": 1},
+          "type_label": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "excluded": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scope", "reason"],
+        "properties": {
+          "scope": {"const": "unselected_library_items"},
+          "reason": {"const": "explicit_selection_required"}
+        }
+      }
+    },
+    "egress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state"],
+      "properties": {
+        "state": {"enum": ["not_granted_by_library", "copy_only_user_controlled"]}
+      }
+    },
+    "boundary": {"type": "string"}
+  }
+}

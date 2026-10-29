@@ -1,0 +1,2 @@
+*.pdf binary
+dashboard/data/*.json linguist-generated=true

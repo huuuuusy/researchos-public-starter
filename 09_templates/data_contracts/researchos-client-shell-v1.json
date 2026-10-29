@@ -1,0 +1,67 @@
+{
+  "version": "researchos-client-shell-v1",
+  "identity": {
+    "kind": "optional_client",
+    "role": "application_shell_and_plugin_host",
+    "capability_plugin": false,
+    "protocol": "researchos-client-shell-v1"
+  },
+  "profile_contract": "researchos-interaction-semantics-v1.json#/client_profiles",
+  "supported_profiles": ["private_compact_v1", "public_explanatory_v1", "zero_dashboard_v1"],
+  "surface_catalog": ["now", "library"],
+  "legacy_route_aliases": {"start": "now", "today": "now", "agent": "now", "next": "now?panel=work", "work": "now?panel=work", "assets": "library", "review": "now?panel=review", "inbox": "now?panel=review"},
+  "nested_surfaces": ["preview", "utility"],
+  "owns": [
+    "bootstrap",
+    "profile_defined_surface_routing",
+    "render_lifecycle",
+    "accessibility",
+    "failure_containment",
+    "plugin_slot_host"
+  ],
+  "must_not_own": [
+    "canonical_authority",
+    "domain_state_transition",
+    "domain_mutation",
+    "task_catalog",
+    "provider_policy",
+    "admission_decision",
+    "plugin_domain_storage"
+  ],
+  "allowed_ports": [
+    "action_gateway",
+    "lifecycle_projection",
+    "projection_envelope",
+    "work_item_projection",
+    "candidate_envelope",
+    "receipt_projection",
+    "preview_adapter"
+  ],
+  "plugin_host": {
+    "guest_protocol": "researchos-plugin-v1",
+    "guest_kind": "capability_plugin",
+    "guest_must_not_add": [
+      "top_level_surface",
+      "canonical_authority",
+      "domain_storage",
+      "second_work_session_owner",
+      "second_review_lifecycle"
+    ],
+    "disable_semantics": "capability_reduction_only"
+  },
+  "headless_closure": {
+    "required_entrypoints": [
+      "scripts/receipt_cli.py",
+      "scripts/plan_context.py",
+      "scripts/validate_semantic_receipts.py"
+    ],
+    "forbidden_dependency_prefixes": [
+      "dashboard/"
+    ],
+    "meaning": "Removing or not starting the Dashboard must not remove receipt, context planning, or semantic validation paths."
+  },
+  "public_runtime": {
+    "execution": "copy_only",
+    "canonical_write": false
+  }
+}

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security-sensitive report
+    url: https://github.com/huuuuusy/researchos-public-starter/blob/main/SECURITY.md
+    about: Do not post secrets, credentials, sensitive examples, or exploit details in public issues.
+  - name: Support guide
+    url: https://github.com/huuuuusy/researchos-public-starter/blob/main/SUPPORT.md
+    about: Read this first for setup, documentation, and public-starter usage questions.
+  - name: Commercial use boundary
+    url: https://github.com/huuuuusy/researchos-public-starter/blob/main/docs/reference/COMMERCIAL_USE.md
+    about: Commercial use and large-scale commercial-potential distribution require prior written permission.

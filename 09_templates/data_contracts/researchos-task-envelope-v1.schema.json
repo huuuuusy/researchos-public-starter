@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-task-envelope-v1.schema.json",
+  "title": "ResearchOS TaskEnvelope v1",
+  "description": "An immutable pre-policy execution envelope that keeps untrusted request evidence and actual runtime facts separate; policy decisions and grants are separate contracts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "task_id", "run_id", "idempotency_key",
+    "capability_id", "intent", "request_ref", "result_mode", "context_ref",
+    "runtime_ref", "authorization_ref", "client"
+  ],
+  "properties": {
+    "schema_id": {"const": "researchos-task-envelope-v1"},
+    "task_id": {
+      "type": "string", "pattern": "^task:[0-9a-f]{64}$",
+      "description": "A server-derived correlation identity for the exact request and actual execution fingerprint; it is neither authority nor a canonical research-object identity."
+    },
+    "run_id": {"type": "string", "minLength": 1, "maxLength": 160},
+    "idempotency_key": {
+      "type": "string", "pattern": "^idem:[0-9a-f]{64}$",
+      "description": "A server-derived correlation key. It is not a deduplication claim until the execution ledger indexes it."
+    },
+    "capability_id": {
+      "enum": ["research.analysis", "research.candidate_plan", "research.execution"]
+    },
+    "intent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_id", "input_trust", "digest", "goal", "instruction"],
+      "properties": {
+        "schema_id": {"const": "researchos-task-intent-v1"},
+        "input_trust": {"const": "untrusted"},
+        "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "goal": {"type": "string", "maxLength": 4000},
+        "instruction": {
+          "type": "string", "maxLength": 120000,
+          "description": "Nested TaskIntent v1 remains limited to 65536 code points; the larger envelope bound preserves legacy flat requests during dual-read."
+        }
+      }
+    },
+    "request_ref": {
+      "type": "object", "additionalProperties": false,
+      "required": ["result_mode", "profile_id", "provider", "model", "reasoning_effort", "task_complexity", "client_hints"],
+      "properties": {
+        "result_mode": {"enum": ["answer", "artifact", "writeback"]},
+        "profile_id": {"type": "string", "minLength": 1, "maxLength": 64},
+        "provider": {"type": "string", "minLength": 1, "maxLength": 120},
+        "model": {"type": "string", "minLength": 1, "maxLength": 240},
+        "reasoning_effort": {"enum": ["auto", "low", "medium", "high", "xhigh", "max", "ultra"]},
+        "task_complexity": {"enum": ["auto", "economy", "standard", "deep"]},
+        "client_hints": {
+          "type": "object", "additionalProperties": false,
+          "required": ["recommended_reasoning_effort", "recommended_task_complexity"],
+          "properties": {
+            "recommended_reasoning_effort": {"enum": ["auto", "low", "medium", "high", "xhigh", "max", "ultra"]},
+            "recommended_task_complexity": {"enum": ["auto", "economy", "standard", "deep"]}
+          }
+        }
+      }
+    },
+    "result_mode": {"enum": ["answer", "artifact", "writeback"]},
+    "context_ref": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_state", "source_refs"],
+      "properties": {
+        "source_state": {"const": "requested"},
+        "receipt": {"$ref": "researchos-context-receipt-v1.schema.json"},
+        "source_refs": {
+          "type": "array", "maxItems": 20,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["kind", "ref", "label"],
+            "properties": {
+              "kind": {"type": "string", "minLength": 1, "maxLength": 80},
+              "ref": {"type": "string", "minLength": 1, "maxLength": 2048},
+              "label": {"type": "string", "maxLength": 240}
+            }
+          }
+        }
+      }
+    },
+    "runtime_ref": {
+      "type": "object", "additionalProperties": false,
+      "required": ["scope", "profile_id", "provider", "model", "reasoning_effort", "task_complexity", "task_data_digest"],
+      "properties": {
+        "scope": {"enum": ["private", "public_starter", "personal_vault"]},
+        "profile_id": {"type": "string", "minLength": 1, "maxLength": 64},
+        "provider": {"type": "string", "minLength": 1, "maxLength": 120},
+        "model": {"type": "string", "minLength": 1, "maxLength": 240},
+        "reasoning_effort": {"type": "string", "minLength": 1, "maxLength": 80},
+        "task_complexity": {"type": "string", "minLength": 1, "maxLength": 80},
+        "task_data_digest": {
+          "type": "string", "pattern": "^[0-9a-f]{64}$",
+          "description": "Digest of the server-normalized untrusted task data that determines task semantics. It excludes the server-generated attempt id and the separate policy grant."
+        }
+      }
+    },
+    "authorization_ref": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state"],
+      "properties": {
+        "state": {
+          "const": "unresolved",
+          "description": "TaskEnvelope is immutable and pre-policy. PolicyDecision and AuthorizationGrant are separate B4 contracts."
+        }
+      }
+    },
+    "client": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "surface", "task_ref", "request_id"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1, "maxLength": 120},
+        "surface": {"type": "string", "minLength": 1, "maxLength": 120},
+        "task_ref": {"type": "string", "maxLength": 240},
+        "request_id": {
+          "type": "string", "maxLength": 160,
+          "description": "Untrusted correlation evidence retained for receipts, never an authorization or server run id."
+        }
+      }
+    }
+  }
+}

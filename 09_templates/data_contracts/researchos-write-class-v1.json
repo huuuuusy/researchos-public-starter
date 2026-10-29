@@ -1,0 +1,16 @@
+{
+  "schema_id": "researchos-write-class-v1",
+  "owner": "05_workflows/research_management/researchos-soul-contract.md",
+  "purpose": "Which writes a session may make directly (fact) and which need the researcher's admission (judgment). Detection, not blocking: an unadmitted judgment-class change becomes a requirement; files are never rolled back.",
+  "judgment": {
+    "judgment_blocks": "any `> [!judgment] <id>` block in any Markdown file",
+    "path_prefixes": ["00_identity/", "03_cognition/", "distilled/"],
+    "commitment_fields": ["question", "judgments", "responsibility", "state", "priority"],
+    "relation_status": ["confirmed"],
+    "rules": ["config/extensions/rules/"]
+  },
+  "fact": {
+    "description": "Card bodies, facts, status, evidence and Agent Summary; commitment current_stage, last_verified, lifecycle_phase, next_step, dates; extractor-generated edges.",
+    "commitment_fields": ["current_stage", "last_verified", "lifecycle_phase", "next_step", "target_date", "deadline"]
+  }
+}

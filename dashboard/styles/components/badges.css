@@ -1,0 +1,29 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard 共享组件样式原子「badges」；只放跨视图复用的组件规则。
+ * English: Shared component style atom for badges in the ResearchOS dashboard; only cross-view reusable component rules belong here.
+ */
+
+.preview-meta span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 8px;
+  border: var(--chrome-subtle-border);
+  border-radius: 999px;
+  background: rgba(118, 118, 128, 0.08);
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 540;
+  line-height: 1;
+}
+
+.warn {
+  border-color: var(--status-warn-border);
+  background: var(--status-warn-soft);
+  color: var(--status-warn-text);
+}
+
+.safe,
+.ok {
+  color: var(--status-ok);
+}

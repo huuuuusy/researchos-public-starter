@@ -1,0 +1,158 @@
+/* ResearchOS maintenance header.
+ * 中文：dashboard 基础外壳布局层，管理主区域、服务提示和 footer；topbar/workspace 局部规则拆入 shell/ 子原子。
+ * English: Base dashboard shell layout layer for main region, service banner, and footer; topbar/workspace local rules live in shell/ sub-atoms.
+ */
+
+main {
+  width: min(var(--content), calc(100% - 56px));
+  margin: 0 auto;
+  padding: 28px 0 56px;
+}
+
+.dashboard-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 22px;
+}
+
+.dashboard-shell:has(.markdown-preview-panel:not(.collapsed)) {
+  grid-template-columns: minmax(0, 1fr) 10px var(--preview-panel-width, clamp(420px, 34vw, 560px));
+  gap: 12px;
+  width: min(1540px, calc(100vw - 36px));
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.dashboard-shell:has(.markdown-preview-panel.collapsed) {
+  grid-template-columns: minmax(0, 1fr);
+  box-sizing: border-box;
+  padding-right: 48px;
+}
+
+.dashboard-content,
+.dashboard-content > *,
+.workspace-panel,
+.panel {
+  min-width: 0;
+}
+
+.preview-resize-handle {
+  display: none;
+}
+
+.dashboard-shell:has(.markdown-preview-panel:not(.collapsed)) .preview-resize-handle {
+  position: sticky;
+  top: calc(var(--topbar-height) + 16px);
+  z-index: 15;
+  display: block;
+  align-self: stretch;
+  width: 10px;
+  min-width: 10px;
+  min-height: calc(100vh - var(--topbar-height) - 34px);
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.dashboard-shell:has(.markdown-preview-panel:not(.collapsed)) .preview-resize-handle::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 4px;
+  width: 2px;
+  border-radius: 999px;
+  background: rgba(71, 91, 118, 0.18);
+  transition: background 160ms ease, box-shadow 160ms ease, width 160ms ease, left 160ms ease;
+}
+
+.dashboard-shell:has(.markdown-preview-panel:not(.collapsed)) .preview-resize-handle:hover::before,
+.dashboard-shell.preview-resizing .preview-resize-handle::before,
+.preview-resize-handle:focus-visible::before {
+  left: 3px;
+  width: 4px;
+  background: var(--blue);
+  box-shadow: 0 0 0 4px rgba(27, 116, 210, 0.12);
+}
+
+.dashboard-shell.preview-resizing {
+  user-select: none;
+  cursor: col-resize;
+}
+
+.service-mode-banner {
+  width: min(var(--content), calc(100% - 36px));
+  margin: 16px auto 0;
+  padding: 14px 16px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: var(--shadow-soft);
+}
+
+.legal-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  margin-top: 42px;
+  padding: 22px 4px 0;
+  border-top: 1px solid var(--hairline);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.legal-footer strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.legal-footer p,
+.legal-footer small,
+.legal-footer span,
+.legal-footer a {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.legal-footer a {
+  color: var(--status-info-text);
+  text-decoration: none;
+}
+
+.legal-footer a:hover {
+  text-decoration: underline;
+}
+
+.legal-footer-links {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .dashboard-shell:has(.markdown-preview-panel.collapsed) {
+    padding-right: 0;
+  }
+
+  .legal-footer {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .legal-footer > div {
+    min-width: 0;
+  }
+
+  .legal-footer-links {
+    justify-items: start;
+    overflow-wrap: anywhere;
+    text-align: left;
+  }
+}

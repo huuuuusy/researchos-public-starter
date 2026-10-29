@@ -1,0 +1,133 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard 视图样式「external evidence」的 owner；局部布局规则应留在本 view seed。
+ * English: Style owner for the external evidence dashboard view; local layout rules should stay in this view seed.
+ */
+
+.external-visual-summary,
+.external-source-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.external-score,
+.external-policy,
+.external-source-card {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.external-score,
+.external-policy {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+}
+
+.external-score strong {
+  color: var(--ink-strong);
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.external-policy strong,
+.external-source-head strong {
+  color: var(--ink-strong);
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+
+.external-score span,
+.external-policy span,
+.external-source-head span,
+.external-checked-at {
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.external-source-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.external-source-head,
+.external-source-meta,
+.external-use-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.external-source-head {
+  flex-wrap: nowrap;
+}
+
+.external-source-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--status-info-soft);
+  color: var(--status-info-text);
+  font-weight: 680;
+}
+
+.external-source-meta span,
+.external-use-chips span {
+  min-height: 23px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(118, 118, 128, 0.08);
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 560;
+}
+
+.external-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.external-metric-grid div {
+  display: grid;
+  gap: 3px;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(242, 242, 247, 0.64);
+}
+
+.external-metric-grid strong {
+  color: var(--ink-strong);
+  font-size: 15px;
+}
+
+.external-metric-grid span,
+.external-source-card p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.external-source-card p {
+  margin: 0;
+}
+
+.external-open-link {
+  width: fit-content;
+  min-height: 32px;
+  padding: 7px 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--status-info-text);
+  font-size: 12.5px;
+  font-weight: 620;
+  text-decoration: none;
+}

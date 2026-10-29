@@ -1,0 +1,197 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard Markdown preview 正文排版 owner；Markdown body、标题、段落、代码块和表格规则应留在本 preview-local seed。
+ * English: Markdown preview content owner for the ResearchOS dashboard; Markdown body, heading, paragraph, code, and table rules should stay in this preview-local seed.
+ */
+
+.markdown-body {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.preview-evidence-content > .markdown-body {
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  overflow: auto;
+  padding: 18px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: #fff;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+  margin: 1em 0 0.45em;
+}
+
+.markdown-body h1:first-child,
+.markdown-body h2:first-child,
+.markdown-body h3:first-child {
+  margin-top: 0;
+}
+
+.markdown-body p,
+.markdown-body li {
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+
+.markdown-body ul {
+  margin: 8px 0 14px;
+  padding-left: 20px;
+}
+
+.markdown-body li {
+  color: var(--muted);
+}
+
+.markdown-body pre {
+  max-width: 100%;
+  overflow: auto;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: #f5f5f7;
+}
+
+.markdown-body img,
+.markdown-body video,
+.markdown-body iframe {
+  max-width: 100%;
+}
+
+.markdown-body .md-frontmatter {
+  margin: 0 0 14px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: #fafafa;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.markdown-body .md-frontmatter summary {
+  min-height: 34px;
+  padding: 0 10px;
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.markdown-body .md-frontmatter div {
+  padding: 0 10px 8px;
+  overflow-wrap: anywhere;
+}
+
+.markdown-body .md-source-token {
+  padding: 1px 3px;
+  border-radius: 3px;
+  background: rgba(60, 60, 67, 0.06);
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  vertical-align: baseline;
+}
+
+.markdown-body .md-source-link {
+  display: inline-flex;
+  max-width: min(100%, 520px);
+  min-height: 24px;
+  align-items: center;
+  margin: 2px 2px;
+  padding: 3px 8px;
+  border: 1px solid rgba(60, 60, 67, 0.13);
+  border-radius: 7px;
+  background: rgba(248, 248, 250, 0.78);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.94em;
+  font-weight: 620;
+  line-height: 1.28;
+  overflow-wrap: anywhere;
+  text-align: left;
+  text-decoration: none;
+  vertical-align: middle;
+  white-space: normal;
+  cursor: pointer;
+}
+
+.markdown-body .md-source-link:hover,
+.markdown-body .md-source-link:focus-visible {
+  border-color: rgba(0, 122, 255, 0.24);
+  background: rgba(0, 122, 255, 0.06);
+  color: var(--ink-strong);
+}
+
+.markdown-body .md-source-link:focus-visible {
+  outline: var(--control-focus-outline);
+  outline-offset: 2px;
+}
+
+.markdown-body li .md-source-link {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.markdown-body td .md-source-link,
+.markdown-body td .inline-preview-button {
+  display: inline;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  box-shadow: none;
+  text-decoration: none;
+  text-align: left;
+  vertical-align: baseline;
+  white-space: normal;
+}
+
+.markdown-body td .md-source-link:hover,
+.markdown-body td .md-source-link:focus-visible,
+.markdown-body td .inline-preview-button:hover,
+.markdown-body td .inline-preview-button:focus-visible {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--blue);
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+  box-shadow: none;
+  transform: none;
+}
+
+.markdown-body .md-preview-anchor-highlight {
+  border-radius: 6px;
+  background: rgba(255, 221, 87, 0.34);
+  box-shadow: 0 0 0 4px rgba(255, 221, 87, 0.2);
+  transition: background 220ms ease, box-shadow 220ms ease;
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.markdown-body th,
+.markdown-body td {
+  padding: 8px;
+  border: 1px solid var(--hairline);
+  text-align: left;
+  vertical-align: top;
+}
+
+@media (max-width: 1180px) {
+  .preview-evidence-content > .markdown-body {
+    height: 100%;
+    max-height: none;
+  }
+}

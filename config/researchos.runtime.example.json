@@ -1,0 +1,40 @@
+{
+  "schema_id": "researchos-runtime-config-v1",
+  "default_provider": "codex",
+  "dashboard": {
+    "host": "127.0.0.1"
+  },
+  "providers": {
+    "codex": {
+      "type": "local_codex",
+      "command": "codex",
+      "default_model": "auto",
+      "enabled": true
+    },
+    "claude_code": {
+      "type": "local_claude_code",
+      "command": "claude",
+      "default_model": "auto",
+      "enabled": false
+    }
+  },
+  "public_starter": {
+    "provider_mode": "copy_only",
+    "allow_local_codex": false,
+    "allow_real_api": false,
+    "execution_scope": "none",
+    "maintenance_scope": "registered_actions",
+    "content_language": "en",
+    "available_content_languages": [
+      "en",
+      "zh-CN"
+    ],
+    "alternate_language_files": "reference_only_do_not_read_by_agent",
+    "agent_language_routing": "selected_language_only",
+    "case_materials": {
+      "enabled": true,
+      "source": "08_exports/public_starter",
+      "disabled_behavior": "keep_files_as_reference_only"
+    }
+  }
+}

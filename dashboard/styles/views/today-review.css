@@ -1,0 +1,29 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard Now 页与事项执行抽屉的局部布局样式 owner（文件名沿用 today review）。
+ * English: Style owner for the Now surface and item-execution drawer layout (the file keeps its historical today-review name).
+ */
+
+.work-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.work-filter button {
+  border-radius: 999px;
+}
+
+.work-filter button.selected,
+.work-filter button[aria-pressed="true"] {
+  background: var(--accent-soft, rgba(80, 110, 240, 0.12));
+  border-color: var(--accent, #506ef0);
+}
+
+.work-filter-empty-state {
+  margin-bottom: 18px;
+}
+
+.work-session-surface:not(:empty) {
+  margin-bottom: 18px;
+}

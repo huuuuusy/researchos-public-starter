@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-rule-evolution-v1",
+  "title": "ResearchOS Governed Rule Evolution v1",
+  "description": "Candidate, bounded-trial, proposal, and version records. No record in this schema constitutes a human disposition by itself.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "object_kind", "claim_boundary"],
+  "properties": {
+    "schema_id": {"const": "researchos-rule-evolution-v1"},
+    "object_kind": {"enum": ["rule_candidate", "bounded_trial", "disposition_proposal", "rule_version"]},
+    "claim_boundary": {"const": "governed_rule_evolution_not_human_ai_coevolution"},
+    "rule_id": {"$ref": "#/$defs/ref"},
+    "rule_version_ref": {"$ref": "#/$defs/ref"},
+    "trial_id": {"$ref": "#/$defs/ref"},
+    "candidate_ref": {"$ref": "#/$defs/ref"},
+    "proposal_id": {"$ref": "#/$defs/ref"},
+    "rule_ref": {"$ref": "#/$defs/ref"},
+    "target_ref": {"$ref": "#/$defs/ref"},
+    "replacement_candidate_ref": {"type": "string", "maxLength": 1024},
+    "state": {"type": "string", "maxLength": 32},
+    "statement": {"type": "string", "minLength": 1, "maxLength": 8192},
+    "scope": {"$ref": "#/$defs/scope"},
+    "source_episodes": {"$ref": "#/$defs/nonempty_refs"},
+    "counterevidence": {"$ref": "#/$defs/counterevidence"},
+    "version": {"type": "integer", "minimum": 1},
+    "review_date": {"$ref": "#/$defs/time"},
+    "retire_trigger": {"type": "string", "minLength": 1, "maxLength": 2048},
+    "rollback_target": {"$ref": "#/$defs/ref"},
+    "created_at": {"$ref": "#/$defs/time"},
+    "begins_at": {"$ref": "#/$defs/time"},
+    "expires_at": {"type": "string", "maxLength": 64},
+    "activation": {"const": "explicit_scope_only"},
+    "authority": {"enum": ["candidate_only", "trial_only", "proposal_only_human_disposition_required"]},
+    "proposed": {"enum": ["retain", "revise", "retire", "defer", "supersede", "rollback"]},
+    "requested_proposal": {"enum": ["retain", "revise", "retire", "defer", "supersede"]},
+    "evidence": {"type": "object"},
+    "evidence_refs": {"$ref": "#/$defs/nonempty_refs"},
+    "history_refs": {"$ref": "#/$defs/nonempty_refs"},
+    "supersedes": {"$ref": "#/$defs/refs"},
+    "stability": {"enum": ["provisional", "stable"]},
+    "human_disposition_ref": {"$ref": "#/$defs/ref"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"object_kind": {"const": "rule_candidate"}}},
+      "then": {
+        "required": ["rule_id", "state", "statement", "scope", "source_episodes", "counterevidence", "version", "review_date", "retire_trigger", "rollback_target", "created_at", "authority"],
+        "properties": {"state": {"const": "candidate"}, "authority": {"const": "candidate_only"}}
+      }
+    },
+    {
+      "if": {"properties": {"object_kind": {"const": "bounded_trial"}}},
+      "then": {
+        "required": ["trial_id", "candidate_ref", "state", "scope", "begins_at", "expires_at", "activation", "authority"],
+        "properties": {"state": {"enum": ["planned", "active", "completed", "stopped", "expired"]}, "authority": {"const": "trial_only"}}
+      }
+    },
+    {
+      "if": {"properties": {"object_kind": {"const": "disposition_proposal"}}},
+      "then": {
+        "required": ["proposal_id", "rule_ref", "proposed", "created_at", "authority"],
+        "properties": {"proposed": {"enum": ["retain", "revise", "retire", "defer", "supersede", "rollback"]}, "authority": {"const": "proposal_only_human_disposition_required"}}
+      }
+    },
+    {
+      "if": {"properties": {"object_kind": {"const": "rule_version"}}},
+      "then": {
+        "required": ["rule_version_ref", "rule_id", "version", "statement", "scope", "source_episodes", "counterevidence", "review_date", "retire_trigger", "rollback_target", "stability", "supersedes", "human_disposition_ref"],
+        "allOf": [
+          {
+            "if": {"properties": {"stability": {"const": "provisional"}}},
+            "then": {"required": ["expires_at"]}
+          },
+          {
+            "if": {"properties": {"stability": {"const": "stable"}}},
+            "then": {"properties": {"expires_at": {"maxLength": 0}}}
+          }
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "ref": {"type": "string", "minLength": 1, "maxLength": 1024},
+    "time": {"type": "string", "minLength": 1, "maxLength": 64},
+    "refs": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+    "nonempty_refs": {"type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_types", "profile_ids", "project_refs"],
+      "properties": {
+        "task_types": {"$ref": "#/$defs/refs"},
+        "profile_ids": {"$ref": "#/$defs/refs"},
+        "project_refs": {"$ref": "#/$defs/refs"}
+      },
+      "anyOf": [
+        {"properties": {"task_types": {"minItems": 1}}},
+        {"properties": {"profile_ids": {"minItems": 1}}},
+        {"properties": {"project_refs": {"minItems": 1}}}
+      ]
+    },
+    "counterevidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "refs", "assessment"],
+      "properties": {
+        "status": {"enum": ["observed", "searched_none_found", "unknown"]},
+        "refs": {"$ref": "#/$defs/refs"},
+        "assessment": {"type": "string", "minLength": 1, "maxLength": 2048}
+      }
+    }
+  },
+  "x-invariants": [
+    "source episodes and counterevidence are required before a Rule candidate exists",
+    "a bounded trial never expands candidate scope and never activates in public_starter",
+    "insufficient longitudinal evidence yields defer rather than adoption",
+    "stable review dates produce review_due and never automatic downgrade",
+    "only provisional Rules with explicit expiry automatically stop",
+    "supersede and rollback are proposals that preserve history and require human disposition",
+    "acceptance rate and Rule count are not success metrics",
+    "the claim is governed Rule evolution, not demonstrated human-AI co-evolution"
+  ]
+}

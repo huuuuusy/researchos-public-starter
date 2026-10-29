@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-runtime-profile-v1.schema.json",
+  "title": "ResearchOS RuntimeProfile v1",
+  "description": "A named execution configuration. It carries references and capabilities, never credentials, egress authorization, or durable authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "profile_id", "adapter_family", "provider", "enabled", "allowed_scopes",
+    "model", "allowed_models", "reasoning_effort", "allowed_reasoning_efforts", "endpoint_ref",
+    "credential_ref", "capabilities", "timeout_seconds", "cost_policy", "fallback_policy"
+  ],
+  "properties": {
+    "schema_id": {"const": "researchos-runtime-profile-v1"},
+    "profile_id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"},
+    "adapter_family": {"enum": ["local_codex", "local_claude_code"]},
+    "provider": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"},
+    "enabled": {"type": "boolean"},
+    "allowed_scopes": {
+      "type": "array", "minItems": 1, "maxItems": 2, "uniqueItems": true,
+      "items": {"enum": ["private", "personal_vault"]}
+    },
+    "model": {"type": "string", "minLength": 1, "maxLength": 160},
+    "allowed_models": {
+      "type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1, "maxLength": 160}
+    },
+    "reasoning_effort": {"enum": ["auto", "low", "medium", "high", "xhigh", "max", "ultra"]},
+    "allowed_reasoning_efforts": {
+      "type": "array", "minItems": 1, "maxItems": 7, "uniqueItems": true,
+      "items": {"enum": ["auto", "low", "medium", "high", "xhigh", "max", "ultra"]}
+    },
+    "endpoint_ref": {"type": "string", "minLength": 1, "maxLength": 120},
+    "credential_ref": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "name"],
+      "properties": {
+        "kind": {"const": "none"},
+        "name": {"type": "string", "maxLength": 80}
+      }
+    },
+    "capabilities": {
+      "type": "object", "additionalProperties": false,
+      "required": ["result_modes", "streaming", "cancel", "tool_calling", "agent_loop"],
+      "properties": {
+        "result_modes": {
+          "type": "array", "minItems": 1, "maxItems": 3, "uniqueItems": true,
+          "items": {"enum": ["answer", "artifact", "writeback"]}
+        },
+        "streaming": {"type": "boolean"},
+        "cancel": {"enum": ["unsupported", "best_effort", "supported"]},
+        "tool_calling": {"type": "boolean"},
+        "agent_loop": {"type": "boolean"}
+      }
+    },
+    "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 3600},
+    "cost_policy": {
+      "type": "object", "additionalProperties": false, "required": ["mode", "budget_ref"],
+      "properties": {
+        "mode": {"const": "local_unmetered"},
+        "budget_ref": {"type": "string", "maxLength": 64}
+      }
+    },
+    "fallback_policy": {
+      "type": "object", "additionalProperties": false, "required": ["mode"],
+      "properties": {"mode": {"const": "none"}}
+    }
+  }
+}

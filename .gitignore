@@ -1,0 +1,49 @@
+.DS_Store
+Thumbs.db
+
+# Local runtime config and secrets
+config/researchos.runtime.local.json
+config/extensions.local/
+config/plugins.local/
+.env
+.env.local
+
+# Local scratch/cache
+*.tmp
+*.bak
+*.swp
+*.log
+__pycache__/
+.pytest_cache/
+output/
+.playwright-cli/
+dashboard/data/researchos-local.json
+personal_vault/
+06_active_context/work_state/runner-logs/
+06_active_context/work_state/uploads/
+06_active_context/work_state/outputs/
+06_active_context/work_state/.artifact-staging/
+06_active_context/work_state/.artifact-rollbacks/
+06_active_context/work_state/evolution/
+06_active_context/work_state/ros/
+06_active_context/ui-card-group-dissolution-inbox.json
+06_active_context/ui-card-group-dissolution-inbox.md
+06_active_context/ui-card-groups.json
+06_active_context/ui-card-groups.md
+06_active_context/ui-confirmation-decisions.json
+06_active_context/ui-confirmation-decisions.md
+06_active_context/ui-material-intake-inbox.json
+06_active_context/ui-material-intake-inbox.md
+06_active_context/ui-material-upgrade-inbox.json
+06_active_context/ui-material-upgrade-inbox.md
+06_active_context/ui-research-scout-inbox.json
+06_active_context/ui-research-scout-inbox.md
+
+# Public starter does not ship raw corpus files.
+corpus/**
+!corpus/
+!corpus/README.md
+!corpus/README.zh.md
+
+# Scheduler demo run ledger
+examples/scheduler-demo/06_active_context/work_state/

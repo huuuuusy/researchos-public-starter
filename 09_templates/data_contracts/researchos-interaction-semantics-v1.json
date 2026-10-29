@@ -1,0 +1,198 @@
+{
+  "version": "researchos-interaction-semantics-v1",
+  "authority": {
+    "surface_roles": "researchos-product-design.md",
+    "attention_and_commitment": "researchos-attention-kernel-interaction-architecture-v1.md",
+    "state_action_and_admission": "researchos-kernel-extension-architecture-v1.md",
+    "primitive_types": "researchos-primitive-rule-model.md",
+    "precedence": [
+      "canonical_source_and_human_decision",
+      "stable_kernel_ledger",
+      "capability_owned_source",
+      "generated_projection",
+      "client_preference_and_dom"
+    ]
+  },
+  "client_profiles": {
+    "owner": "researchos-product-design.md",
+    "default_by_runtime_scope": {
+      "private": "private_compact_v1",
+      "public_starter": "public_explanatory_v1",
+      "headless": "zero_dashboard_v1"
+    },
+    "profiles": {
+      "private_compact_v1": {
+        "client_kind": "dashboard",
+        "workspace_ids": ["now", "library"],
+        "surface_aliases": {"start": "now", "today": "now", "agent": "now", "next": "now?panel=work", "work": "now?panel=work", "assets": "library", "review": "now?panel=review", "inbox": "now?panel=review"},
+        "alias_policy": "input_only_canonical_output",
+        "auxiliary_parent_overrides": {},
+        "expression_boundary": "two_screen_now_library_item_local_work_review"
+      },
+      "public_explanatory_v1": {
+        "client_kind": "dashboard",
+        "workspace_ids": ["now", "library"],
+        "surface_aliases": {"start": "now", "today": "now", "agent": "now", "next": "now?panel=work", "work": "now?panel=work", "assets": "library", "review": "now?panel=review", "inbox": "now?panel=review"},
+        "alias_policy": "input_only_canonical_output",
+        "auxiliary_parent_overrides": {},
+        "expression_boundary": "explanatory_two_screen_now_library_copy_only"
+      },
+      "zero_dashboard_v1": {
+        "client_kind": "codex_or_cli",
+        "workspace_ids": [],
+        "surface_aliases": {},
+        "alias_policy": "input_only_canonical_output",
+        "auxiliary_parent_overrides": {},
+        "expression_boundary": "no_dashboard_required"
+      }
+    },
+    "shared_consequences": [
+      "object_and_reference_identity",
+      "researcher_authority",
+      "result_and_admission",
+      "action_effect_and_non_effect",
+      "context_and_egress",
+      "failure_truth",
+      "validation_receipt_rollback_and_recovery"
+    ]
+  },
+  "objects": {
+    "project": {"owner": "domain_plugin_and_canonical_markdown", "meaning": "long_lived_research_fact_and_responsibility_container"},
+    "commitment": {"owner": "attention_kernel_and_plugin_projection", "meaning": "one_current_next_step_or_next_judgment"},
+    "work_session": {"owner": "work_session_kernel", "meaning": "bounded_continuity_container_for_one_intent"},
+    "context_pack": {"owner": "work_session_kernel_and_context_receipt", "meaning": "task_bounded_projection_of_included_sources_default_exclusions_and_egress_boundary"},
+    "task_envelope": {"owner": "server_policy_gateway", "meaning": "immutable_registered_execution_identity_and_authority_boundary"},
+    "run": {"owner": "server_run_ledger", "meaning": "one_machine_execution_attempt"},
+    "result": {"owner": "kernel_result_protocol", "meaning": "answer_artifact_or_writeback_outcome"},
+    "candidate": {"owner": "admission_kernel", "meaning": "proposed_durable_change_without_canonical_authority"},
+    "receipt": {"owner": "stable_kernel", "meaning": "verifiable_record_of_action_result_and_recovery_coordinate"},
+    "action_feedback": {"owner": "action_gateway", "meaning": "ephemeral_client_feedback_not_a_durable_receipt_authority_or_recovery_coordinate"}
+  },
+  "surfaces": {
+    "now": {
+      "accepted_input_aliases": ["start", "today", "agent"],
+      "moment": "resume",
+      "question": "which_commitments_need_attention_and_how_should_each_be_disposed",
+      "primary_object": "attention_portfolio_of_commitment_bounded_actionable_research_states",
+      "focus_invariant": "many_commitments_may_be_visible_each_with_one_disposition_and_one_next_step",
+      "must_not": ["show_two_next_steps_for_one_commitment", "become_generic_todo_list", "become_plugin_launcher", "show_system_activity", "show_scholar_snapshot", "manage_plugins"]
+    },
+    "library": {
+      "accepted_input_aliases": ["assets"],
+      "moment": "prepare",
+      "question": "what_context_is_included_excluded_and_allowed_to_leave",
+      "primary_object": "commitment_lens_over_context_pack_or_project_overview",
+      "mode_rule": "one_or_few_commitments_select_relevant_objects_with_provenance_and_relation_kind",
+      "must_not": ["infer_project_fact", "make_human_decision", "become_second_task_catalog"]
+    },
+    "work": {
+      "accepted_input_aliases": ["next", "review", "inbox"],
+      "moments": ["work", "admit"],
+      "question": "how_confirmed_work_starts_continues_runs_in_parallel_and_returns_results_safely",
+      "primary_object": "item_local_execution_and_review_capability_projected_inside_now",
+      "filters": ["ready", "active", "waiting", "needs_review", "done"],
+      "session_invariant": "one_bounded_intent_per_session_many_sessions_per_researchos",
+      "must_not": ["become_general_agent_orchestrator", "become_notification_inbox", "duplicate_task_lifecycle", "own_candidate_truth", "claim_unverified_bridge"]
+    }
+  },
+  "auxiliary_surfaces": {
+    "preview": "cross_surface_source_sidecar",
+    "utility": "maintenance_outside_primary_path"
+  },
+  "interaction_language": {
+    "action_label": "describe_the_immediate_user_visible_effect_never_only_the_destination_surface",
+    "action_hint": "state_actor_location_effect_non_effect_and_recovery_when_the_label_cannot_carry_them",
+    "surface_name": "navigation_context_not_an_action_verb"
+  },
+  "task_history_identity": {
+    "registered_task": "provider_id_plus_item_id_plus_next_step_signature",
+    "session_id": "bounded_continuity_identity_not_logical_task_identity",
+    "merge_policy": "same_registered_task_keeps_newest_resume_entry_and_unions_bounded_sources_artifacts_and_step_count",
+    "legacy_without_step_signature": "preserve_separately_unless_exact_history_lineage_is_known",
+    "display_rule": "same_project_different_next_steps_must_show_the_next_step_that_distinguishes_each_task",
+    "forbidden": ["deduplicate_by_title", "discard_older_artifacts_or_sources", "show_current_logical_task_in_recent_switcher"]
+  },
+  "handoff_record_identity": {
+    "owner": "dashboard/src/services/doing-board-state.js",
+    "stable_record_id": "explicit_id_or_work_session_or_candidate_or_non_task_source_lineage_else_new_local_id",
+    "display_fields": ["title", "path", "note"],
+    "legacy_policy": "preserve_existing_legacy_key_until_the_record_is_replaced_or_removed",
+    "forbidden": ["title_as_new_task_identity", "path_change_creates_second_work_session_handoff", "archive_or_remove_by_display_label"]
+  },
+  "state_axes": {
+    "session": ["none", "open", "ended"],
+    "run": ["none", "submitted", "queued", "running", "completed", "failed"],
+    "observation": ["none", "fresh", "delivery_unknown", "lease_expired", "reconcile_failed"],
+    "result": ["none", "answer", "artifact", "writeback", "invalid"],
+    "admission": {
+      "schema_id": "researchos-admission-state-v1",
+      "owner": "09_templates/data_contracts/researchos-admission-state-v1.schema.json",
+      "decision_state": ["unproposed", "proposed", "accepted", "revised", "rejected", "deferred"],
+      "mutation_state": ["not_requested", "staged", "applied", "rolled_back"],
+      "validation_state": ["unvalidated", "pending", "passed", "failed"],
+      "authority_role": ["none", "informative", "interpretive", "normative"],
+      "admitted_derivation": "decision_accepted_or_revised_and_mutation_applied_and_validation_passed",
+      "forbidden": ["single_authority_state_axis", "candidate_as_authority_role", "execution_completion_as_admission", "client_side_authority_promotion"]
+    }
+  },
+  "derived_task_states": [
+    "no_task",
+    "ready",
+    "running",
+    "verify_delivery",
+    "verify_run",
+    "failed_retryable",
+    "failed_needs_impact_check",
+    "result_ready",
+    "late_result_ready",
+    "ended",
+    "ended_with_run_tracking",
+    "invalid"
+  ],
+  "legacy_v9_migration": {
+    "draft": {"session": "open", "requires": ["no_active_run"]},
+    "active": {"session": "open", "requires": ["no_active_run"], "note": "legacy_container_state_not_running"},
+    "running": {"session": "open", "requires": ["exact_run_binding", "server_ledger_state", "fresh_or_explicit_uncertain_observation"]},
+    "ready": {"session": "open", "requires": ["completed_run", "valid_result_envelope"]},
+    "completed": {"session": "ended", "requires": ["preserve_bound_run_and_receipts"]}
+  },
+  "recovery_rules": {
+    "delivery_unknown": "reconcile_by_client_request_id_never_resubmit",
+    "lease_expired": "verify_ledger_never_infer_terminal_from_time",
+    "safe_retry": "only_when_not_found_or_side_effects_none",
+    "late_result": "attach_recoverable_receipt_without_reopening_session_or_rerunning",
+    "projection_failure_after_completion": "rebuild_projection_never_rerun"
+  },
+  "result_action_matrix": {
+    "answer": {"primary": "finish_session", "secondary": ["add_followup", "copy_result", "propose_artifact", "propose_writeback"]},
+    "artifact": {"primary": "open_artifact", "secondary": ["finish_session", "copy_result", "propose_writeback"]},
+    "writeback": {"primary": "open_review", "secondary": ["finish_session", "copy_result"]},
+    "delivery_unknown": {"primary": "reconcile_by_client_request_id", "secondary": ["finish_session_keep_tracking"], "forbidden": ["resubmit", "retry_same_request"]},
+    "failed_side_effects_none": {"primary": "retry_same_request", "secondary": ["finish_session_keep_receipt"]},
+    "failed_side_effects_unknown": {"primary": "check_effects", "secondary": ["finish_session_keep_receipt"], "forbidden": ["resubmit", "retry_same_request"]}
+  },
+  "element_hierarchy": ["domain", "surface", "region", "block", "primitive", "action", "feedback"],
+  "action_spec": {
+    "required": ["id", "verb", "target", "actor", "location", "effect", "confirmation", "risk", "reversible", "fallback"],
+    "actor": ["human", "codex", "runner", "system"],
+    "location": ["current_surface", "codex", "cli", "work", "review", "utility"],
+    "effect": ["navigate", "select_context", "mutate_attention", "handoff", "execute_bounded", "propose_writeback", "mutate_canonical", "recover"],
+    "confirmation": ["none", "inline", "preview_confirm"],
+    "risk": ["low", "medium", "high"]
+  },
+  "prediction_contract": {
+    "required_visible_questions": ["actor", "location", "effect", "non_effect", "fallback"],
+    "before_action": "answer_without_opening_logs_or_recalling_hidden_policy",
+    "after_failure": "show_last_confirmed_safe_point_and_only_legal_recovery",
+    "progressive_disclosure": "primary_action_remains_short_prediction_evidence_stays_adjacent"
+  },
+  "compatibility": {
+    "legacy_route_aliases": {"start": "now", "today": "now", "agent": "now", "next": "work", "assets": "library", "review": "work?filter=needs_review", "inbox": "work?filter=needs_review"},
+    "legacy_slot_aliases": {"workbench": "now.primary", "library": "library.context"},
+    "deprecated_user_terms": {
+      "background_conversation": "background_execution",
+      "work_screen": "work",
+      "processing_without_fresh_run": "status_specific_copy"
+    }
+  }
+}

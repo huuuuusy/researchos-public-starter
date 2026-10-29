@@ -1,0 +1,122 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard topbar chrome owner；顶部标题、动作区、语言选择和维护按钮规则应留在本 shell-local seed。
+ * English: Topbar chrome owner for the ResearchOS dashboard; title, action row, language select, and maintenance button rules should stay in this shell-local seed.
+ */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  min-height: var(--topbar-height);
+  padding: 10px 28px;
+  border-bottom: 1px solid rgba(60, 60, 67, 0.1);
+  background: rgba(248, 248, 250, 0.86);
+  backdrop-filter: blur(20px) saturate(1.18);
+}
+
+.topbar > div:first-child {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: max-content;
+}
+
+.topbar h1 {
+  color: var(--ink-strong);
+  font-size: 21px;
+  font-weight: 650;
+}
+
+.topbar p,
+#generatedAt,
+.topbar .auto-update-status,
+.theme-picker {
+  display: none;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 0;
+}
+
+.language-select {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.language-select span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.language-select select,
+.auto-update-button,
+.theme-picker button {
+  min-height: 34px;
+  border: var(--chrome-card-border);
+  border-radius: 999px;
+  background: var(--chrome-panel-surface);
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.035);
+  font-size: 13px;
+  font-weight: 560;
+}
+
+.language-select select {
+  min-width: 76px;
+  padding: 0 13px;
+}
+
+.auto-update-button {
+  padding: 0 15px;
+  cursor: pointer;
+}
+
+@media (max-width: 860px) {
+  .topbar {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    min-width: 0;
+    padding: 10px 14px;
+    overflow-x: clip;
+    background: rgba(248, 248, 250, 0.9);
+  }
+
+  .topbar > div:first-child {
+    min-width: 0;
+    justify-content: space-between;
+  }
+
+  .top-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+    max-width: 100%;
+    justify-content: stretch;
+    gap: 8px;
+  }
+
+  .language-select {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    margin-left: 0;
+  }
+
+  .top-actions .auto-update-button {
+    display: none;
+  }
+}

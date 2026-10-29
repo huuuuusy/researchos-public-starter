@@ -1,0 +1,9 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard 共享组件样式原子「progress」；只放跨视图复用的组件规则。
+ * English: Shared component style atom for progress in the ResearchOS dashboard; only cross-view reusable component rules belong here.
+ */
+
+.section-focus,
+.surface-selected {
+  box-shadow: var(--control-focus-halo), var(--shadow-lift);
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-filesystem-receipt-v1.schema.json",
+  "title": "ResearchOS Filesystem Receipt v1",
+  "description": "A runtime receipt for a bounded artifact working-copy promotion or rollback. It records filesystem effects and does not grant research authority, confirmation, or canonical admission.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "transaction_id", "run_id", "runtime_scope", "operation",
+    "target", "status", "authority_effect", "changes", "rollback_ref",
+    "created_at", "completed_at", "receipt_id"
+  ],
+  "properties": {
+    "schema_id": {"const": "researchos-filesystem-receipt-v1"},
+    "transaction_id": {"type": "string", "pattern": "^artifact-[0-9a-f]{32}$"},
+    "run_id": {"type": "string", "minLength": 1, "maxLength": 160},
+    "runtime_scope": {"enum": ["private", "personal_vault"]},
+    "operation": {"const": "artifact_promotion"},
+    "target": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "mode"],
+      "properties": {
+        "path": {"const": "06_active_context/work_state/outputs/"},
+        "mode": {"const": "subtree"}
+      }
+    },
+    "status": {"enum": ["prepared", "committed", "compensated", "compensation_failed", "rolled_back"]},
+    "authority_effect": {"const": "none"},
+    "changes": {
+      "type": "array", "maxItems": 64,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["path", "disposition", "prior_digest", "new_digest", "bytes"],
+        "properties": {
+          "path": {"type": "string", "pattern": "^06_active_context/work_state/outputs/[^/].*", "maxLength": 2048},
+          "disposition": {"enum": ["created", "replaced"]},
+          "prior_digest": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+          "new_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "bytes": {"type": "integer", "minimum": 0, "maximum": 33554432}
+        }
+      }
+    },
+    "rollback_ref": {"type": "string", "pattern": "^06_active_context/work_state/\\.artifact-rollbacks/artifact-[0-9a-f]{32}/receipt\\.json$"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string"},
+    "receipt_id": {"type": "string", "pattern": "^filesystem:[0-9a-f]{64}$"}
+  }
+}

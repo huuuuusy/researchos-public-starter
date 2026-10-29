@@ -1,0 +1,136 @@
+{
+  "schema_id": "researchos-evolution-control-v1",
+  "version": "1.1.0",
+  "status": "active",
+  "plan_states": [
+    "observed",
+    "candidate",
+    "confirmed",
+    "executing",
+    "validated",
+    "checkpointed",
+    "deferred",
+    "rejected",
+    "failed",
+    "rolled_back"
+  ],
+  "risk_tiers": {
+    "E0": {
+      "id": "observe",
+      "automatic": true,
+      "writes": []
+    },
+    "E1": {
+      "id": "derived_refresh",
+      "automatic": "opt_in_only",
+      "allowed_write_classes": [
+        "derived_index",
+        "generated_projection",
+        "runtime_checkpoint"
+      ]
+    },
+    "E2": {
+      "id": "candidate_writeback",
+      "automatic": false,
+      "allowed_write_classes": [
+        "review_candidate"
+      ]
+    },
+    "E3": {
+      "id": "canonical_change",
+      "automatic": false,
+      "requires_human_confirmation": true
+    },
+    "E4": {
+      "id": "system_or_external_change",
+      "automatic": false,
+      "requires_human_confirmation": true
+    }
+  },
+  "execution_policies": [
+    "observe",
+    "safe_refresh",
+    "manual_heavy",
+    "network_manual"
+  ],
+  "step_required_fields": [
+    "id",
+    "label",
+    "command",
+    "timeout",
+    "optional",
+    "phase",
+    "triggers",
+    "depends_on",
+    "writes",
+    "validates",
+    "execution_policy",
+    "cost"
+  ],
+  "limits": {
+    "max_changed_paths": 200,
+    "max_visible_paths": 40,
+    "full_review_tracked_markdown_ratio": 0.25,
+    "file_change_debounce_seconds": 30
+  },
+  "canonical_prefixes": [
+    "00_identity/",
+    "01_knowledge/",
+    "02_decisions/",
+    "03_cognition/",
+    "04_people/",
+    "05_workflows/"
+  ],
+  "derived_prefixes": [
+    "01_knowledge/metadata/",
+    "dashboard/data/",
+    "08_exports/public_starter/"
+  ],
+  "runtime_prefixes": [
+    "06_active_context/work_state/evolution/"
+  ],
+  "always_confirm_prefixes": [
+    "00_identity/",
+    "02_decisions/",
+    "03_cognition/",
+    "04_people/",
+    "05_workflows/",
+    "09_templates/data_contracts/",
+    "config/",
+    "dashboard/",
+    "scripts/",
+    ".github/"
+  ],
+  "invariants": [
+    "confirmed Markdown and explicit human confirmation remain authority",
+    "planning reads paths and bounded metadata rather than private source bodies",
+    "commands come only from the versioned maintenance manifest",
+    "every maintenance writer declares its actual repository relative write owners",
+    "canonical memory is never an automatic write target",
+    "public starter never discovers private repositories providers checkpoints or runtime state",
+    "a plan id is valid only for its exact change token and ordered step ids",
+    "required validation must pass before checkpoint advancement",
+    "selected dependency failures block downstream commands; executed receipts exclude blocked steps and independent selected steps may continue",
+    "direct subsets do not expand execution scope; omitted prerequisites reuse existing inputs subject to the selected command checks",
+    "failed safe refresh preserves changed targets and retains snapshots for reconciliation when write attribution is unavailable",
+    "an unresolved manual candidate remains visible across later unrelated changes until an exact reject decision while defer retains it without repeated prompting for the same change token",
+    "Git remains the rollback owner for code schema and reviewed document changes"
+  ],
+  "public_boundary": {
+    "shared": [
+      "contract",
+      "planner semantics",
+      "risk tiers",
+      "fixed-step execution",
+      "validation"
+    ],
+    "never_shared": [
+      "private changed paths",
+      "private checkpoint",
+      "private provider state",
+      "private corpus content",
+      "private execution logs"
+    ],
+    "public_execution": "public-starter fixed maintenance commands only"
+  }
+}

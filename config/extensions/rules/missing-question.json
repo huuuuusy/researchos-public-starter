@@ -1,0 +1,41 @@
+{
+  "schema_id": "researchos-task-extension-v2",
+  "id": "missing_question",
+  "version": "1.0.0",
+  "family": "system",
+  "kind": "maintenance",
+  "evaluates": [
+    "commitments"
+  ],
+  "scope_selector": "own_scope",
+  "summary_zh": "主责活跃承诺还没有写当前问题 Q；每天最多提示 2 项。",
+  "summary_en": "An active lead commitment has no current question Q; at most 2 prompts per day.",
+  "trigger": {
+    "when": "active_lead_commitment_without_question",
+    "daily_cap": 2
+  },
+  "preserve": [
+    "all_content"
+  ],
+  "expect": {
+    "result": "writeback",
+    "write_scope": [
+      "commitment:question"
+    ]
+  },
+  "pre": {
+    "auto_start_max": "internal"
+  },
+  "executor": "script",
+  "resolver": "human",
+  "check": [
+    "commitment_has_question"
+  ],
+  "budget": {
+    "model_runs": 0
+  },
+  "available_in": [
+    "private",
+    "public_starter"
+  ]
+}

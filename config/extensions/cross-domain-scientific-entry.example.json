@@ -1,0 +1,132 @@
+{
+  "schema_id": "researchos-task-extension-v1",
+  "core_api_version": "1",
+  "id": "cross_domain_scientific_entry",
+  "version": "1.0.0",
+  "enabled": false,
+  "available_in": [
+    "private",
+    "public_starter",
+    "personal_vault"
+  ],
+  "public_safe": true,
+  "sensitivity_default": "public_safe",
+  "documentation": {"readme": "docs/plugins/cross-domain-scientific-entry/README.md"},
+  "governance": {
+    "schema_id": "researchos-plugin-governance-v1",
+    "contract_id": "researchos.contribution.cross_domain_scientific_entry",
+    "archetype": "capability_led",
+    "distribution": {"variant": "public", "parity_policy": "scoped_variant", "allowed_divergence_fields": ["governance.distribution.variant", "governance.composition.optional_integrations", "governance.routing.handoff_to"]},
+    "lineage": {"prototype_id": "researchos_plugin_capability_v1", "derivation_mode": "native", "reuse_policy": "native", "source_refs": [], "external_runtime_dependency": "none", "transformation_summary": "Native cross-domain scientific-entry method packaged as an installable derivative of the shared capability prototype.", "current_placement": "plugin", "proposed_absorption_target": "none", "absorption_gate": "review_required"},
+    "capability_value": {"comparison_target": "current_model_without_capability", "comparison_status": "planned", "expected_deltas": ["quality", "reliability", "evidence_boundary"], "expected_burdens": ["context_cost", "maintenance_cost"], "evidence_refs": [], "placement_decision": "pending_comparison", "retention_rule": "Retain as an extension only if bounded cross-domain entry improves problem framing and admission without overstating domain authority."},
+    "effects": {"default_effect": "artifact", "allowed_effects": ["read_only", "answer", "artifact", "review_candidate"]},
+    "data_policy": {"default_sensitivity": "inherit_runtime", "default_export_policy": "public_safe"},
+    "composition": {"requires": ["researchos_core"], "provides": ["cross_domain_scientific_entry"], "optional_integrations": [], "conflicts_with": []},
+    "capability_bindings": [{"contribution_id": "cross_domain_scientific_entry", "claim_ids": ["cross_domain_scientific_entry"]}],
+    "task_projections": [{"task_id": "cross_domain_scientific_entry", "contribution_id": "cross_domain_scientific_entry", "capability_id": "cross_domain_scientific_entry", "role": "entrypoint"}],
+    "routing": {"trigger_intents": ["cross_domain_entry", "foreign_domain_problem", "capability_transfer"], "non_goals": ["unverified_problem_solving", "domain_authority_replacement", "automatic_capability_claim"], "handoff_to": [{"kind": "workflow", "id": "domain_admission", "availability": "required"}]},
+    "admission": {"maturity": "instrumented", "proof_refs": ["evals/test_cross_domain_scientific_entry_extension.py"], "last_reviewed": "2026-08-14", "revalidation_triggers": ["case_protocol_change", "domain_admission_change", "human_case_evidence"], "retirement_condition": "Retire if search, domain admission, human learning, retention, and result claims can no longer be evaluated separately."}
+  },
+  "authority": {
+    "source": "User-supplied sources, named domain authorities, and explicit version boundaries remain authoritative.",
+    "candidate": "Case maps, candidates, admission judgments, and capability claims remain candidate-only until separately reviewed.",
+    "confirmation": "Human confirmation and the named domain admission route are required before durable writeback or public claims.",
+    "save_target": "Use the existing answer, artifact, or Review flow; this extension owns no storage or release authority.",
+    "requires_human_confirmation": true,
+    "writeback_route": "review",
+    "storage_owner": "researchos_core",
+    "locales": {
+      "en": {
+        "source": "User-supplied sources, named domain authorities, and explicit version boundaries remain authoritative.",
+        "candidate": "Case maps, candidates, admission judgments, and capability claims remain candidate-only until separately reviewed.",
+        "confirmation": "Human confirmation and the named domain admission route are required before durable writeback or public claims.",
+        "save_target": "Use the existing answer, artifact, or Review flow; this extension owns no storage or release authority."
+      },
+      "zh-CN": {
+        "source": "用户提供的来源、指定领域权威和明确版本边界继续拥有事实权威。",
+        "candidate": "领域地图、候选、准入判断和能力主张在单独审核前均保持 candidate-only。",
+        "confirmation": "持久写回或公开主张前，必须获得人工确认并经过指定的领域准入入口。",
+        "save_target": "复用现有 answer、artifact 或 Review 流程；本扩展不拥有存储或发布权。"
+      }
+    }
+  },
+  "task": {
+    "aliases": [
+      "interdisciplinary_entry",
+      "cross_domain_research"
+    ],
+    "workspace": "agent",
+    "result_modes": [
+      "answer",
+      "artifact",
+      "writeback"
+    ],
+    "default_result_mode": "artifact",
+    "budget": "quick/standard/evidence; freeze one case and report model, tool, expert, and wall-time costs",
+    "read": {
+      "quick": [
+        "05_workflows/research_management/cross-domain-scientific-entry-workflow.md"
+      ],
+      "standard": [
+        "05_workflows/research_management/cross-domain-scientific-entry-workflow.md",
+        "09_templates/cross-domain-scientific-entry-case-pack.md"
+      ],
+      "evidence": [
+        "05_workflows/research_management/cross-domain-scientific-entry-workflow.md",
+        "09_templates/cross-domain-scientific-entry-case-pack.md"
+      ]
+    },
+    "read_locales": {
+      "en": {
+        "quick": [
+          "05_workflows/research_management/cross-domain-scientific-entry-workflow.md"
+        ],
+        "standard": [
+          "05_workflows/research_management/cross-domain-scientific-entry-workflow.md",
+          "09_templates/cross-domain-scientific-entry-case-pack.md"
+        ],
+        "evidence": [
+          "05_workflows/research_management/cross-domain-scientific-entry-workflow.md",
+          "09_templates/cross-domain-scientific-entry-case-pack.md"
+        ]
+      },
+      "zh-CN": {
+        "quick": [
+          "05_workflows/research_management/cross-domain-scientific-entry-workflow.zh.md"
+        ],
+        "standard": [
+          "05_workflows/research_management/cross-domain-scientific-entry-workflow.zh.md",
+          "09_templates/cross-domain-scientific-entry-case-pack.zh.md"
+        ],
+        "evidence": [
+          "05_workflows/research_management/cross-domain-scientific-entry-workflow.zh.md",
+          "09_templates/cross-domain-scientific-entry-case-pack.zh.md"
+        ]
+      }
+    },
+    "locales": {
+      "en": {
+        "name": "Cross-domain scientific entry",
+        "goal": "Turn entry into an unfamiliar scientific domain into a bounded, replayable process that separates search, admission, human learning, system retention, and domain results.",
+        "user_input_hint": "Provide the target domain, one local problem or phenomenon, the smallest source set, evidence obligation, budget, and available domain-admission route.",
+        "output": "Case Charter + Minimum Domain Map + Approach Registry + Candidate Ledger + Admission Receipt + Retention/Transfer Report + Case Settlement",
+        "next_steps": [
+          "Compare at most three candidate cases and freeze one",
+          "Verify the problem status and evidence obligation before solution search",
+          "Choose answer, Case Pack artifact, or candidate writeback through Review"
+        ]
+      },
+      "zh-CN": {
+        "name": "跨域科研入域",
+        "goal": "把进入陌生科学领域变成一个有边界、可回放的过程，并分开检验搜索、准入、人的学习、系统保持和领域结果。",
+        "user_input_hint": "提供目标领域、一个局部问题或现象、最小来源集、证据义务、预算和可用的领域准入入口。",
+        "output": "Case Charter + Minimum Domain Map + Approach Registry + Candidate Ledger + Admission Receipt + Retention/Transfer Report + Case Settlement",
+        "next_steps": [
+          "最多比较三个候选案例并只冻结一个",
+          "解题搜索前核对问题状态和证据义务",
+          "选择直接回答、Case Pack 产物或经 Review 的候选写回"
+        ]
+      }
+    }
+  }
+}

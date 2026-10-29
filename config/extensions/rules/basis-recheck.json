@@ -1,0 +1,47 @@
+{
+  "schema_id": "researchos-task-extension-v2",
+  "id": "basis_recheck",
+  "version": "1.0.0",
+  "family": "basis_changed",
+  "kind": "maintenance",
+  "evaluates": [
+    "judgments",
+    "nodes"
+  ],
+  "scope_selector": "own_scope",
+  "summary_zh": "判断块或已确认边所依据的节点版本变了，请复查判断是否仍成立。",
+  "summary_en": "The version of a node that a judgment block or confirmed relation depends on changed; re-check whether the judgment still holds.",
+  "trigger": {
+    "when": "basis_version_changed",
+    "covers": [
+      "judgment_basis",
+      "confirmed_relation_endpoints"
+    ]
+  },
+  "preserve": [
+    "all_content"
+  ],
+  "expect": {
+    "result": "decision",
+    "write_scope": [
+      "judgment_block:basis",
+      "judgment_block:confirmed",
+      "relation:confirmed_versions"
+    ]
+  },
+  "pre": {
+    "auto_start_max": "internal"
+  },
+  "executor": "script",
+  "resolver": "human",
+  "check": [
+    "basis_versions_current"
+  ],
+  "budget": {
+    "model_runs": 0
+  },
+  "available_in": [
+    "private",
+    "public_starter"
+  ]
+}

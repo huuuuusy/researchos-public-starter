@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-task-extension-v1.schema.json",
+  "title": "ResearchOS Declarative Task Extension v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "core_api_version",
+    "id",
+    "version",
+    "enabled",
+    "available_in",
+    "public_safe",
+    "sensitivity_default",
+    "documentation",
+    "authority",
+    "task"
+  ],
+  "properties": {
+    "schema_id": {"const": "researchos-task-extension-v1"},
+    "core_api_version": {"const": "1"},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "enabled": {"type": "boolean"},
+    "available_in": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["private", "public_starter", "personal_vault"]}
+    },
+    "public_safe": {"type": "boolean"},
+    "sensitivity_default": {
+      "enum": ["public", "public_safe", "internal", "private", "local_only", "not_exportable"]
+    },
+    "documentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["readme"],
+      "properties": {
+        "readme": {"type": "string", "pattern": "^docs/plugins/[a-z][a-z0-9-]*/README\\.md$"}
+      }
+    },
+    "governance": {"$ref": "researchos-plugin-governance-v1.schema.json"},
+    "authority": {
+      "type": "object",
+      "required": ["source", "candidate", "confirmation", "save_target", "requires_human_confirmation", "writeback_route", "storage_owner"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "candidate": {"type": "string", "minLength": 1},
+        "confirmation": {"type": "string", "minLength": 1},
+        "save_target": {"type": "string", "minLength": 1},
+        "locales": {
+          "type": "object",
+          "required": ["en", "zh-CN"],
+          "properties": {
+            "en": {"$ref": "#/$defs/authority_locale"},
+            "zh-CN": {"$ref": "#/$defs/authority_locale"}
+          }
+        },
+        "requires_human_confirmation": {"const": true},
+        "writeback_route": {"const": "review"},
+        "storage_owner": {"const": "researchos_core"}
+      }
+    },
+    "task": {
+      "type": "object",
+      "required": ["workspace", "result_modes", "default_result_mode", "budget", "read", "locales"],
+      "properties": {
+        "aliases": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "workspace": {"enum": ["agent", "assets", "inbox"]},
+        "result_modes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["answer", "artifact", "writeback"]}
+        },
+        "default_result_mode": {"enum": ["answer", "artifact", "writeback"]},
+        "budget": {"type": "string", "minLength": 1},
+        "read": {"$ref": "#/$defs/read_tiers"},
+        "read_locales": {
+          "type": "object",
+          "required": ["en", "zh-CN"],
+          "properties": {
+            "en": {"$ref": "#/$defs/read_tiers"},
+            "zh-CN": {"$ref": "#/$defs/read_tiers"}
+          }
+        },
+        "locales": {
+          "type": "object",
+          "required": ["en", "zh-CN"],
+          "properties": {
+            "en": {"$ref": "#/$defs/locale"},
+            "zh-CN": {"$ref": "#/$defs/locale"}
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "authority_locale": {
+      "type": "object",
+      "required": ["source", "candidate", "confirmation", "save_target"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "candidate": {"type": "string", "minLength": 1},
+        "confirmation": {"type": "string", "minLength": 1},
+        "save_target": {"type": "string", "minLength": 1}
+      }
+    },
+    "read_tiers": {
+      "type": "object",
+      "required": ["quick", "standard", "evidence"],
+      "properties": {
+        "quick": {"type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "standard": {"type": "array", "minItems": 1, "maxItems": 5, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "evidence": {"type": "array", "minItems": 1, "maxItems": 8, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "locale": {
+      "type": "object",
+      "required": ["name", "goal", "user_input_hint", "output", "next_steps"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "goal": {"type": "string", "minLength": 1},
+        "user_input_hint": {"type": "string", "minLength": 1},
+        "output": {"type": "string", "minLength": 1},
+        "next_steps": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "schema_id": "researchos-plugin-v1",
+  "core_api_version": "1",
+  "id": "research_portfolio",
+  "version": "2.0.0",
+  "enabled": true,
+  "available_in": [
+    "private",
+    "public_starter",
+    "personal_vault"
+  ],
+  "execution_profile": "declarative",
+  "product_tier": "foundation_projection",
+  "public_safe": true,
+  "sensitivity_default": "local_only",
+  "documentation": {"readme": "docs/plugins/research-portfolio/README.md"},
+  "governance": {
+    "schema_id": "researchos-plugin-governance-v1",
+    "contract_id": "researchos.contribution.research_portfolio",
+    "archetype": "capability_led",
+    "distribution": {"variant": "universal", "parity_policy": "exact", "allowed_divergence_fields": []},
+    "lineage": {"prototype_id": "researchos_plugin_capability_v1", "derivation_mode": "native", "reuse_policy": "native", "source_refs": [], "external_runtime_dependency": "none", "transformation_summary": "Native ResearchOS responsibility projection derived from the shared plugin prototype.", "current_placement": "foundation_capability", "proposed_absorption_target": "none", "absorption_gate": "review_required"},
+    "capability_value": {"comparison_target": "host_without_capability", "comparison_status": "planned", "expected_deltas": ["efficiency", "authority_safety", "recoverability"], "expected_burdens": ["trigger_risk", "maintenance_cost"], "evidence_refs": [], "placement_decision": "pending_comparison", "retention_rule": "Retain as foundation only if registered responsibility and attention state improve recovery without inferring ownership."},
+    "effects": {"default_effect": "read_only", "allowed_effects": ["read_only", "artifact", "bounded_runtime_state", "review_candidate"]},
+    "data_policy": {"default_sensitivity": "inherit_runtime", "default_export_policy": "local_only"},
+    "composition": {"requires": ["researchos_core"], "provides": ["research_portfolio_projection"], "optional_integrations": ["material_intake"], "conflicts_with": []},
+    "capability_bindings": [{"contribution_id": "research_portfolio_projection", "claim_ids": ["research_portfolio_attention"]}],
+    "task_projections": [],
+    "routing": {"trigger_intents": ["portfolio_view", "attention_update", "project_completion_candidate"], "non_goals": ["responsibility_inference", "canonical_direct_write"], "handoff_to": [{"kind": "core_route", "id": "review", "availability": "required"}]},
+    "admission": {"maturity": "locally_validated", "proof_refs": ["evals/test_research_portfolio_two_surface_contract.js"], "last_reviewed": "2026-08-16", "revalidation_triggers": ["responsibility_contract_change", "attention_state_change", "public_runtime_change"], "retirement_condition": "Retire only after responsibility authority and reversible attention-state behavior have a validated replacement."}
+  },
+  "authority": {
+    "source": "The private responsibility ledger, public demo agenda, or local personal-vault agenda remains the only responsibility authority for its runtime.",
+    "candidate": "Now projects every Today commitment, confirmed calendar date, active or waiting project, and exact item-level execution status. Library never owns project state or scheduling. Calendar and same-day ordering change only the reversible attention owner. Start, adjust, create, and completion actions remain candidates until the existing confirmation route accepts them.",
+    "confirmation": "The Dashboard never infers lead/support ownership from recent activity and never writes responsibility state directly.",
+    "save_target": "Confirmed private changes target the existing portfolio Markdown owner; public demo and personal-vault modes remain policy-gated.",
+    "locales": {
+      "en": {
+        "source": "The private responsibility ledger, public demo agenda, or local personal-vault agenda remains the only responsibility authority for its runtime.",
+        "candidate": "Now projects every Today commitment, confirmed calendar date, active or waiting project, and exact item-level execution status. Library never owns project state or scheduling. Calendar and same-day ordering change only the reversible attention owner. Start, adjust, create, and completion actions remain candidates until the existing confirmation route accepts them.",
+        "confirmation": "The Dashboard never infers lead/support ownership from recent activity and never writes responsibility state directly.",
+        "save_target": "Confirmed private changes target the existing portfolio Markdown owner; public demo and personal-vault modes remain policy-gated."
+      },
+      "zh-CN": {
+        "source": "私有责任台账、公开示例议程或本地个人材料议程分别是其运行时唯一责任权威。",
+        "candidate": "Now 投影今日全部 Commitment、明确日期、活动或等待项目及精确事项级执行状态；Library 不拥有项目状态或排期。月历和同日排序只改变可撤销的 attention owner；开始、调整、新建和完成动作继续沿用既有确认路径。",
+        "confirmation": "Dashboard 不从最近活动推断 lead/support，也不直接写责任状态。",
+        "save_target": "私有版确认后仍写向既有 portfolio Markdown owner；公开示例和个人材料模式继续受策略门禁。"
+      }
+    },
+    "requires_human_confirmation": true,
+    "writeback_route": "review",
+    "storage_owner": "researchos_core"
+  },
+  "permissions": {
+    "read_paths": [],
+    "network_domains": [],
+    "command_ids": [],
+    "state_access": "none",
+    "canonical_write": false
+  },
+  "contributions": {
+    "tasks": [],
+    "actions": [
+      {"id": "start_portfolio_item", "handler": "draft_portfolio_item", "surface": "start", "execution": "client", "effect": "artifact"},
+      {"id": "adjust_portfolio_item", "handler": "draft_portfolio_item", "surface": "start", "execution": "client", "effect": "artifact"},
+      {"id": "create_portfolio_item", "handler": "draft_portfolio_item", "surface": "start", "execution": "client", "effect": "artifact"},
+      {"id": "update_portfolio_attention", "handler": "attention_action", "surface": "start", "execution": "platform_registered", "effect": "bounded_runtime_state", "confirmation_mode": "inline", "risk": "low", "write_scope": "attention_state", "reversible": true, "public_behavior": "demo_only"},
+      {"id": "complete_portfolio_step", "handler": "attention_action", "surface": "start", "execution": "platform_registered", "effect": "bounded_runtime_state", "confirmation_mode": "inline", "risk": "low", "write_scope": "attention_state", "reversible": true, "public_behavior": "demo_only"},
+      {"id": "complete_portfolio_project", "handler": "complete_portfolio_project", "surface": "start", "execution": "platform_registered", "effect": "review_candidate", "confirmation_mode": "review", "risk": "high", "write_scope": "lifecycle_state", "reversible": true, "public_behavior": "demo_only"}
+    ],
+    "candidate_types": [],
+    "asset_types": [
+      {"id": "portfolio_item"}
+    ],
+    "source_adapters": [],
+    "previewers": [],
+    "projections": [
+      {"id": "research_portfolio", "source": "home_command_center.research_portfolio", "optional": true, "schema_id": "researchos-projection-envelope-v1", "version": "1", "sensitivity": "local_only", "freshness": "snapshot", "export_fields": ["$"]}
+    ],
+    "work_item_providers": [
+      {"id": "research_portfolio_items", "projection_id": "research_portfolio", "adapter": "research_portfolio_work_items", "optional": true, "public_behavior": "demo_only"}
+    ],
+    "ui_slots": [
+      {
+        "id": "research_portfolio_workbench",
+        "slot": "workbench",
+        "surface": "start",
+        "region": "primary",
+        "adapter": "research_portfolio_workbench",
+        "order": 100,
+        "projection_ids": ["research_portfolio"],
+        "action_ids": ["start_portfolio_item", "adjust_portfolio_item", "create_portfolio_item", "update_portfolio_attention", "complete_portfolio_step", "complete_portfolio_project"],
+        "locales": {
+          "en": {"title": "Actionable projects", "hint": "Only work that needs attention now appears on the first screen."},
+          "zh-CN": {"title": "当前可行动项目", "hint": "第一屏只显示现在需要安排、处理或重新判断的事项。"}
+        }
+      }
+    ]
+  },
+  "state_namespace": "researchos.plugin.research_portfolio",
+  "lifecycle": {
+    "install": "core_bundled",
+    "enable": "runtime_scope",
+    "disable": "runtime_scope",
+    "uninstall": "core_release_change",
+    "migrations": [
+      "legacy_today_portfolio_to_workbench_slot",
+      "full_portfolio_from_workbench_to_library",
+      "library_card_calendar_projection",
+      "library_time_destination_projection",
+      "calendar_day_drag_projection"
+    ]
+  },
+  "validation": {
+    "commands": [
+      "python3 scripts/validate_plugins.py",
+      "python3 scripts/validate_agent_architecture.py"
+    ],
+    "behavior_tests": [
+      "node evals/test_research_portfolio_two_surface_contract.js"
+    ]
+  }
+}

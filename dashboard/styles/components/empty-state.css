@@ -1,0 +1,11 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard 共享组件样式原子「empty-state」；只放跨视图复用的空态文本规则。
+ * English: Shared component style atom for empty states in the ResearchOS dashboard; only cross-view reusable empty-state text rules belong here.
+ */
+
+.empty-state,
+.preview-empty {
+  color: var(--muted-soft);
+  font-size: 13px;
+  line-height: 1.5;
+}

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-task-intent-v1.schema.json",
+  "title": "ResearchOS TaskIntent v1",
+  "description": "An untrusted client request. It never grants permission, runtime scope, idempotency, or durable authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "input_trust", "goal", "instruction", "client_request_id", "client",
+    "requested_result", "requested_profile", "client_hints", "source_refs"
+  ],
+  "properties": {
+    "schema_id": {"const": "researchos-task-intent-v1"},
+    "input_trust": {"const": "untrusted"},
+    "goal": {"type": "string", "maxLength": 4000},
+    "instruction": {"type": "string", "maxLength": 65536},
+    "client_request_id": {
+      "type": "string", "maxLength": 160,
+      "description": "Untrusted correlation hint. The server must not treat it as an authorization, run id, or canonical idempotency key."
+    },
+    "client": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "surface", "task_ref"],
+      "properties": {
+        "kind": {
+          "type": "string", "minLength": 1, "maxLength": 120,
+          "description": "Self-asserted client metadata. It must never select policy, permission, runtime scope, or authority."
+        },
+        "surface": {
+          "type": "string", "minLength": 1, "maxLength": 120,
+          "description": "Self-asserted client surface metadata; not a trusted route or authorization signal."
+        },
+        "task_ref": {"type": "string", "maxLength": 240}
+      }
+    },
+    "requested_result": {
+      "type": "object", "additionalProperties": false, "required": ["mode"],
+      "properties": {
+        "mode": {
+          "type": "string", "minLength": 1, "maxLength": 80,
+          "x-supported-values": ["answer", "artifact", "writeback"],
+          "description": "Untrusted requested value. Unsupported values remain visible for server-side validation and structured rejection."
+        }
+      }
+    },
+    "requested_profile": {
+      "type": "object", "additionalProperties": false,
+      "required": ["provider", "model", "reasoning_effort", "task_complexity"],
+      "properties": {
+        "provider": {"type": "string", "minLength": 1, "maxLength": 120},
+        "model": {"type": "string", "minLength": 1, "maxLength": 240},
+        "reasoning_effort": {
+          "type": "string", "minLength": 1, "maxLength": 80,
+          "x-supported-values": ["auto", "low", "medium", "high", "xhigh", "max", "ultra"]
+        },
+        "task_complexity": {
+          "type": "string", "minLength": 1, "maxLength": 80,
+          "x-supported-values": ["auto", "economy", "standard", "deep"]
+        }
+      }
+    },
+    "client_hints": {
+      "type": "object", "additionalProperties": false,
+      "required": ["recommended_reasoning_effort", "recommended_task_complexity"],
+      "properties": {
+        "recommended_reasoning_effort": {
+          "type": "string", "minLength": 1, "maxLength": 80,
+          "x-supported-values": ["auto", "low", "medium", "high", "xhigh", "max", "ultra"]
+        },
+        "recommended_task_complexity": {
+          "type": "string", "minLength": 1, "maxLength": 80,
+          "x-supported-values": ["auto", "economy", "standard", "deep"]
+        }
+      }
+    },
+    "source_refs": {
+      "type": "array", "maxItems": 20,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["kind", "ref", "label"],
+        "properties": {
+          "kind": {
+            "type": "string", "minLength": 1, "maxLength": 80,
+            "x-supported-values": ["artifact", "card", "object", "session_source", "url"]
+          },
+          "ref": {"type": "string", "minLength": 1, "maxLength": 2048},
+          "label": {"type": "string", "maxLength": 240}
+        }
+      }
+    }
+  }
+}

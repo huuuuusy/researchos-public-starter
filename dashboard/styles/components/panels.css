@@ -1,0 +1,53 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard 共享组件样式原子「panels」；只放跨视图复用的 panel、section 和 page-lead surface。
+ * English: Shared component style atom for panels in the ResearchOS dashboard; only cross-view reusable panel, section, and page-lead surfaces belong here.
+ */
+
+.panel,
+.markdown-preview-panel {
+  border: var(--chrome-panel-border);
+  border-top-color: var(--chrome-panel-border-top);
+  border-radius: var(--radius-lg);
+  background: var(--chrome-panel-surface);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(18px) saturate(1.08);
+}
+
+.panel {
+  display: grid;
+  gap: 22px;
+  padding: 22px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+}
+
+.panel-head h2 {
+  color: var(--ink-strong);
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.panel-head span {
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 450;
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  .panel {
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .panel-head {
+    display: grid;
+    justify-content: stretch;
+  }
+}

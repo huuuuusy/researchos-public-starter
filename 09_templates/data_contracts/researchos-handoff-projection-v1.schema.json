@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-handoff-projection-v1.schema.json",
+  "title": "ResearchOS HandoffReceipt Dashboard Projection v1",
+  "description": "A read-only, allowlisted projection of one normalized HandoffReceipt. It is not authority, delivery proof, a transcript, or a receipt-creation surface.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "source_schema_id", "handoff_id", "task_id", "runtime_scope", "content_state", "source_revision", "last_judgment", "open_boundary", "next_safe_action", "forbidden_actions", "target_client", "limitations"],
+  "properties": {
+    "schema_id": {"const": "researchos-handoff-projection-v1"},
+    "source_schema_id": {"const": "researchos-handoff-receipt-v1"},
+    "handoff_id": {"type": "string", "pattern": "^handoff:[0-9a-f]{64}$"},
+    "task_id": {"type": "string", "pattern": "^task:[0-9a-f]{64}$"},
+    "runtime_scope": {"enum": ["private", "public_starter", "personal_vault"]},
+    "content_state": {"enum": ["included", "suppressed"]},
+    "source_revision": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "source_id", "value_digest"],
+      "properties": {
+        "state": {"enum": ["unknown", "verified"]},
+        "source_id": {"type": "string", "maxLength": 68},
+        "value_digest": {"type": "string", "maxLength": 64}
+      },
+      "allOf": [
+        {"if": {"properties": {"state": {"const": "unknown"}}}, "then": {"properties": {"source_id": {"const": ""}, "value_digest": {"const": ""}}}},
+        {"if": {"properties": {"state": {"const": "verified"}}}, "then": {"properties": {"source_id": {"pattern": "^src:[0-9a-f]{64}$"}, "value_digest": {"pattern": "^[0-9a-f]{64}$"}}}}
+      ]
+    },
+    "last_judgment": {"$ref": "#/$defs/lastJudgment"},
+    "open_boundary": {"$ref": "#/$defs/openBoundary"},
+    "next_safe_action": {"$ref": "#/$defs/nextSafeAction"},
+    "forbidden_actions": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "items"],
+      "properties": {
+        "state": {"enum": ["unknown", "recorded"]},
+        "items": {"type": "array", "maxItems": 8, "items": {"type": "string", "minLength": 1, "maxLength": 500}}
+      }
+    },
+    "target_client": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "surface", "binding_state"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1, "maxLength": 120},
+        "surface": {"type": "string", "minLength": 1, "maxLength": 120},
+        "binding_state": {"const": "requested"}
+      }
+    },
+    "limitations": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "prefixItems": [
+        {"const": "projection_not_authority"},
+        {"const": "target_not_delivery"},
+        {"const": "no_transcript"}
+      ],
+      "items": false
+    }
+  },
+  "$defs": {
+    "statementBase": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "text"],
+      "properties": {"state": {"type": "string"}, "text": {"type": "string", "maxLength": 2000}}
+    },
+    "lastJudgment": {"allOf": [{"$ref": "#/$defs/statementBase"}, {"properties": {"state": {"enum": ["unknown", "candidate", "human_recorded"]}}}]},
+    "openBoundary": {"allOf": [{"$ref": "#/$defs/statementBase"}, {"properties": {"state": {"enum": ["unknown", "recorded"]}}}]},
+    "nextSafeAction": {"allOf": [{"$ref": "#/$defs/statementBase"}, {"properties": {"state": {"enum": ["unknown", "recommended"]}}}]}
+  }
+}

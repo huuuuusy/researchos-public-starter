@@ -1,0 +1,723 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard 视图样式「maintenance」的 owner；维护区以系统关系图为主，命令与外部证据保持二级入口。
+ * English: Style owner for the maintenance dashboard view; centers the system relationship graph while keeping commands and external evidence secondary.
+ */
+
+.maintenance-graph-shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  min-width: 0;
+}
+
+.utility-drawer[open] {
+  overflow: visible;
+}
+
+.maintenance-graph-panel {
+  gap: 14px;
+  min-width: 0;
+}
+
+.auto-update-panel {
+  gap: 14px;
+  min-width: 0;
+  overflow: hidden;
+  border-color: rgba(0, 122, 255, 0.2);
+  background: rgba(248, 251, 255, 0.86);
+}
+
+.research-audit-status,
+.research-audit-boundary {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.research-audit-status {
+  color: var(--ink-strong);
+  font-size: 13px;
+  font-weight: 620;
+}
+
+.research-audit-boundary {
+  padding-left: 10px;
+  border-left: 2px solid rgba(0, 122, 255, 0.24);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.research-audit-handoff-status:empty {
+  display: none;
+}
+
+.research-audit-handoff-status:not(:empty) {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 560;
+}
+
+.maintenance-diagnostics-drawer {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.maintenance-diagnostics-drawer > summary {
+  display: grid;
+  gap: 3px;
+  min-height: 48px;
+  padding: 11px 14px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.maintenance-diagnostics-drawer > summary::-webkit-details-marker {
+  display: none;
+}
+
+.maintenance-diagnostics-drawer > summary span {
+  color: var(--ink-strong);
+  font-size: 13px;
+  font-weight: 660;
+}
+
+.maintenance-diagnostics-drawer > summary small {
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.maintenance-diagnostics-drawer > .maintenance-graph-panel {
+  margin: 0 10px 10px;
+}
+
+.asset-health-drawer > summary,
+.maintenance-detail-drawer > summary {
+  min-height: 50px;
+}
+
+.asset-health-drawer > summary span,
+.maintenance-detail-drawer > summary span {
+  font-size: 13px;
+  font-weight: 680;
+}
+
+.asset-health-drawer > summary small,
+.maintenance-detail-drawer > summary small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 450;
+  line-height: 1.42;
+}
+
+.maintenance-graph-panel,
+.auto-update-panel,
+.maintenance-secondary-grid .panel {
+  padding: 18px;
+  border-radius: var(--radius-md);
+}
+
+.maintenance-graph-panel .panel-head,
+.auto-update-panel .panel-head,
+.maintenance-secondary-grid .panel-head {
+  display: grid;
+  justify-content: stretch;
+  gap: 4px;
+}
+
+.maintenance-graph-panel .panel-head h2,
+.auto-update-panel .panel-head h2,
+.maintenance-secondary-grid .panel-head h2 {
+  font-size: 14px;
+  font-weight: 680;
+}
+
+.maintenance-graph-panel .panel-head span,
+.auto-update-panel .panel-head span,
+.maintenance-secondary-grid .panel-head span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.42;
+}
+
+.maintenance-graph-view {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.maintenance-suggestion {
+  align-items: center;
+  padding: 13px 14px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.maintenance-suggestion.recommended {
+  border-color: rgba(255, 149, 0, 0.3);
+  background: rgba(255, 247, 232, 0.64);
+}
+
+.maintenance-suggestion-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+
+.maintenance-suggestion .command-row-main p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.48;
+}
+
+.maintenance-suggestion-state {
+  display: inline-flex;
+  align-items: center;
+  min-height: 23px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(118, 118, 128, 0.09);
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.maintenance-suggestion-state.automatic {
+  align-self: center;
+  color: rgba(28, 96, 65, 0.96);
+  background: rgba(52, 199, 89, 0.11);
+}
+
+.maintenance-evolution-plan {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(0, 122, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(232, 244, 255, 0.62);
+}
+
+.maintenance-evolution-plan.warn {
+  border-color: rgba(255, 149, 0, 0.32);
+  background: rgba(255, 247, 232, 0.76);
+}
+
+.maintenance-evolution-plan.risk {
+  border-color: rgba(255, 59, 48, 0.3);
+  background: rgba(255, 235, 234, 0.76);
+}
+
+.maintenance-evolution-plan > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: end;
+}
+
+.maintenance-evolution-plan > header div {
+  display: grid;
+  gap: 3px;
+}
+
+.maintenance-evolution-plan > header span,
+.maintenance-evolution-plan > header small,
+.maintenance-evolution-plan > footer {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.maintenance-evolution-plan > header span {
+  font-weight: 720;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.maintenance-evolution-plan > header strong {
+  color: var(--ink-strong);
+  font-size: 13px;
+  font-weight: 680;
+}
+
+.maintenance-plan-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(118, 118, 128, 0.09);
+  color: var(--ink);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.maintenance-plan-summary {
+  padding: 9px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.66);
+  color: var(--ink-strong) !important;
+  font-weight: 620;
+}
+
+.maintenance-evolution-plan > footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.maintenance-evolution-plan > footer > span {
+  flex: 1 1 240px;
+}
+
+.maintenance-evolution-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.maintenance-evolution-actions button {
+  min-height: 30px;
+  padding: 6px 10px;
+  font-size: 11px;
+}
+
+.maintenance-evolution-plan > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.maintenance-evolution-plan > details {
+  min-width: 0;
+  border-top: 1px solid var(--hairline);
+  padding-top: 8px;
+}
+
+.maintenance-evolution-plan > details summary {
+  color: var(--ink-strong);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 640;
+}
+
+.maintenance-evolution-plan dl {
+  display: grid;
+  gap: 7px;
+  margin: 9px 0 0;
+}
+
+.maintenance-evolution-plan dl div {
+  display: grid;
+  grid-template-columns: minmax(78px, 0.25fr) minmax(0, 1fr);
+  gap: 8px;
+}
+
+.maintenance-evolution-plan dt,
+.maintenance-evolution-plan dd {
+  min-width: 0;
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.maintenance-evolution-plan dt {
+  color: var(--muted-soft);
+  font-weight: 650;
+}
+
+.maintenance-evolution-plan dd {
+  color: var(--ink);
+}
+
+.maintenance-technical-drawer,
+.maintenance-log-drawer {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.maintenance-technical-drawer > summary,
+.maintenance-log-drawer > summary {
+  min-height: 40px;
+  padding: 10px 12px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 630;
+}
+
+.maintenance-technical-drawer > .maintenance-runtime-summary {
+  margin: 0 10px 10px;
+}
+
+.maintenance-technical-drawer > .maintenance-evolution-plan {
+  margin: 0 10px 10px;
+}
+
+.maintenance-log-drawer > .auto-update-steps {
+  padding: 0 10px 10px;
+}
+
+.maintenance-result-card,
+.maintenance-primary-issue {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid var(--hairline);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.maintenance-result-card strong,
+.maintenance-primary-issue strong {
+  color: var(--ink-strong);
+  font-size: 14px;
+  font-weight: 690;
+}
+
+.maintenance-result-card p,
+.maintenance-primary-issue p,
+.maintenance-result-card small {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.48;
+}
+
+.maintenance-result-card.is-success,
+.maintenance-result-card.is-idle,
+.maintenance-result-card.is-read-only {
+  border-color: rgba(52, 199, 89, 0.2);
+  background: rgba(236, 249, 239, 0.72);
+}
+
+.maintenance-result-card.is-ready,
+.maintenance-result-card.is-restored,
+.maintenance-result-card.is-running,
+.maintenance-result-card.is-checking {
+  border-color: rgba(255, 149, 0, 0.3);
+  background: rgba(255, 247, 232, 0.8);
+}
+
+.maintenance-result-card.is-running,
+.maintenance-result-card.is-checking {
+  border-color: rgba(0, 122, 255, 0.24);
+  background: rgba(232, 244, 255, 0.72);
+}
+
+.maintenance-result-card.is-failed,
+.maintenance-primary-issue {
+  border-color: rgba(255, 59, 48, 0.3);
+  background: rgba(255, 235, 234, 0.78);
+}
+
+.maintenance-result-card .auto-update-button {
+  justify-self: start;
+  min-height: 40px;
+  margin-top: 5px;
+  padding-inline: 16px;
+}
+
+.maintenance-result-eyebrow {
+  color: var(--status-info-text, #165d9f);
+  font-size: 10.5px;
+  font-weight: 720;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.maintenance-result-card.is-ready .maintenance-result-eyebrow,
+.maintenance-result-card.is-restored .maintenance-result-eyebrow {
+  color: var(--status-warning-text, #8a5b12);
+}
+
+.maintenance-result-card.is-success .maintenance-result-eyebrow,
+.maintenance-result-card.is-idle .maintenance-result-eyebrow {
+  color: var(--status-success-text, #24683f);
+}
+
+.maintenance-result-card.is-failed .maintenance-result-eyebrow {
+  color: var(--status-risk-text, #a33a32);
+}
+
+.maintenance-update-impact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.maintenance-update-impact > div {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 11px;
+  border: 1px solid rgba(0, 122, 255, 0.14);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.maintenance-update-impact strong {
+  color: var(--status-info-text, #165d9f);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.maintenance-update-impact span,
+.maintenance-action-explanation,
+.maintenance-manual-note {
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.maintenance-action-explanation,
+.maintenance-manual-note {
+  margin: 2px 0 0;
+}
+
+.maintenance-running-indicator {
+  position: relative;
+  display: block;
+  height: 3px;
+  margin-top: 5px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(0, 122, 255, 0.12);
+}
+
+.maintenance-running-indicator::after {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 34%;
+  background: var(--blue, #007aff);
+  content: "";
+  animation: maintenance-running 1.1s ease-in-out infinite;
+}
+
+@keyframes maintenance-running {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(300%); }
+}
+
+.maintenance-primary-issue > span {
+  color: var(--status-risk-text, #a33a32);
+  font-size: 10.5px;
+  font-weight: 720;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.maintenance-boundary-note {
+  margin: 0;
+  padding: 9px 10px;
+  border-radius: 8px;
+  background: rgba(118, 118, 128, 0.07);
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.maintenance-boundary-note.is-safe {
+  background: rgba(236, 249, 239, 0.78);
+  color: var(--status-success-text, #24683f);
+}
+
+.maintenance-boundary-note.is-risk {
+  background: rgba(255, 235, 234, 0.78);
+  color: var(--status-risk-text, #a33a32);
+}
+
+.maintenance-runtime-summary {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.maintenance-runtime-summary > header {
+  display: grid;
+  gap: 4px;
+}
+
+.maintenance-runtime-summary > header strong {
+  color: var(--ink-strong);
+  font-size: 13px;
+  font-weight: 680;
+}
+
+.maintenance-runtime-summary > header span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.42;
+}
+
+.maintenance-runtime-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.maintenance-runtime-step {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  min-height: 86px;
+  padding: 10px;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.maintenance-runtime-step span {
+  overflow: hidden;
+  color: var(--muted-soft);
+  font-size: 10.5px;
+  font-weight: 720;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.maintenance-runtime-step strong {
+  color: var(--ink-strong);
+  font-size: 12.5px;
+  font-weight: 680;
+  line-height: 1.25;
+}
+
+.maintenance-runtime-step small {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.32;
+}
+
+.maintenance-runtime-step.type-source,
+.maintenance-runtime-step.type-index {
+  border-color: rgba(0, 122, 255, 0.18);
+  background: rgba(232, 244, 255, 0.72);
+}
+
+.maintenance-runtime-step.type-view {
+  border-color: rgba(52, 199, 89, 0.18);
+  background: rgba(236, 249, 239, 0.72);
+}
+
+.maintenance-runtime-step.type-action {
+  border-color: rgba(88, 86, 214, 0.18);
+  background: rgba(242, 240, 255, 0.72);
+}
+
+.maintenance-runtime-step.type-check,
+.maintenance-runtime-step.type-state {
+  border-color: rgba(255, 149, 0, 0.2);
+  background: rgba(255, 247, 232, 0.76);
+}
+
+.maintenance-runtime-step.tone-risk {
+  border-color: rgba(255, 59, 48, 0.34);
+  background: rgba(255, 235, 234, 0.82);
+}
+
+.maintenance-runtime-step.tone-warn {
+  border-color: rgba(255, 149, 0, 0.34);
+}
+
+.maintenance-detail-drawer {
+  margin-top: 16px;
+  min-width: 0;
+}
+
+.maintenance-secondary-grid {
+  margin: 0 18px 18px;
+  min-width: 0;
+}
+
+@media (max-width: 1280px) {
+  .maintenance-graph-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .maintenance-runtime-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .asset-health-drawer > summary,
+  .maintenance-detail-drawer > summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 3px 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .asset-health-drawer > summary span,
+  .maintenance-detail-drawer > summary span {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .asset-health-drawer > summary small,
+  .maintenance-detail-drawer > summary small {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .asset-health-drawer > summary::after,
+  .maintenance-detail-drawer > summary::after {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .maintenance-evolution-plan > header {
+    display: grid;
+    align-items: start;
+  }
+
+  .maintenance-evolution-plan dl div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+
+  .maintenance-runtime-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .maintenance-update-impact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .maintenance-result-card .auto-update-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maintenance-running-indicator::after {
+    width: 100%;
+    animation: none;
+  }
+}

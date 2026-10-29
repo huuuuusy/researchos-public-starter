@@ -1,0 +1,103 @@
+/* ResearchOS maintenance header.
+ * 中文：低干扰三屏导航；判断、资产与今日处理各自只承担一种主要动作。
+ * English: Low-attention three-screen navigation where Judgment, Assets, and Today Work each own one primary job.
+ */
+
+.workspace-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  background: transparent;
+}
+
+.workspace-switcher button {
+  position: relative;
+  display: inline-flex;
+  min-width: 0;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 540;
+  cursor: pointer;
+}
+
+.workspace-switcher button:hover {
+  background: rgba(73, 91, 116, 0.06);
+  color: var(--ink-strong);
+}
+
+.workspace-switcher button.selected,
+.workspace-switcher button[aria-selected="true"] {
+  background: rgba(73, 91, 116, 0.07);
+  color: var(--ink-strong);
+  box-shadow: none;
+}
+
+.workspace-switcher button[aria-selected="true"]::after {
+  position: absolute;
+  right: 9px;
+  bottom: 2px;
+  left: 9px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--blue);
+  content: "";
+}
+
+.workspace-switcher button strong {
+  color: inherit;
+  font: inherit;
+}
+
+.workspace-switcher button span,
+.workspace-switcher button small {
+  display: none;
+}
+
+.workspace-panel {
+  display: none;
+}
+
+.workspace-panel.workspace-active {
+  display: grid;
+  gap: 22px;
+}
+
+.workspace-panel:focus-visible {
+  outline: var(--control-focus-outline);
+  outline-offset: 6px;
+}
+
+@media (max-width: 860px) {
+  .workspace-switcher {
+    order: -1;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .workspace-switcher button {
+    flex: 1 1 0;
+    max-width: 150px;
+  }
+}
+
+@media (max-width: 640px) {
+  .workspace-switcher {
+    justify-content: stretch;
+  }
+
+  .workspace-switcher button {
+    max-width: none;
+    padding-right: 7px;
+    padding-left: 7px;
+    font-size: 12px;
+  }
+}

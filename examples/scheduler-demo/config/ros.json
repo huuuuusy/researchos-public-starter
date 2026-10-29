@@ -1,0 +1,31 @@
+{
+  "schema_id": "researchos-ros-config-v1",
+  "runtime_scope": "public_starter",
+  "graph_roots": [
+    "01_knowledge",
+    "06_active_context"
+  ],
+  "exclude": [
+    "06_active_context/work_state/"
+  ],
+  "portfolio": "06_active_context/research-portfolio.md",
+  "requirement_ledger": "06_active_context/work_state/evolution/context-impact-review.json",
+  "runtime_dir": "06_active_context/work_state/ros",
+  "active_states": [
+    "mainline",
+    "waiting",
+    "queued",
+    "conditional"
+  ],
+  "caps": {
+    "immediate": 3,
+    "today_commitments": 5,
+    "missing_question_per_day": 2
+  },
+  "deadline_warning_days": 7,
+  "immediate_deadline_days": 3,
+  "context": {
+    "max_chars": 40000
+  },
+  "language": "en"
+}

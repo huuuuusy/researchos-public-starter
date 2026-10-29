@@ -1,0 +1,168 @@
+/* ResearchOS maintenance header.
+ * 中文：ResearchOS dashboard 共享组件样式原子「drawers」；只放跨视图复用的组件规则。
+ * English: Shared component style atom for drawers in the ResearchOS dashboard; only cross-view reusable component rules belong here.
+ */
+
+.asset-detail-drawer,
+.utility-drawer,
+.simple-detail-drawer,
+.item-execution-drawer {
+  border: var(--chrome-panel-border);
+  border-top-color: var(--chrome-panel-border-top);
+  border-radius: var(--radius-lg);
+  background: var(--chrome-panel-surface);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(18px) saturate(1.08);
+}
+
+.item-execution-drawer {
+  margin-top: 16px;
+  overflow: hidden;
+  scroll-margin-top: calc(var(--topbar-height) + 16px);
+}
+
+@media (max-width: 860px) {
+  .item-execution-drawer {
+    scroll-margin-top: calc(var(--topbar-height) + 48px);
+  }
+}
+
+.item-execution-drawer > summary > div {
+  display: grid;
+  gap: 3px;
+}
+
+.item-execution-mode {
+  align-self: center;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(27, 116, 210, 0.1);
+  color: rgb(27, 116, 210);
+  font-size: 11px;
+}
+
+.item-execution-identity {
+  margin: 0 18px 14px;
+  padding: 10px 12px;
+  border-left: 3px solid rgba(27, 116, 210, 0.52);
+  background: rgba(27, 116, 210, 0.05);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.item-execution-tabs {
+  display: flex;
+  gap: 6px;
+  margin: 0 18px 14px;
+  padding: 4px;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: rgba(29, 42, 57, 0.035);
+}
+
+.item-execution-tabs[hidden] {
+  display: none;
+}
+
+.item-execution-tabs > button {
+  min-height: 34px;
+  flex: 1 1 0;
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+}
+
+.item-execution-tabs > button[aria-selected="true"] {
+  border-color: var(--hairline-strong);
+  background: var(--surface-solid);
+  color: var(--ink-strong);
+  box-shadow: var(--shadow-button);
+}
+
+details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 54px;
+  padding: 0 18px;
+  color: var(--ink-strong);
+  font-weight: 640;
+  cursor: pointer;
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details > summary::after {
+  content: "";
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--muted), var(--muted)) center / 12px 2px no-repeat,
+    linear-gradient(var(--muted), var(--muted)) center / 2px 12px no-repeat,
+    rgba(118, 118, 128, 0.09);
+}
+
+details[open] > summary::after {
+  background:
+    linear-gradient(var(--muted), var(--muted)) center / 12px 2px no-repeat,
+    rgba(118, 118, 128, 0.09);
+}
+
+details:not([open]) > :not(summary) {
+  display: none !important;
+}
+
+details > summary small {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 440;
+}
+
+.asset-detail-drawer,
+.utility-drawer,
+.simple-detail-drawer {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.asset-detail-drawer > section,
+.utility-drawer > section,
+.simple-detail-drawer > div {
+  padding: 0 18px 18px;
+}
+
+.item-local-review-ledger,
+.item-local-review-decision {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.item-local-review-ledger > header,
+.item-local-review-decision > div:first-child {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.item-local-review-decision-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.item-local-review-decision.is-recorded,
+.item-local-review-non-effect {
+  border: 1px solid var(--line, #d8d8d0);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  background: var(--surface-soft, #f7f7f3);
+}

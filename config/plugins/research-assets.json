@@ -1,0 +1,121 @@
+{
+  "schema_id": "researchos-plugin-v1",
+  "core_api_version": "1",
+  "id": "research_assets",
+  "version": "1.2.0",
+  "enabled": true,
+  "available_in": [
+    "private",
+    "public_starter",
+    "personal_vault"
+  ],
+  "execution_profile": "declarative",
+  "product_tier": "foundation_projection",
+  "public_safe": true,
+  "sensitivity_default": "local_only",
+  "documentation": {"readme": "docs/plugins/research-assets/README.md"},
+  "governance": {
+    "schema_id": "researchos-plugin-governance-v1",
+    "contract_id": "researchos.contribution.research_assets",
+    "archetype": "capability_led",
+    "distribution": {"variant": "universal", "parity_policy": "exact", "allowed_divergence_fields": []},
+    "lineage": {"prototype_id": "researchos_plugin_capability_v1", "derivation_mode": "native", "reuse_policy": "native", "source_refs": [], "external_runtime_dependency": "none", "transformation_summary": "Native ResearchOS asset and lineage projection derived from the shared plugin prototype.", "current_placement": "foundation_capability", "proposed_absorption_target": "none", "absorption_gate": "review_required"},
+    "capability_value": {"comparison_target": "host_without_capability", "comparison_status": "planned", "expected_deltas": ["efficiency", "evidence_boundary"], "expected_burdens": ["context_cost", "maintenance_cost"], "evidence_refs": [], "placement_decision": "pending_comparison", "retention_rule": "Retain as foundation only if asset discovery and evidence inspection outperform an unstructured host view without creating a second authority."},
+    "effects": {"default_effect": "read_only", "allowed_effects": ["read_only", "artifact"]},
+    "data_policy": {"default_sensitivity": "inherit_runtime", "default_export_policy": "local_only"},
+    "composition": {"requires": ["researchos_core"], "provides": ["research_asset_graph"], "optional_integrations": ["material_intake"], "conflicts_with": []},
+    "capability_bindings": [{"contribution_id": "research_asset_graph", "claim_ids": ["research_asset_navigation"]}],
+    "task_projections": [],
+    "routing": {"trigger_intents": ["asset_browse", "source_preview", "relationship_projection"], "non_goals": ["source_authority_replacement", "canonical_direct_write"], "handoff_to": [{"kind": "capability", "id": "material_intake", "availability": "if_available"}, {"kind": "core_route", "id": "review", "availability": "required"}]},
+    "admission": {"maturity": "locally_validated", "proof_refs": ["evals/test_research_assets_plugin_contract.js"], "last_reviewed": "2026-08-14", "revalidation_triggers": ["asset_schema_change", "projection_change", "public_runtime_change"], "retirement_condition": "Retire only after source identity, lineage, and projection contracts have a validated replacement."}
+  },
+  "authority": {
+    "source": "Confirmed Markdown or explicitly enabled public/personal-vault records remain source authority.",
+    "candidate": "Cards, relations, baskets, and composition changes are projections or candidates until Review confirmation.",
+    "confirmation": "Human confirmation is required before a relation, group, or asset update enters durable memory.",
+    "save_target": "The plugin reuses the existing Review route and owns no canonical storage.",
+    "locales": {
+      "en": {
+        "source": "Confirmed Markdown or explicitly enabled public/personal-vault records remain source authority.",
+        "candidate": "Cards, relations, baskets, and composition changes are projections or candidates until Review confirmation.",
+        "confirmation": "Human confirmation is required before a relation, group, or asset update enters durable memory.",
+        "save_target": "The plugin reuses the existing Review route and owns no canonical storage."
+      },
+      "zh-CN": {
+        "source": "已确认 Markdown 或明确启用的公开/个人材料记录保留来源权威。",
+        "candidate": "卡片、关系、临时篮子和组合变化在 Review 确认前只是投影或候选。",
+        "confirmation": "关系、组合或资产更新进入长期记忆前必须由用户确认。",
+        "save_target": "插件沿用既有 Review 路由，不拥有 canonical storage。"
+      }
+    },
+    "requires_human_confirmation": true,
+    "writeback_route": "review",
+    "storage_owner": "researchos_core"
+  },
+  "permissions": {
+    "read_paths": [],
+    "network_domains": [],
+    "command_ids": [],
+    "state_access": "namespaced_local",
+    "canonical_write": false
+  },
+  "contributions": {
+    "tasks": [],
+    "actions": [],
+    "candidate_types": [
+      {"id": "group"},
+      {"id": "dissolution"}
+    ],
+    "asset_types": [
+      {"id": "paper"},
+      {"id": "talk"},
+      {"id": "person"},
+      {"id": "project"},
+      {"id": "group"}
+    ],
+    "source_adapters": [],
+    "previewers": [],
+    "projections": [
+      {"id": "source_overview", "source": "source_overview", "schema_id": "researchos-projection-envelope-v1", "version": "1", "sensitivity": "local_only", "freshness": "snapshot", "export_fields": ["$"]},
+      {"id": "asset_graph", "source": "asset_graph", "schema_id": "researchos-projection-envelope-v1", "version": "1", "sensitivity": "local_only", "freshness": "snapshot", "export_fields": ["$"]},
+      {"id": "preview_documents", "source": "preview_documents", "schema_id": "researchos-projection-envelope-v1", "version": "1", "sensitivity": "local_only", "freshness": "snapshot", "export_fields": ["$"]}
+    ],
+    "ui_slots": [
+      {
+        "id": "research_assets_library",
+        "slot": "library",
+        "surface": "library",
+        "region": "context",
+        "adapter": "research_assets_library",
+        "order": 90,
+        "projection_ids": ["source_overview", "asset_graph", "preview_documents"],
+        "action_ids": [],
+        "locales": {
+          "en": {"title": "Research cards", "hint": "Search, inspect, relate, and compose research assets."},
+          "zh-CN": {"title": "研究卡片", "hint": "搜索、查看、关联和组合研究资产。"}
+        }
+      }
+    ]
+  },
+  "state_namespace": "researchos.plugin.research_assets",
+  "lifecycle": {
+    "install": "core_bundled",
+    "enable": "runtime_scope",
+    "disable": "runtime_scope",
+    "uninstall": "core_release_change",
+    "migrations": [
+      "legacy_asset_overview_to_library_slot",
+      "legacy_group_review_to_candidate_adapter"
+    ]
+  },
+  "validation": {
+    "commands": [
+      "python3 scripts/validate_plugins.py",
+      "python3 scripts/validate_agent_architecture.py"
+    ],
+    "behavior_tests": [
+      "node evals/test_research_assets_plugin_contract.js",
+      "node evals/test_plugin_runtime_contract.js"
+    ]
+  }
+}

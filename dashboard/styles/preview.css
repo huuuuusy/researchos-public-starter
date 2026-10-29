@@ -1,0 +1,438 @@
+/* ResearchOS maintenance header.
+ * 中文：Markdown/PDF 预览面板 chrome 样式 owner，管理预览外壳、文档浏览和反馈面板规则。
+ * English: Markdown/PDF preview chrome style owner for preview panel, document browser, and feedback-panel rules.
+ */
+
+.markdown-preview-panel {
+  position: sticky;
+  top: calc(var(--topbar-height) + 16px);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  max-height: calc(100vh - var(--topbar-height) - 34px);
+  min-width: 0;
+  padding: 14px;
+  overflow: hidden;
+}
+
+.preview-resize-handle {
+  width: 10px;
+  min-width: 10px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.markdown-preview-panel.collapsed {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  z-index: 70;
+  display: block;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: translateY(-50%);
+}
+
+.markdown-preview-panel.collapsed .panel-head {
+  display: flex;
+  width: auto;
+  padding: 0;
+}
+
+.markdown-preview-panel.collapsed .panel-head div,
+.markdown-preview-panel.collapsed .panel-head span,
+.markdown-preview-panel.collapsed .markdown-preview {
+  display: none;
+}
+
+.markdown-preview-panel.collapsed .preview-collapse {
+  width: auto;
+  min-width: 48px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0 11px;
+  overflow: hidden;
+  border: 1px solid rgba(73, 91, 116, 0.16);
+  border-radius: 8px 0 0 8px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--muted);
+  box-shadow: 0 2px 8px rgba(31, 47, 69, 0.07);
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+html[lang="zh-CN"] .markdown-preview-panel.collapsed .preview-collapse,
+html:not([lang]) .markdown-preview-panel.collapsed .preview-collapse {
+  font-size: 12px;
+}
+
+.preview-tab-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22px;
+  align-items: center;
+  min-width: 0;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.56);
+}
+
+.preview-tab-card > button:not(.preview-tab-close) {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  width: 100%;
+  min-height: 30px;
+  padding: 6px 4px 6px 9px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 9px 0 0 9px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 620;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.preview-tab-card > button:not(.preview-tab-close),
+.preview-tab-card > button:not(.preview-tab-close) span,
+.preview-tab-card > button:not(.preview-tab-close) small {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-tab-card:hover,
+.preview-tab-card.selected {
+  border-color: rgba(0, 122, 255, 0.14);
+  background: rgba(0, 122, 255, 0.08);
+}
+
+.preview-tab-card.selected > button:not(.preview-tab-close) {
+  color: var(--ink-strong);
+}
+
+.preview-tab-close {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  min-height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--muted-soft);
+  font-size: 14px;
+  font-weight: 520;
+  line-height: 1;
+}
+
+.preview-tab-close:hover {
+  background: rgba(60, 60, 67, 0.12);
+  color: var(--ink-strong);
+}
+
+.markdown-preview {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.preview-toolbar {
+  display: grid;
+  grid-template-columns: minmax(112px, 150px) auto;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.preview-mode-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: rgba(118, 118, 128, 0.12);
+}
+
+.preview-mode-tabs button {
+  min-width: 0;
+  min-height: 26px;
+  padding: 0 8px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 620;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-mode-tabs button[aria-pressed="true"] {
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--ink-strong);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.96) inset,
+    0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.preview-mode-tabs button:disabled {
+  cursor: default;
+  opacity: 0.46;
+}
+
+.preview-pane-stack,
+.preview-document-pane,
+.preview-pdf-pane {
+  min-width: 0;
+  min-height: 0;
+}
+
+.preview-pane-stack {
+  display: grid;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.preview-pane-stack > [hidden] {
+  display: none !important;
+}
+
+.preview-document-pane {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+  gap: 8px;
+  overflow: visible;
+}
+
+.preview-browser,
+.preview-current,
+.preview-feedback-panel {
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: rgba(248, 248, 250, 0.72);
+  overflow: hidden;
+}
+
+.preview-browser:not([open]),
+.preview-feedback-panel:not([open]) {
+  display: none;
+}
+
+.preview-current {
+  padding: 9px 10px;
+  background: rgba(248, 248, 250, 0.62);
+}
+
+.preview-current-main {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.preview-current-main strong {
+  color: var(--ink);
+  font-size: 13.5px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.preview-current-main code {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--muted-soft);
+  font-size: 10.5px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 0;
+}
+
+.preview-meta span {
+  padding: 2px 6px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 10.5px;
+  line-height: 1.2;
+}
+
+.preview-browser summary,
+.preview-feedback-panel summary {
+  min-height: 42px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.preview-search,
+.preview-doc-list,
+.preview-note,
+.preview-feedback-form,
+.preview-feedback-selection {
+  padding: 0 12px 12px;
+}
+
+.preview-doc-list {
+  display: grid;
+  gap: 6px;
+  max-height: 156px;
+  overflow: auto;
+}
+
+.preview-doc-list button {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  min-height: 0;
+  padding: 9px 10px;
+  border-radius: var(--radius-xs);
+  text-align: left;
+}
+
+.preview-doc-list button.selected {
+  border-color: var(--control-accent-border);
+  background: var(--blue-soft);
+}
+
+.preview-doc-list strong {
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+.preview-doc-list span,
+.preview-current code {
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.35;
+}
+
+.preview-nav {
+  display: flex;
+  gap: 5px;
+  justify-content: end;
+  min-width: 0;
+}
+
+.preview-nav button {
+  min-height: 26px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+.preview-history-tabs {
+  display: flex;
+  gap: 5px;
+  min-width: 0;
+  padding: 0 1px 2px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.preview-history-tabs .preview-tab-card {
+  flex: 0 0 min(168px, 46%);
+  min-width: 104px;
+  border-color: rgba(71, 91, 118, 0.14);
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.preview-history-tabs .preview-tab-card.selected {
+  border-color: var(--control-accent-border);
+  background: var(--blue-soft);
+  color: var(--ink-strong);
+}
+
+.preview-history-tabs .preview-tab-card > button:not(.preview-tab-close) {
+  min-height: 32px;
+  padding: 5px 3px 5px 8px;
+}
+
+.preview-history-tabs .preview-tab-card > button:not(.preview-tab-close) span,
+.preview-history-tabs small {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-history-tabs .preview-tab-card > button:not(.preview-tab-close) span {
+  font-size: 11.5px;
+  font-weight: 680;
+  line-height: 1.2;
+}
+
+.preview-history-tabs small {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+.preview-evidence-content {
+  min-height: 0;
+  overflow: auto;
+}
+
+@media (max-width: 1180px) {
+  .markdown-preview-panel:not(.collapsed) {
+    position: fixed;
+    top: calc(var(--topbar-height) + 14px);
+    right: 18px;
+    bottom: 18px;
+    z-index: 80;
+    width: min(540px, calc(100vw - 36px));
+    max-height: none;
+    overflow: hidden;
+  }
+
+  .preview-resize-handle {
+    display: none !important;
+  }
+
+  .markdown-preview,
+  .preview-document-pane {
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 640px) {
+  .markdown-preview-panel.collapsed {
+    position: static;
+    width: auto;
+    margin: 0 10px 18px auto;
+    transform: none;
+  }
+
+  .markdown-preview-panel.collapsed .panel-head {
+    width: auto;
+  }
+}

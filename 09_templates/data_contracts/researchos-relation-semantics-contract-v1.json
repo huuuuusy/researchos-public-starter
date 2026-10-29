@@ -1,0 +1,21 @@
+{
+  "schema": "researchos-relation-semantics-contract-v1",
+  "states": [
+    "confirmed",
+    "candidate",
+    "needs_evidence",
+    "local_only",
+    "rejected"
+  ],
+  "types": [
+    "source_of",
+    "derived_from",
+    "supports",
+    "contrasts_with",
+    "same_project_family_candidate",
+    "coauthor_candidate",
+    "talks_about",
+    "next_action_for"
+  ],
+  "safety_rule": "Authorship proves co-authorship only; do not infer private relationship or future commitment."
+}

@@ -1,0 +1,266 @@
+{
+  "schema_id": "researchos-plugin-v1",
+  "core_api_version": "1",
+  "id": "system_stewardship",
+  "version": "1.1.0",
+  "enabled": true,
+  "available_in": [
+    "public_starter",
+    "personal_vault"
+  ],
+  "execution_profile": "declarative",
+  "product_tier": "bundled_capability",
+  "public_safe": true,
+  "sensitivity_default": "local_only",
+  "documentation": {"readme": "docs/plugins/system-stewardship/README.md"},
+  "governance": {
+    "schema_id": "researchos-plugin-governance-v1",
+    "contract_id": "researchos.contribution.system_stewardship",
+    "archetype": "capability_led",
+    "distribution": {"variant": "public", "parity_policy": "scoped_variant", "allowed_divergence_fields": ["available_in", "public_safe", "authority", "contributions.tasks", "contributions.projections", "validation", "governance.distribution.variant", "governance.data_policy", "governance.composition.optional_integrations", "governance.routing.handoff_to"]},
+    "lineage": {"prototype_id": "researchos_plugin_capability_v1", "derivation_mode": "native", "reuse_policy": "native", "source_refs": [], "external_runtime_dependency": "none", "transformation_summary": "Native system-governance capability with explicitly bounded private and public repository variants.", "current_placement": "plugin", "proposed_absorption_target": "none", "absorption_gate": "review_required"},
+    "capability_value": {"comparison_target": "current_model_without_capability", "comparison_status": "planned", "expected_deltas": ["reliability", "authority_safety", "recoverability"], "expected_burdens": ["trigger_risk", "maintenance_cost"], "evidence_refs": [], "placement_decision": "pending_comparison", "retention_rule": "Retain as a plugin only if governed system evolution and rollback outperform ad hoc model changes without expanding authority."},
+    "effects": {"default_effect": "answer", "allowed_effects": ["read_only", "answer", "artifact", "reversible_workspace_write", "review_candidate"]},
+    "data_policy": {"default_sensitivity": "inherit_runtime", "default_export_policy": "public_safe"},
+    "composition": {"requires": ["researchos_core"], "provides": ["system_stewardship"], "optional_integrations": [], "conflicts_with": []},
+    "capability_bindings": [{"contribution_id": "system_stewardship", "claim_ids": ["self_evolution"]}],
+    "task_projections": [{"task_id": "system_evolution_review", "contribution_id": "system_stewardship", "capability_id": "self_evolution", "role": "entrypoint"}],
+    "routing": {"trigger_intents": ["system_evolution_review", "governance_change", "system_architecture_change"], "non_goals": ["project_evidence_audit", "episode_reflection", "deterministic_health_check"], "handoff_to": [{"kind": "core_route", "id": "system_maintenance", "availability": "required"}]},
+    "admission": {"maturity": "locally_validated", "proof_refs": ["evals/test_plugins.py"], "last_reviewed": "2026-08-14", "revalidation_triggers": ["kernel_contract_change", "public_variant_change", "system_action_change"], "retirement_condition": "Retire only after system evolution, rollback, and human confirmation boundaries have a validated owner."}
+  },
+  "authority": {
+    "source": "Confirmed repository files, the public maintenance contract, and explicit user feedback remain the source authority.",
+    "candidate": "Diagnostics and proposed system changes remain candidate-only until reviewed.",
+    "confirmation": "Human confirmation is required before durable, code, schema, provider, public, Git, network, or external changes.",
+    "save_target": "Use answer, artifact, or the existing Review flow; this plugin owns no storage.",
+    "locales": {
+      "en": {
+        "source": "Confirmed repository files, the public maintenance contract, and explicit user feedback remain the source authority.",
+        "candidate": "Diagnostics and proposed system changes remain candidate-only until reviewed.",
+        "confirmation": "Human confirmation is required before durable, code, schema, provider, public, Git, network, or external changes.",
+        "save_target": "Use answer, artifact, or the existing Review flow; this plugin owns no storage."
+      },
+      "zh-CN": {
+        "source": "已确认的仓库文件、公开维护契约和用户明确反馈保留来源权威。",
+        "candidate": "诊断和系统候选改动在审阅前保持候选状态。",
+        "confirmation": "修改长期内容、代码、schema、provider、公开内容、Git、网络或外部状态前必须由用户确认。",
+        "save_target": "使用回答、成果或既有 Review 流程；本插件不拥有独立存储。"
+      }
+    },
+    "requires_human_confirmation": true,
+    "writeback_route": "review",
+    "storage_owner": "researchos_core"
+  },
+  "permissions": {
+    "read_paths": [],
+    "network_domains": [],
+    "command_ids": [],
+    "state_access": "none",
+    "canonical_write": false
+  },
+  "contributions": {
+    "tasks": [
+      {
+        "id": "system_evolution_review",
+        "task": {
+          "aliases": [
+            "evolution_review",
+            "self_evolution_audit"
+          ],
+          "workspace": "agent",
+          "result_modes": [
+            "answer",
+            "artifact",
+            "writeback"
+          ],
+          "default_result_mode": "answer",
+          "budget": "quick/standard/evidence",
+          "read": {
+            "quick": [
+              "docs/self-evolution-control-plane.en.md"
+            ],
+            "standard": [
+              "docs/self-evolution-control-plane.en.md",
+              "docs/system-reference.en.md"
+            ],
+            "evidence": [
+              "docs/self-evolution-control-plane.en.md",
+              "docs/system-reference.en.md",
+              "docs/reference/SAFE_EXPORT_POLICY.md"
+            ]
+          },
+          "read_locales": {
+            "en": {
+              "quick": [
+                "docs/self-evolution-control-plane.en.md"
+              ],
+              "standard": [
+                "docs/self-evolution-control-plane.en.md",
+                "docs/system-reference.en.md"
+              ],
+              "evidence": [
+                "docs/self-evolution-control-plane.en.md",
+                "docs/system-reference.en.md",
+                "docs/reference/SAFE_EXPORT_POLICY.md"
+              ]
+            },
+            "zh-CN": {
+              "quick": [
+                "docs/self-evolution-control-plane.zh.md"
+              ],
+              "standard": [
+                "docs/self-evolution-control-plane.zh.md",
+                "docs/system-reference.zh.md"
+              ],
+              "evidence": [
+                "docs/self-evolution-control-plane.zh.md",
+                "docs/system-reference.zh.md",
+                "docs/reference/SAFE_EXPORT_POLICY.zh.md"
+              ]
+            }
+          },
+          "locales": {
+            "en": {
+              "name": "System evolution review",
+              "goal": "Diagnose maintenance pressure and propose the smallest governed change supported by real use evidence.",
+              "user_input_hint": "Describe the maintenance pain, recent repository change, or real task that exposed a system gap.",
+              "output": "bounded diagnosis + affected owners + candidate change + validation and rollback + confirmation boundary",
+              "next_steps": [
+                "Inspect the smallest relevant maintenance context",
+                "Separate reproducible refresh from governance change",
+                "Confirm, defer, or reject the candidate"
+              ]
+            },
+            "zh-CN": {
+              "name": "系统进化审计",
+              "goal": "根据真实使用证据诊断维护压力，并提出最小、受治理的系统候选改动。",
+              "user_input_hint": "说明维护摩擦、最近的仓库变化，或暴露系统缺口的真实任务。",
+              "output": "有边界的诊断 + 受影响 owner + 候选改动 + 验证与回滚 + 确认边界",
+              "next_steps": [
+                "读取最小相关维护上下文",
+                "区分可再生刷新与治理变更",
+                "确认、延后或拒绝候选"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "actions": [
+      {
+        "id": "run_auto_update",
+        "handler": "auto_update",
+        "surface": "overlay",
+        "execution": "platform_registered",
+        "effect": "reversible_workspace_write",
+        "confirmation_mode": "review",
+        "risk": "medium",
+        "write_scope": "durable_content",
+        "reversible": true,
+        "public_behavior": "disabled"
+      },
+      {
+        "id": "review_evolution_plan",
+        "handler": "evolution_decision",
+        "surface": "overlay",
+        "execution": "review",
+        "effect": "review_candidate",
+        "confirmation_mode": "review",
+        "risk": "high",
+        "write_scope": "durable_content",
+        "reversible": true,
+        "public_behavior": "disabled"
+      }
+    ],
+    "candidate_types": [],
+    "asset_types": [],
+    "source_adapters": [],
+    "previewers": [],
+    "projections": [
+      {
+        "id": "system_health",
+        "source": "health",
+        "schema_id": "researchos-projection-envelope-v1", "version": "1", "sensitivity": "local_only", "freshness": "snapshot", "export_fields": ["$"]
+      },
+      {
+        "id": "external_evidence",
+        "source": "source_overview.external_profiles",
+        "optional": true,
+        "schema_id": "researchos-projection-envelope-v1", "version": "1", "sensitivity": "local_only", "freshness": "snapshot", "export_fields": ["$"]
+      },
+      {
+        "id": "maintenance_commands",
+        "source": "commands",
+        "schema_id": "researchos-projection-envelope-v1", "version": "1", "sensitivity": "local_only", "freshness": "snapshot", "export_fields": ["$"]
+      },
+      {
+        "id": "safe_export",
+        "source": "safe_exports",
+        "schema_id": "researchos-projection-envelope-v1", "version": "1", "sensitivity": "local_only", "freshness": "snapshot", "export_fields": ["$"]
+      },
+      {
+        "id": "asset_graph",
+        "source": "asset_graph",
+        "schema_id": "researchos-projection-envelope-v1", "version": "1", "sensitivity": "local_only", "freshness": "snapshot", "export_fields": ["$"]
+      },
+      {
+        "id": "source_overview",
+        "source": "source_overview",
+        "schema_id": "researchos-projection-envelope-v1", "version": "1", "sensitivity": "local_only", "freshness": "snapshot", "export_fields": ["$"]
+      }
+    ],
+    "ui_slots": [
+      {
+        "id": "system_stewardship_utility",
+        "slot": "utility",
+        "surface": "overlay",
+        "region": "utility",
+        "adapter": "system_stewardship",
+        "order": 100,
+        "projection_ids": [
+          "system_health",
+          "external_evidence",
+          "maintenance_commands",
+          "safe_export",
+          "asset_graph",
+          "source_overview"
+        ],
+        "action_ids": [
+          "run_auto_update",
+          "review_evolution_plan"
+        ],
+        "locales": {
+          "en": {
+            "title": "System maintenance",
+            "hint": "Usually no action is needed. Open this only when page data looks stale or ResearchOS reports a problem."
+          },
+          "zh-CN": {
+            "title": "系统维护",
+            "hint": "通常无需操作；只有页面数据未更新或系统提示问题时再展开。"
+          }
+        }
+      }
+    ]
+  },
+  "state_namespace": "researchos.plugin.system_stewardship",
+  "lifecycle": {
+    "install": "release_bundled",
+    "enable": "manifest_flag",
+    "disable": "manifest_flag",
+    "uninstall": "release_change",
+    "migrations": [
+      "task_extension_to_native_plugin",
+      "utility_slot_registration"
+    ]
+  },
+  "validation": {
+    "commands": [
+      "python3 scripts/validate_plugins.py",
+      "python3 scripts/validate_agent_architecture.py"
+    ],
+    "behavior_tests": [
+      "python3 -m unittest evals.test_plugins",
+      "node evals/test_plugin_runtime_contract.js"
+    ]
+  }
+}

@@ -1,0 +1,153 @@
+/* ResearchOS maintenance header.
+ * 中文：基础 reset 与页面级排版层，避免视图文件重复定义全局元素行为。
+ * English: Base reset and page typography layer, keeping global element behavior out of view files.
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 0;
+  background: var(--page);
+  font-size: 16px;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 0;
+  overflow-x: hidden;
+  background:
+    linear-gradient(180deg, #fbfbfd 0, #f7f7fb 220px, var(--page) 620px),
+    var(--page);
+  color: var(--ink);
+  font-family: var(--font);
+  font-weight: 420;
+  line-height: 1.55;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+}
+
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 200;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--ink-strong);
+  color: #fff;
+  transform: translateY(-160%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+figure {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding-left: 1.1rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+strong,
+b {
+  color: var(--ink-strong);
+  font-family: var(--font);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+h1 {
+  font-size: 21px;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 17px;
+  line-height: 1.25;
+}
+
+h3 {
+  font-size: 24px;
+  line-height: 1.16;
+}
+
+h4 {
+  font-size: 15px;
+  line-height: 1.32;
+}
+
+p,
+li,
+small {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  letter-spacing: 0;
+}
+
+button {
+  border: 0;
+}
+
+a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button,
+strong,
+span,
+p,
+li,
+h1,
+h2,
+h3,
+h4,
+code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use ResearchOS Public Starter in academic work, teaching, or public research discussion, please cite it as below."
+title: "ResearchOS Public Starter"
+type: software
+authors:
+  - family-names: "Hu"
+    given-names: "Shiyu"
+version: "1.0.0"
+date-released: "2026-10-29"
+repository-code: "https://github.com/huuuuusy/researchos-public-starter"
+url: "https://github.com/huuuuusy/researchos-public-starter"
+abstract: "A source-available, file-based reference tool for individual researchers using repository-aware agents, with bounded context, reviewable AI-assisted work, researcher-controlled writeback, and optional local dashboard support."
+keywords:
+  - research-workflow
+  - human-ai-collaboration
+  - local-primary
+  - research-os
+  - llm-handoff
+  - research-memory

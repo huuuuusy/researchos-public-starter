@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-metadata-profile-v1",
+  "title": "ResearchOS Metadata Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "metadata_profile",
+    "type",
+    "title",
+    "record_state",
+    "authority_role",
+    "sensitivity",
+    "export_policy",
+    "owner"
+  ],
+  "properties": {
+    "schema_version": {"const": "researchos-metadata-profile-v1"},
+    "metadata_profile": {
+      "enum": [
+        "canonical_knowledge",
+        "decision_cognition",
+        "workflow_contract",
+        "active_context_task_run",
+        "generated_projection",
+        "export_public_safe",
+        "template_schema",
+        "people_sensitive"
+      ]
+    },
+    "type": {"type": "string", "minLength": 1, "maxLength": 96},
+    "title": {"type": "string", "minLength": 1, "maxLength": 512},
+    "record_state": {"enum": ["draft", "active", "paused", "completed", "superseded", "archived", "retired"]},
+    "authority_role": {"enum": ["none", "informative", "interpretive", "normative"]},
+    "sensitivity": {"enum": ["public", "internal", "sensitive", "private"]},
+    "export_policy": {"enum": ["public", "allowlisted", "internal_only", "local_only", "no_export"]},
+    "owner": {"type": "string", "minLength": 1, "maxLength": 512},
+    "created": {"type": "string", "maxLength": 64},
+    "updated": {"type": "string", "maxLength": 64},
+    "tags": {"$ref": "#/$defs/string_list"},
+    "relations": {"$ref": "#/$defs/string_list"},
+    "evidence_state": {"type": "string", "maxLength": 96},
+    "last_verified": {"type": "string", "maxLength": 64},
+    "source_refs": {"$ref": "#/$defs/string_list"},
+    "admission_ref": {"type": "string", "maxLength": 1024},
+    "source_episodes": {"$ref": "#/$defs/string_list"},
+    "counterexamples": {"$ref": "#/$defs/string_list"},
+    "review_date": {"type": "string", "maxLength": 64},
+    "governed_by": {"$ref": "#/$defs/string_list"},
+    "contract_level": {"type": "string", "maxLength": 96},
+    "gate": {"type": "string", "maxLength": 96},
+    "next_resume": {"type": "string", "maxLength": 1024},
+    "current_consumer": {"type": "string", "maxLength": 512},
+    "generated_by": {"type": "string", "maxLength": 512},
+    "source_digest": {"type": "string", "maxLength": 128},
+    "rebuild_command": {"type": "string", "maxLength": 1024},
+    "export_target": {"type": "string", "maxLength": 128},
+    "derived_from": {"$ref": "#/$defs/string_list"},
+    "template_for": {"type": "string", "maxLength": 256},
+    "agent_reading_level": {"type": "string", "maxLength": 96},
+    "context_budget": {"type": "string", "maxLength": 96},
+    "capsule_of": {"$ref": "#/$defs/string_list"},
+    "exportable_to": {"$ref": "#/$defs/string_list"},
+    "privacy_basis": {"type": "string", "maxLength": 512},
+    "access_scope": {"type": "string", "maxLength": 256}
+  },
+  "$defs": {
+    "string_list": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1, "maxLength": 1024}
+    }
+  },
+  "x-profile-fields": {
+    "canonical_knowledge": ["evidence_state", "last_verified", "source_refs"],
+    "decision_cognition": ["admission_ref", "source_episodes", "counterexamples", "review_date"],
+    "workflow_contract": ["governed_by", "contract_level"],
+    "active_context_task_run": ["gate", "next_resume", "current_consumer"],
+    "generated_projection": ["generated_by", "source_digest", "rebuild_command"],
+    "export_public_safe": ["export_target", "derived_from"],
+    "template_schema": ["template_for", "governed_by", "agent_reading_level", "context_budget", "capsule_of", "exportable_to"],
+    "people_sensitive": ["privacy_basis", "access_scope"]
+  }
+}

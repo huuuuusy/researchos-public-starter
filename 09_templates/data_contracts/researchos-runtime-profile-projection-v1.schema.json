@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://researchos.local/schemas/researchos-runtime-profile-projection-v1.schema.json",
+  "title": "ResearchOS RuntimeProfileProjection v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "profile_id", "adapter_family", "provider", "enabled", "execution_scope",
+    "model", "reasoning_effort", "result_modes", "cancel", "status", "verification_state",
+    "selector_state", "error_type", "configuration_handoff"
+  ],
+  "properties": {
+    "schema_id": { "const": "researchos-runtime-profile-projection-v1" },
+    "profile_id": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "adapter_family": { "enum": ["none", "local_codex", "local_claude_code"] },
+    "provider": { "type": "string", "maxLength": 160 },
+    "enabled": { "type": "boolean" },
+    "execution_scope": { "enum": ["none", "answer_only", "workspace_write"] },
+    "model": { "type": "string", "maxLength": 160 },
+    "reasoning_effort": { "type": "string", "maxLength": 160 },
+    "result_modes": {
+      "type": "array", "maxItems": 3, "uniqueItems": true,
+      "items": { "enum": ["answer", "artifact", "writeback"] }
+    },
+    "cancel": { "const": "unsupported" },
+    "status": { "enum": ["configured", "disabled", "copy_only", "invalid"] },
+    "verification_state": {
+      "enum": [
+        "local_probe_required", "local_probe_passed", "local_probe_failed",
+        "disabled", "copy_only", "configuration_invalid"
+      ]
+    },
+    "selector_state": { "const": "candidate_off" },
+    "error_type": { "type": "string", "maxLength": 160 },
+    "configuration_handoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "command", "config_target"],
+      "properties": {
+        "mode": { "const": "copy_only" },
+        "command": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "config_target": { "const": "config/researchos.runtime.local.json" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "configured" } }, "required": ["status"] },
+      "then": { "properties": { "enabled": { "const": true } } }
+    },
+    {
+      "if": { "properties": { "status": { "enum": ["disabled", "copy_only", "invalid"] } }, "required": ["status"] },
+      "then": {
+        "properties": {
+          "enabled": { "const": false },
+          "execution_scope": { "const": "none" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "status": { "const": "copy_only" } }, "required": ["status"] },
+      "then": {
+        "properties": {
+          "profile_id": { "const": "public-copy-only" },
+          "adapter_family": { "const": "none" },
+          "provider": { "const": "none" },
+          "verification_state": { "const": "copy_only" },
+          "error_type": { "const": "" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "status": { "const": "invalid" } }, "required": ["status"] },
+      "then": {
+        "properties": {
+          "profile_id": { "const": "unavailable" },
+          "adapter_family": { "const": "none" },
+          "verification_state": { "const": "configuration_invalid" },
+          "error_type": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  ]
+}

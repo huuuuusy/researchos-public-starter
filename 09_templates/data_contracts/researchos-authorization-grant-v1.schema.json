@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "researchos-authorization-grant-v1.schema.json",
+  "title": "ResearchOS AuthorizationGrant v1",
+  "description": "A short-lived server execution grant bound to one task, run, action, runtime scope, target set, request/diff digest, and policy decision. It is not a Human Decision or long-term authority admission.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "grant_id", "policy_decision_id", "policy_version", "issuer",
+    "trust_basis", "human_authorization_state", "runtime_scope", "task_id", "run_id",
+    "idempotency_key", "capability_id", "action_id", "operation", "risk_class",
+    "target_binding", "diff_binding", "allowed_effects", "valid_from", "expires_at"
+  ],
+  "properties": {
+    "schema_id": {"const": "researchos-authorization-grant-v1"},
+    "grant_id": {"type": "string", "pattern": "^grant:[0-9a-f]{64}$"},
+    "policy_decision_id": {"type": "string", "pattern": "^policy:[0-9a-f]{64}$"},
+    "policy_version": {"const": "researchos-policy-gateway-v1"},
+    "issuer": {"const": "researchos_adapters.policy_gateway"},
+    "trust_basis": {"const": "server_runtime_policy"},
+    "human_authorization_state": {"const": "not_claimed"},
+    "runtime_scope": {"enum": ["private", "public_starter", "personal_vault"]},
+    "task_id": {"type": "string", "pattern": "^task:[0-9a-f]{64}$"},
+    "run_id": {"type": "string", "minLength": 1, "maxLength": 160},
+    "idempotency_key": {"type": "string", "pattern": "^idem:[0-9a-f]{64}$"},
+    "capability_id": {"enum": ["research.analysis", "research.candidate_plan", "research.execution"]},
+    "action_id": {"type": "string", "minLength": 1, "maxLength": 120},
+    "operation": {"enum": ["read_only", "create_artifact"]},
+    "risk_class": {"enum": ["read_only", "bounded_write"]},
+    "target_binding": {"$ref": "researchos-policy-decision-v1.schema.json#/$defs/target_binding"},
+    "diff_binding": {"$ref": "researchos-policy-decision-v1.schema.json#/$defs/diff_binding"},
+    "allowed_effects": {
+      "type": "object", "additionalProperties": false,
+      "required": ["filesystem", "network", "credentials", "permission_changes"],
+      "properties": {
+        "filesystem": {"enum": ["read_only", "bounded_write"]},
+        "network": {"const": "disabled"},
+        "credentials": {"const": "denied"},
+        "permission_changes": {"const": "denied"}
+      }
+    },
+    "valid_from": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"}
+  }
+}
