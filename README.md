@@ -80,8 +80,28 @@ The technical report ([English source](docs/technical-report.en.md) · [English 
 
 This is V1.0, released as `v1.0.0` on 2026-10-29 (see the [V1.0 release notes](docs/releases/v1.0.0.md) and the [changelog](CHANGELOG.md)).
 
+## How to cite
+
+The technical report and the public starter are archived together on Zenodo. Please cite them with the DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799), which always resolves to the latest version; to cite exactly this release, use [10.5281/zenodo.23769800](https://doi.org/10.5281/zenodo.23769800).
+
+> Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.0.0). Zenodo. https://doi.org/10.5281/zenodo.23769799
+
+```bibtex
+@misc{hu2026researchos,
+  author       = {Hu, Shiyu},
+  title        = {{ReSearchOS}: A Reference Architecture for Sustained Human--{AI} Research},
+  howpublished = {Technical report (not peer reviewed), version 1.0.0},
+  publisher    = {Zenodo},
+  year         = {2026},
+  doi          = {10.5281/zenodo.23769799},
+  url          = {https://github.com/huuuuusy/researchos-public-starter}
+}
+```
+
+The "Cite this repository" button on the GitHub page gives the same reference from [CITATION.cff](CITATION.cff).
+
 ## License and citation
 
-ResearchOS Public Starter is source-available for personal learning, personal research, academic research, teaching, non-commercial evaluation, and non-commercial academic redistribution or derivative development. It is not released under an OSI-approved open-source license. Any use outside that scope, including commercial use of any kind, requires prior written permission; see [LICENSE.md](LICENSE.md) for the full terms and [COMMERCIAL_USE.md](docs/reference/COMMERCIAL_USE.md). Cite the software with [CITATION.cff](CITATION.cff); contribution, support and security routes are in [CONTRIBUTING.md](CONTRIBUTING.md), [SUPPORT.md](SUPPORT.md) and [SECURITY.md](SECURITY.md). The name refers only to this project, which is not affiliated with other projects, products or companies that use the same or a similar name.
+ResearchOS Public Starter is source-available for personal learning, personal research, academic research, teaching, non-commercial evaluation, and non-commercial academic redistribution or derivative development. It is not released under an OSI-approved open-source license. Any use outside that scope, including commercial use of any kind, requires prior written permission; see [LICENSE.md](LICENSE.md) for the full terms and [COMMERCIAL_USE.md](docs/reference/COMMERCIAL_USE.md). To cite it, see [How to cite](#how-to-cite); contribution, support and security routes are in [CONTRIBUTING.md](CONTRIBUTING.md), [SUPPORT.md](SUPPORT.md) and [SECURITY.md](SECURITY.md). The name refers only to this project, which is not affiliated with other projects, products or companies that use the same or a similar name.
 
 Created and maintained by [Shiyu Hu](https://huuuuusy.github.io/).

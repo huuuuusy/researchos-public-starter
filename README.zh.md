@@ -80,8 +80,28 @@ python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 
 本仓库是 V1.0，已于 2026-10-29 以 `v1.0.0` 发布（见 [V1.0 发布说明](docs/releases/v1.0.0.zh.md)与[更新记录](CHANGELOG.md)）。
 
+## 如何引用
+
+技术报告和公开 starter 一起存档在 Zenodo。引用时请用 DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799)，它始终指向最新版本；如果要精确引用这一版，用 [10.5281/zenodo.23769800](https://doi.org/10.5281/zenodo.23769800)。
+
+> Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.0.0). Zenodo. https://doi.org/10.5281/zenodo.23769799
+
+```bibtex
+@misc{hu2026researchos,
+  author       = {Hu, Shiyu},
+  title        = {{ReSearchOS}: A Reference Architecture for Sustained Human--{AI} Research},
+  howpublished = {Technical report (not peer reviewed), version 1.0.0},
+  publisher    = {Zenodo},
+  year         = {2026},
+  doi          = {10.5281/zenodo.23769799},
+  url          = {https://github.com/huuuuusy/researchos-public-starter}
+}
+```
+
+GitHub 页面上的「Cite this repository」按钮会根据 [CITATION.cff](CITATION.cff) 给出同样的引用。
+
 ## 许可与引用
 
-ResearchOS 公开 starter 允许个人学习、个人研究、学术研究、教学、非商业评估，以及非商业学术再分发或二次开发；它不是采用 OSI 认可开源许可证发布的项目。超出上述范围的任何使用，包括任何商业使用，都需要事先取得书面许可；完整条款见 [LICENSE.md](LICENSE.md)，中文说明见 [COMMERCIAL_USE.zh.md](docs/reference/COMMERCIAL_USE.zh.md)。引用软件请用 [CITATION.cff](CITATION.cff)；贡献、支持与安全渠道见[贡献指南](docs/reference/CONTRIBUTING.zh.md)、[支持](docs/reference/SUPPORT.zh.md)和[安全政策](docs/reference/SECURITY.zh.md)。这里的名字只指本项目，与使用相同或相近名字的其他项目、产品或公司没有关联。
+ResearchOS 公开 starter 允许个人学习、个人研究、学术研究、教学、非商业评估，以及非商业学术再分发或二次开发；它不是采用 OSI 认可开源许可证发布的项目。超出上述范围的任何使用，包括任何商业使用，都需要事先取得书面许可；完整条款见 [LICENSE.md](LICENSE.md)，中文说明见 [COMMERCIAL_USE.zh.md](docs/reference/COMMERCIAL_USE.zh.md)。引用方式见[如何引用](#如何引用)；贡献、支持与安全渠道见[贡献指南](docs/reference/CONTRIBUTING.zh.md)、[支持](docs/reference/SUPPORT.zh.md)和[安全政策](docs/reference/SECURITY.zh.md)。这里的名字只指本项目，与使用相同或相近名字的其他项目、产品或公司没有关联。
 
 由 [Shiyu Hu](https://huuuuusy.github.io/) 创建并维护。

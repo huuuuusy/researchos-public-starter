@@ -7,6 +7,7 @@ authors:
     given-names: "Shiyu"
 version: "1.0.0"
 date-released: "2026-10-29"
+doi: "10.5281/zenodo.23769799"
 repository-code: "https://github.com/huuuuusy/researchos-public-starter"
 url: "https://github.com/huuuuusy/researchos-public-starter"
 abstract: "A source-available, file-based reference tool for individual researchers using repository-aware agents, with bounded context, reviewable AI-assisted work, researcher-controlled writeback, and optional local dashboard support."
@@ -17,3 +18,15 @@ keywords:
   - research-os
   - llm-handoff
   - research-memory
+preferred-citation:
+  type: report
+  title: "ReSearchOS: A Reference Architecture for Sustained Human–AI Research"
+  authors:
+    - family-names: "Hu"
+      given-names: "Shiyu"
+  year: 2026
+  publisher:
+    name: "Zenodo"
+  doi: "10.5281/zenodo.23769799"
+  url: "https://github.com/huuuuusy/researchos-public-starter"
+  notes: "Technical report, not peer reviewed."
