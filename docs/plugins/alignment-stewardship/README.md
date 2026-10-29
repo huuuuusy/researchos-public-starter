@@ -77,4 +77,4 @@ ELSE: KEEP the dependent action pending; CONTINUE independent work
 
 **Algorithm explanation.** Normalization makes the discrepancy comparison meaningful. Only a consequential mismatch unresolved by existing evidence triggers clarification; dependent work waits for grounds while unrelated work can continue.
 
-![Control flow for human–agent task alignment.](../../figures/architecture/researchos-v5-flow-alignment-en.png)
+![Control flow for human–agent task alignment.](../../figures/architecture/researchos-plugin-flow-alignment-en.png)

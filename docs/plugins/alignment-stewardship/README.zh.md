@@ -77,4 +77,4 @@ OS 工作假设与用户明确表达的任务假设；输出：一次有界对�
 
 **算法解释。** 共同命题身份使差异可以比较，行动后果决定差异是否值得处理。澄清只用于现有证据无法解决的重要分歧；等待局部回答不应使无关工作一并停下。
 
-![人机任务对齐的控制流程。](../../figures/architecture/researchos-v5-flow-alignment-zh.png)
+![人机任务对齐的控制流程。](../../figures/architecture/researchos-plugin-flow-alignment-zh.png)

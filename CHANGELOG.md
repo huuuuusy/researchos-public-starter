@@ -23,7 +23,7 @@ First stable release, tagged `v1.0.0`; citation metadata carries version `1.0.0`
 
 ### Validation Evidence
 
-Private-repository CI (repository not public), run `39708102808` at commit `ad6903328c28c8e96c7e2f0b3c40f5979efbf701`, ubuntu-24.04 and CPython 3.11.17: the 101-file default Python regression set reported `Ran 972 tests` / `OK (skipped=30)`, the 19-file JavaScript default set passed, and the release gate `run_public_release_gate.py --ci` passed. Public CI run `39708093367` at commit `49f95789422231c4aee737912b53d73ce199e94e`, same environment: `Ran 670 tests` / `OK (skipped=4)`, with all 39 JavaScript contract suites passing. Both runs are dated 22 October 2026. See the [V1.0 release notes](docs/releases/v1.0.0.md) for commands, inventory counts and artifact hashes. These receipts cover only their specified commits.
+Public CI run `40890605519` at commit `f541cb6d161af29c8fe172ab264e214bd492ae45`, ubuntu-24.04 with CPython 3.10.22 and 3.13.17: `Ran 661 tests` / `OK (skipped=4)` on each, with all 39 JavaScript contract suites passing. Private-repository CI (repository not public), run `40883029378` at commit `4a9f696a6ebc0b042be0136a7c4e943991330519`, ubuntu-24.04 and CPython 3.11.17: the 107-file default Python regression set reported `Ran 1006 tests` / `OK (skipped=30)`, the 19-file JavaScript default set passed, and all 17 CI checks passed. Both runs are dated 29 October 2026. See the [V1.0 release notes](docs/releases/v1.0.0.md) for commands, inventory counts and artifact hashes. These receipts cover only their specified commits.
 
 ### Known Limitations
 

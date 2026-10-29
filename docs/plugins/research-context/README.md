@@ -76,4 +76,4 @@ RETURN reconstructed state and remaining gaps
 
 **Algorithm explanation.** Reconstruction begins with a budgeted selection and expands only when an omitted condition blocks the task. Each permitted addition feeds the reconstruction again; remaining gaps are returned when further reading is unavailable or unaffordable.
 
-![Control flow for context reconstruction.](../../figures/architecture/researchos-v5-flow-context-en.png)
+![Control flow for context reconstruction.](../../figures/architecture/researchos-plugin-flow-context-en.png)

@@ -78,4 +78,4 @@ RETURN draft, check statuses, source links and unresolved checks
 
 **Algorithm explanation.** The procedure checks assertions against the bound evidence and purpose, not merely whether the draft contains citations. Revision can narrow or remove an assertion, while hypotheses and unchecked claims keep their own status when the budget ends.
 
-![Control flow for evidence-grounded expression.](../../figures/architecture/researchos-v5-flow-expression-en.png)
+![Control flow for evidence-grounded expression.](../../figures/architecture/researchos-plugin-flow-expression-en.png)

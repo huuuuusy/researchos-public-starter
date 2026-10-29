@@ -105,9 +105,9 @@ This fictional comparison reuses the [worked session in Section 4.1 of the repor
 | Candidate | Retain the first-set claim with its grounds, withdraw the second-set claim, and leave the re-appearance experiment open | Review a candidate on the corrected source version |
 | Decision boundary | In the report's private-prototype session a change is admitted only after the researcher decides; default public operation prepares candidates or planned differences without admission | Separate a proposed change from accepted durable state |
 
-![When a source is corrected, only the judgment it supported is withdrawn; the open evidence gap, the protocol and the next experiment remain.](figures/architecture/researchos-card-network.png)
+![A build system rebuilds on its own; research state waits for the researcher's decision.](figures/architecture/researchos-r9-contrast-en.png)
 
-*When a source is corrected, only the judgment it supported is withdrawn; the open evidence gap, the protocol and the next experiment remain.*
+*Figure 1 of the report. A build system rebuilds on its own; research state waits for the researcher's decision. When the paper's second benchmark set (set 2) is corrected, the ground the judgment J draws from set 1 is kept and the ground from set 2 must be rechecked; the open re-appearance condition stays open, and another session's proposal, which the paper does not support, is refused. Only the researcher's admission writes.*
 
 The runnable public check in Section 3 uses a different fictional fixture and does not execute the report's private admission or partial narrowing. Neither example establishes a benefit over a versioned handoff.
 

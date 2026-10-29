@@ -78,4 +78,4 @@ $E_t$、目标读者与 $\kappa$；输出：草稿、逐项断言与证据核查
 
 **算法解释。** 引用存在与主张成立是两回事。核查针对证据在本次用途下能支持什么，修订可以改变断言的范围而不必强行补全答案；预算结束时，假设与未检查主张仍保留各自状态。
 
-![有证据依据的科研表达的控制流程。](../../figures/architecture/researchos-v5-flow-expression-zh.png)
+![有证据依据的科研表达的控制流程。](../../figures/architecture/researchos-plugin-flow-expression-zh.png)

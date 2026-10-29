@@ -76,4 +76,4 @@ Public Starter 版本保留能力含义，用用户选定的来源替代私有�
 
 **算法解释。** 补读由当前任务的阻碍驱动，而非追求恢复更多历史。最小补充材料重新进入状态构造；没有合适来源或预算不足时，输出保留缺口，使后续判断知道哪些根据尚未恢复。
 
-![上下文重建的控制流程。](../../figures/architecture/researchos-v5-flow-context-zh.png)
+![上下文重建的控制流程。](../../figures/architecture/researchos-plugin-flow-context-zh.png)
