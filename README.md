@@ -14,6 +14,8 @@ Set up ResearchOS for me from https://github.com/huuuuusy/researchos-public-star
 
 The assistant downloads it, shows you in a few sentences what it does on a fictional example, then asks for your homepage or Google Scholar, a few of your papers, your collaborators and one current project, and sets up your own vault from them. It takes about fifteen minutes and you do not need to read anything first. It shows you the list of cards before writing them, everything stays in a git-ignored folder on your computer, and nothing is pushed anywhere. If git is not installed, the assistant can download the ZIP from the same page instead.
 
+Already downloaded it? Open the folder in Codex or Claude Code and say one sentence: “Read AGENTS.md and walk me through its First Run.”
+
 ResearchOS keeps the questions, evidence, judgments and next steps of your long-running research connected, in plain files on your own computer. It is for individual researchers who want their judgment to stay continuous across tools, projects and time.
 
 **Or do it yourself in 10 minutes**
