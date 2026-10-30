@@ -37,7 +37,7 @@ Already downloaded it? Open the folder in Codex or Claude Code and say one sente
 
 The [first-run guide](08_exports/public_starter/onboarding-step-by-step.md) takes you through all three and says what you should see at each step.
 
-![When a source changes, the researcher decides what is kept, updated or held open: a fictional example.](docs/figures/readme/keep-update-hold-en.gif)
+![When a source changes, the system hands the judgment back and the researcher decides what to keep, narrow or withdraw: a fictional example.](docs/figures/readme/keep-update-hold-en.gif)
 
 ## What it is and is not
 
@@ -83,7 +83,7 @@ This repository is copy-only, and its data is fictional. It never admits anythin
 
 The [documentation index](docs/README.md) lists the guides in the order a newcomer needs them, with one line on when to read each. [AGENTS.md](AGENTS.md) tells a file-aware assistant how to work here.
 
-The technical report ([English source](docs/technical-report.en.md) · [English PDF](docs/technical-report.en.pdf) · [Chinese PDF](docs/technical-report.zh.pdf)) describes the prototype, under the stylized spelling *ReSearchOS*, in Sections 1–6 and Appendices A–B, with [Supplementary Notes 1–6](docs/technical-report-supplement.en.md) supplied separately outside the PDFs; it has not been peer reviewed, and its claims are not a checklist of what this repository can do.
+The technical report ([English source](docs/technical-report.en.md) · [English PDF](docs/technical-report.en.pdf) · [Chinese PDF](docs/technical-report.zh.pdf)) describes the prototype, under the stylized spelling *ReSearchOS*, in Sections 1–8 and Appendices A–B, with [Supplementary Notes 1–6](docs/technical-report-supplement.en.md) supplied separately outside the PDFs; it has not been peer reviewed, and its claims are not a checklist of what this repository can do.
 
 ## Status
 

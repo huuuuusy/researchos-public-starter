@@ -8,7 +8,8 @@ The format follows the spirit of [Keep a Changelog](https://keepachangelog.com/e
 
 ### Changed
 
-- Technical report rewritten throughout as one line of reasoning in a written register, with its claims unchanged. The report and the documentation now call the two versions the prototype and the downloadable version, or this repository.
+- Technical report V11: the claim is narrowed to what the prototype supports (when a source changes, the system follows the recorded dependency and hands the judgment back to the researcher). The report now has eight sections; bounded goals, composition, the two propositions and the four historical requests moved to the supplementary notes; terms changed to item, evidence, waiting on the researcher and deferred. Figures were rebuilt as `researchos-r11-*`.
+- The report and the documentation now call the two versions the prototype and the downloadable version, or this repository.
 
 ## [1.0.1] - 2026-10-30
 

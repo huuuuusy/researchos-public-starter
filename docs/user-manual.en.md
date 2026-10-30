@@ -100,14 +100,14 @@ This fictional comparison reuses the [worked session in Section 4.1 of the repor
 
 | Stage | Source, judgment and open condition | What to check |
 | --- | --- | --- |
-| Before | Two benchmark sets support A over B while the target stays in view; re-appearance is untested and its experiment is planned | Keep the grounds, scope, unknown and next action together |
+| Before | Two benchmark sets support A over B while the target stays in view; re-appearance is untested and its experiment is planned | Keep the evidence, scope, unknown and next action together |
 | Source correction | A's advantage disappears on the second set; the first set is unchanged | A source change triggers recheck, not a scientific verdict |
-| Candidate | Retain the first-set claim with its grounds, withdraw the second-set claim, and leave the re-appearance experiment open | Review a candidate on the corrected source version |
+| Candidate | Retain the first-set claim with its evidence, withdraw the second-set claim, and leave the re-appearance experiment open | Review a candidate on the corrected source version |
 | Decision boundary | In the report's session a change is admitted only after the researcher decides; default public operation prepares candidates or planned differences without admission | Separate a proposed change from accepted durable state |
 
-![A build system rebuilds on its own; research state waits for the researcher's decision.](figures/architecture/researchos-r9-contrast-en.png)
+![A build system rebuilds on its own; research state waits for the researcher's decision.](figures/architecture/researchos-r11-contrast-en.png)
 
-*Figure 1 of the report. A build system rebuilds on its own; research state waits for the researcher's decision. When the paper's second benchmark set (set 2) is corrected, the ground the judgment J draws from set 1 is kept and the ground from set 2 must be rechecked; the open re-appearance condition stays open, and another session's proposal, which the paper does not support, is refused. Only the researcher's admission writes.*
+*Figure 1 of the report. A build system rebuilds on its own; research state waits for the researcher. When the paper's second benchmark set (set 2) is corrected, the evidence the judgment J draws from set 1 is kept, the evidence from set 2 must be rechecked, the re-appearance condition stays open, and another session's proposal, which the paper does not support, is refused. Only the researcher's admission writes.*
 
 The runnable public check in Section 3 uses a different fictional fixture and does not execute the report's private admission or partial narrowing. Neither example establishes a benefit over a versioned handoff.
 

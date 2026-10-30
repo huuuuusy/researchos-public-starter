@@ -37,7 +37,7 @@
 
 [首次上手说明](08_exports/public_starter/onboarding-step-by-step.zh.md)带你走完这三步，并写明每一步应该看到什么。
 
-![来源变了，哪部分保留、更新或挂起，由研究者决定：一个虚构的例子。](docs/figures/readme/keep-update-hold-zh.gif)
+![来源变化时，系统把判断交回，保留、收窄或撤回由研究者决定：一个虚构的例子。](docs/figures/readme/keep-update-hold-zh.gif)
 
 ## 它是什么、不是什么
 
@@ -83,7 +83,7 @@ python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 
 [文档索引](docs/README.zh.md)按新手需要的顺序列出各份指南，每份用一句话说明什么时候读。[AGENTS.md](docs/reference/AGENTS.zh.md) 约束文件感知助手在这里怎样工作。
 
-技术报告（[中文源稿](docs/technical-report.zh.md) · [中文 PDF](docs/technical-report.zh.pdf) · [English PDF](docs/technical-report.en.pdf)）以风格化拼写 *ReSearchOS* 描述原型，包含正文第 1–6 节与附录 A–B；[补充说明 1–6](docs/technical-report-supplement.zh.md) 单独提供，不进入 PDF。报告未经同行评审，其中的主张不是本仓库的能力清单。
+技术报告（[中文源稿](docs/technical-report.zh.md) · [中文 PDF](docs/technical-report.zh.pdf) · [English PDF](docs/technical-report.en.pdf)）以风格化拼写 *ReSearchOS* 描述原型，包含正文第 1–8 节与附录 A–B；[补充说明 1–6](docs/technical-report-supplement.zh.md) 单独提供，不进入 PDF。报告未经同行评审，其中的主张不是本仓库的能力清单。
 
 ## 状态
 
