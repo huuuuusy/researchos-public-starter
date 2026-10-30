@@ -91,7 +91,7 @@ python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 
 ## 如何引用
 
-技术报告和本仓库一起存档在 Zenodo 的同一条记录里，Zenodo 把这条记录列为软件，标题是「ResearchOS Public Starter」。引用时请用 DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799)，它始终指向最新版本；如果要精确引用这一版，用 [10.5281/zenodo.23806125](https://doi.org/10.5281/zenodo.23806125)。
+技术报告和本仓库一起存档在 Zenodo 的同一条记录里，Zenodo 把这条记录列为软件，标题是「ResearchOS Public Starter」。引用时请用 DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799)，它始终指向最新版本；如果要精确引用这一版，用 [10.5281/zenodo.23807585](https://doi.org/10.5281/zenodo.23807585)。
 
 > Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.0.3). Zenodo. https://doi.org/10.5281/zenodo.23769799
 
