@@ -29,4 +29,5 @@
 ## 背景
 
 - [技术报告](technical-report.zh.md)（[中文 PDF](technical-report.zh.pdf) · [English PDF](technical-report.en.pdf)）：想知道架构为什么是这样、有什么证据支持时读。它包含正文第 1–5 节与附录 A–B；[补充说明 1–6](technical-report-supplement.zh.md) 放在 PDF 之外。报告描述的是私有原型，未经同行评审；实际行为仍由现行合同、几份指南和发布门禁约束。
+- [V1.0.1 发布说明](releases/v1.0.1.zh.md)：相对 V1.0 改了什么。
 - [V1.0 发布说明](releases/v1.0.0.zh.md)：V1.0 包含什么、还有哪些局限。

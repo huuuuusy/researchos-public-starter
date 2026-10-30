@@ -1,0 +1,18 @@
+{
+  "title": "ResearchOS Public Starter",
+  "upload_type": "software",
+  "description": "Source-available, file-based reference tool for individual researchers using repository-aware agents, with the bilingual technical report ReSearchOS: A Reference Architecture for Sustained Human–AI Research. Not peer reviewed. Licensed under the ResearchOS Source-Available Research License (LICENSE.md): non-commercial, not an OSI-approved open source license.",
+  "creators": [
+    {
+      "name": "Hu, Shiyu",
+      "affiliation": "Nanyang Technological University"
+    }
+  ],
+  "license": "other-nc",
+  "keywords": [
+    "research-workflow",
+    "human-ai-collaboration",
+    "local-primary",
+    "research-memory"
+  ]
+}

@@ -4,10 +4,14 @@ All notable changes to ResearchOS Public Starter are documented in this file.
 
 The format follows the spirit of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [1.0.1] - 2026-10-30
+
+Documentation release, tagged `v1.0.1`; the software behaviour of `v1.0.0` is unchanged. See the [V1.0.1 release notes](docs/releases/v1.0.1.md).
 
 ### Changed
 
+- README opens with what the project is, why it exists and how it works in four steps, and gives a one-sentence prompt for an agent; a how-to-cite section and a citation in `CITATION.cff` carry the Zenodo DOI.
+- First-run fixes from a fresh-clone walk-through, in the onboarding guide, the user manual, `AGENTS.md` and the person template.
 - Technical report restructured for readability, with no change to its claims. It now opens with the research scenario, the pain and why the design follows. The worked session moved to Section 2, followed by principles (3), definitions (4), architecture and gaps (5), and comparison and counter-case (6); Figures 2-9 and Tables 2-3 were renumbered. "Model" now means only an AI model, and the report's formal part is called the definitions. Captions were shortened, and literature and implementation detail moved to Supplementary Notes 1 and 2.
 - Section 6.1 and Table 5 add a provenance system for LLM-maintained wikis as the nearest mechanism for carrying a retraction to dependent claims.
 
