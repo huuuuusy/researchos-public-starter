@@ -4,6 +4,12 @@ All notable changes to ResearchOS Public Starter are documented in this file.
 
 The format follows the spirit of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+- Technical report V11 corrected after three independent checks: a full run of the worked session against the report, a paragraph-level comparison of the English and Chinese texts, and a check of the citations against their sources. Corrections include the statement on AI-scientist systems in Section 6, Table 4 and Figures 9 and 10.
+
 ## [1.0.2] - 2026-10-30
 
 Documentation release, tagged `v1.0.2`; the software behaviour of `v1.0.1` is unchanged. See the [V1.0.2 release notes](docs/releases/v1.0.2.md).
