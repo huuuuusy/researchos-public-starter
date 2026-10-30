@@ -87,19 +87,19 @@ python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 
 ## 状态
 
-本仓库是 V1.0.1，已于 2026-10-30 以 `v1.0.1` 发布（见 [V1.0.1 发布说明](docs/releases/v1.0.1.zh.md)与[更新记录](CHANGELOG.md)）。
+本仓库是 V1.0.2，已于 2026-10-30 以 `v1.0.2` 发布（见 [V1.0.2 发布说明](docs/releases/v1.0.2.zh.md)与[更新记录](CHANGELOG.md)）。
 
 ## 如何引用
 
 技术报告和本仓库一起存档在 Zenodo 的同一条记录里，Zenodo 把这条记录列为软件，标题是「ResearchOS Public Starter」。引用时请用 DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799)，它始终指向最新版本；如果要精确引用这一版，用 [10.5281/zenodo.23795586](https://doi.org/10.5281/zenodo.23795586)。
 
-> Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.0.1). Zenodo. https://doi.org/10.5281/zenodo.23769799
+> Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.0.2). Zenodo. https://doi.org/10.5281/zenodo.23769799
 
 ```bibtex
 @misc{hu2026researchos,
   author       = {Hu, Shiyu},
   title        = {{ReSearchOS}: A Reference Architecture for Sustained Human--{AI} Research},
-  howpublished = {Technical report (not peer reviewed), version 1.0.1, Zenodo},
+  howpublished = {Technical report (not peer reviewed), version 1.0.2, Zenodo},
   year         = {2026},
   doi          = {10.5281/zenodo.23769799},
   url          = {https://github.com/huuuuusy/researchos-public-starter}
