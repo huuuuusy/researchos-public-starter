@@ -29,6 +29,7 @@ The documents are listed in the order a newcomer needs them. Read the one that a
 ## Background
 
 - [Technical report](technical-report.en.md) ([English PDF](technical-report.en.pdf) · [Chinese PDF](technical-report.zh.pdf)): read it when you want to know why the architecture looks this way and what evidence supports it. It has Sections 1–8 and Appendices A–B, and [Supplementary Notes 1–6](technical-report-supplement.en.md) are kept outside the PDFs. The report describes the prototype and has not been peer reviewed; current contracts, the guides and the release gates govern actual behavior.
+- [V1.0.3 release notes](releases/v1.0.3.md): corrections to technical report V11 after three independent checks.
 - [V1.0.2 release notes](releases/v1.0.2.md): what changed in technical report V11.
 - [V1.0.1 release notes](releases/v1.0.1.md): what changed since V1.0.
 - [V1.0 release notes](releases/v1.0.0.md): what V1.0 includes and what remains limited.

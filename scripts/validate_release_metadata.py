@@ -23,8 +23,8 @@ from validate_docs_bilingual import discover_pairs
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "1.0.2"
-CANDIDATE_VERSION = "1.0.2-rc.1"
+VERSION = "1.0.3"
+CANDIDATE_VERSION = "1.0.3-rc.1"
 VISIBLE_LICENSE = "License: ResearchOS Source-Available Research License"
 RELEASE_ARTIFACTS = (
     "08_exports/public_starter/generated-public-starter-data.json",

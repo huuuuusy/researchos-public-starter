@@ -87,19 +87,19 @@ The technical report ([English source](docs/technical-report.en.md) · [English 
 
 ## Status
 
-This is V1.0.2, released as `v1.0.2` on 2026-10-30 (see the [V1.0.2 release notes](docs/releases/v1.0.2.md) and the [changelog](CHANGELOG.md)).
+This is V1.0.3, released as `v1.0.3` on 2026-10-30 (see the [V1.0.3 release notes](docs/releases/v1.0.3.md) and the [changelog](CHANGELOG.md)).
 
 ## How to cite
 
 The technical report and this repository are archived together on Zenodo, in one record that Zenodo lists as software under the title "ResearchOS Public Starter". Please cite them with the DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799), which always resolves to the latest version; to cite exactly this release, use [10.5281/zenodo.23806125](https://doi.org/10.5281/zenodo.23806125).
 
-> Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.0.2). Zenodo. https://doi.org/10.5281/zenodo.23769799
+> Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.0.3). Zenodo. https://doi.org/10.5281/zenodo.23769799
 
 ```bibtex
 @misc{hu2026researchos,
   author       = {Hu, Shiyu},
   title        = {{ReSearchOS}: A Reference Architecture for Sustained Human--{AI} Research},
-  howpublished = {Technical report (not peer reviewed), version 1.0.2, Zenodo},
+  howpublished = {Technical report (not peer reviewed), version 1.0.3, Zenodo},
   year         = {2026},
   doi          = {10.5281/zenodo.23769799},
   url          = {https://github.com/huuuuusy/researchos-public-starter}
