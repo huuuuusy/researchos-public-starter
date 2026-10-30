@@ -51,7 +51,7 @@ You need Python 3.10 or newer and nothing else: no package, API key, database or
 python3 scripts/ros_demo.py
 ```
 
-![One scheduler session on the fictional demo, as python3 scripts/ros_demo.py prints it.](docs/figures/readme/session-en.gif)
+![One scheduler session on the fictional demo, condensed from what python3 scripts/ros_demo.py prints.](docs/figures/readme/session-en.gif)
 
 A source card changes, and the judgment that depends on it is flagged for recheck. The researcher reconfirms it, and the public starter shows that as a planned change without admitting it. At close the recheck is still pending. The output uses a few words in a narrow sense, such as candidate, admission, requirement and held; [Words you will meet](docs/user-manual.en.md#words-you-will-meet) explains each in one line. Where the output says `ros …`, it means `python3 scripts/ros.py --root <folder> …`, with the folder that holds the research graph.
 
@@ -91,7 +91,7 @@ This is V1.0, released as `v1.0.0` on 2026-10-29 (see the [V1.0 release notes](d
 
 ## How to cite
 
-The technical report and the public starter are archived together on Zenodo. Please cite them with the DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799), which always resolves to the latest version; to cite exactly this release, use [10.5281/zenodo.23769800](https://doi.org/10.5281/zenodo.23769800).
+The technical report and the public starter are archived together on Zenodo, in one record that Zenodo lists as software under the title "ResearchOS Public Starter". Please cite them with the DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799), which always resolves to the latest version; to cite exactly this release, use [10.5281/zenodo.23769800](https://doi.org/10.5281/zenodo.23769800).
 
 > Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.0.0). Zenodo. https://doi.org/10.5281/zenodo.23769799
 
@@ -99,15 +99,14 @@ The technical report and the public starter are archived together on Zenodo. Ple
 @misc{hu2026researchos,
   author       = {Hu, Shiyu},
   title        = {{ReSearchOS}: A Reference Architecture for Sustained Human--{AI} Research},
-  howpublished = {Technical report (not peer reviewed), version 1.0.0},
-  publisher    = {Zenodo},
+  howpublished = {Technical report (not peer reviewed), version 1.0.0, Zenodo},
   year         = {2026},
   doi          = {10.5281/zenodo.23769799},
   url          = {https://github.com/huuuuusy/researchos-public-starter}
 }
 ```
 
-The "Cite this repository" button on the GitHub page gives the same reference from [CITATION.cff](CITATION.cff).
+The "Cite this repository" button on the GitHub page gives this reference, in its own APA and BibTeX form, from [CITATION.cff](CITATION.cff).
 
 ## License and citation
 

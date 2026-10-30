@@ -31,7 +31,7 @@ TEXT_SUFFIXES = {
 }
 RUNTIME_SUFFIXES = TEXT_SUFFIXES - {".css", ".md", ".svg", ".txt"}
 RUNTIME_ROOTS = ("config", "dashboard", "scripts")
-SKIP_PARTS = {".git", ".playwright-cli", ".pytest_cache", "__pycache__", "node_modules", "work_state"}
+SKIP_PARTS = {".git", ".playwright-cli", ".pytest_cache", "__pycache__", "node_modules", "work_state", "personal_vault"}
 ALLOWED_CORPUS_FILES = {"README.md", "README.zh.md"}
 SELF_TEST_FILES = {"validate_public_safety.py", "test_public_safety.py"}
 # Digests of short names can be reversed by guessing, so this repository ships no list of

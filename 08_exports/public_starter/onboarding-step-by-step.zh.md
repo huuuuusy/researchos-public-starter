@@ -80,7 +80,7 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
 
    后面跟着下面这三步。如果提示 `research-portfolio.md 已经存在；--init 只用于还没有任务总表的文件夹`，说明你以前建过库：直接改那一份，或者把它挪开再重建。`personal_vault/` 已经存在但还没有任务总表也没关系，比如你先打开过 personal-vault Dashboard。
 
-2. 打开 `personal_vault/06_active_context/research-portfolio.md`。保留开头的 frontmatter 和标题，把两项虚构承诺，即 `### Occlusion Transfer Paper` 和 `### Workshop Talk` 连同各自的字段列表，换成你自己的一项。下面是最小的完整承诺，把值改成你自己的：
+2. 打开 `personal_vault/06_active_context/research-portfolio.md`。保留开头的 frontmatter 和标题，把两项虚构承诺，即 `### Occlusion Transfer Paper` 和 `### Workshop Talk` 连同各自的字段列表，换成你自己的一项。下面是最小的完整承诺，把值改成你自己的，`last_verified` 写今天的日期：
 
    ```markdown
    ### 论文第二章
@@ -125,9 +125,9 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
        （没有待复核的要求；按下一步推进）
    ```
 
-   显示「未安排」是正常的，因为公开 starter 不带注意力安排。用 `python3 scripts/ros.py --root personal_vault close` 结束会话；新建的库会报告 `结果分类：complete（待办 0；…）`。
+   显示「未安排」是正常的，因为公开 starter 不带注意力安排。用 `python3 scripts/ros.py --root personal_vault close` 结束会话；新建的库会报告 `结果分类：complete（待办 0；…）`。如果在 `today` 读过之后又改了 `state`、`priority`、`question` 或 `responsibility`（比如为了改正任务总表问题），`today` 和 `close` 会把这次写入列为待确认的判断类字段；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault decide <编号> confirm` 并回答 `y` 即可（由助手转述的调用只记为代理转述）。
 
-   `today` 出现「任务总表问题」时，每一行都写明是哪个字段、可以取哪些值，例如 `state「active」不是可用值（mainline, waiting, queued, conditional, closed, paused）`，照着改任务总表即可。虚构承诺还在，说明它们的块还留在文件里。卡片不在你写的路径上时，这里会显示 `source_path … 在这个文件夹里不存在`；`python3 scripts/ros.py --root personal_vault rules --check` 报告同样的问题，一切就位时报告 `问题 0 条`。用 `--init personal_vault --lang zh-CN` 建的库，`config/ros.json` 已设为中文输出。
+   `today` 出现「任务总表问题」时，每一行都写明是哪个字段、可以取哪些值，例如 `state「active」不是可用值（mainline, waiting, queued, conditional, closed, paused）`，照着改任务总表即可。虚构承诺还出现在「待判断」下，说明它们的块还留在文件里；如果只出现在「待你回答的问题」下并标着 `subject_absent`，说明你在替换之前运行过 `today`，那是虚构演示留下的记录：删掉 `personal_vault/06_active_context/work_state/`，再运行一次 `today`。卡片不在你写的路径上时，这里会显示 `source_path … 在这个文件夹里不存在`；`python3 scripts/ros.py --root personal_vault rules --check` 报告同样的问题，一切就位时报告 `问题 0 条`。用 `--init personal_vault --lang zh-CN` 建的库，`config/ros.json` 已设为中文输出。
 
 之后形成的判断以候选进入：请助手按 `ros close` 打印的格式写出，再用 `ros propose judgment` 登记。
 
@@ -142,6 +142,7 @@ python3 scripts/start_researchos.py --mode personal-vault --port 8881
 ```text
 ResearchOS personal vault dashboard
 - mode: personal-vault
+- vault: user-provided local Markdown
 - dashboard: http://127.0.0.1:8881/
 ```
 

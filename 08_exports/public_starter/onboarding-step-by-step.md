@@ -80,7 +80,7 @@ Candidates returned or proposed since this session started that are neither admi
 
    followed by the three next steps below. If it says `research-portfolio.md already exists; --init only starts a folder that has no portfolio yet`, you have started a vault before: edit that one, or move it aside to start again. It is fine if `personal_vault/` already exists without a portfolio, for example because you opened the personal-vault Dashboard first.
 
-2. Open `personal_vault/06_active_context/research-portfolio.md`. Keep the frontmatter and the headings at the top, and replace the two fictional commitments, `### Occlusion Transfer Paper` and `### Workshop Talk` with their field lists, by one of your own. This is the smallest complete commitment; change the values to yours:
+2. Open `personal_vault/06_active_context/research-portfolio.md`. Keep the frontmatter and the headings at the top, and replace the two fictional commitments, `### Occlusion Transfer Paper` and `### Workshop Talk` with their field lists, by one of your own. This is the smallest complete commitment; change the values to yours, with today's date as `last_verified`:
 
    ```markdown
    ### Thesis chapter 2
@@ -125,9 +125,9 @@ Candidates returned or proposed since this session started that are neither admi
        (no requirements to review; carry on with the next step)
    ```
 
-   `[unscheduled]` is normal, because the public starter ships no attention schedule. End the session with `python3 scripts/ros.py --root personal_vault close`; for a fresh vault it reports `Outcome: complete (0 to do; …)`.
+   `[unscheduled]` is normal, because the public starter ships no attention schedule. End the session with `python3 scripts/ros.py --root personal_vault close`; for a fresh vault it reports `Outcome: complete (0 to do; …)`. If you changed `state`, `priority`, `question` or `responsibility` after `today` had already read them, for example to fix a portfolio problem, `today` and `close` list that write as a judgment-class field to confirm; confirm it in your own terminal with `python3 scripts/ros.py --root personal_vault decide <id> confirm` and answer `y` (a call relayed by an assistant is only recorded as asserted).
 
-   If `today` shows a "Portfolio problems" block, each line names the field and the values it accepts, for example `state "active" is not a valid value (mainline, waiting, queued, conditional, closed, paused)`; fix it in the portfolio. If the fictional commitments still appear, their blocks are still in the file. A card that is not at the path you wrote shows there as `source_path … does not exist in this folder`; `python3 scripts/ros.py --root personal_vault rules --check` reports the same problems and says `0 problems` when everything is in place.
+   If `today` shows a "Portfolio problems" block, each line names the field and the values it accepts, for example `state "active" is not a valid value (mainline, waiting, queued, conditional, closed, paused)`; fix it in the portfolio. If the fictional commitments still appear under "To decide", their blocks are still in the file. If they appear only under "Questions for you", marked `subject_absent`, you ran `today` before replacing them: these are records of the fictional run, so delete `personal_vault/06_active_context/work_state/` once and run `today` again. A card that is not at the path you wrote shows there as `source_path … does not exist in this folder`; `python3 scripts/ros.py --root personal_vault rules --check` reports the same problems and says `0 problems` when everything is in place.
 
 Judgments you form later enter as candidates: ask the assistant to write them in the format that `ros close` prints, and register them with `ros propose judgment`.
 
@@ -142,6 +142,7 @@ python3 scripts/start_researchos.py --mode personal-vault --port 8881
 ```text
 ResearchOS personal vault dashboard
 - mode: personal-vault
+- vault: user-provided local Markdown
 - dashboard: http://127.0.0.1:8881/
 ```
 

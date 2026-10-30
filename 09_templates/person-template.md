@@ -8,7 +8,7 @@ status: active
 related_projects: []
 related_papers: []
 tags: []
-sensitivity: public
+sensitivity: private
 template_default_sensitivity: sensitive
 template_default_public_boundary: local_only
 created:

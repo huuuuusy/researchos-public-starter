@@ -91,7 +91,7 @@ python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 
 ## 如何引用
 
-技术报告和公开 starter 一起存档在 Zenodo。引用时请用 DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799)，它始终指向最新版本；如果要精确引用这一版，用 [10.5281/zenodo.23769800](https://doi.org/10.5281/zenodo.23769800)。
+技术报告和公开 starter 一起存档在 Zenodo 的同一条记录里，Zenodo 把这条记录列为软件，标题是「ResearchOS Public Starter」。引用时请用 DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799)，它始终指向最新版本；如果要精确引用这一版，用 [10.5281/zenodo.23769800](https://doi.org/10.5281/zenodo.23769800)。
 
 > Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.0.0). Zenodo. https://doi.org/10.5281/zenodo.23769799
 
@@ -99,15 +99,14 @@ python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 @misc{hu2026researchos,
   author       = {Hu, Shiyu},
   title        = {{ReSearchOS}: A Reference Architecture for Sustained Human--{AI} Research},
-  howpublished = {Technical report (not peer reviewed), version 1.0.0},
-  publisher    = {Zenodo},
+  howpublished = {Technical report (not peer reviewed), version 1.0.0, Zenodo},
   year         = {2026},
   doi          = {10.5281/zenodo.23769799},
   url          = {https://github.com/huuuuusy/researchos-public-starter}
 }
 ```
 
-GitHub 页面上的「Cite this repository」按钮会根据 [CITATION.cff](CITATION.cff) 给出同样的引用。
+GitHub 页面上的「Cite this repository」按钮会根据 [CITATION.cff](CITATION.cff) 以它自己的 APA 和 BibTeX 格式给出这条引用。
 
 ## 许可与引用
 
