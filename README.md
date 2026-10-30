@@ -6,7 +6,20 @@
 
 **Keep your research judgment yours.**
 
-**The simplest way to use it: one sentence to your AI assistant.** Open Claude Code, Codex or another assistant that can run commands on your computer, and send:
+**What it is.** A research memory that lives in plain files on your own computer, plus a few commands. When you work with AI assistants across many conversations, it keeps the judgments you reached and what each one rests on. When a source changes, it tells you which conclusions need another look, and you decide whether to change them.
+
+**Why you might need it.** Three weeks ago you read a paper and concluded that method A beats method B. Which experiments that rests on, when it holds, what is still untested and what you planned next are scattered across chat histories. Then the paper is corrected, and you no longer remember which of your conclusions used it. Meanwhile an AI assistant may have written an unsupported claim straight into your notes.
+
+**How it works.**
+
+1. **Your research lives in cards.** Paper, project and collaborator cards are ordinary Markdown files on your computer. Each judgment records what it rests on (which file, which version) and where it applies.
+2. **Start with `today`.** It lists what needs your decision. If a source file has changed, for example because you replaced a paper with its corrected version, it marks the judgments that depend on it for recheck.
+3. **Let the AI work, but only as candidates.** `context` picks just the material this task needs, `run` writes a task packet you paste into any assistant, and `collect` brings the answer back as a candidate, which never changes your cards by itself.
+4. **You decide.** You keep or refuse each candidate, and `close` ends the session by listing what changed and what is still open.
+
+This public edition stops at candidates and never writes into your cards; the private prototype described in the [technical report](docs/technical-report.en.md) adds a step in which the researcher confirms at the terminal before anything is written. It is for individual researchers who track research judgments over months.
+
+**Try it: one sentence to your AI assistant.** Open Claude Code, Codex or another assistant that can run commands on your computer, and send:
 
 ```text
 Set up ResearchOS for me from https://github.com/huuuuusy/researchos-public-starter and walk me through the First Run section of its AGENTS.md.
@@ -15,8 +28,6 @@ Set up ResearchOS for me from https://github.com/huuuuusy/researchos-public-star
 The assistant downloads it, shows you in a few sentences what it does on a fictional example, then asks for your homepage or Google Scholar, a few of your papers, your collaborators and one current project, and sets up your own vault from them. It takes about fifteen minutes and you do not need to read anything first. It shows you the list of cards before writing them, everything stays in a git-ignored folder on your computer, and nothing is pushed anywhere. If git is not installed, the assistant can download the ZIP from the same page instead.
 
 Already downloaded it? Open the folder in Codex or Claude Code and say one sentence: “Read AGENTS.md and walk me through its First Run.”
-
-ResearchOS keeps the questions, evidence, judgments and next steps of your long-running research connected, in plain files on your own computer. It is for individual researchers who want their judgment to stay continuous across tools, projects and time.
 
 **Or do it yourself in 10 minutes**
 
@@ -28,9 +39,7 @@ The [first-run guide](08_exports/public_starter/onboarding-step-by-step.md) take
 
 ![When a source changes, the researcher decides what is kept, updated or held open: a fictional example.](docs/figures/readme/keep-update-hold-en.gif)
 
-## Why it exists
-
-Over many sessions, getting the current step right is not enough. Whether what you carry forward from earlier work still holds has to be checked. When a source changes, ResearchOS shows which judgments and next steps it affects. You then decide what to keep, update or leave open. Any agent or model can read and propose. Only you decide what becomes durable research memory.
+## What it is and is not
 
 In the documentation's terms, ResearchOS is a local-primary system for continuously maintaining research state (see [Words you will meet](docs/user-manual.en.md#words-you-will-meet)). It is a small, file-based tool, not a hosted service, an autonomous scientist, a complete personal knowledge base, a question-answering tool detached from evidence, or a polished all-in-one product.
 
