@@ -4,13 +4,13 @@
 
 # 脚本入口
 
-本目录保存公开 starter 的运行和验证脚本。不要从每个 helper 文件开始读，先用下面几个入口。
+本目录保存本仓库 的运行和验证脚本。不要从每个 helper 文件开始读，先用下面几个入口。
 
 | 入口 | 用途 | 边界 |
 | --- | --- | --- |
 | `python3 scripts/start_researchos.py` | 查看或启动 dashboard、CLI、GUI、public-starter 模式。 | 只是运行入口；provider 是执行适配器，不是记忆权威。 |
 | `python3 scripts/receipt_cli.py --help` | 无需 Dashboard/server，在 Agent 客户端或终端中构建、校验或查看 ContextReceipt/HandoffReceipt JSON。 | 仅使用显式相对文件或 stdin/stdout；不发现材料、不调用 provider、不外发、不写 canonical、不覆盖文件、不签发人类判断。 |
-| `python3 scripts/build_public_starter_data.py --write` | 从虚构 case 文件生成 demo records 和 dashboard 投影。 | 只读取公开 starter 材料，不读取非 demo 工作区材料。 |
+| `python3 scripts/build_public_starter_data.py --write` | 从虚构 case 文件生成 demo records 和 dashboard 投影。 | 只读取本仓库的示例材料，不读取非 demo 工作区材料。 |
 | `python3 scripts/build_public_starter_data.py --disable-cases --write` | 关闭 demo case 后重新生成数据，同时保留示例文件作为参考。 | 在替换为用户自己的公开安全材料前使用。 |
 | `python3 scripts/plan_context.py <task-id> --lang zh-CN` | 输出 20 个 public-safe task ID 或 13 个兼容别名的最小路线；`--intent-json`、`--prior-receipt-json` 与 `--headless-json` 提供 typed、有边界的任务连续性。 | 只读且 copy-only；route receipt 不授予 mutation、external effect、network、command 或 canonical write。 |
 | `python3 scripts/query_plugin_portfolio.py` | 查询四个非 owning capability groups 及其声明式 contributions，不读取 Dashboard 字段。 | 只提供分组投影；登记、启用或测试通过都不等于 capability admitted。 |
@@ -20,8 +20,8 @@
 | `python3 scripts/manage_plugins.py install method_comparison` | 安装、校验、停用、启用或卸载仓库随附的示例插件。 | 只使用 Git 忽略的本地状态；可逆，不联网、不执行远程代码、不写 canonical memory。 |
 | `python3 scripts/plan_evolution.py` | 显示有路径边界的维护候选；只有精确确认 plan ID 后才运行固定安全子集。 | 公开 demo 保持只读；personal-vault checkpoint 仅存本地并由 Git 忽略。 |
 | `python3 scripts/validate_evolution_control.py` | 检查计划、固定步骤、确认、运行模式和公私隔离契约。 | 只报告，不执行维护。 |
-| `python3 scripts/check_all_links.py` | 检查公开 starter 内部 Markdown 链接。 | 只报告问题，不改写文档。 |
-| `python3 scripts/validate_runtime_config.py` | 检查运行配置与 provider 登记边界。 | 公开 starter 默认 demo-first，不提交本地 API key。 |
+| `python3 scripts/check_all_links.py` | 检查本仓库 内部 Markdown 链接。 | 只报告问题，不改写文档。 |
+| `python3 scripts/validate_runtime_config.py` | 检查运行配置与 provider 登记边界。 | 本仓库 默认 demo-first，不提交本地 API key。 |
 | `python3 scripts/validate_public_safety.py` | 扫描文档、代码、配置和 demo 数据中的私人语义残留、用户路径、密钥和 raw corpus payload。 | 只是发布闸门，不上传或发布任何内容。 |
 | `python3 scripts/validate_docs_bilingual.py` | 确认面向读者的中英文文档持续成对、互相链接，并保持相关工具的名称、项目 URL、顺序、快照日期和非背书边界一致。 | 只是文档闸门，不自动翻译、不判断外部来源是否仍为官方或可访问，也不改写文件。 |
 | `python3 scripts/validate_positioning_consistency.py` | 保持中英文活跃入口一致声明：小型文件化科研工具、Agent/CLI 负责主要执行、Dashboard 是收窄的跨会话注意力与控制面。 | 定位闸门；拒绝入口并列、dashboard-first、Workbench-first 和含混的“次要 Dashboard”表述。 |

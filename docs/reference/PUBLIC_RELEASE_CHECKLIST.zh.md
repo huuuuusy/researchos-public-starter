@@ -22,7 +22,7 @@
 - [ ] 本地打开仪表盘并完成一次浏览器冒烟检查。
 - [ ] 完成当前 Unified Desk 的事项选择、日期预览与刷新恢复、组件查看、交接预览/复制；核对英文与中文界面、冻结内容语言和 `390 x 844` 移动端。Now/Library 是语义职责；页面中隐藏的兼容工作区标签不在本项检查的旅程之内。
 - [ ] 单独核对现有 Agent/CLI 中的任务/结果边界、显式写回候选、连续性回执和本人确认；核对仍适用的真人交互验收与无障碍要求，未完成项保持开放，不用三项工作台任务代替。旧浏览器任务不能冒充当前项目事实。
-- [ ] 确认默认公开运行态为 `copy_only`，不探测本机 Codex，拒绝所有提交给 `codex` 或 `claude_code` provider 的 runner 请求，且不会启动线程或命令；另行验证 personal-vault 可显示受控 workspace-write 动作。
+- [ ] 确认本仓库的默认运行态为 `copy_only`，不探测本机 Codex，拒绝所有提交给 `codex` 或 `claude_code` provider 的 runner 请求，且不会启动线程或命令；另行验证 personal-vault 可显示受控 workspace-write 动作。
 - [ ] 确认 `dashboard/index.html` 指向公开服务端口 `8880`，而不是其他本地服务端口。
 - [ ] 从全新复制的文件夹启动，分别验证一条命令的 demo 路径和一个小型 personal-vault fixture。
 

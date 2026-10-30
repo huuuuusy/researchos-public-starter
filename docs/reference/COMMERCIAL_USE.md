@@ -18,7 +18,7 @@ Commercial use and commercialization-adjacent large-scale distribution require s
 - large-scale redistribution or derivative publication with a realistic commercial pathway, even if initially free;
 - using substantial project content to train, fine-tune, benchmark, package, or provide commercial AI, developer, knowledge-management, workflow, or research-automation products or services.
 
-The public starter does not grant rights to any non-public working materials, raw corpus, local runtime state, or private research memory.
+This repository does not grant rights to any non-public working materials, raw corpus, local runtime state, or private research memory.
 
 Academic citation, classroom discussion, private non-commercial experimentation, academic redistribution, academic forks, non-commercial teaching adaptations, and linking to the official repository are allowed as long as they do not create a commercial service or commercialization-adjacent large-scale distribution.
 

@@ -18,11 +18,11 @@ Use it for architecture, maintenance, or governance changes. It does not approve
 
 ## Availability and parity
 
-Bundled private/public scoped variants share the same capability contract. Public Starter uses public-safe sources and omits private audit/reflection authority.
+The scoped variants bundled in this repository and in the prototype in the technical report share the same capability contract. This repository uses public-safe sources and omits private audit/reflection authority.
 
 ## Dependencies
 
-Requires `researchos_core`; private audit/reflection integrations are optional and absent from the public variant.
+Requires `researchos_core`; private audit/reflection integrations are optional and absent from this repository.
 
 ## Lifecycle
 

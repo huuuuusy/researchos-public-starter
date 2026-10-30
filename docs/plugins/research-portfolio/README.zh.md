@@ -18,7 +18,7 @@ status: active
 
 ## 可用性与一致性
 
-通用 foundation projection，私有版与 Public Starter 的 manifest 完全一致。私有数据与 demo 数据保持分离。
+通用 foundation projection，本仓库与报告中的原型的 manifest 完全一致。私有数据与 demo 数据保持分离。
 
 ## 依赖
 

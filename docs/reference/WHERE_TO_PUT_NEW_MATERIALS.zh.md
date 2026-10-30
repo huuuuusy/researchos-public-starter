@@ -20,15 +20,15 @@ exportable_to:
 
 ## Agent Summary
 
-本指南说明 ResearchOS 新材料应该放在哪里。核心规则是：原始材料、派生知识、决策、认知模型、人物、工作流、当前上下文、导出和模板是不同层级，不要混用。你自己的材料放进 clone 里被 Git 忽略的 `personal_vault/`，它用同样的分层目录。私人、在投、未公开或敏感材料可以在那里分析，但不能放进公开 starter 受跟踪的文件。
+本指南说明 ResearchOS 新材料应该放在哪里。核心规则是：原始材料、派生知识、决策、认知模型、人物、工作流、当前上下文、导出和模板是不同层级，不要混用。你自己的材料放进 clone 里被 Git 忽略的 `personal_vault/`，它用同样的分层目录。私人、在投、未公开或敏感材料可以在那里分析，但不能放进本仓库 受跟踪的文件。
 
 ## 自己的材料放进 `personal_vault/`
 
-你自己的卡片放在 `personal_vault/`，这是 clone 里一个被 Git 忽略的文件夹；下面的分层路径都相对于它，例如论文笔记放进 `personal_vault/01_knowledge/`，当前状态放进 `personal_vault/06_active_context/`。仓库根目录下的分层目录存放公开 starter 自己的说明和虚构示例，不要把你的材料放在那里。含有真实材料的 clone 不要推送到公开远程仓库；想给库做版本管理，就另建一个没有公开远程的私人仓库副本。建库步骤见[用户手册第 5 节](../user-manual.zh.md#5-用自己的材料)的“开始自己的”。
+你自己的卡片放在 `personal_vault/`，这是 clone 里一个被 Git 忽略的文件夹；下面的分层路径都相对于它，例如论文笔记放进 `personal_vault/01_knowledge/`，当前状态放进 `personal_vault/06_active_context/`。仓库根目录下的分层目录存放本仓库 自己的说明和虚构示例，不要把你的材料放在那里。含有真实材料的 clone 不要推送到公开远程仓库；想给库做版本管理，就另建一个没有公开远程的私人仓库副本。建库步骤见[用户手册第 5 节](../user-manual.zh.md#5-用自己的材料)的“开始自己的”。
 
 ## 一句话规则
 
-原始材料留在原处，即仓库之外的本地来源目录，卡片记下它的路径；公开 starter 里的 `corpus/` 保持为空。派生知识进入 `01_knowledge/`；判断和取舍进入 `02_decisions/`；可复用认知进入 `03_cognition/`；人物上下文进入 `04_people/`；流程进入 `05_workflows/`；当前状态进入 `06_active_context/`；经安全导出复查后才进入 `08_exports/`；模板进入 `09_templates/`。
+原始材料留在原处，即仓库之外的本地来源目录，卡片记下它的路径；本仓库 里的 `corpus/` 保持为空。派生知识进入 `01_knowledge/`；判断和取舍进入 `02_decisions/`；可复用认知进入 `03_cognition/`；人物上下文进入 `04_people/`；流程进入 `05_workflows/`；当前状态进入 `06_active_context/`；经安全导出复查后才进入 `08_exports/`；模板进入 `09_templates/`。
 
 ## 放置表
 
@@ -47,7 +47,7 @@ exportable_to:
 
 ## 私人和在投材料
 
-ResearchOS 可以在 `personal_vault/` 里处理私人、在投、审稿中和未公开材料。由这些材料生成的卡片默认标为 `local_only` 或 `not_exportable`，除非用户明确解锁公开边界。不要把真实材料提交到公开 starter。
+ResearchOS 可以在 `personal_vault/` 里处理私人、在投、审稿中和未公开材料。由这些材料生成的卡片默认标为 `local_only` 或 `not_exportable`，除非用户明确解锁公开边界。不要把真实材料提交到本仓库。
 
 一次性工作产物应遵循[阶段性派生工作产物生命周期](../../05_workflows/research_management/derived-work-artifact-lifecycle.zh.md)。把文件移入 archive 不会改变其敏感级别，也不构成公开许可。
 

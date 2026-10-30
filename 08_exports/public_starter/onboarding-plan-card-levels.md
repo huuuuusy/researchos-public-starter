@@ -61,7 +61,7 @@ outputs:
   - collaborator card levels
   - plan card levels
 validation_checks:
-  - generated public starter data includes onboarding examples when cases are enabled
+  - generated demo data includes onboarding examples when cases are enabled
   - generated record count becomes zero when cases are disabled
   - public docs contain no secrets, local paths, or real sensitive people
 blockers:
@@ -75,11 +75,11 @@ card_type: plan
 maturity: 3
 title: Build the first five ResearchOS onboarding cards
 status: operational
-owner: public starter maintainer
+owner: repository maintainer
 execution_order:
   - create paired English and Chinese onboarding examples
-  - update public starter index and user manual
-  - regenerate public starter data
+  - update the repository index and user manual
+  - regenerate demo data
   - run runtime, provider, package, boundary, and whitespace checks
   - verify case-disable behavior
 agent_handoff:

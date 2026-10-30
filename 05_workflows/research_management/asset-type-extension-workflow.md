@@ -106,7 +106,7 @@ Use this threshold:
 
 ## Step 7: Validate
 
-For public starter changes, run:
+For changes to this repository, run:
 
 ```bash
 python3 scripts/build_public_starter_data.py --write

@@ -34,10 +34,10 @@ thread editor, or automatic ResearchOS memory writer.
 
 ## Availability and parity
 
-The same manifest and task semantics apply to private ResearchOS, Public
-Starter, and a personal vault. Private installations may already have a domain
-and connector; public users supply their own. No private endpoint, token, path,
-thread ID, or content is included in the public package.
+The same manifest and task semantics apply to the prototype in the technical
+report, this repository, and a personal vault. The prototype may already have a
+domain and connector; users of this repository supply their own. No private
+endpoint, token, path, thread ID, or content is included in this repository.
 
 Readiness has four separate states:
 
@@ -117,8 +117,8 @@ Manual excerpts remain the safest fallback for one-off or highly sensitive work.
 ## Retirement
 
 Retire when a supported host-native handoff provides equal local-only authority,
-bounded pagination, redaction/omission receipts, and public/private semantic
-parity at lower burden—or if real use shows no net advantage over manual transfer.
+bounded pagination, redaction/omission receipts, and semantic parity with the
+prototype in the technical report at lower burden—or if real use shows no net advantage over manual transfer.
 
 ## Procedure and implementation
 

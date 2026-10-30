@@ -50,7 +50,7 @@ Skill/Codex 是日常调用、阅读、结构化、起草、验证和写回建�
 - `bundled_capability`：随 OS 提供、边界明确的私有或公开能力。
 - `optional_extension`：本地、可逆、默认关闭的安装项。
 
-产品位置以 `product_tier` 为唯一源字段，host 按固定映射派生部署模式：三者分别对应 `embedded_foundation`、`bundled_default_on` 和 `local_installable`。源 manifest 可省略 `governance.deployment_mode`；显式旧值必须与派生值一致，否则拒绝；归一化输出始终保留该字段。紧凑源需要更新后的 host，旧 host 须接收显式补全的派生值。这项输入放宽不改变实际生命周期，也不豁免公私源级 parity。生命周期界面不能再把嵌入式能力伪装成可由本地示例安装器安装或卸载的插件。
+产品位置以 `product_tier` 为唯一源字段，host 按固定映射派生部署模式：三者分别对应 `embedded_foundation`、`bundled_default_on` 和 `local_installable`。源 manifest 可省略 `governance.deployment_mode`；显式旧值必须与派生值一致，否则拒绝；归一化输出始终保留该字段。紧凑源需要更新后的 host，旧 host 须接收显式补全的派生值。这项输入放宽不改变实际生命周期，也不豁免报告中的原型与可下载版本之间的源级 parity。生命周期界面不能再把嵌入式能力伪装成可由本地示例安装器安装或卸载的插件。
 
 生命周期由部署方式推导：foundation 是 `core_bundled`，只通过 `core_release_change` 退场；bundled capability 是 `release_bundled`，通过 `release_change` 退场；只有本地扩展使用 `manifest_present` / `remove_manifest`。旧 v1 local manifest 通过保守兼容层继续使用旧生命周期。
 
@@ -148,11 +148,11 @@ Lineage 与 runtime dependency 是两条不同的轴。Native plugin 没有外�
 目标是以尽可能少的任务插件和能力插件获得最清楚的 owner。任务主导插件不因流程复杂而升级成能力；能力主导插件也不拆成一堆单任务包。组合依赖必须机器可读；插件仍不得直接读取另一个插件的私有状态。
 
 <!-- semantic-anchor: distribution_parity -->
-## 7. 公私版本
+## 7. 报告中的原型与可下载版本
 
-同一 `id@version` 不能在私有版和公开版悄悄表达不同含义。`exact` 指 JSON 解析后的语义对象一致；`scoped_variant` 必须声明 private/public 两侧，并逐项列出允许变化的字段；其他差异一律验证失败。`private_only` 不得进入公开 manifest，公开 runtime source 也不得保留私有 capability ID 的休眠实现。静态门禁检查的是能力语义边界，不等于声称发现了私人数据泄露。
+同一 `id@version` 不能在报告中的原型和可下载版本悄悄表达不同含义。`exact` 指 JSON 解析后的语义对象一致；`scoped_variant` 必须声明 private/public 两侧，并逐项列出允许变化的字段；其他差异一律验证失败。`private_only` 不得进入可下载版本的 manifest，其 runtime source 也不得保留私有 capability ID 的休眠实现。静态门禁检查的是能力语义边界，不等于声称发现了私人数据泄露。
 
-Scoped variant 在共享身份、API、bindings 与失败边界一致时，可以采用独立 minor version。跨仓验证可在已审阅合同中登记额外字段差异；每个字段必须有理由及公私两侧精确值的 digest。值变化使该审阅失效，不产生新 effect 授权；运行时和隐私门仍必须独立通过。
+Scoped variant 在共享身份、API、bindings 与失败边界一致时，可以采用独立 minor version。跨仓验证可在已审阅合同中登记额外字段差异；每个字段必须有理由及两侧精确值的 digest。值变化使该审阅失效，不产生新 effect 授权；运行时和隐私门仍必须独立通过。
 
 <!-- semantic-anchor: required_gates -->
 ## 8. 必须通过的门禁
@@ -164,7 +164,7 @@ python3 scripts/validate_task_extensions.py
 python3 -m unittest evals.test_plugin_governance
 ```
 
-双仓发布时再加入 `--public-root <公开仓库>`。门禁同时检查 archetype 分支、task contract 或 capability binding、来源台账、外部衍生一致性、重复 owner、类型化 handoff、action-effect、人工准入回执、公私 manifest parity 和公开 runtime 私有符号。只有本地行为、负向测试、回滚/卸载与这些边界全部通过，插件才达到可发布状态。
+双仓发布时再加入 `--public-root <公开仓库>`。门禁同时检查 archetype 分支、task contract 或 capability binding、来源台账、外部衍生一致性、重复 owner、类型化 handoff、action-effect、人工准入回执、manifest parity 和可下载版本 runtime source 中的私有符号。只有本地行为、负向测试、回滚/卸载与这些边界全部通过，插件才达到可发布状态。
 
 <!-- semantic-anchor: open_questions -->
 ## Open questions

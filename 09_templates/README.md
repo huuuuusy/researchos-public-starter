@@ -4,7 +4,7 @@
 
 # Templates Layer
 
-Stores reusable templates, standard prompts, card formats, and data contracts that help the public starter stay structurally aligned with the non-public working version.
+Stores reusable templates, standard prompts, card formats, and data contracts that help this repository stay structurally aligned with the prototype in the technical report.
 
 - `paper-template.md`, `person-template.md`, `project-template.md`, `talk-template.md`, `decision-template.md`, `context-capsule-template.md`: core card and capsule templates.
 - `new-project-intake-card-template.md`, `research-expression-task-brief.md`, `safe-export-template.md`, `eval-case-template.md`, `self-evolution-report-template.md`, `memory-update-report-template.md`, `workflow-template.md`: project intake, expression task, safe export, eval, self-evolution, and writeback templates.

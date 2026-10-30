@@ -18,7 +18,7 @@ Use it to navigate registered lead, support, waiting, queued, paused, and attent
 
 ## Availability and parity
 
-Universal foundation projection with exact private/Public Starter manifest parity. Private and demo data remain separate.
+Universal foundation projection; its manifest is identical in this repository and in the prototype in the technical report. Private and demo data remain separate.
 
 ## Dependencies
 

@@ -4,11 +4,11 @@
 
 # ResearchOS 治理与扩展指南
 
-这份指南说明哪些内容可以进入公开 starter，怎样在不削弱权威边界的前提下改造和扩展它，随附插件怎样安装和移除，以及发布、贡献、安全报告和许可如何处理。面向 GitHub 的简短文件 `CONTRIBUTING.md`、`SECURITY.md` 和 `SUPPORT.md` 在仓库根目录，中文版在 `docs/reference/`；本指南保存更完整的原则。怎样使用系统见[用户手册](user-manual.zh.md)，内核合同和代码 owner 见[系统参考](system-reference.zh.md)。
+这份指南说明哪些内容可以进入本仓库，怎样在不削弱权威边界的前提下改造和扩展它，随附插件怎样安装和移除，以及发布、贡献、安全报告和许可如何处理。面向 GitHub 的简短文件 `CONTRIBUTING.md`、`SECURITY.md` 和 `SUPPORT.md` 在仓库根目录，中文版在 `docs/reference/`；本指南保存更完整的原则。怎样使用系统见[用户手册](user-manual.zh.md)，内核合同和代码 owner 见[系统参考](system-reference.zh.md)。
 
 ## 公开边界
 
-公开 starter 是独立的 Git 项目，只展示结构、机制、示例数据、Dashboard 文件、脚本入口和公开安全文档。它不是任何非公开工作系统的复制品，也不能从非公开 Dashboard 投影复制内容。材料先进入系统，Agent 或脚本只能形成候选，人类确认后才成为可复用状态，发布前还要经过安全导出检查。公开 starter 要把这个模型讲清楚，而不是把自己说成自治科学家或自动记忆库。
+本仓库 是独立的 Git 项目，只展示结构、机制、示例数据、Dashboard 文件、脚本入口和公开安全文档。它不是任何非公开工作系统的复制品，也不能从非公开 Dashboard 投影复制内容。材料先进入系统，Agent 或脚本只能形成候选，人类确认后才成为可复用状态，发布前还要经过安全导出检查。本仓库 要把这个模型讲清楚，而不是把自己说成自治科学家或自动记忆库。
 
 | 层级 | 可以放什么 | 不可以放什么 |
 | --- | --- | --- |
@@ -20,11 +20,11 @@
 
 因此，仓库可以包含公开安全的前端和本地服务器文件、虚构的统一接入材料和卡片成熟度示例、不含本机或远程执行器的 copy-only 交接配置、中英成对的核心文档、公开安全模板、验证脚本、provider 注册表和启动脚本，以及简短的 GitHub 支持文件。仓库不得包含非公开工作内容或 Dashboard 投影、原始语料、运行日志、API 密钥、令牌或凭据、真实人物、学生、合作者、评审或未公开论文细节、本地绝对路径或个人账号信息，以及未经审查却被写成事实的 Agent 输出。
 
-公开版能运行和写入什么，包括单独配置的 personal-vault 模式和只复制的 `ros` 边界，见用户手册第 [3](user-manual.zh.md#3-会话调度器与命令行检查) 节和第 [4](user-manual.zh.md#4-可选的-dashboard) 节。公开版的入口是非公开工作版的子集，或是该版已有能力的演示与自托管替身：personal-vault 模式、虚构的 `ros_demo.py` 演练、研究议程查询与维护门面。除此之外，这里出现的启动模式、provider 配置、Dashboard 文件、运行器门面、案例开关和文档入口，都应在非公开工作版中保留同名能力。这条一致性规则不是让公开版复制数据，而是让两边可以长期一起维护：公开版展示结构和机制，非公开工作版保留真实状态的权威。
+本仓库能运行和写入什么，包括单独配置的 personal-vault 模式和只复制的 `ros` 边界，见用户手册第 [3](user-manual.zh.md#3-会话调度器与命令行检查) 节和第 [4](user-manual.zh.md#4-可选的-dashboard) 节。本仓库的入口是报告中的原型的子集，或是原型已有能力的演示与自托管替身：personal-vault 模式、虚构的 `ros_demo.py` 演练、研究议程查询与维护门面。除此之外，这里出现的启动模式、provider 配置、Dashboard 文件、运行器门面、案例开关和文档入口，都应在原型中保留同名能力。这条一致性规则不是让本仓库复制数据，而是让两边可以长期一起维护：本仓库展示结构和机制，原型保留真实状态的权威。
 
 ## 改造 starter
 
-公开 starter 本来就允许用户改造。安全的改法是固定权威边界，只调整它周围的内容、模板、工作流、provider 或 Dashboard 界面。Markdown 来源加人类确认才是权威；Dashboard JSON、provider 返回、Codex 输出和生成文件，在复核前都只是投影或候选。先改内容、模板和工作流，再改 Dashboard：新的 Dashboard 按钮应该是最后一步，而不是证明一个想法重要的第一步。
+本仓库 本来就允许用户改造。安全的改法是固定权威边界，只调整它周围的内容、模板、工作流、provider 或 Dashboard 界面。Markdown 来源加人类确认才是权威；Dashboard JSON、provider 返回、Codex 输出和生成文件，在复核前都只是投影或候选。先改内容、模板和工作流，再改 Dashboard：新的 Dashboard 按钮应该是最后一步，而不是证明一个想法重要的第一步。
 
 | 层级 | 适合先改什么 | 从哪里开始 | 验证 |
 | --- | --- | --- | --- |
@@ -95,7 +95,7 @@ python3 scripts/manage_plugins.py install method_comparison
 
 结果应显示 `method_comparison · 研究方法对比 · 已启用`。这个任务进入既有的 Agent / Work Session 任务目录，不会新建第二个聊天、Dashboard 页面、Inbox 或记忆存储。
 
-随附的 `cross_domain_scientific_entry` 插件用同样方式安装（`python3 scripts/manage_plugins.py install cross_domain_scientific_entry`），它把进入陌生领域组织成一个有边界的 Case Pack：Case Charter、最小领域地图、路线注册表、候选谱系、准入回执、保持/迁移报告和案例结算。它提供的是工作流和权威边界，不提供领域专业性，也不携带任何私有研究记忆；它的实际价值取决于你的来源、判断、模型能力、领域反馈和执行纪律。私有或 personal-vault 运行时可以在运行时把同一内核与你的本地材料结合，但这些材料不会被复制进插件。
+随附的 `cross_domain_scientific_entry` 插件用同样方式安装（`python3 scripts/manage_plugins.py install cross_domain_scientific_entry`），它把进入陌生领域组织成一个有边界的 Case Pack：Case Charter、最小领域地图、路线注册表、候选谱系、准入回执、保持/迁移报告和案例结算。它提供的是工作流和权威边界，不提供领域专业性，也不携带任何私有研究记忆；它的实际价值取决于你的来源、判断、模型能力、领域反馈和执行纪律。personal vault 可以在运行时把同一内核与你的本地材料结合，但这些材料不会被复制进插件。
 
 如果希望在 ChatGPT 或另一个 MCP 客户端中续接本地 Codex task，`python3 scripts/manage_plugins.py install codex_thread_handoff` 只安装声明式 ResearchOS 任务合同。它不会暴露本机、创建 tunnel、安装 bridge 或注册 ChatGPT 连接器；还需要由用户独立运行并配置一个经过验证、带认证的只读 MCP 连接器。只有[其 README](plugins/codex-thread-handoff/README.zh.md#可用性与一致性)中的四个就绪状态都分别核对过，才可称为已就绪。
 
@@ -117,10 +117,10 @@ Dashboard 通过 `dashboard/src/services/work-session-router.js` 暴露三种结
 1. 普通阅读走 `answer`，需要文件成果走 `artifact`，拟议的长期系统变化走 `writeback`；view 不得直接写 Markdown。
 2. 普通选卡只更新 working deck，不导航；只有明确的“提出写回”才创建行动并打开待复核。
 3. 同一 action key 区分 active、archived、withdrawn 和 completed；重新加入恢复 active，并以新的时间戳与旧的 runner completion 记录隔开。
-4. 公开 starter 只返回 copy-only 任务包和待复核说明；本机 Codex 与 Claude Code CLI 派发、Inbox/canonical 写回和任意命令保持关闭，模型目录、执行控件、runner 状态和维护动作都由 runtime capability 控制，不能只靠 CSS 隐藏。
+4. 本仓库 只返回 copy-only 任务包和待复核说明；本机 Codex 与 Claude Code CLI 派发、Inbox/canonical 写回和任意命令保持关闭，模型目录、执行控件、runner 状态和维护动作都由 runtime capability 控制，不能只靠 CSS 隐藏。
 5. 每个新状态都要同步更新双语 UI 文案、手册、前端契约测试、公开安全检查和一次桌面与移动端浏览器流程。
 6. 新能力默认不占首屏：通过扩展契约贡献有界的 Work Item 或动作，或者复用按需展开的 Work Session 结果闭环。空闲时直接自然语言输入保持折叠；只有任务需要时，才展开材料、卡片、成果、待复核或维护控件。
-7. 公开版旧任务包可以留在页面历史中，但不得作为 assistant 回答递归嵌入后续任务包；只带上理解追问所需的先前用户意图。
+7. 本仓库的旧任务包可以留在页面历史中，但不得作为 assistant 回答递归嵌入后续任务包；只带上理解追问所需的先前用户意图。
 
 复用 `work-session-router.js`、`work-session-state.js`、`work-session-workbench.js`、对应 view owner、`doing-board-state.js`、`inbox.js` 和 `storage-contract.js`，不要创建第二套结果闭环、localStorage key 或平行收件箱。无界面集成通过现有扩展 manifest 和 Work Session 合同贡献有界任务，不另建提示词路由器或第二套 Work Session；它保留候选先于确认、冻结的模板语言和待复核边界，普通用户仍从 Agent 对话或“开始”页进入。
 
@@ -137,7 +137,7 @@ Dashboard 通过 `dashboard/src/services/work-session-router.js` 暴露三种结
 
 新增根目录 Markdown 文件前，先判断它是否真是 GitHub 用户会去找的入口；详细解释应放进[文档地图](README.zh.md)里对应的现有 owner。接入文件保留在仓库中，方便用户对照放置位置和字段。用户把自己的内容写进 Git 忽略的 `personal_vault/`，那里从不显示这些示例，所以既不删除也不关闭它们；把案例移出 demo 投影的可选维护者开关见[用户手册第 5 节](user-manual.zh.md#5-用自己的材料)。
 
-发布前，维护者在公开仓库逐条运行 `.github/workflows/validate.yml` 中的步骤，即本仓库的 CI。原始维护者还可以从非公开工作版运行私有的发布边界检查；它不随公开 starter 发布，因为它核对的是私有来源与本公开包之间的导出边界，公开贡献者不需要拥有它。检查确认：公开 starter 是独立的 Git 项目；必要目录和文件都在；`docs/` 保持中英成对；关闭的案例不再进入活跃示例数据；公开 provider 能力是 copy-only，本机 Codex 与 Claude Code CLI 派发关闭、不存在远程 provider；没有本地路径、密钥、敏感人物或禁止出现的边界词；公开独有的入口都属于已登记的演示或自托管替身。
+发布前，维护者在公开仓库逐条运行 `.github/workflows/validate.yml` 中的步骤，即本仓库的 CI。原始维护者还可以从报告中的原型运行私有的发布边界检查；它不随本仓库 发布，因为它核对的是私有来源与本仓库之间的导出边界，公开贡献者不需要拥有它。检查确认：本仓库 是独立的 Git 项目；必要目录和文件都在；`docs/` 保持中英成对；关闭的案例不再进入活跃示例数据；公开 provider 能力是 copy-only，本机 Codex 与 Claude Code CLI 派发关闭、不存在远程 provider；没有本地路径、密钥、敏感人物或禁止出现的边界词；公开独有的入口都属于已登记的演示或自托管替身。
 
 审查拉取请求时，维护者先看四件事：是否真的改善用户理解或运行体验，是否维持公开安全边界，是否更新了对应的中英文档，相关验证脚本是否通过。大型示例、真实人物材料、远程 provider 调用、商业部署说明和未经确认的 Agent 输出，通常要缩小范围或移出公开仓库。安全相关问题按 [SECURITY.zh.md](reference/SECURITY.zh.md) 的私下报告路径处理，求助应提供的信息见 [SUPPORT.zh.md](reference/SUPPORT.zh.md)。
 

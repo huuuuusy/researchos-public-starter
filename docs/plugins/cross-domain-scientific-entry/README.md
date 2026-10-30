@@ -18,7 +18,7 @@ Use it when a specific local problem must be tested under another field's standa
 
 ## Availability and parity
 
-Optional scoped variants exist in private ResearchOS, Public Starter, and a personal vault. The workflow is shared; only optional private handoffs differ.
+Optional scoped variants exist in the prototype in the technical report, this repository, and a personal vault. The workflow is shared; only optional private handoffs differ.
 
 ## Dependencies
 

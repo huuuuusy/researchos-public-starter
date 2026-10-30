@@ -43,7 +43,7 @@ python3 scripts/ros_demo.py
     · [b5d4e33c7c] The basis of judgment "Compare A and B under occlusion first; do not enlarge the dataset yet." changed
 ```
 
-In step 5 the reconfirmation is printed as a diff and not written, and in step 6 the recheck is still pending at close. Phrases such as "no admission receipt yet", "not an admission" and "copy fallback" are not errors: they say that nothing was admitted, which is how the public starter works.
+In step 5 the reconfirmation is printed as a diff and not written, and in step 6 the recheck is still pending at close. Phrases such as "no admission receipt yet", "not an admission" and "copy fallback" are not errors: they say that nothing was admitted, which is how this repository works.
 
 **If it looks different.** If `python3` is not found or the script stops with a syntax error, check that `python3 --version` reports 3.10 or newer. On Windows outside WSL it cannot run, because the file locks it needs are missing. For Chinese output, add `--lang zh-CN`. The counter lines, such as "scope / | … keys", are bookkeeping; the demo itself says you can skip them on a first read.
 
@@ -125,7 +125,7 @@ Candidates returned or proposed since this session started that are neither admi
        (no requirements to review; carry on with the next step)
    ```
 
-   `[unscheduled]` is normal, because the public starter ships no attention schedule. End the session with `python3 scripts/ros.py --root personal_vault close`; for a fresh vault it reports `Outcome: complete (0 to do; …)`. If you changed `state`, `priority`, `question` or `responsibility` after `today` had already read them, for example to fix a portfolio problem, `today` and `close` list that write as a judgment-class field to confirm; confirm it in your own terminal with `python3 scripts/ros.py --root personal_vault decide <id> confirm` and answer `y` (a call relayed by an assistant is only recorded as asserted).
+   `[unscheduled]` is normal, because this repository ships no attention schedule. End the session with `python3 scripts/ros.py --root personal_vault close`; for a fresh vault it reports `Outcome: complete (0 to do; …)`. If you changed `state`, `priority`, `question` or `responsibility` after `today` had already read them, for example to fix a portfolio problem, `today` and `close` list that write as a judgment-class field to confirm; confirm it in your own terminal with `python3 scripts/ros.py --root personal_vault decide <id> confirm` and answer `y` (a call relayed by an assistant is only recorded as asserted).
 
    If `today` shows a "Portfolio problems" block, each line names the field and the values it accepts, for example `state "active" is not a valid value (mainline, waiting, queued, conditional, closed, paused)`; fix it in the portfolio. If the fictional commitments still appear under "To decide", their blocks are still in the file. If they appear only under "Questions for you", marked `subject_absent`, you ran `today` before replacing them: these are records of the fictional run, so delete `personal_vault/06_active_context/work_state/` once and run `today` again. A card that is not at the path you wrote shows there as `source_path … does not exist in this folder`; `python3 scripts/ros.py --root personal_vault rules --check` reports the same problems and says `0 problems` when everything is in place.
 

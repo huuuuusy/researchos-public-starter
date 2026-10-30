@@ -61,11 +61,11 @@ checkpoint 记录执行后的 change token，因此派生输出不会再次触�
 
 计划最多显示 40 条路径。变化超过 200 条、达到 tracked Markdown 的 25%，或控制契约本身变化时，计划升级为 full-review candidate。网络和高成本语义任务不会在启动时或安全刷新确认中执行。
 
-## 公开模式与个人模式
+## 本仓库与个人模式
 
 - **公开 demo：** 只展示公开仓库自身的变化计划；刷新按钮禁用，所有写入 endpoint 继续被阻止。
-- **Personal vault：** 只能运行公开 starter 自己的、已确认的固定安全步骤；checkpoint 和本地投影由 Git 忽略。
-- **永不允许：** 定位私人 sibling repo、发现私人 provider、读取私人原始材料，或把私人路径、checkpoint、日志复制进公开版。
+- **Personal vault：** 只能运行本仓库 自己的、已确认的固定安全步骤；checkpoint 和本地投影由 Git 忽略。
+- **永不允许：** 定位私人 sibling repo、发现私人 provider、读取私人原始材料，或把私人路径、checkpoint、日志复制进本仓库。
 
 公开与私人安装可以共享协议，但不能共享运行态或来源集合。
 

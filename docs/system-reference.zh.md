@@ -12,15 +12,15 @@ sensitivity: public
 
 # ResearchOS 系统参考
 
-本参考说明公开 starter 的界面、状态和治理边界各自是什么意思，内核与扩展端口怎样安排，哪个代码 owner 负责哪类问题，以及公开安全内容放在哪里。修改或调试代码前先读下面的代码地图：只选一条运行链和一个 owner 文件，不要先扫描全部 JavaScript、生成 JSON 或另一语言文档。怎样使用系统见[用户手册](user-manual.zh.md)；发布、自定义和插件见[治理与扩展指南](governance-guide.zh.md)。
+本参考说明本仓库 的界面、状态和治理边界各自是什么意思，内核与扩展端口怎样安排，哪个代码 owner 负责哪类问题，以及公开安全内容放在哪里。修改或调试代码前先读下面的代码地图：只选一条运行链和一个 owner 文件，不要先扫描全部 JavaScript、生成 JSON 或另一语言文档。怎样使用系统见[用户手册](user-manual.zh.md)；发布、自定义和插件见[治理与扩展指南](governance-guide.zh.md)。
 
 ## 系统是什么
 
-ResearchOS 是给个人科研人员使用的小型文件化工具，用来让判断在工具、项目和时间之间保持连续。skill 可读 Markdown 加 Claude Code、Codex 等 Agent 客户端或其他文件感知 CLI 是主要执行路线；刻意收窄的本地 Dashboard 是跨会话的注意力与控制面。公开 starter 展示机制，不保存非公开研究记忆。skill/Agent 使用、Dashboard 可视化、provider 输出和 Agent 输出都只是候选或操作界面，从来不是长期权威。
+ResearchOS 是给个人科研人员使用的小型文件化工具，用来让判断在工具、项目和时间之间保持连续。skill 可读 Markdown 加 Claude Code、Codex 等 Agent 客户端或其他文件感知 CLI 是主要执行路线；刻意收窄的本地 Dashboard 是跨会话的注意力与控制面。本仓库 展示机制，不保存非公开研究记忆。skill/Agent 使用、Dashboard 可视化、provider 输出和 Agent 输出都只是候选或操作界面，从来不是长期权威。
 
-公开 starter 是一个小型文件化参考工具，把研究工作流拆成几个清晰的 Markdown 层级：身份和方向、知识材料、判断记录、认知方法、人物上下文、工作流、当前状态、公开导出和模板。配置、脚本、验证器和刻意收窄的 Dashboard 为这些层级提供支持。它不是用来保存敏感内容的，展示三条机制。候选与确认分离：智能体生成内容先进入候选层。证据与行动分离：材料、解释和下一步行动分别记录。公开与非公开边界分离：可导出的内容必须来自虚构、清洗或明确授权公开的来源。
+本仓库 是一个小型文件化参考工具，把研究工作流拆成几个清晰的 Markdown 层级：身份和方向、知识材料、判断记录、认知方法、人物上下文、工作流、当前状态、公开导出和模板。配置、脚本、验证器和刻意收窄的 Dashboard 为这些层级提供支持。它不是用来保存敏感内容的，展示三条机制。候选与确认分离：智能体生成内容先进入候选层。证据与行动分离：材料、解释和下一步行动分别记录。公开与非公开边界分离：可导出的内容必须来自虚构、清洗或明确授权公开的来源。
 
-公开 starter 不发现其他私人仓库，不包含 federation catalog，不执行跨系统调用，也不共享私人运行态。公开版的 task extension 只是复用公开内核的本地声明式描述，不是连接维护者私人系统的 connector。某个私人方法只有在去除来源身份、本地路径、运行证据和外来 authority，并重新写成领域中性的候选机制后，才可能进入公开版。ResearchOS 不是托管服务、自治科研系统、all-in-one 科研平台或追求消费级完成度的应用；“OS”是项目名称和显式操作规则的比喻，不代表平台广度。
+本仓库 不发现其他私人仓库，不包含 federation catalog，不执行跨系统调用，也不共享私人运行态。本仓库的 task extension 只是复用内核的本地声明式描述，不是连接维护者私人系统的 connector。某个私人方法只有在去除来源身份、本地路径、运行证据和外来 authority，并重新写成领域中性的候选机制后，才可能进入本仓库。ResearchOS 不是托管服务、自治科研系统、all-in-one 科研平台或追求消费级完成度的应用；“OS”是项目名称和显式操作规则的比喻，不代表平台广度。
 
 ```text
 现在：在多项 Commitment 之间分配注意力，每项只有一个下一步
@@ -42,16 +42,16 @@ ResearchOS 是给个人科研人员使用的小型文件化工具，用来让判
 | `Skill/Agent` | 日常 Agent 协助阅读、整理、草拟、验证和写回建议。 | Agent 协议、上下文预算、标准提示词和当前语言 Markdown。 |
 | `现在 / Now` | 投影多项 Commitment 组成的注意力组合。 | 可以同时显示多项 Commitment；每项只保留一个处置和一个下一安全动作，不成为通用 backlog 或运行控制室。 |
 | `资料 / Library` | 以一项或少量 Commitment 为 lens，查看公开安全的材料、项目、人物、报告和关系。 | lens 是临时选择，保留来源和关系类型；资料补上下文但不创建候选，不是第二个项目数据库。 |
-| 事项内 Work | 在 Now 内打开精确所选 Commitment 的 Work Session、thread、run 与 result，连同事项的目标、来源、成果引用、过程记录和 working deck。 | 它是抽屉，不是第三屏；公开版只准备可复制任务包，不启动本机或远程执行器，也不声称已执行。 |
-| 事项内 Review | 展示精确所选事项的结果、成果、拟议长期变化、人工处置、验证边界、回执与连续性交接。 | 身份缺失或含混时失败关闭；公开版不得声称已写入或验证 canonical memory。 |
+| 事项内 Work | 在 Now 内打开精确所选 Commitment 的 Work Session、thread、run 与 result，连同事项的目标、来源、成果引用、过程记录和 working deck。 | 它是抽屉，不是第三屏；本仓库只准备可复制任务包，不启动本机或远程执行器，也不声称已执行。 |
+| 事项内 Review | 展示精确所选事项的结果、成果、拟议长期变化、人工处置、验证边界、回执与连续性交接。 | 身份缺失或含混时失败关闭；本仓库不得声称已写入或验证 canonical memory。 |
 | `Preview` | 文件、候选和证据片段预览。 | Markdown 如何被读取。 |
-| `Agent` | 交接与能力状态。 | 公开版固定为 copy-only；所有执行只属于 personal-vault 或私有运行态。 |
+| `Agent` | 交接与能力状态。 | 本仓库固定为 copy-only；所有执行只属于 personal-vault 模式或报告中的原型。 |
 
-Claude Code、Codex 或其他文件感知 Agent 是主要执行面。Dashboard 是跨会话注意力与控制面，按下一步何时再次占用注意力（今日 / 明日 / 未来 / 搁置）显示虚构或本地 Work Item，Markdown 仍是 authority。Dashboard 不是第二个聊天入口，也不是使用 Agent 的前置条件。生成的 JSON 文件为 Dashboard 提供数据，验证脚本检查配置、模型提供方注册表、生成的启动数据和公开发布边界。公开运行时固定为 copy-only，见[用户手册第 4 节](user-manual.zh.md#4-可选的-dashboard)；排期、完成和长期写回保持禁用，按钮只演示同一交互语法，不假装已经修改数据。
+Claude Code、Codex 或其他文件感知 Agent 是主要执行面。Dashboard 是跨会话注意力与控制面，按下一步何时再次占用注意力（今日 / 明日 / 未来 / 搁置）显示虚构或本地 Work Item，Markdown 仍是 authority。Dashboard 不是第二个聊天入口，也不是使用 Agent 的前置条件。生成的 JSON 文件为 Dashboard 提供数据，验证脚本检查配置、模型提供方注册表、生成的启动数据和公开发布边界。本仓库固定为 copy-only，见[用户手册第 4 节](user-manual.zh.md#4-可选的-dashboard)；排期、完成和长期写回保持禁用，按钮只演示同一交互语法，不假装已经修改数据。
 
 skill/Agent 是深度读取、修改、成果生成和验证的执行路线，ChatGPT 类通用助手可以辅助开放讨论。Dashboard 以统一工作台呈现现在与资料两个语义区域，而不是第二个编辑器。`现在`负责分配注意力：完整的 Today 列表、一个当前研究焦点、月/周日历、全部活动或等待项目，以及精确事项内的 Work/Review 抽屉；复核日或外部事件到达时，等待或暂停的项目可以回到这里供判断，但不会因此变成可执行任务。`资料`只通过最多少量明确选择的 Commitment lens 连接公开安全的来源、人物、论断、证据、线程和成果，不承载日历或项目状态板。项目是长期容器，当天可安排的是它当前唯一的下一步 Work Item。月历只消费显式日期，点击事件只返回精确事项，不拥有生命周期写入。Work/Review 只在精确事项内区分有界执行、返回结果、候选变化、研究者处置、写回与验证状态、回执和连续性交接，抽屉保存精确的 session 与 run 身份。
 
-核心 authority 协议和长期记忆不依赖 Dashboard。插件只能贡献领域投影和受控动作。导航由应用壳拥有；Work Session、Review、准入和存储安全是内核协议；Project/Commitment 生命周期与 attention 由 `research_portfolio` 能力层拥有。`现在`与日历只投影这些状态，不拥有其持久权威；公开版的日历变化仍是不保存的预览。`Start / Today / Agent`、`Assets`、`Next`、`Work` 与 `Review / Inbox` 只作输入 alias；携带 item 的 Work/Review 路由进入 `Now?item=<id>&panel=<work|review>`，身份缺失时失败关闭，输出只使用 canonical ID。公开 demo 只使用虚构事项和 copy-only 交接；它与 personal-vault 模式能运行和写入什么，见用户手册第 [3](user-manual.zh.md#3-会话调度器与命令行检查) 节和第 [4](user-manual.zh.md#4-可选的-dashboard) 节。
+核心 authority 协议和长期记忆不依赖 Dashboard。插件只能贡献领域投影和受控动作。导航由应用壳拥有；Work Session、Review、准入和存储安全是内核协议；Project/Commitment 生命周期与 attention 由 `research_portfolio` 能力层拥有。`现在`与日历只投影这些状态，不拥有其持久权威；本仓库的日历变化仍是不保存的预览。`Start / Today / Agent`、`Assets`、`Next`、`Work` 与 `Review / Inbox` 只作输入 alias；携带 item 的 Work/Review 路由进入 `Now?item=<id>&panel=<work|review>`，身份缺失时失败关闭，输出只使用 canonical ID。公开 demo 只使用虚构事项和 copy-only 交接；它与 personal-vault 模式能运行和写入什么，见用户手册第 [3](user-manual.zh.md#3-会话调度器与命令行检查) 节和第 [4](user-manual.zh.md#4-可选的-dashboard) 节。
 
 待复核状态带有时间边界：重新加入会清除同一 action 的 archive/resolved 遮罩，旧的 completed run 不能处理后来加入的请求。界面语言是浏览器偏好；活跃 prompt/模板语言在生成投影时冻结。
 
@@ -67,7 +67,7 @@ skill/Agent 是深度读取、修改、成果生成和验证的执行路线，Ch
 
 **上下文外发。** `ros context` 包被云端会话 Agent 读取时会离开本机，尽管该 Agent 不是 provider。研究者启动的会话可为所请求的承诺或卡片交付 public/internal 来源，无须再次确认。sensitive 来源每次须研究者本人在本机终端确认；Agent 代给参数不算确认。private 和未知级别一律排除。private 承诺总表可在来源自身声明哪些字段按 internal 交付；未声明字段与标题仍属 private，请求所用承诺 id 随请求交付，声明不降低来源级别。sensitive 和未知来源不适用该例外。
 
-每次交付记录去向服务、用途、已交付与已排除来源；无法识别去向时记为未知。Agent 直接读文件，以及 `ros today`、`ros state` 等其他命令输出，不在这条交付记录内；其外发情况是未知，不能声称已覆盖。撤销只阻止后续交付，不能收回已交付内容。会话交付许可不等于公开发布许可；公开版安全导出规则与 `copy_only` 边界继续适用。
+每次交付记录去向服务、用途、已交付与已排除来源；无法识别去向时记为未知。Agent 直接读文件，以及 `ros today`、`ros state` 等其他命令输出，不在这条交付记录内；其外发情况是未知，不能声称已覆盖。撤销只阻止后续交付，不能收回已交付内容。会话交付许可不等于公开发布许可；本仓库的安全导出规则与 `copy_only` 边界继续适用。
 
 ## 状态与权威模型
 
@@ -84,7 +84,7 @@ ResearchOS 不用一个含混的 status 同时表达所有含义：
 
 ## 内核与扩展架构
 
-稳定内核是 authority 与结果协议，不是 Dashboard 的功能数量。普通任务路线使用声明式扩展；经过审查的第一方能力使用静态 adapter、candidate registry 与稳定的 Utility、Library、Workbench 或 Review 端口。两者都复用现有 Work Session、`answer / artifact / writeback` 模式、Review 边界、语言冻结和公开安全门禁，都不能另建执行器、Inbox、存储或写回链。公开 starter 同样以对话为先：`conversation_contract.py` 统一结果和确认边界，`repository_layout.py` 声明 personal-vault 层，`plan_context.py` 是直接 Agent 路由，Dashboard 只显示公开安全投影和交接。生成 JSON、demo 数据和 Agent 输出都不取得长期 authority；写回个人材料库前必须由用户确认。
+稳定内核是 authority 与结果协议，不是 Dashboard 的功能数量。普通任务路线使用声明式扩展；经过审查的第一方能力使用静态 adapter、candidate registry 与稳定的 Utility、Library、Workbench 或 Review 端口。两者都复用现有 Work Session、`answer / artifact / writeback` 模式、Review 边界、语言冻结和公开安全门禁，都不能另建执行器、Inbox、存储或写回链。本仓库 同样以对话为先：`conversation_contract.py` 统一结果和确认边界，`repository_layout.py` 声明 personal-vault 层，`plan_context.py` 是直接 Agent 路由，Dashboard 只显示公开安全投影和交接。生成 JSON、demo 数据和 Agent 输出都不取得长期 authority；写回个人材料库前必须由用户确认。
 
 ### 产品层
 
@@ -165,7 +165,7 @@ Application Shell
 
 稳定内核只拥有 authority、result、准入、运行状态、上下文外发、Work Session、Review、request 和存储安全合同；platform adapter 拥有 source reader、projection builder、HTTP client 和共享 UI primitive；一个 capability slice 完整拥有一个 user job 的 model、view、workbench、copy key、style、payload schema、行为测试与退场条件；application shell 只负责启动、workspace 组合、渲染调度和失败恢复。`core/services/components/views` 目录可以保持现状：先在 manifest 中声明每个模块属于哪个 capability、platform 或 kernel 边界，依赖图稳定后再考虑物理移动。只有安全不变量，或至少三个 capability 以相同语义复用的逻辑，才提升为 shared/core。一个 feature 不得直接读取另一个 feature 的 DOM、浏览器状态或内部 model。
 
-`material_pipeline` 是第一个在 candidate adapter 边界上验证过的跨前后端 capability plugin。材料接入、材料升级和 research scout 保留各自的领域输入，但进入 Review 前由经审查的第一方 adapter 归一化为统一的 `CandidateEnvelope`；统一 Inbox 与 Codex handoff 只消费 envelope，不按原始字段分支。registry 不是任意代码加载器：manifest 只声明 runtime availability、安全、权限与 candidate type，adapter 实现仍是静态加载、经过审查的第一方模块。公开 starter 共享宿主、adapter、envelope、endpoint 形状和浏览器行为，服务器仍拒绝长期 canonical 材料写回。禁用插件只移除它的 contribution，不新建第二套 Inbox、Review 或存储 owner。registry 之外没有旧 rule module、`ActionInboxStore` owner 或核心 type 分支，因此它不是永久双写层。另有两个端口在同一边界上验证过：`research_assets` 拥有资料投影、组合动作和 group/dissolution 候选，`research_portfolio` 拥有首屏可行动投影与资料中的完整生命周期板；`现在`与`资料`的壳层不计算这些领域状态。外部连接器尚未验证：Zotero/iPad 或证据阅读 bridge 必须单独审查 source adapter、权限和卸载边界。
+`material_pipeline` 是第一个在 candidate adapter 边界上验证过的跨前后端 capability plugin。材料接入、材料升级和 research scout 保留各自的领域输入，但进入 Review 前由经审查的第一方 adapter 归一化为统一的 `CandidateEnvelope`；统一 Inbox 与 Codex handoff 只消费 envelope，不按原始字段分支。registry 不是任意代码加载器：manifest 只声明 runtime availability、安全、权限与 candidate type，adapter 实现仍是静态加载、经过审查的第一方模块。本仓库 共享宿主、adapter、envelope、endpoint 形状和浏览器行为，服务器仍拒绝长期 canonical 材料写回。禁用插件只移除它的 contribution，不新建第二套 Inbox、Review 或存储 owner。registry 之外没有旧 rule module、`ActionInboxStore` owner 或核心 type 分支，因此它不是永久双写层。另有两个端口在同一边界上验证过：`research_assets` 拥有资料投影、组合动作和 group/dissolution 候选，`research_portfolio` 拥有首屏可行动投影与资料中的完整生命周期板；`现在`与`资料`的壳层不计算这些领域状态。外部连接器尚未验证：Zotero/iPad 或证据阅读 bridge 必须单独审查 source adapter、权限和卸载边界。
 
 更新分类与扩展阶梯的层级不是一回事，它决定每次改动走哪条路：
 
@@ -178,7 +178,7 @@ Application Shell
 
 C2/C3 必须记录 user job、现有 owner、替换或合并决定、依赖方向、人工与生成的改动半径、移除条件、公私边界和验证。以下信号用来发现沉积，不是机械追求更小数字的目标。活动前端 owner 数量是观测信号，不是固定上限：每个 owner 都必须已注册、符合单文件预算并处于有界的 capability 改动半径内，C3 新增项还必须说明它替代、拆分或独立启停了哪个 owner。`app.js` 的全局依赖与顶层函数只能减少，而且不能靠包装或隐藏的 service locator 假装减少。新验证优先检查行为、schema、authority 和安全边界；源码 token 检查只保护加载顺序、禁止项和发布边界。生成投影与人工 diff 分开，parity 分叉 allowlist 必须精确对应真实分叉。
 
-迁移有先后。保持 capability slice 由 manifest 声明，不为显示“有架构”而移动文件；新增端口前先复用已验证的 Utility、Library、Workbench、candidate 与 surface-dependency 端口；首屏投影以小型 bootstrap envelope 为目标保持精简，只有证据充分时才按需加载重型 payload；与私有原型共享的文件分步同步，任何公开写入前先运行公开安全与 parity 检查，绝不自动推送；slice 迁移时用行为、schema 或 authority 测试替换实现 token 检查，并在同一批删除旧检查；只有物理移动能解决已测得的依赖问题时，才考虑 feature 目录或 bundler。一次迁移若同时触及内核、多于一个 capability、存储语义和公私分叉，必须拆批。说不出要删除哪个旧 owner 时不新增抽象；新抽象在两个真实需求内没有第二个消费者，就退回 capability slice。
+迁移有先后。保持 capability slice 由 manifest 声明，不为显示“有架构”而移动文件；新增端口前先复用已验证的 Utility、Library、Workbench、candidate 与 surface-dependency 端口；首屏投影以小型 bootstrap envelope 为目标保持精简，只有证据充分时才按需加载重型 payload；与报告中的原型共享的文件分步同步，任何公开写入前先运行公开安全与 parity 检查，绝不自动推送；slice 迁移时用行为、schema 或 authority 测试替换实现 token 检查，并在同一批删除旧检查；只有物理移动能解决已测得的依赖问题时，才考虑 feature 目录或 bundler。一次迁移若同时触及内核、多于一个 capability、存储语义和公私分叉，必须拆批。说不出要删除哪个旧 owner 时不新增抽象；新抽象在两个真实需求内没有第二个消费者，就退回 capability slice。
 
 ## 代码地图
 
@@ -206,7 +206,7 @@ Demo 或 personal 启动
     -> 已记录的公开命令
 ```
 
-Demo 写入 `08_exports/public_starter/generated-public-starter-data.json` 和 `dashboard/data/researchos-dashboard.json`。personal-vault 模式写入本地专用、Git 忽略的 `dashboard/data/researchos-local.json`，它绝不能提交。这些文件都是投影，不是编辑权威。默认公开 demo 可以显示只针对公开仓库的演化计划，但不能执行。personal-vault 与私有原型使用同一 UI 动作契约：白名单内的本地维护动作与本机安装的 Codex CLI 可以执行，长期写回仍遵守当前确认边界。维护靠[受控自我演化控制面](self-evolution-control-plane.zh.md)扩展，不靠自主修改自身。
+Demo 写入 `08_exports/public_starter/generated-public-starter-data.json` 和 `dashboard/data/researchos-dashboard.json`。personal-vault 模式写入本地专用、Git 忽略的 `dashboard/data/researchos-local.json`，它绝不能提交。这些文件都是投影，不是编辑权威。默认公开 demo 可以显示只针对公开仓库的演化计划，但不能执行。personal-vault 模式与报告中的原型使用同一 UI 动作契约：白名单内的本地维护动作与本机安装的 Codex CLI 可以执行，长期写回仍遵守当前确认边界。维护靠[受控自我演化控制面](self-evolution-control-plane.zh.md)扩展，不靠自主修改自身。
 
 | 问题 | 主要 owner | 只有需要时才继续读 |
 | --- | --- | --- |
@@ -226,7 +226,7 @@ Demo 写入 `08_exports/public_starter/generated-public-starter-data.json` 和 `
 | Codex 执行和用量报告 | `scripts/researchos_server/codex_runner.py` | `scripts/researchos_adapters/command_runner.py`、前端 runner client |
 | 低冗余运行与空间提醒 | `work_session_upload.py`、`runtime_retention.py` | 用户附件不设任意配额、不自动删除；仅压缩日志和清理 owner 生成的 `.tmp` |
 | 本地 Markdown 预览与写回 bridge | `scripts/researchos_server/local_file_bridge.py` | preview file server 和对应 eval |
-| 公开 runtime-read 白名单与文件投影 | `scripts/researchos_server/runtime_read_boundary.py`、`config/public-runtime-read-manifest.json` | preview/source-tree 消费者和 runtime-read eval |
+| Runtime-read 白名单与文件投影 | `scripts/researchos_server/runtime_read_boundary.py`、`config/public-runtime-read-manifest.json` | preview/source-tree 消费者和 runtime-read eval |
 | Inbox、卡组、清理和复查状态 | `scripts/researchos_server/` 中对应的 `*_store.py` | 对应前端 client 或 workbench |
 | 前端数据读取和服务调用 | `dashboard/src/services/*-client.js` 或 `dashboard-data-client.js` | 后端路由 owner |
 | 前端状态和持久偏好 | `dashboard/src/core/*.js` | 使用该状态的 view 或 workbench |
@@ -246,7 +246,7 @@ Demo 写入 `08_exports/public_starter/generated-public-starter-data.json` 和 `
 
 ### 冻结规则与边界
 
-新功能必须扩展或替换一个现有 owner，不得并行创建第二条`现在`、`资料`、Review 或接入主路径。兼容层必须同时带迁移回归和删除条件；迁移完成后删除旧分支，不长期保留两种语义。与私有原型共享的模块默认逐字节一致；只有在私有原型的版本一致性登记表中、因隐私、示例或运行差异登记为分叉的文件可以不同。新增代码前先看能否删除或合并旧分支；若 `app.js`、某个 owner 或某条文档路线持续增长，应抽取职责或收敛路线，而不是提高预算。
+新功能必须扩展或替换一个现有 owner，不得并行创建第二条`现在`、`资料`、Review 或接入主路径。兼容层必须同时带迁移回归和删除条件；迁移完成后删除旧分支，不长期保留两种语义。与报告中的原型共享的模块默认逐字节一致；只有在该原型的一致性登记表中、因隐私、示例或运行差异登记为分叉的文件可以不同。新增代码前先看能否删除或合并旧分支；若 `app.js`、某个 owner 或某条文档路线持续增长，应抽取职责或收敛路线，而不是提高预算。
 
 Markdown 材料、用户明确确认和已记录规则是权威输入；Dashboard JSON、运行时 store、provider response 和 Agent 输出只是投影或候选，`dashboard/data/researchos-dashboard.json` 是生成的 demo 数据。`scripts/researchos_data/` 包含受支持的 runtime owner：`maintenance_pipeline.py`、`task_extensions.py`、`plugins.py`、`plugin_governance.py`、`plugin_docs.py`、`plugin_lifecycle.py`、`plugin_ownership.py`、`conversation_contract.py`、`capability_registry.py`、`plugin_portfolio.py`、`task_router.py`、`repository_layout.py`、`metadata_profiles.py`、`public_conversation_catalog.py`，以及供架构验证使用的只读前端与样式 manifest。三个 headless owner `capability_registry.py`、`plugin_portfolio.py` 与 `task_router.py` 只读取声明式合同并输出无副作用的 receipt 或分组投影，不拥有 provider、command、存储、Dashboard 或 canonical write。`plugin_docs.py` 负责机器校验的逐插件 README 合同与公开文档泄漏检查，不读取插件运行数据。`plugin_governance.py` 验证能力来源、作用、组合、路由和准入，不拥有运行时状态。`plugin_lifecycle.py` 只能经 `scripts/manage_plugins.py` 进入，并且只管理 Git 忽略目录中的随附示例。Research Agenda 解析是有文档的顶层投影 owner，不是兼容层。不要加入 `fake-*`、`walkthrough` 或 `example-original-developer-*` 案例：架构验证器会拒绝它们，starter 只保留一条接入路线。
 
@@ -258,7 +258,7 @@ Markdown 材料、用户明确确认和已记录规则是权威输入；Dashboar
 
 ### 低冗余运行契约
 
-Work Session 恢复历史最多保留 10 项摘要，而不是完整聊天；其他浏览器列表也必须有明确条目上限。在 personal-vault 与私有运行态中，用户选择的会话附件不设产品级大小、数量或保存期限配额，上限只是本机文件系统和运行环境；公开 demo 接受单个不超过 1 GiB 的文件。附件不因空间阈值自动删除，上传采用流式写盘。runner JSONL 超过 5 MB 后压缩为最近 80 个 run 的合并状态，移除 prompt，并限制保留的输出。公开 demo 拒绝所有 runner 提交（见[用户手册第 4 节](user-manual.zh.md#4-可选的-dashboard)）。Demo JSON 与 Dashboard JSON 是覆盖式、可重建的投影，不是不断追加的历史数据库。已完成的会话附件由用户控制，启动时只清除上传 owner 自己留下的 `.tmp` 残片。会话副本较大或本机可用空间较低时，只返回非阻断的空间回执；提醒不得删除材料，也不得联动停用其他功能。
+Work Session 恢复历史最多保留 10 项摘要，而不是完整聊天；其他浏览器列表也必须有明确条目上限。在 personal-vault 模式与报告中的原型中，用户选择的会话附件不设产品级大小、数量或保存期限配额，上限只是本机文件系统和运行环境；公开 demo 接受单个不超过 1 GiB 的文件。附件不因空间阈值自动删除，上传采用流式写盘。runner JSONL 超过 5 MB 后压缩为最近 80 个 run 的合并状态，移除 prompt，并限制保留的输出。公开 demo 拒绝所有 runner 提交（见[用户手册第 4 节](user-manual.zh.md#4-可选的-dashboard)）。Demo JSON 与 Dashboard JSON 是覆盖式、可重建的投影，不是不断追加的历史数据库。已完成的会话附件由用户控制，启动时只清除上传 owner 自己留下的 `.tmp` 残片。会话副本较大或本机可用空间较低时，只返回非阻断的空间回执；提醒不得删除材料，也不得联动停用其他功能。
 
 ### 本地 HTTP 端点
 
@@ -272,12 +272,12 @@ Work Session 恢复历史最多保留 10 项摘要，而不是完整聊天；其
 | `/pdf`、`/corpus/*.pdf` | GET | 返回白名单内的 PDF 供预览。 |
 | `/source-tree` | GET | 查看示例来源树。 |
 | `/source-info` | GET | 查看文件信息。 |
-| `/provider-status` | GET | 返回公开版 `copy_only` 能力，不探测本机 provider。 |
-| `/model-catalog` | GET | 列出可选模型；公开 starter 不为刷新它启动任何进程。 |
+| `/provider-status` | GET | 返回本仓库的 `copy_only` 能力，不探测本机 provider。 |
+| `/model-catalog` | GET | 列出可选模型；本仓库 不为刷新它启动任何进程。 |
 | `/evolution-plan` | GET | 显示只读的维护计划。 |
-| `/codex-runner` | GET/POST | GET 只返回清理后的状态；公开版所有 POST 都以 `public_starter_copy_only` 关闭。 |
+| `/codex-runner` | GET/POST | GET 只返回清理后的状态；本仓库所有 POST 都以 `public_starter_copy_only` 关闭。 |
 | `/maintenance-action` | POST | 运行一个已登记的维护动作 ID；拒绝任意命令。 |
-| `/work-session-upload` | POST | 把选择的来源保存到本机、Git 忽略的会话目录；公开版不会把它发送给模型。 |
+| `/work-session-upload` | POST | 把选择的来源保存到本机、Git 忽略的会话目录；本仓库不会把它发送给模型。 |
 | `/open-local-file`、`/reveal-local-file` | POST | 用默认应用打开白名单内的文档，或在文件管理器中定位。脚本只能定位，不会被打开。 |
 | `/feedback` | POST | 保存示例反馈。公开 demo：403；仅 personal-vault 执行。 |
 | `/material-intake-inbox` | POST | 保存本地材料线索和交接说明，不上传或复制源文件。公开 demo：403；仅 personal-vault 执行。 |
@@ -313,7 +313,7 @@ Work Session 恢复历史最多保留 10 项摘要，而不是完整聊天；其
 | `08_exports/public_starter/` | 一条统一接入案例和卡片成熟度示例。 | 真实姓名、机构、未公开论文、本地路径。 |
 | `09_templates/` | Markdown skill 格式、frontmatter、卡片、提示词和验证模板。 | 已填入敏感真实内容的模板。 |
 | `09_templates/data_contracts/` | Dashboard、案例、验证、关系、能力和扩展字段约定。 | 真实运行数据或密钥。 |
-| `config/` | 无凭据的公开运行配置（`ros.json` 设为 `runtime_scope: public_starter`：公开 starter 只走复制回退，不向长期来源准入）、私有运行态的 provider 字段和案例开关。 | `.env`、API 密钥、私人端点。 |
+| `config/` | 无凭据的运行配置（`ros.json` 设为 `runtime_scope: public_starter`：本仓库 只走复制回退，不向长期来源准入）、报告中的原型所用的 provider 字段和案例开关。 | `.env`、API 密钥、私人端点。 |
 | `config/plugins/` + `scripts/manage_plugins.py` | 本地、可逆的插件 manifest 与生命周期。 | 远程安装或 canonical 写回权。 |
 | `corpus/` | 原始材料边界的空目录说明。 | PDF、邮件、聊天记录、网页抓取。 |
 | `distilled/` | 公开安全的短摘要和可迁移原则。 | 私人长期记忆的压缩包。 |

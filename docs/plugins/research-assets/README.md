@@ -18,7 +18,7 @@ Use it to find and inspect registered research assets. It does not infer source 
 
 ## Availability and parity
 
-Universal foundation projection with exact private/Public Starter manifest parity. Each runtime projects only its own allowed data.
+Universal foundation projection; its manifest is identical in this repository and in the prototype in the technical report. Each runtime projects only its own allowed data.
 
 ## Dependencies
 

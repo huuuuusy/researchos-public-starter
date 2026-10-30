@@ -22,7 +22,7 @@
 - [ ] Open the dashboard locally and complete a browser smoke check.
 - [ ] Complete the current Unified Desk journey: select an item, preview a date and reload, inspect components, then preview/copy the agent handoff. Check English/Chinese display, frozen content language and `390 x 844` mobile layout. Now/Library are semantic roles; the hidden compatibility workspace tabs are not part of the journey to check.
 - [ ] Separately verify the existing Agent/CLI task/result boundary, explicit writeback candidate, continuity receipt and human confirmation. Check the applicable human-interaction acceptance and accessibility requirements and keep incomplete items open; the three desk tasks do not replace them. Never present an old browser task as current project truth.
-- [ ] Confirm the default public runtime is `copy_only`, performs no local Codex probe, rejects every runner submission to the `codex` or `claude_code` provider without starting a thread or command, and emits copy-ready handoff; separately verify that personal-vault mode may expose controlled workspace-write actions.
+- [ ] Confirm this repository's default runtime is `copy_only`, performs no local Codex probe, rejects every runner submission to the `codex` or `claude_code` provider without starting a thread or command, and emits copy-ready handoff; separately verify that personal-vault mode may expose controlled workspace-write actions.
 - [ ] Confirm `dashboard/index.html` points to the public service port `8880`, not any other local service port.
 - [ ] Start from a clean copied folder and verify both the one-command demo route and a small personal-vault fixture.
 

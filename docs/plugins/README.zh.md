@@ -45,7 +45,7 @@ skill 控制关系 $\eta_{\mathsf S}(H_t^a,L_t,e_t^a,\kappa)$ 规定允许的下
 | 任务交接 (`codex_thread_handoff`); $\mathsf P_i^{\mathrm{task}}$, 可选 | $H_{t,h}^a:=H_t^a\vert_h$; $Z_t=D_{\omega_t^u}(H_{t,h}^a,q_t)$ | 先把获准历史限制到指定任务 $h$，再选择续接所需上下文。连接器与回执记录访问、脱敏和截断；受限定义域排除无关任务历史。 |
 | 跨域科研入域 (`cross_domain_scientific_entry`); $\mathsf P_i^{\mathrm{cap}}$, 可选 | $\mathcal U_{t+1}=(\mathcal U_t\cup\mathcal F_t)\setminus(\mathcal Z_t^{\mathrm{res}}\cup\mathcal Z_t^{\mathrm{cancel}})$ | 在一个冻结案例内持续携带未决义务，加入受影响要求，仅移除已核查解决或获准取消的项。领域准入、学习与方法保持仍为不同要求。 |
 
-基础投影这一放置位置不使所有贡献动作都成为纯视图，项目插件的动作也有声明的效果；补充说明 3 中纯视图的状态保持条件适用于纯视图操作。Public 与 Private 变体可以在同一声明贡献下提供不同任务集合，因此表格描述组织形式，不意味着运行覆盖完全相同。宿主校验描述符结构与引用，目前尚不从任意 skill 文本推导或证明完整的规则和控制语义。这些数学形态提供了检查具体接入方式的共同规格。
+基础投影这一放置位置不使所有贡献动作都成为纯视图，项目插件的动作也有声明的效果；补充说明 3 中纯视图的状态保持条件适用于纯视图操作。本仓库与报告中的原型可以在同一声明贡献下提供不同任务集合，因此表格描述组织形式，不意味着运行覆盖完全相同。宿主校验描述符结构与引用，目前尚不从任意 skill 文本推导或证明完整的规则和控制语义。这些数学形态提供了检查具体接入方式的共同规格。
 
 [方法比较开发指南](method-comparison/README.zh.md)提供完整任务主导示例及 skill；原生能力主导结构见[系统维护描述符](../../config/plugins/system-stewardship.json)，可安装的能力主导结构见[跨领域科研进入描述符](../../config/extensions/cross-domain-scientific-entry.example.json)。抽象原型是规格，不是可安装包。
 
@@ -53,7 +53,7 @@ skill 控制关系 $\eta_{\mathsf S}(H_t^a,L_t,e_t^a,\kappa)$ 规定允许的下
 
 每个已检入的插件或任务扩展都必须拥有 `docs/plugins/<id-with-hyphens>/README.md`（id 中的下划线换成连字符），并由 manifest 的 `documentation.readme` 精确指向。加载器会拒绝缺失、越界、symlink 或结构不完整的文档。
 
-README 是插件合同，不是宣传页。它必须说明：插件负责什么任务、明确不做什么、私有/公开可用性、依赖、安装和退役、数据与权限、验证、失败恢复，以及相对替代方案的价值。英文 `README.md` 须逐字使用以下二级标题：`Purpose`、`Use and non-goals`、`Availability and parity`、`Dependencies`、`Lifecycle`、`Data, permissions, and export`、`Verification`、`Failure recovery`、`Value and alternatives`、`Retirement`。
+README 是插件合同，不是宣传页。它必须说明：插件负责什么任务、明确不做什么、可用性与一致性、依赖、安装和退役、数据与权限、验证、失败恢复，以及相对替代方案的价值。英文 `README.md` 须逐字使用以下二级标题：`Purpose`、`Use and non-goals`、`Availability and parity`、`Dependencies`、`Lifecycle`、`Data, permissions, and export`、`Verification`、`Failure recovery`、`Value and alternatives`、`Retirement`。
 
 foundation 与随发布附带的 capability 只通过经过审查的 ResearchOS 发布改变。`local_installable` 只通过 `scripts/manage_plugins.py` 把仓库随附且已审计的 manifest 复制到 Git 忽略目录；不下载代码、不联网、不写 canonical memory。若依赖 MCP/provider，必须按 [Thread Handoff](codex-thread-handoff/README.zh.md#可用性与一致性) 定义的就绪状态分别报告，不能把安装 manifest 等同于已经接通。
 

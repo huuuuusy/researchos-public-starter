@@ -12,7 +12,7 @@ sensitivity: public
 
 # Safe Export Policy
 
-The public starter may only export public-safe content. Demo materials must be fictional, sanitized, or explicitly approved for public release.
+This repository may only export public-safe content. Demo materials must be fictional, sanitized, or explicitly approved for public release.
 
 ## Do Not Include
 
@@ -24,7 +24,7 @@ The public starter may only export public-safe content. Demo materials must be f
 - Domain facts, identity memory, relationship context, or authority copied from another private system.
 - Unreviewed agent output presented as confirmed knowledge.
 
-When unsure, keep the material out of the public version.
+When unsure, keep the material out of this repository.
 
 ## Release Rule
 

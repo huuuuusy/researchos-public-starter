@@ -16,7 +16,7 @@ exportable_to:
   <strong>English</strong> | <a href="README.zh.md">中文</a>
 </p>
 
-# Public Starter Demo Materials
+# Demo Materials
 
 This directory contains fictional demo materials for ResearchOS Public Starter: the Dashboard's demo agenda, the first-run guide and card examples. The examples help a new user understand what source to register first, how cards are written and how card maturity changes. Your own material does not go here; it goes in the git-ignored `personal_vault/`. Registering a source means adding a local Markdown summary, path clue, or public link; the dashboard does not upload or transmit source files.
 

@@ -61,7 +61,7 @@ outputs:
   - 合作者卡片等级
   - 计划卡片等级
 validation_checks:
-  - 案例开启时，生成的公开启动数据包含接入示例
+  - 案例开启时，生成的示例数据包含接入示例
   - 案例关闭时，生成记录数变成零
   - 公开文档不包含密钥、本地路径或真实敏感人物
 blockers:
@@ -75,11 +75,11 @@ card_type: plan
 maturity: 3
 title: 建立前五张 ResearchOS 接入卡片
 status: operational
-owner: 公开 starter 维护者
+owner: 仓库维护者
 execution_order:
   - 创建成对英文和中文接入示例
-  - 更新公开 starter 索引和用户手册
-  - 重新生成公开启动数据
+  - 更新仓库索引和用户手册
+  - 重新生成示例数据
   - 运行运行配置、模型提供方、公开包、边界和空白字符检查
   - 验证案例关闭行为
 agent_handoff:

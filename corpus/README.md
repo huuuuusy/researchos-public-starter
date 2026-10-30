@@ -4,4 +4,4 @@
 
 # Corpus Boundary
 
-The public starter keeps `corpus/` empty by default. Do not copy raw materials into the public repository.
+This repository keeps `corpus/` empty by default. Do not copy raw materials into the public repository.

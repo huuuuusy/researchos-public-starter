@@ -21,7 +21,7 @@ exportable_to:
 
 This workflow helps a researcher and AI enter an unfamiliar or partly familiar scientific domain without mistaking fluent search for valid discovery. It freezes one bounded case, builds the smallest adequate domain map, separates epistemic search roles, records candidate lineage, requires independent admission evidence, tests what the human and a fresh system retain, and settles the case without automatically promoting outputs into durable memory or public claims.
 
-The workflow is a reusable capability kernel. A private ResearchOS may instantiate it with owner-specific research history, judgment preferences, and private sources at runtime. Those inputs remain owned by the private system and are never copied into the public plugin. The public plugin contains only the procedure, templates, and authority boundaries; its practical power depends on the user's judgment, source quality, model capability, expert access, and execution discipline.
+The workflow is a reusable capability kernel. The prototype in the technical report may instantiate it with owner-specific research history, judgment preferences, and private sources at runtime. Those inputs remain with the prototype's owner and are never copied into this plugin. The plugin contains only the procedure, templates, and authority boundaries; its practical power depends on the user's judgment, source quality, model capability, expert access, and execution discipline.
 
 ## What this plugin does
 
@@ -168,7 +168,7 @@ Rollback removes the installed task contribution and preserves the user's source
 
 ## Runtime boundary
 
-The same capability kernel serves private and public use:
+The same capability kernel serves the prototype in the technical report and the downloadable version:
 
 ```text
 public-safe workflow + public-safe Case Pack
@@ -177,7 +177,7 @@ public-safe workflow + public-safe Case Pack
         = one runtime instance
 ```
 
-In a private runtime, owner-specific history and private evidence may improve selection and judgment, but remain private inputs. In a public runtime, the user supplies their own sources and expertise. The plugin must never infer that a private owner's capability, identity, collaborators, or project facts transfer with the public package.
+In the prototype in the technical report, owner-specific history and private evidence may improve selection and judgment, but remain private inputs. In the downloadable version, the user supplies their own sources and expertise. The plugin must never infer that the prototype owner's capability, identity, collaborators, or project facts transfer with the downloadable version.
 
 ## Output contract
 

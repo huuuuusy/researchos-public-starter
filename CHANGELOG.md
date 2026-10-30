@@ -8,7 +8,7 @@ The format follows the spirit of [Keep a Changelog](https://keepachangelog.com/e
 
 ### Changed
 
-- Technical report abstract and the opening of Section 1 rewritten as one line of reasoning. The report and the entry documents now call the two versions the prototype and the downloadable version, or this repository.
+- Technical report rewritten throughout as one line of reasoning in a written register, with its claims unchanged. The report and the documentation now call the two versions the prototype and the downloadable version, or this repository.
 
 ## [1.0.1] - 2026-10-30
 

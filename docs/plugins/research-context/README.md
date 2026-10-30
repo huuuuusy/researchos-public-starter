@@ -18,7 +18,7 @@ Use it to bound source reading. It does not discover private sibling repositorie
 
 ## Availability and parity
 
-The Public Starter variant preserves the capability meaning while replacing private context with user-selected sources.
+The variant in this repository preserves the capability meaning while replacing private context with user-selected sources.
 
 ## Dependencies
 

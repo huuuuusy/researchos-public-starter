@@ -43,7 +43,7 @@ python3 scripts/ros_demo.py --lang zh-CN
     · [b5d4e33c7c] 判断「Compare A and B under occlusion first; do not enlarge the dataset yet.」的依据变了
 ```
 
-第 5 步把重新确认打印成 diff，不写入；第 6 步收尾时复核仍待处理。「还没有准入回执」「不算准入」「复制回退」这类说法都不是报错，它们说的是什么都没有准入，公开 starter 本来就是这样工作的。
+第 5 步把重新确认打印成 diff，不写入；第 6 步收尾时复核仍待处理。「还没有准入回执」「不算准入」「复制回退」这类说法都不是报错，它们说的是什么都没有准入，本仓库 本来就是这样工作的。
 
 **看到的不一样时。** 找不到 `python3`，或者脚本报语法错误，先看 `python3 --version` 是否为 3.10 或更高。在 WSL 之外的 Windows 上跑不起来，因为缺它需要的文件锁。不带 `--lang` 时输出英文。「范围 /｜… 个键」这类计数行是记账用的，演示自己也说了第一次读可以跳过。
 
@@ -125,7 +125,7 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
        （没有待复核的要求；按下一步推进）
    ```
 
-   显示「未安排」是正常的，因为公开 starter 不带注意力安排。用 `python3 scripts/ros.py --root personal_vault close` 结束会话；新建的库会报告 `结果分类：complete（待办 0；…）`。如果在 `today` 读过之后又改了 `state`、`priority`、`question` 或 `responsibility`（比如为了改正任务总表问题），`today` 和 `close` 会把这次写入列为待确认的判断类字段；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault decide <编号> confirm` 并回答 `y` 即可（由助手转述的调用只记为代理转述）。
+   显示「未安排」是正常的，因为本仓库 不带注意力安排。用 `python3 scripts/ros.py --root personal_vault close` 结束会话；新建的库会报告 `结果分类：complete（待办 0；…）`。如果在 `today` 读过之后又改了 `state`、`priority`、`question` 或 `responsibility`（比如为了改正任务总表问题），`today` 和 `close` 会把这次写入列为待确认的判断类字段；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault decide <编号> confirm` 并回答 `y` 即可（由助手转述的调用只记为代理转述）。
 
    `today` 出现「任务总表问题」时，每一行都写明是哪个字段、可以取哪些值，例如 `state「active」不是可用值（mainline, waiting, queued, conditional, closed, paused）`，照着改任务总表即可。虚构承诺还出现在「待判断」下，说明它们的块还留在文件里；如果只出现在「待你回答的问题」下并标着 `subject_absent`，说明你在替换之前运行过 `today`，那是虚构演示留下的记录：删掉 `personal_vault/06_active_context/work_state/`，再运行一次 `today`。卡片不在你写的路径上时，这里会显示 `source_path … 在这个文件夹里不存在`；`python3 scripts/ros.py --root personal_vault rules --check` 报告同样的问题，一切就位时报告 `问题 0 条`。用 `--init personal_vault --lang zh-CN` 建的库，`config/ros.json` 已设为中文输出。
 

@@ -1,6 +1,6 @@
 ---
 type: protocol
-title: "ResearchOS 公开版上下文预算协议"
+title: "ResearchOS 上下文预算协议"
 status: ready
 created: 2026-06-27
 updated: 2026-07-10
@@ -21,7 +21,7 @@ exportable_to:
 
 ## Agent Summary
 
-本文件定义 ResearchOS 公开 starter 的低 token 阅读协议。Agent 应先判断是否真的需要仓库上下文，再按层级读取：先路由，再读摘要，再读任务 Markdown，只有任务需要核证据时才进入 evidence 层。这样既能保持判断准确，也能减少上下文噪声和 local-only 材料暴露。
+本文件定义 ResearchOS Public Starter 的低 token 阅读协议。Agent 应先判断是否真的需要仓库上下文，再按层级读取：先路由，再读摘要，再读任务 Markdown，只有任务需要核证据时才进入 evidence 层。这样既能保持判断准确，也能减少上下文噪声和 local-only 材料暴露。
 
 ## 五级阅读阶梯
 

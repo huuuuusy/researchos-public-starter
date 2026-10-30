@@ -18,7 +18,7 @@ Use it with exact user-selected sources. It does not load a private style profil
 
 ## Availability and parity
 
-The public variant preserves research-expression semantics with public-safe sources and candidate-only outputs.
+This repository preserves research-expression semantics with public-safe sources and candidate-only outputs.
 
 ## Dependencies
 

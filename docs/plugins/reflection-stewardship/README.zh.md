@@ -18,11 +18,11 @@ status: instrumented
 
 ## 可用性与一致性
 
-这是经审阅的 scoped variant 的公开侧。它与私有侧共享 capability identity、版本、因果/non-goal 语义与 Review 边界，但只接受用户显式提供的 episode receipt，并且只返回可复制或进入 Review 的候选。它不接收私有 episode 证据、长期判断、路径、runtime state 或 canonical-write 权限。
+这是经审阅的 scoped variant 在本仓库中的一侧。它与报告中的原型共享 capability identity、版本、因果/non-goal 语义与 Review 边界，但只接受用户显式提供的 episode receipt，并且只返回可复制或进入 Review 的候选。它不接收私有 episode 证据、长期判断、路径、runtime state 或 canonical-write 权限。
 
 ## 依赖
 
-需要声明式核心，持久候选只送入 Review。私有 audit 或 alignment 集成不是公开版的依赖。
+需要声明式核心，持久候选只送入 Review。私有 audit 或 alignment 集成不是本仓库的依赖。
 
 ## 生命周期
 
@@ -30,7 +30,7 @@ status: instrumented
 
 ## 数据、权限与导出
 
-无 network、command、state 或 canonical-write 权限。公开版的 `writeback` 结果只是可复制或 Review 候选，不证明个人 vault 已经改变。
+无 network、command、state 或 canonical-write 权限。本仓库的 `writeback` 结果只是可复制或 Review 候选，不证明个人 vault 已经改变。
 
 ## 验证
 

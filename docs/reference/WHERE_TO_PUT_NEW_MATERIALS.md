@@ -20,15 +20,15 @@ exportable_to:
 
 ## Agent Summary
 
-This guide explains where new ResearchOS material should go. Core rule: raw material, derived knowledge, decisions, cognition, people, workflows, active context, exports, and templates are different layers. Do not mix them. Your own material goes in the git-ignored `personal_vault/` inside your clone, which uses the same layer folders. If a material is private, submitted, unpublished, or sensitive, it may be analyzed there, but it must not be placed in the tracked files of the public starter.
+This guide explains where new ResearchOS material should go. Core rule: raw material, derived knowledge, decisions, cognition, people, workflows, active context, exports, and templates are different layers. Do not mix them. Your own material goes in the git-ignored `personal_vault/` inside your clone, which uses the same layer folders. If a material is private, submitted, unpublished, or sensitive, it may be analyzed there, but it must not be placed in the tracked files of this repository.
 
 ## Your Own Material Goes in `personal_vault/`
 
-Your own cards live in `personal_vault/`, a folder inside your clone that Git ignores; the layer paths below are relative to it, so a paper note goes in `personal_vault/01_knowledge/` and the current state in `personal_vault/06_active_context/`. The layer folders at the repository root hold the public starter's own notes and fictional examples; do not add your material there. Never push a clone that contains real material to a public remote; to version the vault, keep a private copy of the repository without a public remote. To create the vault, follow "Start your own" in [Section 5 of the User Manual](../user-manual.en.md#5-your-own-material).
+Your own cards live in `personal_vault/`, a folder inside your clone that Git ignores; the layer paths below are relative to it, so a paper note goes in `personal_vault/01_knowledge/` and the current state in `personal_vault/06_active_context/`. The layer folders at the repository root hold this repository's own notes and fictional examples; do not add your material there. Never push a clone that contains real material to a public remote; to version the vault, keep a private copy of the repository without a public remote. To create the vault, follow "Start your own" in [Section 5 of the User Manual](../user-manual.en.md#5-your-own-material).
 
 ## One-Line Rule
 
-Raw material stays where it is, in a local source folder outside the repository, and a card records its path; `corpus/` in the public starter stays empty. Derived knowledge goes to `01_knowledge/`; decisions to `02_decisions/`; reusable judgment patterns to `03_cognition/`; people context to `04_people/`; workflows to `05_workflows/`; current state to `06_active_context/`; exports to `08_exports/` only after safe-export review; templates to `09_templates/`.
+Raw material stays where it is, in a local source folder outside the repository, and a card records its path; `corpus/` in this repository stays empty. Derived knowledge goes to `01_knowledge/`; decisions to `02_decisions/`; reusable judgment patterns to `03_cognition/`; people context to `04_people/`; workflows to `05_workflows/`; current state to `06_active_context/`; exports to `08_exports/` only after safe-export review; templates to `09_templates/`.
 
 ## Placement Table
 
@@ -47,7 +47,7 @@ Raw material stays where it is, in a local source folder outside the repository,
 
 ## Private and Submitted Materials
 
-ResearchOS can process private, submitted, under-review, and unpublished material in `personal_vault/`. Mark derived cards as `local_only` or `not_exportable` unless explicitly cleared. Do not commit those real materials to the public starter.
+ResearchOS can process private, submitted, under-review, and unpublished material in `personal_vault/`. Mark derived cards as `local_only` or `not_exportable` unless explicitly cleared. Do not commit those real materials to this repository.
 
 For bounded work products, follow the [Derived Work Artifact Lifecycle](../../05_workflows/research_management/derived-work-artifact-lifecycle.md). Moving a file into an archive never changes its sensitivity or grants public permission.
 

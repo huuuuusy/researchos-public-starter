@@ -38,7 +38,7 @@ ResearchOS does not need to copy every raw file. It needs a traceable record of 
 
 | Sensitivity | Meaning |
 | --- | --- |
-| `public` | Safe for demo/public starter. |
+| `public` | Safe for demos and this repository. |
 | `internal` | Local work material, not automatically public. |
 | `sensitive` | People, submission, review, student, grant, or relationship content. |
 | `local_only` | May be analyzed locally but not exported. |

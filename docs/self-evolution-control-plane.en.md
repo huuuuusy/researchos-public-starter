@@ -61,11 +61,11 @@ Every maintenance step declares its path triggers, dependencies, allowed writes,
 
 Plans show at most 40 paths. More than 200 changed paths, at least 25% of tracked Markdown, or a control-contract change escalates to a full-review candidate. Network and expensive semantic work never run from startup or a safe-refresh confirmation.
 
-## Public and Personal Modes
+## Repository and Personal Modes
 
 - **Public demo:** shows a public-repository-only change plan. The refresh action is disabled and all write endpoints remain blocked.
-- **Personal vault:** may run only the public starter's own confirmed fixed safe steps. Its checkpoint and local projection are Git-ignored.
-- **Never:** locate a sibling private repository, discover private providers, read raw private material, or copy private paths/checkpoints/logs into the public starter.
+- **Personal vault:** may run only this repository's own confirmed fixed safe steps. Its checkpoint and local projection are Git-ignored.
+- **Never:** locate a sibling private repository, discover private providers, read raw private material, or copy private paths/checkpoints/logs into this repository.
 
 The protocol can be shared with a private installation; runtime state and source sets are never shared.
 

@@ -1,6 +1,6 @@
 ---
 type: protocol
-title: "ResearchOS Public Context Budget Protocol"
+title: "ResearchOS Context Budget Protocol"
 status: ready
 created: 2026-06-27
 updated: 2026-07-10

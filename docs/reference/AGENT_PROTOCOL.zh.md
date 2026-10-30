@@ -1,6 +1,6 @@
 ---
 type: protocol
-title: "ResearchOS 公开版 Agent 协议"
+title: "ResearchOS Agent 协议"
 status: ready
 created: 2026-06-27
 updated: 2026-10-28
@@ -21,7 +21,7 @@ exportable_to:
 
 ## Agent Summary
 
-本文件定义 Agent 应如何使用 ResearchOS 公开 starter。核心规则是：先识别任务，再读取最小充分上下文；区分来源事实、用户确认判断和 Agent 推断；私人、在投、敏感材料默认 local-only；明确授权的编辑应完成必要验证；未接受的判断仍保持候选，写入文件不等于本人接受。
+本文件定义 Agent 应如何使用 ResearchOS Public Starter。核心规则是：先识别任务，再读取最小充分上下文；区分来源事实、用户确认判断和 Agent 推断；私人、在投、敏感材料默认 local-only；明确授权的编辑应完成必要验证；未接受的判断仍保持候选，写入文件不等于本人接受。
 
 ## 核心原则
 
@@ -33,7 +33,7 @@ exportable_to:
 
 ## 语言路由
 
-先按项目选择的语言读取文件，再按普通链接下钻。公开版中，英文通常使用基础文件名或 `.en.md`，中文使用 `.zh.md`。如果 `public_starter.content_language` 是 `en`，读取 `README.md`、`docs/user-manual.en.md`、`docs/reference/AGENT_PROTOCOL.md` 和其他英文文件。如果是 `zh-CN`，读取 `README.zh.md`、`docs/user-manual.zh.md`、`docs/reference/AGENT_PROTOCOL.zh.md` 和存在的 `.zh.md` 文件。
+先按项目选择的语言读取文件，再按普通链接下钻。本仓库中，英文通常使用基础文件名或 `.en.md`，中文使用 `.zh.md`。如果 `public_starter.content_language` 是 `en`，读取 `README.md`、`docs/user-manual.en.md`、`docs/reference/AGENT_PROTOCOL.md` 和其他英文文件。如果是 `zh-CN`，读取 `README.zh.md`、`docs/user-manual.zh.md`、`docs/reference/AGENT_PROTOCOL.zh.md` 和存在的 `.zh.md` 文件。
 
 默认不要读取另一套语言的对应文件。只有用户明确要求翻译、双语对照或语言维护时，才读取另一套语言。
 

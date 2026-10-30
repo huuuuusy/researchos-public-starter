@@ -31,7 +31,7 @@ The skill uses the [Agent Skills file format](https://agentskills.io/specificati
 
 ## Availability and parity
 
-Version 1.1.0 is a `task_led`, `local_installable` contribution. The private and public descriptors differ in distribution scope. The Public variant accepts public-safe method documentation; this does not make a user's selected papers or results public. The example ships disabled. Existing installations change only through an explicit upgrade.
+Version 1.1.0 is a `task_led`, `local_installable` contribution. The descriptors in this repository and in the prototype in the technical report differ in distribution scope. This repository accepts public-safe method documentation; this does not make a user's selected papers or results public. The example ships disabled. Existing installations change only through an explicit upgrade.
 
 ## Dependencies
 
@@ -90,7 +90,7 @@ For an existing external skill, first inspect its instructions, scripts, depende
 
 ## Data, permissions, and export
 
-The plugin defaults to an answer. An artifact uses the requested output location; a durable edit becomes an exact candidate for the existing review/admission path. A generated answer does not update a source card. No method instruction grants broader read, write or disclosure permission. Public Starter's handoff remains copy-only.
+The plugin defaults to an answer. An artifact uses the requested output location; a durable edit becomes an exact candidate for the existing review/admission path. A generated answer does not update a source card. No method instruction grants broader read, write or disclosure permission. This repository's handoff remains copy-only.
 
 ## Verification
 

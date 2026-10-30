@@ -4,7 +4,7 @@
 
 # AGENTS.zh.md
 
-这是 ResearchOS 公开 starter 给助手看的入口文件。Codex、Claude Code、Gemini CLI 或其他 LLM 工具在这个仓库里工作时，先读这里。本仓库是一个小型文件化工具的只复制公开版，这个工具让研究者的问题、证据、判断和下一步保持相连；随附内容全部是虚构的。
+这是 ResearchOS Public Starter 给助手看的入口文件。Codex、Claude Code、Gemini CLI 或其他 LLM 工具在这个仓库里工作时，先读这里。本仓库是一个小型文件化工具的只复制版本，这个工具让研究者的问题、证据、判断和下一步保持相连；随附内容全部是虚构的。
 
 默认文档语言是英文。中文通过成对的 `.zh.md` 文件支持；根目录的 `AGENTS.md` 保留给 Agent 客户端/LLM 自动识别，本文件提供中文说明。
 
@@ -12,7 +12,7 @@
 
 新用户通常是把 README 里的安装提示粘贴到这个客户端里来的。他们还没读过任何文件，也不需要去读。带他们走下面六步，每次一步：先用一句话说这一步做什么，再运行命令或展示要写的内容，最后用平常话告诉他们发生了什么。对中文用户全程用中文，命令加 `--lang zh-CN`。命令行打印的 `ros …` 都指 `python3 scripts/ros.py --root <文件夹> …`。
 
-1. **讲清楚是什么。** 运行 `python3 --version`（须为 3.10 或更新；Windows 上只能在 WSL 里继续，原生 Windows Python 缺少所需的文件锁）。再运行 `python3 scripts/ros_demo.py --lang zh-CN`，它在一份临时的虚构副本上运行，不改动任何东西。不要把输出原样贴给用户，用三四句话说清它演示了什么：一份来源变了，ResearchOS 标出了依赖它的判断，由研究者决定保留、更新还是挂起，没有研究者的决定，什么都不会成为长期记忆。「还没有准入回执」「复制回退」这类说法在这个版本里是正常的，不是报错。然后运行 `python3 scripts/ros_demo.py --init personal_vault --lang zh-CN`，在 Git 忽略的 `personal_vault/` 里建好用户自己的库。
+1. **讲清楚是什么。** 运行 `python3 --version`（须为 3.10 或更新；Windows 上只能在 WSL 里继续，原生 Windows Python 缺少所需的文件锁）。再运行 `python3 scripts/ros_demo.py --lang zh-CN`，它在一份临时的虚构副本上运行，不改动任何东西。不要把输出原样贴给用户，用三四句话说清它演示了什么：一份来源变了，ResearchOS 标出了依赖它的判断，由研究者决定保留、更新还是挂起，没有研究者的决定，什么都不会成为长期记忆。「还没有准入回执」「复制回退」这类说法在本仓库里是正常的，不是报错。然后运行 `python3 scripts/ros_demo.py --init personal_vault --lang zh-CN`，在 Git 忽略的 `personal_vault/` 里建好用户自己的库。
 2. **个人档案。** 请用户给公开主页、Google Scholar、ORCID 或 DBLP 链接，愿意的话再给一份简历。只读用户给的、公开能访问的内容；Google Scholar 常常拦截自动读取，读不到时请用户粘贴论文列表，或改给 ORCID、DBLP 链接，不要绕过登录或拦截。用 `09_templates/person-template.md` 在 `personal_vault/00_identity/profile.md` 起草一张用户自己的卡片，`relationship_type: self`：姓名、单位、研究方向和几项代表作。简历只取科研经历，电话、住址、证件号、推荐人以及与科研无关的内容都不写。
 3. **论文。** 请用户挑三到五篇与眼下工作最相关的论文，给链接、DOI 或 PDF。每篇用 `09_templates/paper-template.md` 在 `personal_vault/01_knowledge/papers/<简短英文名>.md` 起草一张卡片：标题、作者、发表处与年份、主要结论、依据的证据，以及公开边界（已发表、预印本或未发表）。只写论文里写了的；自己推断的内容标为候选。
 4. **合作者。** 从这几篇论文的作者中，列出出现两次及以上的人，问用户保留哪些。每位选中的人用 `09_templates/person-template.md` 在 `personal_vault/04_people/collaborators/<简短英文名>.md` 起草一张卡片，`relationship_type: candidate`，只写论文能说明的：一起发表过哪几篇。师生、同组、资历、私交这类关系，除非用户亲口说明，否则不写。
@@ -129,7 +129,7 @@ python3 scripts/build_public_starter_data.py --personal-vault --write
 
 验证时逐条运行 `.github/workflows/validate.yml` 中的步骤，即本仓库的 CI。
 
-公开 starter 默认使用无凭据的 copy-only 交接；普通上手不应该需要真实 API key。Agent 与 Work Session 只生成可复制任务包，不启动本机 Codex、Claude Code CLI 或远程 API。Inbox/canonical 写回保持复制交接，维护命令只接受登记 action ID；受控执行只属于 private 或 personal-vault 运行态。personal-vault 是 Dashboard 的模式，不改变 `scripts/ros.py`；出厂 `runtime_scope: public_starter` 下 `ros` 的行为见[用户手册第 3 节](../user-manual.zh.md#3-会话调度器与命令行检查)。
+本仓库 默认使用无凭据的 copy-only 交接；普通上手不应该需要真实 API key。Agent 与 Work Session 只生成可复制任务包，不启动本机 Codex、Claude Code CLI 或远程 API。Inbox/canonical 写回保持复制交接，维护命令只接受登记 action ID；受控执行只属于报告中的原型或 personal-vault 模式。personal-vault 是 Dashboard 的模式，不改变 `scripts/ros.py`；出厂 `runtime_scope: public_starter` 下 `ros` 的行为见[用户手册第 3 节](../user-manual.zh.md#3-会话调度器与命令行检查)。
 
 ## 安全规则
 

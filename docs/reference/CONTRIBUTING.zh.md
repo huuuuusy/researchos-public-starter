@@ -4,7 +4,7 @@
 
 # 贡献指南
 
-感谢你考虑贡献。ResearchOS 公开 starter 接受公开安全的文档、示例、模板、验证脚本、仪表盘行为和 copy-only 交接界面改进。
+感谢你考虑贡献。ResearchOS Public Starter 接受公开安全的文档、示例、模板、验证脚本、仪表盘行为和 copy-only 交接界面改进。
 
 ## 可贡献范围
 

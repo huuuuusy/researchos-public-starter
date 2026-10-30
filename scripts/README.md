@@ -4,13 +4,13 @@
 
 # Scripts
 
-This directory contains the public starter runtime and validation scripts. Start from the entrypoints below instead of treating every helper as a user-facing command.
+This directory contains this repository's runtime and validation scripts. Start from the entrypoints below instead of treating every helper as a user-facing command.
 
 | Entrypoint | Use it for | Boundary |
 | --- | --- | --- |
 | `python3 scripts/start_researchos.py` | Inspect or start dashboard, CLI, GUI, and public-starter modes. | Runtime entrypoint only; providers are execution adapters, not memory authority. |
 | `python3 scripts/receipt_cli.py --help` | Build, validate, or inspect ContextReceipt/HandoffReceipt JSON from an agent client or a terminal without Dashboard/server. | Explicit relative files or stdin/stdout only; no discovery, provider call, egress, canonical write, overwrite, or human-decision signing. |
-| `python3 scripts/build_public_starter_data.py --write` | Generate demo records and the dashboard projection from fictional case files. | Reads public starter material only; does not read non-demo workspace material. |
+| `python3 scripts/build_public_starter_data.py --write` | Generate demo records and the dashboard projection from fictional case files. | Reads this repository's demo material only; does not read non-demo workspace material. |
 | `python3 scripts/build_public_starter_data.py --disable-cases --write` | Rebuild with demo cases disabled while keeping the example files as references. | Use before replacing the starter with user-owned public-safe material. |
 | `python3 scripts/plan_context.py <task-id> --lang en` | Print the minimal route for one of 20 public-safe task IDs or 13 compatibility aliases; `--intent-json`, `--prior-receipt-json`, and `--headless-json` provide typed, bounded continuity. | Read-only and copy-only; a route receipt never grants mutation, external effect, network, command, or canonical write. |
 | `python3 scripts/query_plugin_portfolio.py` | Query the four non-owning capability groups and their declarative contributions without reading Dashboard fields. | Grouping projection only; registration, enablement, or a passing test does not admit a capability. |
@@ -20,8 +20,8 @@ This directory contains the public starter runtime and validation scripts. Start
 | `python3 scripts/manage_plugins.py install method_comparison` | Install, validate, disable, enable, or uninstall a bundled example plugin. | Git-ignored local state only; reversible, no network, remote code, or canonical write. |
 | `python3 scripts/plan_evolution.py` | Show a path-bounded maintenance candidate and, after exact plan-ID confirmation, run only its fixed safe subset. | Public demo stays read-only; personal-vault checkpoints are local and Git-ignored. |
 | `python3 scripts/validate_evolution_control.py` | Validate planning, fixed-step, confirmation, runtime-mode, and public/private isolation contracts. | Report-only; does not run maintenance. |
-| `python3 scripts/check_all_links.py` | Check local Markdown links across the public starter. | Report-only; does not rewrite docs. |
-| `python3 scripts/validate_runtime_config.py` | Check the runtime config and provider registry boundaries. | Public starter remains demo-first; do not commit local API keys. |
+| `python3 scripts/check_all_links.py` | Check local Markdown links across this repository. | Report-only; does not rewrite docs. |
+| `python3 scripts/validate_runtime_config.py` | Check the runtime config and provider registry boundaries. | This repository remains demo-first; do not commit local API keys. |
 | `python3 scripts/validate_public_safety.py` | Scan docs, code, config, and demo data for private semantic residue, user paths, secrets, and raw corpus payloads. | Release gate; does not upload or publish anything. |
 | `python3 scripts/validate_docs_bilingual.py` | Confirm that reader-facing English and Chinese documents remain paired and cross-linked; also keep the related-tools names, project URLs, ordering, snapshot date, and non-endorsement boundary aligned. | Documentation gate; does not translate, verify that an external source is still official or available, or rewrite files. |
 | `python3 scripts/validate_positioning_consistency.py` | Keep active English/Chinese entry docs aligned on a small file-based tool, Agent/CLI primary execution, and Dashboard as the narrow persistent attention/control surface. | Positioning gate; rejects equal-surface, dashboard-first, Workbench-first, and vague “secondary dashboard” wording. |

@@ -18,11 +18,11 @@ Use after a completed, failed, interrupted, or corrected episode when the user w
 
 ## Availability and parity
 
-This is the public side of a reviewed scoped variant. It shares capability identity, version, causal/non-goal semantics, and the Review boundary with the private side, but requires an explicitly supplied episode receipt and remains copy-only or candidate-only. It never receives private episode evidence, longitudinal judgment, paths, runtime state, or canonical-write authority.
+This is the side of a reviewed scoped variant that ships in this repository. It shares capability identity, version, causal/non-goal semantics, and the Review boundary with the prototype in the technical report, but requires an explicitly supplied episode receipt and remains copy-only or candidate-only. It never receives private episode evidence, longitudinal judgment, paths, runtime state, or canonical-write authority.
 
 ## Dependencies
 
-Requires the declarative core and routes durable candidates only to Review. Private audit or alignment integrations are not dependencies of the public variant.
+Requires the declarative core and routes durable candidates only to Review. Private audit or alignment integrations are not dependencies of this repository.
 
 ## Lifecycle
 

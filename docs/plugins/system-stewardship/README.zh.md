@@ -18,11 +18,11 @@ status: active
 
 ## 可用性与一致性
 
-私有/公开 scoped variants 随版本提供，共享同一 capability 合同，差异受 allowed-divergence-fields 约束。Public Starter 使用公开安全来源，不含私有 audit/reflection 权限。
+本仓库与报告中的原型各自随附 scoped variants，共享同一 capability 合同，差异受 allowed-divergence-fields 约束。本仓库使用公开安全来源，不含私有 audit/reflection 权限。
 
 ## 依赖
 
-需要 `researchos_core`；私有 audit/reflection 集成是可选的，公开版不包含。
+需要 `researchos_core`；私有 audit/reflection 集成是可选的，本仓库不包含。
 
 ## 生命周期
 

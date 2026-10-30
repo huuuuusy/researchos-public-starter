@@ -22,7 +22,7 @@ exportable_to:
 
 These are the standard prompt templates for ResearchOS Public Starter. They are intentionally written as reusable protocols, not one-off experiment prompts.
 
-Use them when you run the public starter with Codex CLI, Codex GUI, another local assistant, or an API-backed provider. Keep the same governance rule across all providers: materials can be private in your local workspace, but public-facing output requires an explicit export boundary.
+Use them when you run this repository with Codex CLI, Codex GUI, another local assistant, or an API-backed provider. Keep the same governance rule across all providers: materials can be private in your local workspace, but public-facing output requires an explicit export boundary.
 
 ## Prompt 0: Let An LLM Onboard You
 

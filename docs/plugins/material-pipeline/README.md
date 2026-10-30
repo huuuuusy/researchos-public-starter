@@ -18,7 +18,7 @@ Use it when adding or upgrading research material. It does not certify source qu
 
 ## Availability and parity
 
-Universal foundation projection with exact private/Public Starter manifest parity. Runtime data differs: each installation supplies its own local sources.
+Universal foundation projection; its manifest is identical in this repository and in the prototype in the technical report. Runtime data differs: each installation supplies its own local sources.
 
 ## Dependencies
 

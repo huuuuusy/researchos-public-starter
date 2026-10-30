@@ -18,7 +18,7 @@ status: active
 
 ## 可用性与一致性
 
-私有 ResearchOS、Public Starter 和 personal vault 中都有可选的 scoped variants。工作流共享，只有可选的私有 handoff 不同。
+报告中的原型、本仓库和 personal vault 中都有可选的 scoped variants。工作流共享，只有可选的私有 handoff 不同。
 
 ## 依赖
 

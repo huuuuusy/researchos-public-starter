@@ -49,7 +49,7 @@ Every plugin also chooses one product placement:
 - `bundled_capability`: a bounded private or public capability shipped with the OS.
 - `optional_extension`: a local, reversible, disabled-by-default installation.
 
-Product tier is the source of placement; the host derives deployment mode through a fixed mapping. Source manifests may omit `governance.deployment_mode`. An explicit legacy value is checked against the derived value and rejected if it conflicts; normalized output always retains the field. Compact sources require the updated host; an older host must receive the explicit derived value. This input relaxation does not change runtime lifecycle or waive private/public source parity. A foundation projection is `embedded_foundation`; a bundled capability is `bundled_default_on`; an optional extension is `local_installable`. The lifecycle UI must not imply that an embedded capability can be installed or removed by the local example installer.
+Product tier is the source of placement; the host derives deployment mode through a fixed mapping. Source manifests may omit `governance.deployment_mode`. An explicit legacy value is checked against the derived value and rejected if it conflicts; normalized output always retains the field. Compact sources require the updated host; an older host must receive the explicit derived value. This input relaxation does not change runtime lifecycle or waive source parity between the prototype in the technical report and the downloadable version. A foundation projection is `embedded_foundation`; a bundled capability is `bundled_default_on`; an optional extension is `local_installable`. The lifecycle UI must not imply that an embedded capability can be installed or removed by the local example installer.
 
 Lifecycle is deployment-derived: foundation capabilities are `core_bundled` and retire only through `core_release_change`; bundled capabilities are `release_bundled` and retire through `release_change`; only local extensions use `manifest_present` / `remove_manifest`. Old v1 local manifests keep the legacy lifecycle through the conservative compatibility adapter.
 
@@ -149,11 +149,11 @@ A new source or task should not become a plugin merely because it is useful. Fir
 The preferred result is the smallest number of task and capability plugins with the clearest owners. A task-led plugin does not become a capability merely because its implementation is complex; a capability-led plugin is not fragmented into one package per task. Composition dependencies remain machine-readable, and direct reads of another plugin's private state remain forbidden.
 
 <!-- semantic-anchor: distribution_parity -->
-## 7. Public/private parity
+## 7. Parity between the prototype and the downloadable version
 
-The same `id@version` cannot silently mean different things. `exact` means semantic equality after JSON parsing. `scoped_variant` capabilities declare both sides and every allowed divergent field. Any other difference fails validation. `private_only` capabilities must not appear in public manifests, and public runtime source must not retain dormant implementations keyed by private capability IDs. This is a semantic distribution boundary, not by itself a claim of private-data leakage.
+The same `id@version` cannot silently mean different things. `exact` means semantic equality after JSON parsing. `scoped_variant` capabilities declare both sides and every allowed divergent field. Any other difference fails validation. `private_only` capabilities must not appear in the downloadable version's manifests, and its runtime source must not retain dormant implementations keyed by private capability IDs. This is a semantic distribution boundary, not by itself a claim of private-data leakage.
 
-Scoped variants may have independent minor versions when the shared identity, API, bindings and failure boundaries remain equal. Cross-repository validation may record additional field differences in a reviewed contract: each field must carry a reason and exact private/public value digests. A digest change invalidates that review; it never authorizes a new effect. The separate runtime and privacy gates remain mandatory.
+Scoped variants may have independent minor versions when the shared identity, API, bindings and failure boundaries remain equal. Cross-repository validation may record additional field differences in a reviewed contract: each field must carry a reason and exact value digests for both sides. A digest change invalidates that review; it never authorizes a new effect. The separate runtime and privacy gates remain mandatory.
 
 <!-- semantic-anchor: required_gates -->
 ## 8. Required gates
@@ -167,7 +167,7 @@ python3 scripts/validate_task_extensions.py
 python3 -m unittest evals.test_plugin_governance
 ```
 
-For a dual-repository release, add `--public-root <public-repository>`. The gate also checks archetype branches, task contracts or capability bindings, source-ledger consistency, external derivation modes, duplicate owners, typed handoffs, action effects, human admission receipts, manifest parity, and private symbols in public runtime source. A plugin is release-ready only after those boundaries, local behavior, negative tests, and rollback or uninstall behavior all pass.
+For a dual-repository release, add `--public-root <public-repository>`. The gate also checks archetype branches, task contracts or capability bindings, source-ledger consistency, external derivation modes, duplicate owners, typed handoffs, action effects, human admission receipts, manifest parity, and private symbols in the downloadable version's runtime source. A plugin is release-ready only after those boundaries, local behavior, negative tests, and rollback or uninstall behavior all pass.
 
 <!-- semantic-anchor: open_questions -->
 ## Open questions

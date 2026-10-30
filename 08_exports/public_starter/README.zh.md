@@ -1,6 +1,6 @@
 ---
 type: markdown
-title: "公开 starter 示例材料"
+title: "Public Starter 示例材料"
 status: reference
 created: 2026-06-26
 updated: 2026-10-29
@@ -16,9 +16,9 @@ exportable_to:
   <a href="README.md">English</a> | <strong>中文</strong>
 </p>
 
-# 公开 starter 示例材料
+# 示例材料
 
-本目录包含 ResearchOS 公开 starter 的虚构示例材料：Dashboard 的示例议程、首次上手说明和卡片示例。它们帮助新用户理解第一步应该登记什么来源、卡片怎样写、卡片成熟度如何变化。你自己的材料不放在这里，而是放进 Git 忽略的 `personal_vault/`。登记来源是加入本地 Markdown 摘要、路径线索或公开链接；dashboard 不会上传或传输源文件。
+本目录包含 ResearchOS Public Starter 的虚构示例材料：Dashboard 的示例议程、首次上手说明和卡片示例。它们帮助新用户理解第一步应该登记什么来源、卡片怎样写、卡片成熟度如何变化。你自己的材料不放在这里，而是放进 Git 忽略的 `personal_vault/`。登记来源是加入本地 Markdown 摘要、路径线索或公开链接；dashboard 不会上传或传输源文件。
 
 这些文件不代表真实研究项目、真实人物、真实论文、真实合作者或任何非公开工作系统内容。
 

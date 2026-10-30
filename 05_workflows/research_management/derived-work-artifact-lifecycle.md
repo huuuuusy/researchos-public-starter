@@ -24,7 +24,7 @@ exportable_to:
 
 This workflow governs Markdown created for one bounded piece of work, such as presentation preparation, a meeting handoff, an application workbench, a temporary collaboration analysis, or a revision plan. Keep it in `06_active_context/` only while a named consumer, next action, or concrete waiting event still exists. At closeout, distill durable facts, decisions, or methods into layers `01–05`; move the complete artifact to `07_archive/task_artifacts/` only when its feedback trail or decision context still has independent value.
 
-Archiving is not a privacy or publication decision. Real people, unpublished work, applications, reviews, and local paths remain `local_only` or `not_exportable` and must not be committed to the public starter.
+Archiving is not a privacy or publication decision. Real people, unpublished work, applications, reviews, and local paths remain `local_only` or `not_exportable` and must not be committed to this repository.
 
 ## Applies To
 
@@ -95,7 +95,7 @@ If new work begins, create a new current artifact and link it with `derived_from
 
 If the document says "how this project should proceed," it is usually a project plan. If it says "how we prepared and revised this one task," it is usually a task artifact.
 
-## Public Starter Boundary
+## Boundary in This Repository
 
 - The public repository may ship this workflow, templates, and fictional or sanitized examples.
 - Real task artifacts belong only in the user's own private/local vault unless separately approved for publication.

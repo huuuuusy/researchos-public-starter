@@ -1,6 +1,6 @@
 ---
 type: protocol
-title: "ResearchOS Public Agent Protocol"
+title: "ResearchOS Agent Protocol"
 status: ready
 created: 2026-06-27
 updated: 2026-10-28
@@ -33,7 +33,7 @@ Routing, reading budgets, the default response shape and the general safety rule
 
 ## Language Routing
 
-Use the selected project language before following ordinary file links. In the public starter, English files usually use the base filename or `.en.md`, and Chinese files use `.zh.md`. If `public_starter.content_language` is `en`, read `README.md`, `docs/user-manual.en.md`, `docs/reference/AGENT_PROTOCOL.md`, and other English files. If it is `zh-CN`, read `README.zh.md`, `docs/user-manual.zh.md`, `docs/reference/AGENT_PROTOCOL.zh.md`, and other `.zh.md` files when they exist.
+Use the selected project language before following ordinary file links. In this repository, English files usually use the base filename or `.en.md`, and Chinese files use `.zh.md`. If `public_starter.content_language` is `en`, read `README.md`, `docs/user-manual.en.md`, `docs/reference/AGENT_PROTOCOL.md`, and other English files. If it is `zh-CN`, read `README.zh.md`, `docs/user-manual.zh.md`, `docs/reference/AGENT_PROTOCOL.zh.md`, and other `.zh.md` files when they exist.
 
 Do not read the alternate-language counterpart by default. Read it only when the user asks for translation, bilingual comparison, or language-maintenance work.
 

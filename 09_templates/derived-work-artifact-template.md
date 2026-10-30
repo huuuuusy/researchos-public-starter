@@ -22,7 +22,7 @@ exportable_to:
 
 ## Agent Summary
 
-Use this public-safe template for a bounded presentation, meeting, application, analysis, or revision work product in a user's private/local vault. The placeholders are not facts. Do not commit a filled template containing real people, unpublished work, applications, private review text, or local paths to the public starter.
+Use this public-safe template for a bounded presentation, meeting, application, analysis, or revision work product in a user's private/local vault. The placeholders are not facts. Do not commit a filled template containing real people, unpublished work, applications, private review text, or local paths to this repository.
 
 ## Working Frontmatter
 

@@ -98,7 +98,7 @@ export_boundary:
 
 ## 第七步：验证
 
-公开版至少运行：
+修改本仓库时至少运行：
 
 ```bash
 python3 scripts/build_public_starter_data.py --write

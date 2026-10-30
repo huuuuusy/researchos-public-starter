@@ -31,7 +31,7 @@ exportable_to:
 
 `researchos-plugin-v1` 是公开安全插件和本地忽略 manifest 共用的宿主合同。Schema 是 [researchos-plugin-v1.schema.json](researchos-plugin-v1.schema.json)；经过审查的 manifest 放在 `config/plugins/`；机器或个人专用 manifest 放在 Git 忽略的 `config/plugins.local/`；`python3 scripts/validate_plugins.py` 是默认拒绝的验证门。
 
-公开版只加载声明式、`public_safe` 且不申请网络、命令、canonical 写入、私有路径或私有状态权限的 manifest。Registry summary 不暴露来源路径和权限细节。V1 不执行任意插件 JavaScript，也不创建新工作区、结果模式、storage owner 或写回路线。
+本仓库只加载声明式、`public_safe` 且不申请网络、命令、canonical 写入、私有路径或私有状态权限的 manifest。Registry summary 不暴露来源路径和权限细节。V1 不执行任意插件 JavaScript，也不创建新工作区、结果模式、storage owner 或写回路线。
 
 现有 `researchos-task-extension-v1` 仍是当前运行时输入。Plugin Host 只把它规范化为 `tasks` contribution，并核验输出等价，因此不会形成第二套任务定义，也不会改变用户可见路由。
 
@@ -49,7 +49,7 @@ Plugin v1.1 以向后兼容方式增加 `work_item_providers` contribution。Pro
 
 Projection 读取不是对 Dashboard 整体对象的原始访问。每项 manifest projection 都声明 `researchos-projection-envelope-v1`、敏感度、新鲜度和精确字段导出表；未知或被拒绝的合同只返回 `ready / empty / error` 中的受限状态，不提供 payload。UI slot 同时声明旧 routing alias 与唯一 canonical `surface.region` 坐标；引用的 action 必须属于同一 canonical surface，插件不能把 Review 或 Start mutation 暗中挂到另一屏。
 
-Action 一旦声明任一 v1.1 字段，就必须完整声明 `confirmation_mode`、`risk`、`write_scope`、`reversible` 和 `public_behavior`。`inline` 必须由经过审查的 `platform_registered` handler 执行。公开版的 Research Agenda 只是虚构 Work Item 投影：`交给 Codex` 只生成可复制交接，不启动本地或远程执行器；排期与完成控件保持 `demo_only`，绝不修改打包数据。
+Action 一旦声明任一 v1.1 字段，就必须完整声明 `confirmation_mode`、`risk`、`write_scope`、`reversible` 和 `public_behavior`。`inline` 必须由经过审查的 `platform_registered` handler 执行。本仓库的 Research Agenda 只是虚构 Work Item 投影：`交给 Codex` 只生成可复制交接，不启动本地或远程执行器；排期与完成控件保持 `demo_only`，绝不修改打包数据。
 
 ## 可执行任务扩展端口
 
@@ -103,10 +103,10 @@ Core API v1 继续把 `task.read` 作为必需的向后兼容回退。双语扩�
 
 | 新类别 | 建议位置 | 注意 |
 | --- | --- | --- |
-| 邮件 | 行动进入 `06_active_context/`，确认决策进入 `02_decisions/`，原始邮件留在本地私人来源 | 不把原始邮箱导出放进公开版。 |
+| 邮件 | 行动进入 `06_active_context/`，确认决策进入 `02_decisions/`，原始邮件留在本地私人来源 | 不把原始邮箱导出放进本仓库。 |
 | 外部调研论文 | `01_knowledge/literature/` 或公开安全阅读笔记 | 不等同于本人论文；要标注和当前项目的关系。 |
 | 审稿论文 | `05_workflows/review_writing/` 放流程，`06_active_context/` 放当前审稿状态 | 默认 `local_only` 或 `not_exportable`。 |
-| 经费或预算分配 | `02_decisions/` 放分配决策，`06_active_context/` 放当前预算状态 | 公开版用占位金额或示意字段。 |
+| 经费或预算分配 | `02_decisions/` 放分配决策，`06_active_context/` 放当前预算状态 | 本仓库用占位金额或示意字段。 |
 | 算力分配 | `06_active_context/` 放当前额度，`02_decisions/` 放取舍，`05_workflows/` 放排程流程 | 记录刷新日期、owner、限制和风险。 |
 
 ## 停止规则

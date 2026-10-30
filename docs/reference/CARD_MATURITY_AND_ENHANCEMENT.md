@@ -25,7 +25,7 @@ Each Library card may show one primary maturity axis with a plain-language label
 - **Library** shows the primary maturity label, direct relations, and the card-focused enhancement preview.
 - **Work** distinguishes multiple bounded sessions; its **Needs Review** state shows returned results or candidate changes and controls any durable change. Needs Review is not a fourth screen or a notification inbox.
 
-The item placement and result/candidate examples here describe part of Review. Its [full reception scope](../system-reference.en.md#shared-governance-boundaries) also includes bounded unknowns, break-glass confirmation, validation failures, rollback, and handoffs required before closure. The same reference distinguishes requirement waiting/defer from portfolio state and explains completion and context delivery. These definitions do not enable private writes in the public release.
+The item placement and result/candidate examples here describe part of Review. Its [full reception scope](../system-reference.en.md#shared-governance-boundaries) also includes bounded unknowns, break-glass confirmation, validation failures, rollback, and handoffs required before closure. The same reference distinguishes requirement waiting/defer from portfolio state and explains completion and context delivery. These definitions do not enable private writes in this repository.
 
 A card face shows at most one primary maturity label, one decision-relevant secondary status, one date, one action summary, and a small relation preview. A project may show up to two confirmed people plus `+N`; candidate relations remain separate.
 
@@ -52,7 +52,7 @@ By default, an enhancement task reads only the selected canonical card, up to fi
 | --- | --- | --- |
 | Cards and relations | Fictional only | User-controlled local material |
 | Enhancement preview | Available | Available |
-| Execution | Copyable task packet only; the public starter only offers a copy fallback and admits nothing into the durable sources | Explicit local controlled execution |
+| Execution | Copyable task packet only; this repository only offers a copy fallback and admits nothing into the durable sources | Explicit local controlled execution |
 | Durable change | Disabled | Candidate first; user confirmation required |
 | External download | Disabled | Only from a user-provided source and explicit confirmation |
 

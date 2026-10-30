@@ -18,7 +18,7 @@ Use after semantic discontinuity or repeated correction. It does not create a ps
 
 ## Availability and parity
 
-The public variant uses current statements and supplied history only; user authority is unchanged.
+This repository uses current statements and supplied history only; user authority is unchanged.
 
 ## Dependencies
 

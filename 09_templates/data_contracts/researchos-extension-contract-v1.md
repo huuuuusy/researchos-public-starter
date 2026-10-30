@@ -31,7 +31,7 @@ Add a new category only when it changes how the researcher judges, acts, validat
 
 `researchos-plugin-v1` is the shared host contract for reviewed public-safe plugins and ignored local manifests. Its schema is [researchos-plugin-v1.schema.json](researchos-plugin-v1.schema.json), reviewed manifests belong in `config/plugins/`, local manifests belong in the Git-ignored `config/plugins.local/`, and `python3 scripts/validate_plugins.py` is the fail-closed gate.
 
-The public starter loads only declarative, public-safe manifests without network, command, canonical-write, private-path, or private-state access. Registry summaries omit source paths and permission details. V1 does not execute arbitrary plugin JavaScript or create new workspaces, result modes, storage owners, or writeback routes.
+This repository loads only declarative, public-safe manifests without network, command, canonical-write, private-path, or private-state access. Registry summaries omit source paths and permission details. V1 does not execute arbitrary plugin JavaScript or create new workspaces, result modes, storage owners, or writeback routes.
 
 Existing `researchos-task-extension-v1` descriptors remain the current runtime input. The Plugin Host normalizes them into a `tasks` contribution and verifies output equivalence, so the host contract does not introduce a second task definition or change user-visible routes.
 
@@ -49,7 +49,7 @@ Plugin v1.1 adds a backward-compatible `work_item_providers` contribution. A pro
 
 Projection reads are not raw access to the Dashboard object. Each manifest projection declares `researchos-projection-envelope-v1`, sensitivity, freshness, and an exact field export map; the host returns `ready / empty / error` and withholds payload on an unknown or denied contract. UI slots declare both a legacy routing alias and one canonical `surface.region` coordinate. Referenced actions must belong to the same canonical surface, so a capability cannot quietly attach a Review or Start mutation to another screen.
 
-If an action declares any v1.1 field, it must declare the complete contract: `confirmation_mode`, `risk`, `write_scope`, `reversible`, and `public_behavior`. `inline` requires a reviewed `platform_registered` handler. In the public starter, the Research Agenda is a fictional Work Item projection: `Start with Codex` produces a copy-ready handoff and never starts a local or remote executor, while scheduling and completion controls remain `demo_only` and never mutate packaged data.
+If an action declares any v1.1 field, it must declare the complete contract: `confirmation_mode`, `risk`, `write_scope`, `reversible`, and `public_behavior`. `inline` requires a reviewed `platform_registered` handler. In this repository, the Research Agenda is a fictional Work Item projection: `Start with Codex` produces a copy-ready handoff and never starts a local or remote executor, while scheduling and completion controls remain `demo_only` and never mutate packaged data.
 
 ## Executable Task Extension Port
 
@@ -103,10 +103,10 @@ Every extension proposal must answer:
 
 | New class | Suggested location | Notes |
 | --- | --- | --- |
-| Email | `06_active_context/` for actions, `02_decisions/` for confirmed decisions, local private source for raw mail | Do not store raw inbox dumps in the public starter. |
+| Email | `06_active_context/` for actions, `02_decisions/` for confirmed decisions, local private source for raw mail | Do not store raw inbox dumps in this repository. |
 | External paper being surveyed | `01_knowledge/literature/` or a public-safe reading note | It is not an "own paper"; mark relation to active projects. |
 | Paper under peer review | `05_workflows/review_writing/` for workflow, `06_active_context/` for active review state | Default `local_only` or `not_exportable`. |
-| Budget or funding allocation | `02_decisions/` for allocation decisions, `06_active_context/` for current budget state | Keep amounts public-safe or use placeholders in public starter. |
+| Budget or funding allocation | `02_decisions/` for allocation decisions, `06_active_context/` for current budget state | Keep amounts public-safe or use placeholders in this repository. |
 | Compute allocation | `06_active_context/` for current quota, `02_decisions/` for tradeoffs, `05_workflows/` for scheduling workflow | Track refresh date, owner, limit, and risk. |
 
 ## Stop Rules

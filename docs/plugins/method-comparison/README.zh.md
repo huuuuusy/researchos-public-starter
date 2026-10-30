@@ -27,7 +27,7 @@ updated: 2026-09-11
 
 ## 可用范围与依赖
 
-1.1.0 版属于 `task_led`、`local_installable` 贡献，随仓库提供但默认停用。Private 与 Public 描述符的分发范围不同；公开方法文件不会使用户后来提供的论文或结果自动公开。已有安装只有显式 upgrade 才采用新版。
+1.1.0 版属于 `task_led`、`local_installable` 贡献，随仓库提供但默认停用。本仓库与报告中的原型的描述符分发范围不同；公开方法文件不会使用户后来提供的论文或结果自动公开。已有安装只有显式 upgrade 才采用新版。
 
 依赖 `researchos_core`、能够读取文件的执行宿主及 Python 3。适配脚本仅用标准库，读取一个固定 skill、生成一个固定文件，不下载包或运行其中的方法。资料导航是可选依赖，无须新模型、密钥、页面或存储服务。
 
@@ -84,7 +84,7 @@ python3 docs/plugins/method-comparison/build_adapter.py --check
 
 ## 数据与结果
 
-默认返回 answer。artifact 写到请求的输出位置；持久修改形成精确候选，进入既有审阅与准入流程。生成答案不会自动更新来源卡。方法指令不能扩大读取、修改或披露权限；Public Starter 交接仍为 copy-only。
+默认返回 answer。artifact 写到请求的输出位置；持久修改形成精确候选，进入既有审阅与准入流程。生成答案不会自动更新来源卡。方法指令不能扩大读取、修改或披露权限；本仓库的交接仍为 copy-only。
 
 ## 验证与练习
 

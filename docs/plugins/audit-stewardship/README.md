@@ -18,7 +18,7 @@ Use with an exact baseline and scope. It does not perform irreversible cleanup o
 
 ## Availability and parity
 
-The public variant operates only on public-safe or explicitly selected local sources.
+This repository operates only on public-safe or explicitly selected local sources.
 
 ## Dependencies
 

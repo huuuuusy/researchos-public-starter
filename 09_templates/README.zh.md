@@ -4,7 +4,7 @@
 
 # 模板层
 
-保存可复用模板、标准提示词、卡片格式和数据契约，帮助公开版与非公开工作版保持结构一致。
+保存可复用模板、标准提示词、卡片格式和数据契约，帮助本仓库与报告中的原型保持结构一致。
 
 - `paper-template.md`、`person-template.md`、`project-template.md`、`talk-template.md`、`decision-template.md`、`context-capsule-template.md`：核心卡片和 capsule 模板。
 - `new-project-intake-card-template.md`、`research-expression-task-brief.md`、`safe-export-template.md`、`eval-case-template.md`、`self-evolution-report-template.md`、`memory-update-report-template.md`、`workflow-template.md`：项目接入、表达任务、安全导出、评估、自我进化和写回模板。
