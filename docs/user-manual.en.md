@@ -4,17 +4,17 @@
 
 # ResearchOS User Manual
 
-This manual follows a reader from the first session to a private vault of their own: what the public starter is and the words its output uses, how to run one research loop in an agent client, how to try the session scheduler, what the optional Dashboard shows, and how to replace the fictional demo with your own material. For a first run, follow the [first-run guide](../08_exports/public_starter/onboarding-step-by-step.md); this manual is the reference behind it. The [System Reference](system-reference.en.md) defines states, governance boundaries, architecture, code owners and directories. The [Governance and Extension Guide](governance-guide.en.md) covers publication, customization, plugins, contribution and the license.
+This manual follows a reader from the first session to a private vault of their own: what this repository is and the words its output uses, how to run one research loop in an agent client, how to try the session scheduler, what the optional Dashboard shows, and how to replace the fictional demo with your own material. For a first run, follow the [first-run guide](../08_exports/public_starter/onboarding-step-by-step.md); this manual is the reference behind it. The [System Reference](system-reference.en.md) defines states, governance boundaries, architecture, code owners and directories. The [Governance and Extension Guide](governance-guide.en.md) covers publication, customization, plugins, contribution and the license.
 
-## 1. What the public starter is
+## 1. What this repository is
 
 ResearchOS Public Starter is a public-safe reference implementation of a small, file-based tool for individual researchers who want their judgment to stay continuous across tools, projects and time. An agent client such as Claude Code or Codex, or another file-aware CLI, is the primary execution route and also the complete default route: you state one goal, provide the minimum source, receive an answer or artifact, and any durable change waits for your approval and validation. The first loop needs no Dashboard, plugin, model setting or knowledge of the whole repository. The optional Dashboard makes attention, linked material and review boundaries visible, but it does not accept judgments or enlarge execution permissions.
 
 The researcher chooses the question and judges what the evidence supports. Models and tools carry out bounded parts of the work, and ResearchOS keeps their results connected to sources, acceptance status, unresolved dependencies and the next action; when a source changes, the judgments that depend on it come back for a recheck. It is not a hosted service, an autonomous scientist, a complete personal knowledge base, a question-answering tool detached from evidence, or a polished all-in-one product, and an empty vault will not understand a research domain for you. Literature search, experiment execution and general agent runtimes belong to specialized tools; [Related Research Tools](reference/RELATED_RESEARCH_TOOLS.md) describes adjacent tools and where ResearchOS stays narrow.
 
-This release is the copy-only edition. It shares the kernel with the private prototype, ships fictional data, and its `config/ros.json` sets `runtime_scope: public_starter`: it can inspect, validate, prepare handoffs and show planned changes, but it cannot claim that work was executed or that durable memory changed. Attention writes, admission writeback, maintenance writes and completion recording stay in the private prototype. The [technical report](technical-report.en.md) describes that prototype, whose execution paths are broader than this release; its claims are not a public capability checklist. The table compares the three ways to run the code:
+This release is copy-only. It shares its kernel with the prototype in the technical report, ships fictional data, and its `config/ros.json` sets `runtime_scope: public_starter`: it can inspect, validate, prepare handoffs and show planned changes, but it cannot claim that work was executed or that durable memory changed. Attention writes, admission writeback, maintenance writes and completion recording stay in the prototype in the report. The [technical report](technical-report.en.md) describes that prototype, whose execution paths are broader than this release; its claims are not a public capability checklist. The table compares the three ways to run the code:
 
-| Capability | Public starter | Personal-vault mode (Section 5) | Private runtime |
+| Capability | This repository | Personal-vault mode (Section 5) | Prototype in the report |
 | --- | --- | --- | --- |
 | Data | Fictional and public-safe | Your real material under the git-ignored `personal_vault/` | Your real local research material |
 | Portfolio, task routing and Library cards | Yes | Yes | Yes |
@@ -37,13 +37,13 @@ The demo output and these guides use a few words in a narrow sense. For a first 
 | card | A Markdown file with frontmatter about one project, paper, person or other source. Commitments and judgments point to cards as their evidence. |
 | research state | The question, the evidence, the accepted judgments with their scope, the open conditions and the next step. `ros state` prints them as Q, E, J, B and N. |
 | candidate | A model's output or a draft that has not been accepted yet. |
-| admission, admit | The researcher accepting a candidate into research state. The public starter only shows the planned change; it never admits. |
+| admission, admit | The researcher accepting a candidate into research state. This repository only shows the planned change; it never admits. |
 | judgment block | The `> [!judgment]` Markdown block that records one accepted judgment with its basis. |
 | requirement | A registered piece of maintenance work, such as rechecking a judgment after its source changed. |
 | held, waiting | Held work waits for the researcher's answer to one question. Waiting work waits for a trigger, such as a date. |
 | receipt | The record of what was done and checked. |
 | decision boundary | The moment the system looks at what has arrived and decides what to do next. The output calls it a "ros boundary". |
-| copy fallback, copy-only | The public starter prepares text you copy into your own assistant instead of running or writing anything. |
+| copy fallback, copy-only | This repository prepares text you copy into your own assistant instead of running or writing anything. |
 | `personal_vault/` | The git-ignored folder in your clone for your own material. |
 
 Three phrases in the demo output follow from these words, and none of them is an error. "No admission receipt yet" means that the fixture's judgment was written straight into the file: nobody admitted it, so no receipt of an admission exists, and `today` asks you to confirm it. "Confirmed … after the fact", together with "not an admission" or "not admitted", means that you said yes to a judgment that was already written; that closes the request to confirm it, but it does not admit anything. "Copy fallback" means that `ros` printed the change `admit` would make, as a diff, and wrote nothing.
@@ -103,7 +103,7 @@ This fictional comparison reuses the [worked session in Section 4.1 of the repor
 | Before | Two benchmark sets support A over B while the target stays in view; re-appearance is untested and its experiment is planned | Keep the grounds, scope, unknown and next action together |
 | Source correction | A's advantage disappears on the second set; the first set is unchanged | A source change triggers recheck, not a scientific verdict |
 | Candidate | Retain the first-set claim with its grounds, withdraw the second-set claim, and leave the re-appearance experiment open | Review a candidate on the corrected source version |
-| Decision boundary | In the report's private-prototype session a change is admitted only after the researcher decides; default public operation prepares candidates or planned differences without admission | Separate a proposed change from accepted durable state |
+| Decision boundary | In the report's session a change is admitted only after the researcher decides; default public operation prepares candidates or planned differences without admission | Separate a proposed change from accepted durable state |
 
 ![A build system rebuilds on its own; research state waits for the researcher's decision.](figures/architecture/researchos-r9-contrast-en.png)
 
@@ -135,7 +135,7 @@ Use a real task and a natural return after 24 to 72 hours. The competing baselin
 
 ## 3. The session scheduler and command-line checks
 
-`python3 scripts/ros_demo.py` (or `--lang zh-CN`) runs on a temporary copy of a fictional research graph. A source card changes and the dependent judgment is flagged for recheck; the researcher then requests reconfirmation, which public mode shows as a planned change without admitting it, and at session close the recheck is still listed as pending. Stop when you can identify the source change, the candidate or plan, the open work and the next action. If a word in the output is unfamiliar, see [Words you will meet](#words-you-will-meet) in Section 1.
+`python3 scripts/ros_demo.py` (or `--lang zh-CN`) runs on a temporary copy of a fictional research graph. A source card changes and the dependent judgment is flagged for recheck; the researcher then requests reconfirmation, which this repository shows as a planned change without admitting it, and at session close the recheck is still listed as pending. Stop when you can identify the source change, the candidate or plan, the open work and the next action. If a word in the output is unfamiliar, see [Words you will meet](#words-you-will-meet) in Section 1.
 
 The scheduler and the Dashboard use two separate fictional worlds. The scheduler fixture in `examples/scheduler-demo/` is one research graph about an occlusion paper: two commitments, two cards and one judgment. The Dashboard demo in Section 4 shows six fictional agenda items from `08_exports/public_starter/demo-research-agenda.md`. Neither refers to the other.
 
@@ -166,7 +166,7 @@ python3 scripts/ros.py --root examples/scheduler-demo close
 
 Two things in the output come from the date rather than from the fixture. Run on today's date, the walk-through flags the fixture's commitments as not recently verified, whereas `ros_demo.py` pins its date. On a fresh clone the first `today` may also report a source as "changed after verification", because the check compares the file's modification time, which the clone has just set, with the commitment's `last_verified` date. Without `--root`, `ros` reads this repository's own graph, which has no commitments.
 
-### What `ros` writes in the public starter
+### What `ros` writes in this repository
 
 Under the shipped `runtime_scope: public_starter`:
 
@@ -176,16 +176,16 @@ Under the shipped `runtime_scope: public_starter`:
 - `admit --confirm` records an after-the-fact confirmation in the git-ignored local ledger only when you answer at your own terminal. Relayed by an agent, it is recorded as asserted and the confirmation request stays open. Either way it writes no source and is not an admission.
 - `close` lists the candidates returned or proposed since the session started that are still undecided. Here they stay undecided, because `admit` neither admits nor records a refusal.
 
-The admission and dispatch code ships but stays off. Only a `config/ros.json` that sets `runtime_scope: "private"` explicitly turns it on; a missing key, a misspelling or any other value runs as the copy-only starter. The private prototype in the technical report runs with admission and dispatch on. A vault copied from the fixture keeps the fixture's `config/ros.json`, so it runs copy-only as well.
+The admission and dispatch code ships but stays off. Only a `config/ros.json` that sets `runtime_scope: "private"` explicitly turns it on; a missing key, a misspelling or any other value runs as copy-only. The prototype in the technical report runs with admission and dispatch on. A vault copied from the fixture keeps the fixture's `config/ros.json`, so it runs copy-only as well.
 
-All 13 subcommands exist in the public starter. Most commands first run one boundary, recorded in the same git-ignored ledger; `receipt`, `propose rule`, `admit --rollback`, `collect --abandon` and `attend` do not. None writes a durable source:
+All 13 subcommands exist in this repository. Most commands first run one boundary, recorded in the same git-ignored ledger; `receipt`, `propose rule`, `admit --rollback`, `collect --abandon` and `attend` do not. None writes a durable source:
 
-| Command | In the public starter |
+| Command | In this repository |
 | --- | --- |
 | `today` | Copy-only fallback: lists changes and open requests and opens a session, but no attention schedule ships, so every commitment reads as unscheduled |
-| `close` | Same as the private prototype; the listed candidates stay undecided |
+| `close` | Same as the prototype in the report; the listed candidates stay undecided |
 | `propose judgment`, `episode-close`, `rule` | Same: registers a candidate |
-| `admit` | Copy-only fallback: `<candidate>` and `--reconfirm` show the planned difference; `--confirm` records a confirmation without writing, and applies only when you answer at your own terminal; `--rollback` is refused, because the starter writes no source and rolls none back |
+| `admit` | Copy-only fallback: `<candidate>` and `--reconfirm` show the planned difference; `--confirm` records a confirmation without writing, and applies only when you answer at your own terminal; `--rollback` is refused, because this repository writes no source and rolls none back |
 | `decide` | Same: records the decision; `cancel` and `confirm` apply only when you answer at your own terminal |
 | `answer` | Same: records the answer; `satisfied` and `cancel` close the request, so they apply only when you answer at your own terminal; `satisfied` is offered only where a check's basis is the researcher's judgment, which none of the shipped rules declares |
 | `state`, `context`, `rules`, `receipt` | Same; they only read |
@@ -212,7 +212,7 @@ python3 scripts/start_researchos.py --mode dashboard --port 8880
 
 ![The public Dashboard: open an item, preview and cancel an attention date, preview the handoff. Nothing is saved or run.](figures/readme/dashboard-en.gif)
 
-Then open `http://127.0.0.1:8880/`. It shows six fictional agenda items from `08_exports/public_starter/demo-research-agenda.md`, a different fictional world from the scheduler fixture in Section 3, and needs no real API key. The demo is set on a fixed fictional date, 2026-08-11, shown in the page's status line, so its calendar and freshness read the same on any day you open it. Ordinary startup serves the shipped public-safe projection and does not rewrite tracked files; it rebuilds only when that projection is missing, and maintainers rebuild explicitly with `python3 scripts/build_public_starter_data.py --write` after changing demo sources. The launcher reuses a listener only when `/session-config` identifies the matching runtime, so a public demo is never mistaken for a personal vault, the private prototype or an unrelated process on the same port; startup stops and suggests another port instead. `--mode public-starter` only reports the public runtime status and starts no server. The remaining modes are:
+Then open `http://127.0.0.1:8880/`. It shows six fictional agenda items from `08_exports/public_starter/demo-research-agenda.md`, a different fictional world from the scheduler fixture in Section 3, and needs no real API key. The demo is set on a fixed fictional date, 2026-08-11, shown in the page's status line, so its calendar and freshness read the same on any day you open it. Ordinary startup serves the shipped public-safe projection and does not rewrite tracked files; it rebuilds only when that projection is missing, and maintainers rebuild explicitly with `python3 scripts/build_public_starter_data.py --write` after changing demo sources. The launcher reuses a listener only when `/session-config` identifies the matching runtime, so a public demo is never mistaken for a personal vault, the prototype in the report or an unrelated process on the same port; startup stops and suggests another port instead. `--mode public-starter` only reports the public runtime status and starts no server. The remaining modes are:
 
 ```bash
 python3 scripts/start_researchos.py --mode public-starter --check --provider codex
@@ -231,7 +231,7 @@ The Dashboard is a persistent attention and control surface beside the agent cli
 
 The calendar uses days as its smallest unit and has no hourly grid. `+N` expands a day; a Plan card can be dragged, or moved with `Alt + Arrow`, to another day as an in-memory preview that is labeled unsaved and resets on refresh. Only a write-enabled private runtime persists the date through its reversible schedule owner. Review, deadline and lifecycle markers never move. `Complete step`, `End Work Session` and `Complete project` close different things: the current commitment, the execution session and the durable project lifecycle. A Work Session is one bounded execution session with your agent client, and ending it does not complete the project. Three further distinctions stay apart. Lifecycle says whether a project is submitted, under review, in rebuttal, under revision or complete. In progress, To advance, Not advancing and Closed say how the whole project is managed. Today, Tomorrow, Future and Parked say only when its next step should take attention again. A project under review stays available among the linked resources, and a real event or review date can return its next action to the desk.
 
-The public starter is copy-only. It never starts the local Codex or Claude Code CLI, probes no local provider, calls no remote API, writes no durable memory (the two kinds of file it may write are listed at the end of this section), executes no Inbox write-back task and accepts no arbitrary shell command. Submitting a task prepares a packet for a separate private assistant; the desk always produces a copyable execution brief. Private and personal-vault runtimes are the controlled execution routes. The surfaces divide the work as follows:
+This repository is copy-only. It never starts the local Codex or Claude Code CLI, probes no local provider, calls no remote API, writes no durable memory (the two kinds of file it may write are listed at the end of this section), executes no Inbox write-back task and accepts no arbitrary shell command. Submitting a task prepares a packet for a separate private assistant; the desk always produces a copyable execution brief. Private and personal-vault runtimes are the controlled execution routes. The surfaces divide the work as follows:
 
 | Surface | Owns | Does not own |
 | --- | --- | --- |
@@ -253,7 +253,7 @@ Now: restore one bounded research focus
   -> validated writeback in a private vault
 ```
 
-One loop makes three things explicit. The Work Session holds the current goal, on-demand sources, the current result, a collapsed process log, the working deck and the frozen prompt and template language; browser coordination state and recent-task summaries are not durable memory. The candidate handoff is a bounded task carrying source cards, evidence state, sensitivity, the proposed authority change, its impact scope and validation state. The Review boundary reminds you that task completion is not evidence confirmation and that a source path is not a write-back target. In a private vault the next steps are execution, evidence review, your decision, validated write-back and a resume packet; they stay controlled, and the public starter does not pretend they are automatic.
+One loop makes three things explicit. The Work Session holds the current goal, on-demand sources, the current result, a collapsed process log, the working deck and the frozen prompt and template language; browser coordination state and recent-task summaries are not durable memory. The candidate handoff is a bounded task carrying source cards, evidence state, sensitivity, the proposed authority change, its impact scope and validation state. The Review boundary reminds you that task completion is not evidence confirmation and that a source path is not a write-back target. In a private vault the next steps are execution, evidence review, your decision, validated write-back and a resume packet; they stay controlled, and this repository does not pretend they are automatic.
 
 Review is not only where proposed write-backs go. Its [full reception scope](system-reference.en.md#shared-governance-boundaries) also covers bounded unknowns, break-glass confirmation, results, validation failures, rollback and handoffs required before closure; durable, sensitive, public or destructive changes always pass through it. The public runtime never executes durable write-back.
 
@@ -276,7 +276,7 @@ Browser dashboard
   -> copyable task packet for a separate private assistant
 ```
 
-The agent route and the Dashboard depend on the same Markdown and confirmation rules, and public mode keeps the copy-only boundary described above; it rejects every `/codex-runner` submission without starting a thread or command. Personal-vault and private runtimes may return a local answer or artifact to Review, and local Codex starts only after you submit a task. In the public demo every local endpoint that saves feedback, inbox entries or card groups, withdraws a confirmation or runs an update returns 403 `public_starter_writeback_blocked`; those run only in personal-vault mode. The public demo writes only two kinds of file: uploads into the Git-ignored session workspace, and the demo projection when you run the registered `build_public_starter_data` action (unchanged demo sources give the same bytes). The local HTTP endpoints serve the Dashboard and are not internet APIs; the [System Reference](system-reference.en.md#local-http-endpoints) lists them.
+The agent route and the Dashboard depend on the same Markdown and confirmation rules, and this repository keeps the copy-only boundary described above; it rejects every `/codex-runner` submission without starting a thread or command. Personal-vault and private runtimes may return a local answer or artifact to Review, and local Codex starts only after you submit a task. In the public demo every local endpoint that saves feedback, inbox entries or card groups, withdraws a confirmation or runs an update returns 403 `public_starter_writeback_blocked`; those run only in personal-vault mode. The public demo writes only two kinds of file: uploads into the Git-ignored session workspace, and the demo projection when you run the registered `build_public_starter_data` action (unchanged demo sources give the same bytes). The local HTTP endpoints serve the Dashboard and are not internet APIs; the [System Reference](system-reference.en.md#local-http-endpoints) lists them.
 
 Local **Open** and **Reveal** use Finder on macOS, Explorer on Windows and `xdg-open` on Linux when available; without a desktop opener the server returns a clear failure and leaves the path for manual opening.
 
@@ -339,7 +339,7 @@ A candidate card is an interpretation; writing it does not make it durable memor
 
 Inside `personal_vault/`, a short current state goes in `06_active_context/`, source-grounded summaries in `01_knowledge/`, decisions and tradeoffs in `02_decisions/`, people context in `04_people/` and reusable methods in `05_workflows/`. [Where to Put New Materials](reference/WHERE_TO_PUT_NEW_MATERIALS.md) has the full placement table. Raw material stays where it is, outside the repository: a card records the path, which is often enough, and raw files should not be copied merely so that the Dashboard can see them. Nothing from the vault becomes public without a separate review under the [Safe Export Policy](reference/SAFE_EXPORT_POLICY.md).
 
-Cards are context objects, not a prerequisite. A supplied source becomes the first working card, and Library is searched only when the current evidence is insufficient. Each card carries a sensitivity label of public, internal, sensitive or private. The personal-vault projection is written to the git-ignored `dashboard/data/researchos-local.json` because it may contain private derived metadata; public demo and personal-vault modes never share a generated data file. In this mode server-side Review state, selected working copies, runner receipts and the local Codex writable sandbox all use `personal_vault/` as their write root. The agent may read the public starter as reference but cannot use personal-vault `workspace-write` to modify tracked demo files. Personal-vault mode still does not turn task completion into evidence confirmation: a durable change needs a named target, an evidence check, your approval and validation after writeback.
+Cards are context objects, not a prerequisite. A supplied source becomes the first working card, and Library is searched only when the current evidence is insufficient. Each card carries a sensitivity label of public, internal, sensitive or private. The personal-vault projection is written to the git-ignored `dashboard/data/researchos-local.json` because it may contain private derived metadata; public demo and personal-vault modes never share a generated data file. In this mode server-side Review state, selected working copies, runner receipts and the local Codex writable sandbox all use `personal_vault/` as their write root. The agent may read this repository as reference but cannot use personal-vault `workspace-write` to modify tracked demo files. Personal-vault mode still does not turn task completion into evidence confirmation: a durable change needs a named target, an evidence check, your approval and validation after writeback.
 
 Stop after one successful loop: a larger vault helps only when each new file has a clear owner and evidence boundary. Useful long-term memory still needs your own papers, notes, projects, talks, decisions or relationship context with traceable boundaries, added only when it improves the judgment at hand.
 
@@ -351,7 +351,7 @@ This step is optional and only changes the public demo projection. `python3 scri
 
 Besides the agent route and the Dashboard, you can read the Markdown directly in an editor or on GitHub to understand the directories, cases and manuals. The Codex app suits AI-assisted reading and editing, and the Codex CLI executes small handoffs and records logs; ResearchOS has no remote API provider. ResearchOS does not include Codex, and the public Dashboard never starts it. To execute a copied packet in a separate private agent task, install OpenAI's Codex app or CLI following its current official instructions, and check it with `command -v codex` and `codex --version`. The macOS desktop app may bundle the CLI at `/Applications/Codex.app/Contents/Resources/codex`; if `codex --version` fails but that file exists, add it to `PATH` or set `alias codex="/Applications/Codex.app/Contents/Resources/codex"`. Never write login tokens, API keys or account details into the repository.
 
-The public starter registers two local providers, `codex` and `claude_code`, and both are `copy_only` here. `python3 scripts/runtime_profile_cli.py list --scope public_starter` shows the public copy-only profile and `show --profile codex --scope public_starter` shows how one reserved provider projects in this edition; neither needs credentials or network access. The public Dashboard defaults to:
+This repository registers two local providers, `codex` and `claude_code`, and both are `copy_only` here. `python3 scripts/runtime_profile_cli.py list --scope public_starter` shows the public copy-only profile and `show --profile codex --scope public_starter` shows how one reserved provider projects in this edition; neither needs credentials or network access. The public Dashboard defaults to:
 
 ```json
 {
@@ -367,7 +367,7 @@ Do not turn the public Dashboard into an execution host. To use one of the two l
 
 ## 6. Safety and common mistakes
 
-Do not expose the Dashboard to the public internet. Do not commit API keys, tokens, `.env` files or local runtime configuration, and do not add real sensitive people, unpublished manuscripts, real relationship notes, raw corpus payloads or personal runtime logs to the public starter. Before a release, `python3 scripts/validate_public_safety.py` checks for these.
+Do not expose the Dashboard to the public internet. Do not commit API keys, tokens, `.env` files or local runtime configuration, and do not add real sensitive people, unpublished manuscripts, real relationship notes, raw corpus payloads or personal runtime logs to this repository. Before a release, `python3 scripts/validate_public_safety.py` checks for these.
 
 The public demo is about 19 MB of tracked files, roughly 100 MB with Git history, and does not copy a private vault. ResearchOS does not govern your disk space: in personal-vault and private runtimes the local Work Session intake accepts the research materials you select without a product-level file-type, size, count or age quota and is limited only by the local filesystem and runtime, while the public demo accepts uploads of up to 1 GiB per file. Neither deletes your materials because of a space threshold. It bounds only the debris it generates, as listed in the [low-redundancy runtime contract](system-reference.en.md#low-redundancy-runtime-contract); low free space or substantial session copies produce a non-blocking advisory.
 

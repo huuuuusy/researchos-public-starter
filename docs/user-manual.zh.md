@@ -4,17 +4,17 @@
 
 # ResearchOS 用户手册
 
-这份手册按读者的使用顺序展开：公开 starter 是什么、输出里的词是什么意思，怎样在 Agent 客户端里走一个研究闭环，怎样试用会话调度器，可选 Dashboard 显示什么，以及怎样用自己的材料替换虚构 demo。第一次上手请按[首次上手说明](../08_exports/public_starter/onboarding-step-by-step.zh.md)走，本手册是它背后的参考。状态、治理边界、架构、代码 owner 和目录的定义见[系统参考](system-reference.zh.md)；发布、自定义、插件、贡献与许可见[治理与扩展指南](governance-guide.zh.md)。
+这份手册按读者的使用顺序展开：本仓库是什么、输出里的词是什么意思，怎样在 Agent 客户端里走一个研究闭环，怎样试用会话调度器，可选 Dashboard 显示什么，以及怎样用自己的材料替换虚构 demo。第一次上手请按[首次上手说明](../08_exports/public_starter/onboarding-step-by-step.zh.md)走，本手册是它背后的参考。状态、治理边界、架构、代码 owner 和目录的定义见[系统参考](system-reference.zh.md)；发布、自定义、插件、贡献与许可见[治理与扩展指南](governance-guide.zh.md)。
 
-## 1. 公开 starter 是什么
+## 1. 本仓库是什么
 
-ResearchOS 公开 starter 是一个面向个人科研人员的小型文件化工具的公开安全参考实现，用来让判断在工具、项目和时间之间保持连续。Claude Code、Codex 等 Agent 客户端或其他文件感知 CLI 是主要执行路线，也是完整的默认路线：给出一个目标和最少来源，得到回答或成果，长期变化留在你的批准与验证之后。第一圈不需要 Dashboard、插件、模型设置，也不需要先理解整个仓库。可选 Dashboard 让注意力、关联资料和审阅边界可见，但不替研究者接受判断，也不扩大执行权限。
+ResearchOS Public Starter 是一个面向个人科研人员的小型文件化工具的公开安全参考实现，用来让判断在工具、项目和时间之间保持连续。Claude Code、Codex 等 Agent 客户端或其他文件感知 CLI 是主要执行路线，也是完整的默认路线：给出一个目标和最少来源，得到回答或成果，长期变化留在你的批准与验证之后。第一圈不需要 Dashboard、插件、模型设置，也不需要先理解整个仓库。可选 Dashboard 让注意力、关联资料和审阅边界可见，但不替研究者接受判断，也不扩大执行权限。
 
 研究者选择问题，判断证据究竟支持什么；模型和工具完成有边界的局部工作；ResearchOS 把结果与来源、接受状态、未决依赖和下一动作连在一起，某份来源变化后，依赖它的判断会回来等待复核。它不是托管服务、自治科研系统、完整个人知识库、脱离证据的万能问答，也不是精致的 all-in-one 产品；空 vault 不会替你理解一个研究领域。文献检索、实验执行和通用 Agent runtime 交给专门工具；相邻工具以及 ResearchOS 为什么保持窄定位，见[相关科研工具](reference/RELATED_RESEARCH_TOOLS.zh.md)。
 
-本次发布是只复制版本。它与私有原型共享内核，随附虚构数据，`config/ros.json` 设为 `runtime_scope: public_starter`：它可以阅读、校验、准备交接、显示拟议变化，但不能声称工作已经执行或长期记忆已经改变。注意力写入、准入写回、维护写入和完成记录仍属于私有原型。[技术报告](technical-report.zh.md)描述的就是这个私有原型，其执行路径比本版更广，其中的主张不是公开版能力清单。下表对比运行这套代码的三种方式：
+本次发布是只复制版本。它与技术报告中的原型共享内核，随附虚构数据，`config/ros.json` 设为 `runtime_scope: public_starter`：它可以阅读、校验、准备交接、显示拟议变化，但不能声称工作已经执行或长期记忆已经改变。注意力写入、准入写回、维护写入和完成记录仍属于报告中的原型。[技术报告](technical-report.zh.md)描述的就是这个原型，其执行路径比本版更广，其中的主张不是本仓库能力清单。下表对比运行这套代码的三种方式：
 
-| 能力 | 公开 starter | personal-vault 模式（第 5 节） | 私有运行时 |
+| 能力 | 本仓库 | personal-vault 模式（第 5 节） | 报告中的原型 |
 | --- | --- | --- | --- |
 | 数据 | 虚构、公开安全 | git 忽略的 `personal_vault/` 下你的真实材料 | 你的真实本地研究材料 |
 | 项目组合、任务处理和资料卡片 | 有 | 有 | 有 |
@@ -37,13 +37,13 @@ ResearchOS 公开 starter 是一个面向个人科研人员的小型文件化工
 | 卡片（card） | 一份带 frontmatter 的 Markdown 文件，记一个项目、一篇论文、一个人或其他来源。承诺和判断都以卡片为依据。 |
 | 研究状态 | 问题、证据、已接受的判断及其范围、仍未决的条件，以及下一步。`ros state` 把它们印成 Q、E、J、B、N。 |
 | 候选（candidate） | 还没有被接受的模型产出或草稿。 |
-| 准入（admission / admit） | 研究者把候选接受进研究状态。公开 starter 只显示计划中的改动，从不准入。 |
+| 准入（admission / admit） | 研究者把候选接受进研究状态。本仓库只显示计划中的改动，从不准入。 |
 | 判断块 | 记录一条已接受判断及其依据的 `> [!judgment]` Markdown 块。 |
 | 要求（requirement） | 一件登记在册的维护工作，例如来源变化后复核某条判断。 |
 | 挂起与等待 | 挂起的工作在等研究者回答一个问题；等待的工作在等一个触发条件，比如某个日期。 |
 | 回执（receipt） | 做了什么、查了什么的记录。 |
 | 决策边界 | 系统查看已到达的内容、决定下一步的时刻。输出里叫「ros 边界」。 |
-| 复制回退、只复制 | 公开 starter 只准备好文字，由你复制到自己的助手里，它自己不运行、也不写入任何东西。 |
+| 复制回退、只复制 | 本仓库只准备好文字，由你复制到自己的助手里，它自己不运行、也不写入任何东西。 |
 | `personal_vault/` | clone 里被 Git 忽略的文件夹，放你自己的材料。 |
 
 演示输出里有三种说法由这些词而来，都不是报错。「还没有准入回执」是说夹具里的判断是直接写进文件的：没有人准入过它，所以没有准入的回执，`today` 会请你确认它。「已事后确认」后面跟着「不算准入」或「未经准入」，是说你对一条已经写进去的判断点了头；这只关闭「请确认」这个请求，并没有准入任何东西。「复制回退」是说 `ros` 把 `admit` 会做的改动以 diff 的形式打印出来，什么都没写。
@@ -103,13 +103,13 @@ ResearchOS 公开 starter 是一个面向个人科研人员的小型文件化工
 | 变化前 | 两组基准支持目标在画面内时 A 优于 B；重新出现后的情况未测试，实验已计划 | 根据、范围、未知与下一动作一起保留 |
 | 来源更正 | 第二组上 A 的优势消失，第一组不变 | 来源变化触发复核，不裁定科学判断 |
 | 候选 | 连同根据保留第一组说法，撤回第二组说法，让重新出现的实验继续开着 | 基于更正后的来源版本审阅候选 |
-| 决定边界 | 报告的私有原型会话只在研究者决定后准入；默认公开运行只准备候选或拟议差异，不实际准入 | 分清拟议变化与已接受的长期状态 |
+| 决定边界 | 报告中的原型只在研究者决定后准入；本仓库默认只准备候选或拟议差异，不实际准入 | 分清拟议变化与已接受的长期状态 |
 
 ![构建系统自己重建，研究状态等研究者决定。](figures/architecture/researchos-r9-contrast-zh.png)
 
 *报告图 1。构建系统自己重建，研究状态等研究者决定。论文的第二组基准被更正后，判断 J 来自第一组的根据保留，来自第二组的根据要复核；未决的重新出现条件仍然悬着，另一个会话提出、论文并不支持的说法被拒绝。只有研究者的准入才写入。*
 
-第 3 节可运行的公开检查使用另一份虚构夹具，不执行报告中的私有准入或局部收窄。两个例子都不证明优于版本化交接。
+第 3 节可运行的公开检查使用另一份虚构夹具，不执行报告中的准入或局部收窄。两个例子都不证明优于版本化交接。
 
 ### 中断后接续
 
@@ -135,7 +135,7 @@ python3 scripts/receipt_cli.py --root . recheck-source --input handoff.json --so
 
 ## 3. 会话调度器与命令行检查
 
-`python3 scripts/ros_demo.py --lang zh-CN`（不带 `--lang` 时为英文）在一份虚构研究图的临时副本上运行：来源卡片变化，依赖它的判断被标为待复核；研究者随后提出重新确认，公开模式只把它显示为拟议变化而不准入，收尾时复核仍列为待处理。能指出来源变化、候选或计划、仍开着的工作和下一动作即可停。输出里的词看不懂时，见第 1 节的[你会遇到的词](#你会遇到的词)。
+`python3 scripts/ros_demo.py --lang zh-CN`（不带 `--lang` 时为英文）在一份虚构研究图的临时副本上运行：来源卡片变化，依赖它的判断被标为待复核；研究者随后提出重新确认，本仓库只把它显示为拟议变化而不准入，收尾时复核仍列为待处理。能指出来源变化、候选或计划、仍开着的工作和下一动作即可停。输出里的词看不懂时，见第 1 节的[你会遇到的词](#你会遇到的词)。
 
 调度器和 Dashboard 用的是两个互不相干的虚构世界。`examples/scheduler-demo/` 里的调度器夹具是一份关于遮挡论文的研究图：两项承诺、两张卡片和一条判断。第 4 节的 Dashboard 演示显示 `08_exports/public_starter/demo-research-agenda.zh.md` 里的六个虚构议程事项。两者互不引用。
 
@@ -166,7 +166,7 @@ python3 scripts/ros.py --root examples/scheduler-demo close
 
 输出里有两处来自日期，而不是夹具本身。按当天日期运行时，夹具里的承诺会被标为久未核实；`ros_demo.py` 固定了日期。新 clone 上第一次运行 `today`，还可能看到某份来源「在核实后有更新」，因为判断依据是文件的修改时间，而 clone 刚把它设成了当天，晚于承诺的 `last_verified`。不带 `--root` 时，`ros` 读的是本仓库自己的图，其中没有承诺。
 
-### 公开 starter 里 `ros` 写什么
+### 本仓库里 `ros` 写什么
 
 在出厂的 `runtime_scope: public_starter` 下：
 
@@ -176,14 +176,14 @@ python3 scripts/ros.py --root examples/scheduler-demo close
 - `admit --confirm` 只有你在自己的终端回答时，才会在 git 忽略的本地账里记一笔事后确认；由 Agent 转述时只记为转述（asserted），确认要求保持开着。两种情况都不写来源，也不算准入。
 - `close` 列出会话开始以来回收或登记、尚未决定的候选。这里它们始终尚未决定，因为 `admit` 既不准入，也不记录拒绝。
 
-准入与派发的代码随本仓提供，但默认关闭。只有 `config/ros.json` 显式写明 `runtime_scope: "private"` 才会开启；缺这个键、拼错或写成其他值，都按只复制的 starter 运行。技术报告里的私有原型是开启准入与派发运行的。从夹具复制出来的库保留夹具的 `config/ros.json`，所以同样按只复制运行。
+准入与派发的代码随本仓提供，但默认关闭。只有 `config/ros.json` 显式写明 `runtime_scope: "private"` 才会开启；缺这个键、拼错或写成其他值，都按只复制模式运行。技术报告里的原型是开启准入与派发运行的。从夹具复制出来的库保留夹具的 `config/ros.json`，所以同样按只复制运行。
 
-13 个子命令在公开 starter 里都有。多数命令先跑一次边界检查，记在同一份 git 忽略的账里；`receipt`、`propose rule`、`admit --rollback`、`collect --abandon` 与 `attend` 不跑。所有命令都不写长期来源：
+13 个子命令在本仓库里都有。多数命令先跑一次边界检查，记在同一份 git 忽略的账里；`receipt`、`propose rule`、`admit --rollback`、`collect --abandon` 与 `attend` 不跑。所有命令都不写长期来源：
 
-| 命令 | 公开 starter 里的行为 |
+| 命令 | 本仓库里的行为 |
 | --- | --- |
 | `today` | 只复制降级：列出变化与待处理要求并开启会话，但不随附注意力安排，所有承诺都读作未排期 |
-| `close` | 与私有原型同语义；列出的候选始终尚未决定 |
+| `close` | 与报告中的原型同语义；列出的候选始终尚未决定 |
 | `propose judgment`、`episode-close`、`rule` | 同语义：登记候选 |
 | `admit` | 只复制降级：`<candidate>` 与 `--reconfirm` 显示拟议差异；`--confirm` 只记确认、不写入，且只有你在自己的终端回答时才生效；`--rollback` 被拒绝，因为这里不写来源，也就不回滚来源 |
 | `decide` | 同语义：记下决定；`cancel` 与 `confirm` 只有你在自己的终端回答时才生效 |
@@ -212,7 +212,7 @@ python3 scripts/start_researchos.py --mode dashboard --port 8880
 
 ![公开 Dashboard：打开事项，预览并取消关注日期，预览交接；什么都不保存，也不运行。](figures/readme/dashboard-zh.gif)
 
-然后打开 `http://127.0.0.1:8880/`。这里显示 `08_exports/public_starter/demo-research-agenda.zh.md` 里的六个虚构议程事项，与第 3 节的调度器夹具是两个不同的虚构世界，不需要真实 API key。演示设在一个固定的虚构日期 2026-08-11，页面状态栏会显示这个日期，所以无论哪天打开，它的日历和时效读起来都一样。普通启动直接读取随仓发布的公开安全投影，不重写受 Git 跟踪的文件；只有投影缺失时才自动恢复。维护者修改 demo 来源后，用 `python3 scripts/build_public_starter_data.py --write` 显式重建。启动器只在 `/session-config` 确认运行时身份匹配时复用已有服务，因此公开 demo 不会被误认为 personal-vault、私有原型或占用同一端口的其他程序；遇到这种情况会停止并建议另一个端口。`--mode public-starter` 只报告公开版的运行状态，不启动服务器。其余模式：
+然后打开 `http://127.0.0.1:8880/`。这里显示 `08_exports/public_starter/demo-research-agenda.zh.md` 里的六个虚构议程事项，与第 3 节的调度器夹具是两个不同的虚构世界，不需要真实 API key。演示设在一个固定的虚构日期 2026-08-11，页面状态栏会显示这个日期，所以无论哪天打开，它的日历和时效读起来都一样。普通启动直接读取随仓发布的公开安全投影，不重写受 Git 跟踪的文件；只有投影缺失时才自动恢复。维护者修改 demo 来源后，用 `python3 scripts/build_public_starter_data.py --write` 显式重建。启动器只在 `/session-config` 确认运行时身份匹配时复用已有服务，因此公开 demo 不会被误认为 personal-vault、报告中的原型或占用同一端口的其他程序；遇到这种情况会停止并建议另一个端口。`--mode public-starter` 只报告本仓库的运行状态，不启动服务器。其余模式：
 
 ```bash
 python3 scripts/start_researchos.py --mode public-starter --check --provider codex
@@ -231,7 +231,7 @@ Dashboard 是与 Agent 客户端互补的跨会话注意力与控制面，不是
 
 月历以日为最小单位，不提供小时网格。`+N` 展开当天；“安排”卡可拖拽或用 `Alt + 方向键` 移到另一日，作为内存中的预览，界面标明未保存，刷新即恢复。只有支持写入的私有运行时才会经可撤销的排期 owner 保存日期；复查、截止和生命周期标记始终不可拖动。“完成本步”“结束 Work Session”和“结束项目”关闭的东西不同：当前承诺、执行会话和长期项目生命周期。Work Session 是与 Agent 客户端处理一个意图的有界执行会话，结束会话不等于结束项目。另外三件事也要分开：生命周期说明项目处于投稿、审稿、rebuttal、修订还是完成；进行中 / 待推进 / 暂不推进 / 已结束说明如何管理整个项目；今日 / 明日 / 未来 / 搁置只说明下一步何时再次占用注意力。审稿中的项目仍可从关联资料中找到；真实事件或复核日期到达时，它的下一动作会回到工作台。
 
-公开 starter 固定为 copy-only。它不启动本机 Codex 或 Claude Code CLI，不探测本机 provider，不调用远程 API，不写长期记忆（它可能写的两类文件列在本节末尾），不执行 Inbox 写回任务，也不接受任意 shell 命令。提交任务只生成交给独立私有助手的任务包；工作台总是只产出可复制的任务说明。private 和 personal-vault 才是受控执行路线。各部分的分工如下：
+本仓库固定为 copy-only。它不启动本机 Codex 或 Claude Code CLI，不探测本机 provider，不调用远程 API，不写长期记忆（它可能写的两类文件列在本节末尾），不执行 Inbox 写回任务，也不接受任意 shell 命令。提交任务只生成交给独立私有助手的任务包；工作台总是只产出可复制的任务说明。private 和 personal-vault 才是受控执行路线。各部分的分工如下：
 
 | 界面 | 负责 | 不负责 |
 | --- | --- | --- |
@@ -253,7 +253,7 @@ Dashboard 是与 Agent 客户端互补的跨会话注意力与控制面，不是
   -> 在私人库中验证后写回
 ```
 
-一轮工作会明确三件事。Work Session 包含当前目标、按需来源、当前结果、折叠的过程记录、工作牌组和被冻结的 prompt/模板语言；浏览器协调状态和最近任务摘要都不是长期记忆。候选交接是一个有边界的任务，带着来源卡片、证据状态、敏感性、拟议权威变化、影响范围和验证状态。待复核边界提醒你：任务完成不等于证据确认，来源路径也不是写回目标。在私人库中，后续步骤是执行、证据核对、你的决定、验证后写回和恢复包；它们保持受控，公开 starter 不会把它们伪装成自动完成。
+一轮工作会明确三件事。Work Session 包含当前目标、按需来源、当前结果、折叠的过程记录、工作牌组和被冻结的 prompt/模板语言；浏览器协调状态和最近任务摘要都不是长期记忆。候选交接是一个有边界的任务，带着来源卡片、证据状态、敏感性、拟议权威变化、影响范围和验证状态。待复核边界提醒你：任务完成不等于证据确认，来源路径也不是写回目标。在私人库中，后续步骤是执行、证据核对、你的决定、验证后写回和恢复包；它们保持受控，本仓库不会把它们伪装成自动完成。
 
 待复核不只接收写回提案。它的[完整接收范围](system-reference.zh.md#共享治理边界)还包括有界未知、break-glass 确认、结果、验证失败、回滚与关闭前必须明确的交接；长期、敏感、公开或破坏性变化一律经过它。公开运行态从不执行持久写回。
 
@@ -276,7 +276,7 @@ Dashboard 是与 Agent 客户端互补的跨会话注意力与控制面，不是
   -> 交给独立私有助手的可复制任务包
 ```
 
-Agent 路线与 Dashboard 依赖同一套 Markdown 和确认规则，公开模式遵守上文说明的只复制边界，所有 `/codex-runner` 提交都被拒绝，不启动线程或命令。personal-vault 与私有运行态可以把本地回答或成果返回待复核；只有在你提交任务后才启动本地 Codex。公开 demo 中保存反馈、Inbox 条目或卡片分组、撤回确认、运行更新的本地端点都返回 403 `public_starter_writeback_blocked`，只在 personal-vault 模式下执行。公开 demo 只会写两类文件：上传到 Git 忽略的会话目录的来源，以及你运行已登记的 `build_public_starter_data` 动作时重建的示例投影（示例来源不变时字节不变）。这些本地 HTTP 端点服务 Dashboard，不是公网 API；完整列表见[系统参考](system-reference.zh.md#本地-http-端点)。
+Agent 路线与 Dashboard 依赖同一套 Markdown 和确认规则，本仓库遵守上文说明的只复制边界，所有 `/codex-runner` 提交都被拒绝，不启动线程或命令。personal-vault 与私有运行态可以把本地回答或成果返回待复核；只有在你提交任务后才启动本地 Codex。公开 demo 中保存反馈、Inbox 条目或卡片分组、撤回确认、运行更新的本地端点都返回 403 `public_starter_writeback_blocked`，只在 personal-vault 模式下执行。公开 demo 只会写两类文件：上传到 Git 忽略的会话目录的来源，以及你运行已登记的 `build_public_starter_data` 动作时重建的示例投影（示例来源不变时字节不变）。这些本地 HTTP 端点服务 Dashboard，不是公网 API；完整列表见[系统参考](system-reference.zh.md#本地-http-端点)。
 
 本地 **打开**/**定位** 在 macOS 使用 Finder，在 Windows 使用 Explorer，在 Linux 尝试 `xdg-open`；当前桌面环境没有可用 opener 时，服务器返回清楚的失败信息并保留路径，供手动打开。
 
@@ -353,7 +353,7 @@ Agent 路线与 Dashboard 依赖同一套 Markdown 和确认规则，公开模�
 
 除了 Agent 路线和 Dashboard，也可以在文本编辑器或 GitHub 上直接读 Markdown，了解目录、案例和手册。Codex 图形界面适合 AI 协助阅读和修改，Codex 命令行可执行小型交接并记录日志；ResearchOS 没有远程 API provider。ResearchOS 不附带 Codex，公开 Dashboard 也不会启动它。若要在独立私有 Agent 任务中执行复制出的任务包，按 OpenAI 当前官方说明安装 Codex 图形界面或命令行，并用 `command -v codex` 与 `codex --version` 检查。macOS 桌面应用可能把命令行程序放在 `/Applications/Codex.app/Contents/Resources/codex`；如果 `codex --version` 不可用而该文件存在，把它加入 `PATH`，或设置 `alias codex="/Applications/Codex.app/Contents/Resources/codex"`。不要把登录令牌、API 密钥或账号信息写入仓库。
 
-公开 starter 登记了两个本地 provider：`codex` 与 `claude_code`，在这里两者都是 `copy_only`。`python3 scripts/runtime_profile_cli.py list --scope public_starter` 显示公开版的只复制配置档，`show --profile codex --scope public_starter` 查看某个保留 provider 在本版中的投影；两者都不需要凭据或网络。公开 Dashboard 的默认配置是：
+本仓库登记了两个本地 provider：`codex` 与 `claude_code`，在这里两者都是 `copy_only`。`python3 scripts/runtime_profile_cli.py list --scope public_starter` 显示本仓库的只复制配置档，`show --profile codex --scope public_starter` 查看某个保留 provider 在本版中的投影；两者都不需要凭据或网络。公开 Dashboard 的默认配置是：
 
 ```json
 {
@@ -369,7 +369,7 @@ Agent 路线与 Dashboard 依赖同一套 Markdown 和确认规则，公开模�
 
 ## 6. 安全规则与常见错误
 
-不要把 Dashboard 暴露到公网。不要提交 API 密钥、令牌、`.env` 或本地运行配置，也不要把真实敏感人物、未公开稿件、真实关系笔记、原始语料或私人运行日志放进公开 starter。发布前，`python3 scripts/validate_public_safety.py` 会检查这些内容。
+不要把 Dashboard 暴露到公网。不要提交 API 密钥、令牌、`.env` 或本地运行配置，也不要把真实敏感人物、未公开稿件、真实关系笔记、原始语料或私人运行日志放进本仓库。发布前，`python3 scripts/validate_public_safety.py` 会检查这些内容。
 
 公开 demo 的跟踪文件约 19 MB，连同 Git 历史约 100 MB，不复制私人 vault。ResearchOS 不治理你的磁盘空间：在 personal-vault 与私有运行态中，本地 Work Session 接收你选择的研究材料，不设产品级文件类型、大小、数量或保存期限配额，实际上限只是本机文件系统和运行环境；公开 demo 则接受单个文件最大 1 GiB 的上传。两者都不因空间阈值自动删除你的材料。系统只约束自己产生的冗余，具体见[低冗余运行契约](system-reference.zh.md#低冗余运行契约)；本机空间较低或会话副本较大时只给出非阻断提醒。
 

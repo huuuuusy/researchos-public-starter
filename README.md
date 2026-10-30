@@ -17,7 +17,7 @@
 3. **Let the AI work, but only as candidates.** `context` picks just the material this task needs, `run` writes a task packet you paste into any assistant, and `collect` brings the answer back as a candidate, which never changes your cards by itself.
 4. **You decide.** You keep or refuse each candidate, and `close` ends the session by listing what changed and what is still open.
 
-This public edition stops at candidates and never writes into your cards; the private prototype described in the [technical report](docs/technical-report.en.md) adds a step in which the researcher confirms at the terminal before anything is written. It is for individual researchers who track research judgments over months.
+This repository stops at candidates and never writes into your cards; the prototype described in the [technical report](docs/technical-report.en.md) adds a step in which the researcher confirms at the terminal before anything is written. It is for individual researchers who track research judgments over months.
 
 **Try it: one sentence to your AI assistant.** Open Claude Code, Codex or another assistant that can run commands on your computer, and send:
 
@@ -53,7 +53,7 @@ python3 scripts/ros_demo.py
 
 ![One scheduler session on the fictional demo, condensed from what python3 scripts/ros_demo.py prints.](docs/figures/readme/session-en.gif)
 
-A source card changes, and the judgment that depends on it is flagged for recheck. The researcher reconfirms it, and the public starter shows that as a planned change without admitting it. At close the recheck is still pending. The output uses a few words in a narrow sense, such as candidate, admission, requirement and held; [Words you will meet](docs/user-manual.en.md#words-you-will-meet) explains each in one line. Where the output says `ros …`, it means `python3 scripts/ros.py --root <folder> …`, with the folder that holds the research graph.
+A source card changes, and the judgment that depends on it is flagged for recheck. The researcher reconfirms it, and the output shows that as a planned change without admitting it. At close the recheck is still pending. The output uses a few words in a narrow sense, such as candidate, admission, requirement and held; [Words you will meet](docs/user-manual.en.md#words-you-will-meet) explains each in one line. Where the output says `ros …`, it means `python3 scripts/ros.py --root <folder> …`, with the folder that holds the research graph.
 
 You can also skip the scheduler and open the folder in Claude Code, Codex or another file-aware agent with one goal and one source; [Section 2 of the User Manual](docs/user-manual.en.md#2-one-loop-in-your-agent-client) gives the prompt.
 
@@ -75,15 +75,15 @@ You then replace the fictional commitments and cards with one of your own and ru
 - `07_archive/` keeps public-safe history, `09_templates/` the card templates and data contracts, `corpus/` stays empty because raw material is never committed, and `distilled/` holds short public-safe method summaries.
 - `scripts/`, `config/`, `dashboard/` and `evals/` are the command-line tools, runtime configuration, optional Dashboard and tests.
 
-## The public boundary
+## What this repository does not do
 
-This repository is the ResearchOS Public Starter, the copy-only public edition of a private prototype. Its data is fictional. It never admits anything: where the private prototype would write an accepted change, the starter shows the planned change for you to copy, which the documentation calls copy fallback. The shipped `config/ros.json` sets `runtime_scope: public_starter`. [Section 3 of the User Manual](docs/user-manual.en.md#3-the-session-scheduler-and-command-line-checks) sets out what `ros` writes, what `admit` does, which `runtime_scope` value turns admission and dispatch on, and how personal-vault mode differs. The optional Dashboard and the plugin system are frozen.
+This repository is copy-only, and its data is fictional. It never admits anything: where the prototype in the report would write an accepted change, it shows the planned change for you to copy, which the documentation calls copy fallback. The shipped `config/ros.json` sets `runtime_scope: public_starter`. [Section 3 of the User Manual](docs/user-manual.en.md#3-the-session-scheduler-and-command-line-checks) sets out what `ros` writes, what `admit` does, which `runtime_scope` value turns admission and dispatch on, and how personal-vault mode differs. The optional Dashboard and the plugin system are frozen.
 
 ## Where to read next
 
 The [documentation index](docs/README.md) lists the guides in the order a newcomer needs them, with one line on when to read each. [AGENTS.md](AGENTS.md) tells a file-aware assistant how to work here.
 
-The technical report ([English source](docs/technical-report.en.md) · [English PDF](docs/technical-report.en.pdf) · [Chinese PDF](docs/technical-report.zh.pdf)) describes the private prototype, under the stylized spelling *ReSearchOS*, in Sections 1–5 and Appendices A–B, with [Supplementary Notes 1–6](docs/technical-report-supplement.en.md) supplied separately outside the PDFs; it has not been peer reviewed, and its claims are not a checklist of public capabilities.
+The technical report ([English source](docs/technical-report.en.md) · [English PDF](docs/technical-report.en.pdf) · [Chinese PDF](docs/technical-report.zh.pdf)) describes the prototype, under the stylized spelling *ReSearchOS*, in Sections 1–6 and Appendices A–B, with [Supplementary Notes 1–6](docs/technical-report-supplement.en.md) supplied separately outside the PDFs; it has not been peer reviewed, and its claims are not a checklist of what this repository can do.
 
 ## Status
 
@@ -91,7 +91,7 @@ This is V1.0.1, released as `v1.0.1` on 2026-10-30 (see the [V1.0.1 release note
 
 ## How to cite
 
-The technical report and the public starter are archived together on Zenodo, in one record that Zenodo lists as software under the title "ResearchOS Public Starter". Please cite them with the DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799), which always resolves to the latest version; to cite exactly this release, use [10.5281/zenodo.23795586](https://doi.org/10.5281/zenodo.23795586).
+The technical report and this repository are archived together on Zenodo, in one record that Zenodo lists as software under the title "ResearchOS Public Starter". Please cite them with the DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799), which always resolves to the latest version; to cite exactly this release, use [10.5281/zenodo.23795586](https://doi.org/10.5281/zenodo.23795586).
 
 > Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.0.1). Zenodo. https://doi.org/10.5281/zenodo.23769799
 

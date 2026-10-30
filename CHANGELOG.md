@@ -4,6 +4,12 @@ All notable changes to ResearchOS Public Starter are documented in this file.
 
 The format follows the spirit of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+- Technical report abstract and the opening of Section 1 rewritten as one line of reasoning. The report and the entry documents now call the two versions the prototype and the downloadable version, or this repository.
+
 ## [1.0.1] - 2026-10-30
 
 Documentation release, tagged `v1.0.1`; the software behaviour of `v1.0.0` is unchanged. See the [V1.0.1 release notes](docs/releases/v1.0.1.md).

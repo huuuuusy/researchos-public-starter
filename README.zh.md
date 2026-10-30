@@ -17,7 +17,7 @@
 3. **让 AI 干活，但只收候选。** `context` 只挑这次需要的材料，`run` 生成一个任务包让你贴给任何助手，`collect` 把回答收回来作为候选，它不会自己改你的卡片。
 4. **由你拍板。** 哪些候选留下、哪些拒绝，你说了算；收工跑 `close`，列出这次变了什么、还有什么没做完。
 
-公开版做到候选为止，从不写入你的卡片；[技术报告](docs/technical-report.zh.md)描述的私有原型多一步：研究者在终端确认之后才写入。它适合需要长期跟踪研究判断的个人研究者。
+本仓库做到候选为止，从不写入你的卡片；[技术报告](docs/technical-report.zh.md)描述的原型多一步：研究者在终端确认之后才写入。它适合需要长期跟踪研究判断的个人研究者。
 
 **一句话上手：对你的 AI 助手说一句话。** 打开 Claude Code、Codex 或其他能在你电脑上运行命令的助手，发送：
 
@@ -53,7 +53,7 @@ python3 scripts/ros_demo.py --lang zh-CN
 
 ![虚构演示上的一次会话，内容取自 python3 scripts/ros_demo.py --lang zh-CN 的输出。](docs/figures/readme/session-zh.gif)
 
-来源卡片变化，依赖它的判断被标为待复核。研究者提出重新确认，公开 starter 只把它显示为拟议变化，不实际准入。收尾时复核仍待处理。输出里有几个词用的是特定意思，比如候选、准入、要求、挂起；[你会遇到的词](docs/user-manual.zh.md#你会遇到的词)每个用一句话说明。输出里写的 `ros …`，指 `python3 scripts/ros.py --root <文件夹> …`，文件夹就是存放研究图的那个目录。
+来源卡片变化，依赖它的判断被标为待复核。研究者提出重新确认，输出只把它显示为拟议变化，不实际准入。收尾时复核仍待处理。输出里有几个词用的是特定意思，比如候选、准入、要求、挂起；[你会遇到的词](docs/user-manual.zh.md#你会遇到的词)每个用一句话说明。输出里写的 `ros …`，指 `python3 scripts/ros.py --root <文件夹> …`，文件夹就是存放研究图的那个目录。
 
 也可以不用调度器，直接用 Claude Code、Codex 或其他文件感知 Agent 打开本文件夹，给出一个目标和一份来源；提示词见[用户手册第 2 节](docs/user-manual.zh.md#2-在-agent-客户端里走一个闭环)。
 
@@ -75,15 +75,15 @@ python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 - `07_archive/` 存公开安全的历史，`09_templates/` 存卡片模板和数据契约，`corpus/` 保持为空（原始材料从不提交），`distilled/` 存简短的公开安全方法摘要。
 - `scripts/`、`config/`、`dashboard/` 和 `evals/` 分别是命令行工具、运行配置、可选 Dashboard 和测试。
 
-## 公开版的边界
+## 本仓库不做什么
 
-本仓库是 ResearchOS 公开 starter，即私有原型的只复制公开版，随附数据都是虚构的。它从不准入任何东西：私有原型会写入已接受改动的地方，starter 只显示计划中的改动，由你自己复制，文档里把这叫作复制回退。出厂 `config/ros.json` 设为 `runtime_scope: public_starter`。`ros` 写什么、`admit` 做什么、`runtime_scope` 取什么值才开启准入与派发、personal-vault 模式有何不同，见[用户手册第 3 节](docs/user-manual.zh.md#3-会话调度器与命令行检查)。可选的 Dashboard 和插件体系处于冻结状态。
+本仓库只复制，随附数据都是虚构的。它从不准入任何东西：报告中的原型会写入已接受改动的地方，这里只显示计划中的改动，由你自己复制，文档里把这叫作复制回退。出厂 `config/ros.json` 设为 `runtime_scope: public_starter`。`ros` 写什么、`admit` 做什么、`runtime_scope` 取什么值才开启准入与派发、personal-vault 模式有何不同，见[用户手册第 3 节](docs/user-manual.zh.md#3-会话调度器与命令行检查)。可选的 Dashboard 和插件体系处于冻结状态。
 
 ## 接下来读什么
 
 [文档索引](docs/README.zh.md)按新手需要的顺序列出各份指南，每份用一句话说明什么时候读。[AGENTS.md](docs/reference/AGENTS.zh.md) 约束文件感知助手在这里怎样工作。
 
-技术报告（[中文源稿](docs/technical-report.zh.md) · [中文 PDF](docs/technical-report.zh.pdf) · [English PDF](docs/technical-report.en.pdf)）以风格化拼写 *ReSearchOS* 描述私有原型，包含正文第 1–5 节与附录 A–B；[补充说明 1–6](docs/technical-report-supplement.zh.md) 单独提供，不进入 PDF。报告未经同行评审，其中的主张不是公开版的能力清单。
+技术报告（[中文源稿](docs/technical-report.zh.md) · [中文 PDF](docs/technical-report.zh.pdf) · [English PDF](docs/technical-report.en.pdf)）以风格化拼写 *ReSearchOS* 描述原型，包含正文第 1–6 节与附录 A–B；[补充说明 1–6](docs/technical-report-supplement.zh.md) 单独提供，不进入 PDF。报告未经同行评审，其中的主张不是本仓库的能力清单。
 
 ## 状态
 
@@ -91,7 +91,7 @@ python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 
 ## 如何引用
 
-技术报告和公开 starter 一起存档在 Zenodo 的同一条记录里，Zenodo 把这条记录列为软件，标题是「ResearchOS Public Starter」。引用时请用 DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799)，它始终指向最新版本；如果要精确引用这一版，用 [10.5281/zenodo.23795586](https://doi.org/10.5281/zenodo.23795586)。
+技术报告和本仓库一起存档在 Zenodo 的同一条记录里，Zenodo 把这条记录列为软件，标题是「ResearchOS Public Starter」。引用时请用 DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799)，它始终指向最新版本；如果要精确引用这一版，用 [10.5281/zenodo.23795586](https://doi.org/10.5281/zenodo.23795586)。
 
 > Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.0.1). Zenodo. https://doi.org/10.5281/zenodo.23769799
 
