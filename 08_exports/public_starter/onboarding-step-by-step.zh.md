@@ -3,7 +3,7 @@ type: onboarding_guide
 title: "首次上手：从示例到自己的库"
 status: ready
 created: 2026-06-26
-updated: 2026-10-29
+updated: 2026-11-07
 tags:
   - public-starter
   - onboarding
@@ -19,11 +19,11 @@ exportable_to:
 
 ## Agent Summary：这份说明解决什么
 
-这是唯一的首次上手路线。`python3 scripts/plan_context.py first_run_onboarding` 指向它，README 和用户手册也指向它。它带新用户从虚构示例走到一个有一项承诺、一张卡片的个人库，共五步：跑一遍演示，在演示夹具上走一遍会话，在 Git 忽略的 `personal_vault/` 里建自己的库，需要时用 Dashboard 打开它，最后核对第一轮是否完成。每一步都写明做什么、应该看到什么、看到的不一样时怎么办。每一步都可以由用户在终端里完成，也可以由助手提出命令、等用户确认后执行。真实材料只进入 `personal_vault/`，本说明里的任何一步都不会在用户批准前写入长期记忆。
+这是唯一的首次上手路线。`python3 scripts/plan_context.py first_run_onboarding` 指向它，README 和用户手册也指向它。它带新用户从虚构示例走到一个有一项承诺、一张卡片和一条判断的个人库，共五步：跑一遍演示，在演示夹具上走一遍会话，在 Git 忽略的 `personal_vault/` 里建自己的库并加一条判断，需要时用 Dashboard 打开它，最后核对第一轮是否完成。每一步都写明做什么、应该看到什么、看到的不一样时怎么办。每一步都可以由用户在终端里完成，也可以由助手提出命令、等用户确认后执行。真实材料只进入 `personal_vault/`，本说明里的任何一步都不会在用户批准前写入长期记忆。
 
 ## 开始前
 
-需要 Python 3.10 或更高版本，并在仓库文件夹里打开终端；支持 macOS 与 Linux，Windows 请用 WSL。不需要安装别的东西。本仓库随附的内容全部是虚构的。
+自己动手只需要 Python 3.10 或更高版本，并在仓库文件夹里打开终端；支持 macOS 与 Linux，Windows 请用 WSL，此外不需要安装别的东西。让助手陪你走，还需要一个能在你电脑上运行命令的助手：README 的「开始前要准备什么」写明了用哪个、要不要付费，「你的材料会去哪里」写明了哪些东西不能交给它。本仓库随附的内容全部是虚构的。
 
 输出里有几个词用的是特定意思，比如承诺、候选、准入。用户手册第 1 节（`docs/user-manual.zh.md` 的「你会遇到的词」）每个用一句话说明。
 
@@ -129,7 +129,29 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
 
    `today` 出现「任务总表问题」时，每一行都写明是哪个字段、可以取哪些值，例如 `state「active」不是可用值（mainline, waiting, queued, conditional, closed, paused）`，照着改任务总表即可。虚构承诺还出现在「待判断」下，说明它们的块还留在文件里；如果只出现在「待你回答的问题」下并标着 `subject_absent`，说明你在替换之前运行过 `today`，那是虚构演示留下的记录：删掉 `personal_vault/06_active_context/work_state/`，再运行一次 `today`。卡片不在你写的路径上时，这里会显示 `source_path … 在这个文件夹里不存在`；`python3 scripts/ros.py --root personal_vault rules --check` 报告同样的问题，一切就位时报告 `问题 0 条`。用 `--init personal_vault --lang zh-CN` 建的库，`config/ros.json` 已设为中文输出。
 
-之后形成的判断以候选进入：请助手按 `ros close` 打印的格式写出，再用 `ros propose judgment` 登记。
+### 加一条判断，看来源变化时会发生什么
+
+库里没有判断时，来源变了 `today` 也没有东西可标。下面用一个虚构的心理学例子走一遍。假设你的项目依据一张元分析卡片 `01_knowledge/papers/reappraisal-meta.md`，你眼下的看法是认知重评训练对焦虑症状有中等程度的改善。把这个看法写进仓库之外的一个草稿文件（比如系统的临时文件夹）：
+
+```text
+> [!judgment] j-reappraisal-effect
+> 结论：认知重评训练对焦虑症状有中等程度的改善。
+> 依据：01_knowledge/papers/reappraisal-meta.md · commitment:<你的 id>
+```
+
+用 `python3 scripts/ros.py --root personal_vault propose judgment --file <草稿> --target commitment:<你的 id>` 登记，再运行它打印的那行 `ros admit <候选编号>`；这时它提示今天没有开着的会话，是正常的。在本仓库里 `admit` 不写入任何东西，只打印它会对 `research-portfolio.md` 做的改动，依据的版本已经填好。照原样应用这段改动（或者请助手代为应用），之后 `today` 会显示这条判断是新的、尚未确认；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault admit --confirm j-reappraisal-effect` 并回答 `y`。回复会说这次修改没有事前授权、不算准入：本仓库对所有手工贴进去的改动都这样记录，不是你做错了什么。
+
+现在假设这篇元分析纳入的一项研究被撤稿了。在论文卡片里记下这件事，比如加一节「## 更正」，再运行一次 `today`：
+
+```text
+    · [d2db02806a] 判断「认知重评训练对焦虑症状有中等程度的改善。」的依据变了
+        依据已变化：……（01_knowledge/papers/reappraisal-meta.md）
+        A 复核后仍成立：刷新依据版本并确认 → ros admit --reconfirm j-reappraisal-effect
+        B 判断需要修改：写新的判断块 → ros propose judgment --file <草稿> --target <卡片或 commitment:id>
+        C 维持现状，暂缓 → ros decide d2db02806a defer --until <日期>
+```
+
+剔除那项研究后效应是否还成立，系统判断不了，由你决定选哪一项。选 A，本仓库打印出刷新依据版本的改动，照原样应用后再在终端确认。选 B，用一个新的 id 起草替代的判断，照上面的方式登记、应用，再删掉旧的判断块和 `judgments` 里的旧 id；随后 `today` 会列出三项要你在终端确认的事：新判断（`admit --confirm`）、旧判断的复核（`answer <编号> cancel --reason …`）和改过的 `judgments` 字段（`decide <编号> confirm`）。编号和你的输出不同时，用终端里打印的那个。伦理方案修订、预注册更新或者数据替换，也都按同样的方式处理：更新对应卡片，`today` 会把依赖它的判断交回来。
 
 ## 第 4 步：用 Dashboard 打开这个库（可选）
 
@@ -152,10 +174,11 @@ ResearchOS personal vault dashboard
 
 ## 第 5 步：核对第一轮是否完成
 
-满足下面三条，第一轮就完成了：
+满足下面四条，第一轮就完成了：
 
 - `python3 scripts/ros.py --root personal_vault today` 列出一项你自己的承诺，没有虚构承诺；
 - 它的卡片在 `source_path` 上，写明了来源边界，`ros rules --check` 报告问题 0 条；
+- 任务总表里有你的一条判断，你已在自己的终端确认过它；没有判断，来源变了也不会有提醒；
 - `git status` 里没有因你的材料产生的改动。`personal_vault/` 被 Git 忽略，根本不会出现在那里。
 
 ### 哪些东西不进公开 clone

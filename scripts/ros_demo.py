@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import io
+import json
 import re
 import shutil
 import sys
@@ -144,7 +145,11 @@ def init(folder: str, say: dict, lang: str = "en") -> int:
     text = re.sub(r"\n> \[!judgment\][^\n]*\n(?:>[^\n]*\n)*", "", text)
     text = text.replace("Demo Commitments (fictional)", say["init.title"])
     config = target / "config" / "ros.json"
-    config.write_text(config.read_text(encoding="utf-8").replace('"language": "en"', f'"language": "{lang}"'), encoding="utf-8")
+    settings = json.loads(config.read_text(encoding="utf-8"))
+    settings["language"] = lang
+    # The first run adds a profile card and collaborator cards, which sit outside the demo's two roots.
+    settings["graph_roots"] = ["00_identity", "01_knowledge", "04_people", "06_active_context"]
+    config.write_text(json.dumps(settings, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     portfolio.write_text(text, encoding="utf-8")
     shown = target.as_posix().rstrip("/")
     print("\n".join(say["init.done"]).format(folder=shown))

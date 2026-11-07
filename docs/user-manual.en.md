@@ -45,6 +45,7 @@ The demo output and these guides use a few words in a narrow sense. For a first 
 | decision boundary | The moment the system looks at what has arrived and decides what to do next. The output calls it a "ros boundary". |
 | copy fallback, copy-only | This repository prepares text you copy into your own assistant instead of running or writing anything. |
 | `personal_vault/` | The git-ignored folder in your clone for your own material. |
+| public, internal, sensitive, private | A card's `sensitivity` label. `ros context` packs public and internal cards, packs a sensitive card only after you confirm it in your own terminal, and leaves out private cards and cards with no label; the line near its end, such as `[delivered 1; excluded 1]`, counts what it left out. The portfolio is internal by default, so a project's question and judgments are packed. The label does not stop an assistant from opening a file itself. |
 
 Three phrases in the demo output follow from these words, and none of them is an error. "No admission receipt yet" means that the fixture's judgment was written straight into the file: nobody admitted it, so no receipt of an admission exists, and `today` asks you to confirm it. "Confirmed … after the fact", together with "not an admission" or "not admitted", means that you said yes to a judgment that was already written; that closes the request to confirm it, but it does not admit anything. "Copy fallback" means that `ros` printed the change `admit` would make, as a diff, and wrote nothing.
 

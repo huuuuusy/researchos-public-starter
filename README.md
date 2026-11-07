@@ -17,15 +17,23 @@
 3. **Let the AI work, but only as candidates.** `context` picks just the material this task needs, `run` writes a task packet you paste into any assistant, and `collect` brings the answer back as a candidate, which never changes your cards by itself.
 4. **You decide.** You keep or refuse each candidate, and `close` ends the session by listing what changed and what is still open.
 
-This repository stops at candidates and never writes into your cards; the prototype described in the [technical report](docs/technical-report.en.md) adds a step in which the researcher confirms at the terminal before anything is written. It is for individual researchers who track research judgments over months.
+The commands in this repository stop at candidates and never change your cards themselves: a change worth keeping is pasted in by you or your assistant from what they print, and then you confirm it; the prototype described in the [technical report](docs/technical-report.en.md) adds a step in which the researcher confirms at the terminal and the system writes. It is for individual researchers who track research judgments over months.
 
-**Try it: one sentence to your AI assistant.** Open Claude Code, Codex or another assistant that can run commands on your computer, and send:
+**What you need first.** You do not need to code, but you need three things:
+
+1. An AI assistant that can run commands on your computer. If you have never used one, the easiest is the [Claude desktop app](https://claude.com/download): sign in and open its Code tab ([guide](https://code.claude.com/docs/en/desktop)). OpenAI's [Codex](https://openai.com/codex/) works too. Both need a paid plan, such as Claude Pro or ChatGPT Plus; see their sites for prices. Neither Claude nor ChatGPT is offered in mainland China, and signing up and paying must happen in a supported country or region, so check first if you are there.
+2. Python 3.10 or newer. Type `python3 --version` in a terminal to check. On a Mac, the first `python3` may ask you to install the "command line developer tools", which usually brings only 3.9; if the version is too old, install it from [python.org](https://www.python.org/downloads/), or ask the assistant to walk you through it. Windows needs WSL first, which is harder; a Mac is the easier start.
+3. A little patience with confirmation prompts. With default settings, each time the assistant wants to run a command or change a file, it asks first: read what it says it will do, then allow it. A few confirmations must be typed by you in a terminal, and the assistant gives you the command; the terminal is the Terminal app on a Mac, and the Claude desktop app's Code tab also has a terminal pane.
+
+**Where your material goes.** Cards are ordinary files on your computer, in `personal_vault/` inside the downloaded repository folder. Git ignores that folder, so it is never committed or pushed to GitHub; but if the repository sits in a synced folder such as iCloud Desktop & Documents, OneDrive or Dropbox, the sync software uploads it anyway. Nothing backs it up either: deleting the repository folder deletes it, so include it in your usual backups. ResearchOS's command-line tools do not use the network, but the files your assistant reads and what you say in the conversation are sent to the assistant's provider (Anthropic or OpenAI) for processing. Labels such as `private` on a card decide only what `ros context` packs; they do not stop the assistant from opening a file. So keep the following out of this folder and away from the assistant: raw participant or client data, case records that identify a person, interview recordings and transcripts, ethics applications and consent forms that contain personal information, manuscripts you are reviewing and others' unpublished manuscripts or data, and unpublished grant ideas you would not hand to the provider. When a card needs to mention such material, write only where it is and what it is (for example "ethics approval, on the university drive"), not its content. Where your institution or ethics board has rules on AI tools, those rules come first.
+
+**Try it: one sentence to your AI assistant.** Open the assistant and send:
 
 ```text
-Set up ResearchOS for me from https://github.com/huuuuusy/researchos-public-starter and walk me through the First Run section of its AGENTS.md.
+Set up ResearchOS for me from https://github.com/huuuuusy/researchos-public-starter and walk me through the First Run section of its AGENTS.md. I do not code, so tell me in plain words what each step does.
 ```
 
-The assistant downloads it, shows you in a few sentences what it does on a fictional example, then asks for your homepage or Google Scholar, a few of your papers, your collaborators and one current project, and sets up your own vault from them. It takes about fifteen minutes and you do not need to read anything first. It shows you the list of cards before writing them, everything stays in a git-ignored folder on your computer, and nothing is pushed anywhere. If git is not installed, the assistant can download the ZIP from the same page instead.
+The assistant downloads it, shows you in a few sentences what it does on a fictional example, then asks for your publication list (a homepage, Google Scholar, or a pasted list all work), a few of your papers, your collaborators and one current project, and sets up your own vault from them. It takes fifteen to thirty minutes and you do not need to read anything first. It shows you the list of cards before writing them, and writes them only into that git-ignored folder on your computer. If git is not installed, the assistant can download the ZIP from the same page instead.
 
 Already downloaded it? Open the folder in Codex or Claude Code and say one sentence: “Read AGENTS.md and walk me through its First Run.”
 
@@ -87,7 +95,7 @@ The technical report ([English source](docs/technical-report.en.md) · [English 
 
 ## Status
 
-This is V1.0.3, released as `v1.0.3` on 2026-10-30 (see the [V1.0.3 release notes](docs/releases/v1.0.3.md) and the [changelog](CHANGELOG.md)).
+This is the V1.0.4 release candidate; the latest release is `v1.0.3`, released on 2026-10-30 (see the [V1.0.4 release notes](docs/releases/v1.0.4.md) and the [changelog](CHANGELOG.md)).
 
 ## How to cite
 

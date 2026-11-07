@@ -2002,7 +2002,8 @@ def cmd_rules(ctx: Context, args) -> int:
     all_problems = problems + result.problems + [row["text"] for row in portfolio_problems(ctx.root, ctx.config,
                                                                                             result.snapshot.commitments)]
     if args.check:
-        lines += ["", t(ctx.lang, "rules.problems", n=len(all_problems))] + [f"  · {p}" for p in all_problems]
+        heading = t(ctx.lang, "rules.problems", n=len(all_problems))
+        lines += ["", heading if all_problems else heading.rstrip(":：")] + [f"  · {p}" for p in all_problems]
     data = {"rules": list(rules), "open_by_rule": counts, "problems": all_problems}
     emit(args, data, "\n".join(lines))
     return 1 if args.check and problems else 0

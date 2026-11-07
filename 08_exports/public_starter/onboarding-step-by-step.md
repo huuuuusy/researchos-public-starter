@@ -3,7 +3,7 @@ type: onboarding_guide
 title: "First Run: From the Demo to Your Own Vault"
 status: ready
 created: 2026-06-26
-updated: 2026-10-29
+updated: 2026-11-07
 tags:
   - public-starter
   - onboarding
@@ -19,11 +19,11 @@ exportable_to:
 
 ## Agent Summary: What this guide does
 
-This is the single first-run path. `python3 scripts/plan_context.py first_run_onboarding` points to it, and so do the README and the User Manual. It takes a new user from the fictional demo to a personal vault with one commitment and one card, in five steps: run the demo, walk through one session on the demo fixture, start your own vault in the git-ignored `personal_vault/`, optionally open it in the Dashboard, and check that the first run is done. Each step says what to do, what you should see and what to do if it looks different. The user can run every step in a terminal, or an assistant can propose each command and wait for confirmation. Real material goes only into `personal_vault/`, and nothing in this guide writes durable memory without the user's approval.
+This is the single first-run path. `python3 scripts/plan_context.py first_run_onboarding` points to it, and so do the README and the User Manual. It takes a new user from the fictional demo to a personal vault with one commitment, one card and one judgment, in five steps: run the demo, walk through one session on the demo fixture, start your own vault in the git-ignored `personal_vault/` and add a judgment, optionally open it in the Dashboard, and check that the first run is done. Each step says what to do, what you should see and what to do if it looks different. The user can run every step in a terminal, or an assistant can propose each command and wait for confirmation. Real material goes only into `personal_vault/`, and nothing in this guide writes durable memory without the user's approval.
 
 ## Before you begin
 
-You need Python 3.10 or newer and a terminal in the repository folder, on macOS or Linux; on Windows, use WSL. Nothing else has to be installed. Everything shipped in this repository is fictional.
+By hand, you need only Python 3.10 or newer and a terminal in the repository folder, on macOS or Linux; on Windows, use WSL. Nothing else has to be installed. To be walked through it by an assistant, you also need one that can run commands on your computer: the README's "What you need first" says which and whether it costs money, and "Where your material goes" says what must not be given to it. Everything shipped in this repository is fictional.
 
 The output uses a few words in a narrow sense, such as commitment, candidate and admission. Section 1 of the User Manual (`docs/user-manual.en.md`, "Words you will meet") explains each in one line.
 
@@ -129,7 +129,29 @@ Candidates returned or proposed since this session started that are neither admi
 
    If `today` shows a "Portfolio problems" block, each line names the field and the values it accepts, for example `state "active" is not a valid value (mainline, waiting, queued, conditional, closed, paused)`; fix it in the portfolio. If the fictional commitments still appear under "To decide", their blocks are still in the file. If they appear only under "Questions for you", marked `subject_absent`, you ran `today` before replacing them: these are records of the fictional run, so delete `personal_vault/06_active_context/work_state/` once and run `today` again. A card that is not at the path you wrote shows there as `source_path … does not exist in this folder`; `python3 scripts/ros.py --root personal_vault rules --check` reports the same problems and says `0 problems` when everything is in place.
 
-Judgments you form later enter as candidates: ask the assistant to write them in the format that `ros close` prints, and register them with `ros propose judgment`.
+### Add one judgment and see what a source change does
+
+With no judgment in the vault, `today` has nothing to flag when a source changes. Here is a fictional psychology example. Suppose your project rests on a meta-analysis card, `01_knowledge/papers/reappraisal-meta.md`, and your current view is that reappraisal training moderately reduces anxiety symptoms. Write the view to a draft file outside the repository, for example in the system's temporary folder:
+
+```text
+> [!judgment] j-reappraisal-effect
+> Conclusion: Reappraisal training moderately reduces anxiety symptoms.
+> Basis: 01_knowledge/papers/reappraisal-meta.md · commitment:<your id>
+```
+
+Register it with `python3 scripts/ros.py --root personal_vault propose judgment --file <draft> --target commitment:<your id>`, then run the `ros admit <candidate id>` line it prints; its note that no session is open today is expected here. In this repository `admit` writes nothing: it prints the change it would make to `research-portfolio.md`, with the basis versions filled in. Apply that change as printed (or ask the assistant to), and `today` then shows the judgment as new and not yet confirmed; confirm it in your own terminal with `python3 scripts/ros.py --root personal_vault admit --confirm j-reappraisal-effect` and answer `y`. The reply says the change had no prior authorization and is not an admission: this repository records every change pasted in by hand that way, and it does not mean you did anything wrong.
+
+Now suppose one study included in the meta-analysis is retracted. Note it on the paper card, for example under a `## Correction` heading, and run `today` again:
+
+```text
+    · [d2db02806a] The basis of judgment "Reappraisal training moderately reduces anxiety symptoms." changed
+        Basis changed: … (01_knowledge/papers/reappraisal-meta.md)
+        A Still holds after re-checking: pin the new versions and reconfirm → ros admit --reconfirm j-reappraisal-effect
+        B Judgment needs revising: write a new judgment block → ros propose judgment --file <draft> --target <card or commitment:id>
+        C Keep as is for now → ros decide d2db02806a defer --until <date>
+```
+
+Whether the effect survives without that study is not something the system can tell; you choose among the three. For A, this repository prints the change that pins the new versions; apply it as printed and confirm it in your terminal. For B, draft the replacement with a new id, register and apply it as above, then delete the old block and its id from `judgments`; `today` then lists three confirmations for your terminal: the new judgment (`admit --confirm`), the old one's recheck (`answer <id> cancel --reason …`) and the changed `judgments` field (`decide <id> confirm`). When your ids differ from these, use the ones your terminal prints. An ethics amendment, an updated preregistration or replaced data works the same way: update the card, and `today` brings back the judgments that rest on it.
 
 ## Step 4: Open the vault in the Dashboard (optional)
 
@@ -156,6 +178,7 @@ The first run is done when:
 
 - `python3 scripts/ros.py --root personal_vault today` lists one commitment of your own and none of the fictional ones;
 - its card exists at `source_path` with a source boundary, and `ros rules --check` reports `0 problems`;
+- the portfolio holds one judgment of yours, confirmed in your own terminal; without one, a source change brings nothing back;
 - `git status` shows no change caused by your material. `personal_vault/` is git-ignored, so it does not appear there at all.
 
 ### What stays out of a public clone

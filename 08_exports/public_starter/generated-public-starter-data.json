@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29",
+  "generated_at": "2026-11-07",
   "schema_id": "researchos-public-starter-data-v2",
   "source": "08_exports/public_starter",
   "boundary": "fictional_public_demo_only",
@@ -238,7 +238,7 @@
       "exportable_to": [
         "public_template"
       ],
-      "agent_summary": ": What this guide does\n\nThis is the single first-run path. `python3 scripts/plan_context.py first_run_onboarding` points to it, and so do the README and the User Manual. It takes a new user from the fictional demo to a personal vault with one commitment and one card, in five steps: run the demo, walk through one session on the demo fixture, start your own vault in the git-ignored `personal_vault/`, optionally open it in the Dashboard, and check that the first run is done. Each step says what to do, what you should see and what to do if it looks different. The user can run every step in a terminal, or an assistant can propose each command and wait for confirmation. Real material goes only into `personal_vault/`, and nothing in this guide writes durable memory without the user's approval.",
+      "agent_summary": ": What this guide does\n\nThis is the single first-run path. `python3 scripts/plan_context.py first_run_onboarding` points to it, and so do the README and the User Manual. It takes a new user from the fictional demo to a personal vault with one commitment, one card and one judgment, in five steps: run the demo, walk through one session on the demo fixture, start your own vault in the git-ignored `personal_vault/` and add a judgment, optionally open it in the Dashboard, and check that the first run is done. Each step says what to do, what you should see and what to do if it looks different. The user can run every step in a terminal, or an assistant can propose each command and wait for confirmation. Real material goes only into `personal_vault/`, and nothing in this guide writes durable memory without the user's approval.",
       "case_mode": "active_demo_case",
       "content_language": "en"
     },
@@ -260,7 +260,7 @@
       "exportable_to": [
         "public_template"
       ],
-      "agent_summary": "：这份说明解决什么\n\n这是唯一的首次上手路线。`python3 scripts/plan_context.py first_run_onboarding` 指向它，README 和用户手册也指向它。它带新用户从虚构示例走到一个有一项承诺、一张卡片的个人库，共五步：跑一遍演示，在演示夹具上走一遍会话，在 Git 忽略的 `personal_vault/` 里建自己的库，需要时用 Dashboard 打开它，最后核对第一轮是否完成。每一步都写明做什么、应该看到什么、看到的不一样时怎么办。每一步都可以由用户在终端里完成，也可以由助手提出命令、等用户确认后执行。真实材料只进入 `personal_vault/`，本说明里的任何一步都不会在用户批准前写入长期记忆。",
+      "agent_summary": "：这份说明解决什么\n\n这是唯一的首次上手路线。`python3 scripts/plan_context.py first_run_onboarding` 指向它，README 和用户手册也指向它。它带新用户从虚构示例走到一个有一项承诺、一张卡片和一条判断的个人库，共五步：跑一遍演示，在演示夹具上走一遍会话，在 Git 忽略的 `personal_vault/` 里建自己的库并加一条判断，需要时用 Dashboard 打开它，最后核对第一轮是否完成。每一步都写明做什么、应该看到什么、看到的不一样时怎么办。每一步都可以由用户在终端里完成，也可以由助手提出命令、等用户确认后执行。真实材料只进入 `personal_vault/`，本说明里的任何一步都不会在用户批准前写入长期记忆。",
       "case_mode": "active_demo_case",
       "content_language": "zh-CN"
     },

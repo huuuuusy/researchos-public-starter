@@ -4,6 +4,15 @@ All notable changes to ResearchOS Public Starter are documented in this file.
 
 The format follows the spirit of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+Release candidate for `v1.0.4`. See the [V1.0.4 release notes](docs/releases/v1.0.4.md).
+
+### Changed
+
+- First run rewritten after a retest with a fictional psychology researcher new to terminals and AI assistants: the README says what is needed first and where the user's material goes, the First Run adds one judgment so that a source change brings it back, and the first-run guide adds a worked example in which a study in a meta-analysis is retracted.
+- `ros_demo.py --init` adds `00_identity` and `04_people` to the vault's graph roots; `ros rules --check` drops the trailing colon when there are no problems.
+
 ## [1.0.3] - 2026-10-30
 
 Documentation release, tagged `v1.0.3`; the software behaviour of `v1.0.2` is unchanged. See the [V1.0.3 release notes](docs/releases/v1.0.3.md).
