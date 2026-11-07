@@ -4,9 +4,9 @@ All notable changes to ResearchOS Public Starter are documented in this file.
 
 The format follows the spirit of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [1.0.4] - 2026-11-07
 
-Release candidate for `v1.0.4`. See the [V1.0.4 release notes](docs/releases/v1.0.4.md).
+Tagged `v1.0.4`. See the [V1.0.4 release notes](docs/releases/v1.0.4.md).
 
 ### Changed
 
