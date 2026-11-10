@@ -119,8 +119,10 @@ def run_boundary(root: Path, config: dict, *, snapshot_builder, today: date | No
         # uninspected input, and counting it would make every boundary incomplete by definition.
         sources = source_versions(snapshot, versions)
         # Cold start: no cursor and nothing registered. A ledger with requirements but no cursor lost its spec.
+        # Each member's owner, so an ownership move inside an unchanged scope is attributed to scope (D5).
+        owners = {key: placements[key].scope for key in sorted(frozen.members) if key in placements}
         attribution = Attribution(cursor.get("spec"), cold=not cursor.get("digest") and not states,
-                                  snapshot=snapshot, config=config,
+                                  snapshot=snapshot, config=config, owners=owners,
                                   rules=rules, derived=derived, sources=sources, frozen=frozen, today=today)
         unreadable = sorted({problem.split(":", 1)[0] for problem in rule_problems if ":" in problem})
         in_scope, covered, global_rules = set(), set(), []
@@ -297,6 +299,14 @@ def run_boundary(root: Path, config: dict, *, snapshot_builder, today: date | No
                         # CC-10: the episode's question budget is spent. The unknown stays open work, not
                         # a question; it is reported, and the next episode may ask it.
                         capped.append(f"{rule_id}: {subject}: question not asked, the episode's ask budget is spent")
+                        if pending_ask and pending_ask != ask_id:
+                            # Its question was asked on an earlier basis version, so it is no longer live
+                            # (Definition 5.10) and cannot hold the work as waiting on the researcher.
+                            withdraw(pending_ask, issue_id, "the question's basis version is obsolete")
+                            ledger.transition(bound, "open", "question_obsolete", point_id=point_id,
+                                              summary=state.get("summary", ""), cause="ver",
+                                              miss_status="not_applicable")
+                            transitions.append(("reopened", registration))
                     elif asks.get(ask_id, {}).get("state") in {None, "withdrawn"}:
                         if ask_room is not None:
                             ask_room -= 1
@@ -335,7 +345,8 @@ def run_boundary(root: Path, config: dict, *, snapshot_builder, today: date | No
         spec = {"schema": SPEC_SCHEMA, "at": today.isoformat(), "purpose_version": rule_table.PURPOSE_VERSION,
                 "rules": {rule_id: str(rule.get("version", "")) for rule_id, rule in rules.items()},
                 "evaluated": sorted(executable), "scope_node": frozen.node, "members": sorted(frozen.members),
-                "covered": sorted(covered), "sources": sources, "unattributed": sorted(unattributed)}
+                "covered": sorted(covered), "sources": sources, "unattributed": sorted(unattributed),
+                "owners": owners}
         ledger.write_cursor({"digest": cursor_digest, "versions": versions, "cache": cache, "at": today.isoformat(),
                              "point_id": point_id, "spec": spec})
         final_trajectory = ledger.trajectory()
@@ -430,11 +441,13 @@ class Attribution:
         which under the premise is the witness that the previous spec did not derive it.
     Without a frozen spec neither witness exists: `initial`, with miss unknown."""
 
-    def __init__(self, previous, *, cold: bool, snapshot, config, rules, derived, sources, frozen, today: date):
+    def __init__(self, previous, *, cold: bool, snapshot, config, rules, derived, sources, frozen, today: date,
+                 owners: dict | None = None):
         self.prev = previous if isinstance(previous, dict) and previous.get("schema") == SPEC_SCHEMA else None
         self.cold = cold
         self.snapshot, self.config, self.rules, self.derived = snapshot, config, rules, derived
         self.sources, self.frozen, self.today = sources, frozen, today.isoformat()
+        self.owners = owners or {}
         self.members = set((self.prev or {}).get("members", []))
         self.covered = set((self.prev or {}).get("covered", []))
         self.dropped_before = set((self.prev or {}).get("unattributed", []))
@@ -454,8 +467,10 @@ class Attribution:
         return any(before.get(key) != self.sources.get(key) for key in keys)
 
     def _new_to_scope(self, key: str) -> bool:
+        owned_before = self.prev.get("owners") or {}  # absent in a spec frozen before owners were recorded
         return self.prev.get("scope_node") != self.frozen.node or \
-            (key not in self.members and key in self.prev.get("sources", {}))
+            (key not in self.members and key in self.prev.get("sources", {})) or \
+            (key in owned_before and owned_before[key] != self.owners.get(key))
 
     def _later(self, finding, state: dict, registered: dict) -> tuple:
         """A new generation or a reopening of a registered requirement: `miss` does not apply."""

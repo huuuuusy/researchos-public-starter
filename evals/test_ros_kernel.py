@@ -354,8 +354,16 @@ class RosKernelTest(unittest.TestCase):
         text = (self.tmp / "06_active_context/research-portfolio.md").read_text(encoding="utf-8")
         self.write("06_active_context/research-portfolio.md", text + "\n" + block)
 
+    def label_internal(self, *refs: str) -> None:
+        """Soul §4: only a labeled source is delivered; the shared fixtures stay unlabeled so the
+        byte-for-byte rule digests keep their inputs."""
+        for ref in refs or ("01_knowledge/projects/alpha.md",):
+            text = (self.tmp / ref).read_text(encoding="utf-8")
+            self.write(ref, text.replace("---\n", "---\nsensitivity: internal\n", 1))
+
     def context_fixture(self) -> None:
-        self.write("01_knowledge/papers/j.md", "---\ntitle: Notes\n---\n> [!judgment] j-s\n> 结论：x\n"
+        self.label_internal("01_knowledge/projects/alpha.md", "06_active_context/research-portfolio.md")
+        self.write("01_knowledge/papers/j.md", "---\ntitle: Notes\nsensitivity: internal\n---\n> [!judgment] j-s\n> 结论：x\n"
                    "> 依据：01_knowledge/papers/secret.md · alpha-project · 01_knowledge/papers/touchy.md\n> 承诺：alpha\n")
         self.write("01_knowledge/papers/touchy.md", "---\ntitle: Touchy\nsensitivity: sensitive\n---\n# Touchy\nbody\n")
 
@@ -668,6 +676,36 @@ class RosKernelTest(unittest.TestCase):
         self.write("config/extensions/rules/basis-recheck.json", json.dumps(data))
         self.boundary(today=date(2026, 9, 25))
         self.assertEqual([a["state"] for a in self.asks_for(issue)], ["asked", "answered", "asked"], "检查改版才重问")
+
+    def test_a_question_on_an_obsolete_basis_version_does_not_hold_work_when_the_ask_budget_is_spent(self) -> None:
+        issue = self.undecidable()
+        self.boundary()
+        self.assertEqual(self.boundary().states["issues"][issue]["status"], "waiting")
+        descriptor = self.tmp / "config/extensions/rules/basis-recheck.json"
+        data = json.loads(descriptor.read_text(encoding="utf-8"))
+        data["version"] = "1.1.0"
+        self.write("config/extensions/rules/basis-recheck.json", json.dumps(data))
+        spent = run_boundary(self.tmp, self.config(), snapshot_builder=build_snapshot, today=TODAY, ask_room=0)
+        self.assertEqual(spent.states["issues"][issue]["status"], "open",
+                         "the old question is no longer live (Definition 5.10), so the work is open, not held")
+        self.assertEqual([a["state"] for a in self.asks_for(issue)], ["asked", "withdrawn"])
+
+    def test_an_ownership_move_inside_an_unchanged_scope_is_attributed_to_scope(self) -> None:
+        # D5 orders scope before src: a record that changed owner while the scope's roots and members
+        # stayed the same is a scope change, even though its file changed too.
+        from researchos_kernel.boundary import Attribution
+        from researchos_kernel.scope import FrozenScope
+        self.boundary()
+        spec = self.ledger().read_cursor()["spec"]
+        card = "01_knowledge/projects/alpha.md"
+        self.assertEqual(spec["owners"][card], "01_knowledge/projects", "the frozen spec records each member's owner")
+        frozen = FrozenScope(node=spec["scope_node"], members=frozenset(spec["members"]), cross=(), frozen_at="")
+        common = dict(cold=False, snapshot=None, config={}, rules={}, derived={}, frozen=frozen, today=TODAY,
+                      sources=dict(spec["sources"], **{card: "changed"}))
+        moved = dict(spec["owners"], **{card: "01_knowledge/projects/alpha-family"})
+        self.assertEqual(Attribution(spec, owners=moved, **common).coverage("r", {}, [card], {}), ("scope", "not_applicable"))
+        self.assertEqual(Attribution(spec, owners=spec["owners"], **common).coverage("r", {}, [card], {}),
+                         ("src", "not_applicable"), "the same owner with a changed file is still a source change")
 
     def test_each_answer_has_its_own_destination(self) -> None:
         issue = self.undecidable()
@@ -2762,7 +2800,8 @@ class RosKernelTest(unittest.TestCase):
         self.assertFalse((self.tmp / self.ATTENTION).exists(), "公开 starter 只走复制回退，不写注意力安排")
 
     def test_context_excludes_private_nodes_and_records_delivery(self) -> None:
-        self.write("01_knowledge/papers/j.md", "---\ntitle: Notes\n---\n> [!judgment] j-s\n> 结论：x\n"
+        self.label_internal("01_knowledge/projects/alpha.md", "06_active_context/research-portfolio.md")
+        self.write("01_knowledge/papers/j.md", "---\ntitle: Notes\nsensitivity: internal\n---\n> [!judgment] j-s\n> 结论：x\n"
                    "> 依据：01_knowledge/papers/secret.md · alpha-project\n> 承诺：alpha\n")
         pack = self.ros("context", "commitment:alpha")
         self.assertIn("01_knowledge/projects/alpha.md", pack["delivered"])
@@ -2804,6 +2843,7 @@ class RosKernelTest(unittest.TestCase):
         self.assertIn("short name", self.refusal("context", "commitment:alpha", "--service", "x" * 200))
 
     def test_a_private_portfolio_keeps_its_commitments_and_judgments_home(self) -> None:
+        self.label_internal()
         text = (self.tmp / "06_active_context/research-portfolio.md").read_text(encoding="utf-8")
         text = text.replace("title: Portfolio", "title: Portfolio\nsensitivity: private", 1)
         text = text.replace("- source_path: 01_knowledge/projects/alpha.md",
@@ -2847,6 +2887,15 @@ class RosKernelTest(unittest.TestCase):
             self.assertNotIn("commitment:alpha", out["delivered"], f"{label} 不因声明而放行")
             self.assertTrue(next(r["reason"] for r in out["excluded"] if r["ref"] == "commitment:alpha").startswith(why))
 
+    def test_a_source_without_a_sensitivity_label_is_not_delivered(self) -> None:
+        # Soul §4 excludes unrecognized levels; a missing label is one, not a default of internal.
+        self.context_fixture()
+        self.write("01_knowledge/projects/alpha.md", "---\ntitle: Alpha\nid: alpha-project\n---\n# Alpha\nUNLABELED_BODY\n")
+        out = self.context("commitment:alpha")
+        self.assertIn({"ref": "01_knowledge/projects/alpha.md", "reason": "sensitivity:unlabeled"}, out["excluded"])
+        self.assertNotIn("UNLABELED_BODY", out["pack"])
+        self.assertIn("commitment:alpha", out["delivered"], "a labeled portfolio is still delivered")
+
     def test_cr2_ros_context_emits_context_receipt_with_egress_service(self) -> None:
         self.context_fixture()
         out = self.context("commitment:alpha", "--service", "claude")
@@ -2874,6 +2923,7 @@ class RosKernelTest(unittest.TestCase):
             self.assertEqual(self.axes(small["context_receipt"], ref)["delivery"], "delivered")
 
     def test_the_receipt_capacity_drops_judgments_before_the_cards_they_rest_on(self) -> None:
+        self.label_internal()
         blocks = "".join(f"> [!judgment] j-{i}\n> 结论：c{i}\n> 依据：alpha-project\n> 承诺：alpha\n\n" for i in range(25))
         self.write("01_knowledge/papers/many.md", "---\ntitle: Many\n---\n" + blocks)
         out = self.context("commitment:alpha", "--service", "claude")
@@ -2912,6 +2962,7 @@ class RosKernelTest(unittest.TestCase):
         self.assertIn("## Judgments", text)
 
     def test_english_output_uses_ascii_punctuation(self) -> None:
+        self.label_internal()
         """English headings, markers and proposal rows use ASCII punctuation; Chinese keeps full-width."""
         full_width = re.compile("[（）［］：]")
         shown = self.run_ros("today", json_out=False, lang="en")[1]

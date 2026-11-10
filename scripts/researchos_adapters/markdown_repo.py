@@ -23,7 +23,9 @@ from researchos_kernel.judgments import Judgment, parse_judgments, strip_judgmen
 from researchos_kernel.messages import t
 from researchos_kernel.triage import LIFECYCLE
 
-CACHE_SCHEMA = "researchos-ros-snapshot-cache-v3"  # v2 containment and episode fields; v3 closure receipt
+# Soul §4: a source without a sensitivity label is an unrecognized level, so it is not delivered as internal.
+UNLABELED = "unlabeled"
+CACHE_SCHEMA = "researchos-ros-snapshot-cache-v4"  # v2 containment and episode fields; v3 closure receipt; v4 unlabeled sensitivity
 ITEM_FIELD = re.compile(r"^- ([a-z0-9_]+):[ \t]*(.*)$", re.MULTILINE)
 RESPONSIBILITIES = ("lead", "support")
 
@@ -361,7 +363,7 @@ def build_snapshot(root: Path, config: dict, cache: dict | None = None) -> tuple
                 "stat": key, "file_sha": hashlib.sha256(raw).hexdigest(),
                 "version": sha256_text(_strip_relations(strip_judgments(text))),
                 "id": str(scalars.get("id") or Path(relative).stem), "title": _title(scalars, body, relative),
-                "sensitivity": str(scalars.get("sensitivity") or "internal").lower(),
+                "sensitivity": str(scalars.get("sensitivity") or UNLABELED).lower(),
                 "declared_scope": str(scalars.get("scope") or "").strip(),
                 "episode_state": str(scalars.get("episode_state") or "").strip().lower(),
                 "closure_receipt": str(scalars.get("episode_closure_receipt") or "").strip(),

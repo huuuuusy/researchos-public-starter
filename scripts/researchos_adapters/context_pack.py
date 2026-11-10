@@ -16,7 +16,7 @@ from pathlib import Path
 
 from researchos_kernel.context_receipt import AXIS_STATES, CONTEXT_RECEIPT_SCHEMA_ID, normalize_context_receipt
 
-from .markdown_repo import split_frontmatter
+from .markdown_repo import UNLABELED, split_frontmatter
 
 DELIVERABLE = {"public", "internal"}
 
@@ -49,7 +49,7 @@ def portfolio_sensitivity(root: Path, snapshot) -> tuple:
         return "unknown", []
     scalars, _, _ = split_frontmatter(path.read_text(encoding="utf-8"))
     declared = str(scalars.get("context_fields") or "").split(" #", 1)[0]
-    return (str(scalars.get("sensitivity") or "internal").strip().lower(),
+    return (str(scalars.get("sensitivity") or UNLABELED).strip().lower(),
             [field.strip() for field in declared.split(",") if field.strip()])
 
 
