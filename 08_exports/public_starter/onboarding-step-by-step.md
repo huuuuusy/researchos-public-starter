@@ -27,7 +27,7 @@ By hand, you need only Python 3.10 or newer and a terminal in the repository fol
 
 The output uses a few words in a narrow sense, such as commitment, candidate and admission. Section 1 of the User Manual (`docs/user-manual.en.md`, "Words you will meet") explains each in one line.
 
-The easiest way through this guide is to let an assistant such as Claude Code or Codex do it with you: paste the setup prompt at the top of the README, and it downloads the repository, asks about one of your projects and builds your vault from the answers, following the "First Run" section of `AGENTS.md`. This guide is the reference for that walk-through and for doing it by hand. An assistant following it should name the step it is on, propose one command or edit at a time, and write no file until the user confirms.
+The easiest way through this guide is to let an assistant such as Claude Code or Codex do it with you: paste the one-sentence prompt from the README, and it downloads the repository, asks for your publication list, a few papers or other sources, your collaborators and one project, and builds your vault from them, following the "First Run" section of `AGENTS.md`. This guide is the reference for that walk-through and for doing it by hand. An assistant following it should name the step it is on, propose one command or edit at a time, and write no file until the user confirms.
 
 ## Step 1: Run the demo
 
@@ -45,7 +45,7 @@ python3 scripts/ros_demo.py
 
 In step 5 the reconfirmation is printed as a diff and not written, and in step 6 the recheck is still pending at close. Phrases such as "no admission receipt yet", "not an admission" and "copy fallback" are not errors: they say that nothing was admitted, which is how this repository works.
 
-**If it looks different.** If `python3` is not found or the script stops with a syntax error, check that `python3 --version` reports 3.10 or newer. On Windows outside WSL it cannot run, because the file locks it needs are missing. For Chinese output, add `--lang zh-CN`. The counter lines, such as "scope / | … keys", are bookkeeping; the demo itself says you can skip them on a first read.
+**If it looks different.** If `python3` is not found or the script stops with a syntax error, check that `python3 --version` reports 3.10 or newer. On Windows outside WSL it cannot run, because the file locks it needs are missing. For Chinese output, add `--lang zh-CN`.
 
 ## Step 2: Walk through one session on the fixture
 
@@ -122,10 +122,10 @@ Candidates returned or proposed since this session started that are neither admi
    ```text
    To decide (1: unscheduled, needing a next step, or due for review)
      ■ Thesis chapter 2  [unscheduled]
-       (no requirements to review; carry on with the next step)
+       (nothing to review; carry on with the next step)
    ```
 
-   `[unscheduled]` is normal, because this repository ships no attention schedule. End the session with `python3 scripts/ros.py --root personal_vault close`; for a fresh vault it reports `Outcome: complete (0 to do; …)`. If you changed `state`, `priority`, `question` or `responsibility` after `today` had already read them, for example to fix a portfolio problem, `close` lists that write as a judgment-class field to confirm, and so does every `today` after it; confirm it in your own terminal with `python3 scripts/ros.py --root personal_vault decide <id> confirm` and answer `y` (a call relayed by an assistant is only recorded as asserted).
+   `[unscheduled]` is normal, because this repository ships no attention schedule. End the session with `python3 scripts/ros.py --root personal_vault close`; for a fresh vault it reports `Outcome: complete (0 to do and 0 waiting or deferred at close; …)`. If you changed `state`, `priority`, `question` or `responsibility` after `today` had already read them, for example to fix a portfolio problem, `close` lists that write as a judgment-class field to confirm, and so does every `today` after it; confirm it in your own terminal with `python3 scripts/ros.py --root personal_vault decide <id> confirm` and answer `y` (a call relayed by an assistant is only recorded as asserted).
 
    If `today` shows a "Portfolio problems" block, each line names the field and the values it accepts, for example `state "active" is not a valid value (mainline, waiting, queued, conditional, closed, paused)`; fix it in the portfolio. If the fictional commitments still appear under "To decide", their blocks are still in the file. If they appear only under "Questions for you", marked `subject_absent`, you ran `today` before replacing them: these are records of the fictional run, so delete `personal_vault/06_active_context/work_state/` once and run `today` again. A card that is not at the path you wrote shows there as `source_path … does not exist in this folder`; `python3 scripts/ros.py --root personal_vault rules --check` reports the same problems and says `0 problems` when everything is in place.
 
@@ -136,10 +136,10 @@ With no judgment in the vault, `today` has nothing to flag when a source changes
 ```text
 > [!judgment] j-reappraisal-effect
 > Conclusion: Reappraisal training moderately reduces anxiety symptoms.
-> Basis: 01_knowledge/papers/reappraisal-meta.md · commitment:<your id>
+> Basis: 01_knowledge/papers/reappraisal-meta.md
 ```
 
-Register it with `python3 scripts/ros.py --root personal_vault propose judgment --file <draft> --target commitment:<your id>`, then run the `ros admit <candidate id>` line it prints; its note that no session is open today is expected here. In this repository `admit` writes nothing: it prints the change it would make to `research-portfolio.md`, with the basis versions filled in. Apply that change as printed (or ask the assistant to), and `today` then shows the judgment as new and not yet confirmed; confirm it in your own terminal with `python3 scripts/ros.py --root personal_vault admit --confirm j-reappraisal-effect` and answer `y`. The reply says the change had no prior authorization and is not an admission: this repository records every change pasted in by hand that way, and it does not mean you did anything wrong.
+Register it with `python3 scripts/ros.py --root personal_vault propose judgment --file <draft> --target commitment:<your id>`, then run the `ros admit <candidate id>` line it prints; its note that no session is open today is expected here. In this repository `admit` writes nothing: it prints the change it would make to `research-portfolio.md`, with the basis versions filled in. Apply that change as printed (or ask the assistant to), and `today` then shows the judgment as new and not yet confirmed; confirm it in your own terminal with `python3 scripts/ros.py --root personal_vault admit --confirm j-reappraisal-effect` and answer `y`. The reply says the judgment was written into the file directly and is recorded as a confirmation after the fact, not an admission: this repository records every change pasted in by hand that way, and it does not mean you did anything wrong. Base a judgment on cards, as here, not on its commitment: the commitment changes whenever you update its dates or next step, and the judgment would come back each time.
 
 Now suppose one study included in the meta-analysis is retracted. Note it on the paper card, for example under a `## Correction` heading, and run `today` again:
 
@@ -151,7 +151,7 @@ Now suppose one study included in the meta-analysis is retracted. Note it on the
         C Keep as is for now → ros decide d2db02806a defer --until <date>
 ```
 
-Whether the effect survives without that study is not something the system can tell; you choose among the three. For A, this repository prints the change that pins the new versions; apply it as printed and confirm it in your terminal. For B, draft the replacement with a new id, register and apply it as above, then delete the old block and its id from `judgments`; `today` then lists two confirmations for your terminal: the new judgment (`admit --confirm`) and the old one's recheck (`answer <id> cancel --reason …`); the changed `judgments` field (`decide <id> confirm`) is listed by `close` and by the next `today`. When your ids differ from these, use the ones your terminal prints. An ethics amendment, an updated preregistration or replaced data works the same way: update the card, and `today` brings back the judgments that rest on it.
+Whether the effect survives without that study is not something the system can tell; you choose among the three. For A, this repository prints the change that pins the new versions; apply it as printed and confirm it in your terminal. For B, draft the replacement with a new id and follow "When a source changes" in [Section 3 of the User Manual](../../docs/user-manual.en.md#when-a-source-changes), which lists the confirmations it leads to. When your ids differ from these, use the ones your terminal prints. An ethics amendment, an updated preregistration or replaced data works the same way: update the card, and `today` brings back the judgments that rest on it.
 
 ## Step 4: Open the vault in the Dashboard (optional)
 

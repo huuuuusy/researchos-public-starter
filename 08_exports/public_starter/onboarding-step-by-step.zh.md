@@ -27,7 +27,7 @@ exportable_to:
 
 输出里有几个词用的是特定意思，比如承诺、候选、准入。用户手册第 1 节（`docs/user-manual.zh.md` 的「你会遇到的词」）每个用一句话说明。
 
-最省事的是让 Claude Code、Codex 这类助手陪你走完本说明：把 README 开头的安装提示粘贴给它，它会下载仓库、问你一个项目的情况，再按回答建好你的库，依据是 `AGENTS.md` 的「First Run」一节。本说明是这一过程以及自己动手时的参考。按本说明工作的助手应说明当前在第几步，每次只提出一条命令或一处修改，用户确认前不写任何文件。
+最省事的是让 Claude Code、Codex 这类助手陪你走完本说明：把 README 里那一句话发给它，它会下载仓库，问你要发表清单、几篇论文或其他来源、合作者和一个项目，再据此建好你的库，依据是 `AGENTS.md` 的「First Run」一节。本说明是这一过程以及自己动手时的参考。按本说明工作的助手应说明当前在第几步，每次只提出一条命令或一处修改，用户确认前不写任何文件。
 
 ## 第 1 步：跑一遍演示
 
@@ -43,9 +43,9 @@ python3 scripts/ros_demo.py --lang zh-CN
     · [b5d4e33c7c] 判断「Compare A and B under occlusion first; do not enlarge the dataset yet.」的依据变了
 ```
 
-第 5 步把重新确认打印成 diff，不写入；第 6 步收尾时复核仍待处理。「还没有准入回执」「不算准入」「复制回退」这类说法都不是报错，它们说的是什么都没有准入，本仓库 本来就是这样工作的。
+第 5 步把重新确认打印成 diff，不写入；第 6 步收尾时复核仍待处理。「还没有准入回执」「不算准入」「复制回退」这类说法都不是报错，它们说的是什么都没有准入，本仓库本来就是这样工作的。
 
-**看到的不一样时。** 找不到 `python3`，或者脚本报语法错误，先看 `python3 --version` 是否为 3.10 或更高。在 WSL 之外的 Windows 上跑不起来，因为缺它需要的文件锁。不带 `--lang` 时输出英文。「范围 /｜… 个键」这类计数行是记账用的，演示自己也说了第一次读可以跳过。
+**看到的不一样时。** 找不到 `python3`，或者脚本报语法错误，先看 `python3 --version` 是否为 3.10 或更高。在 WSL 之外的 Windows 上跑不起来，因为缺它需要的文件锁。不带 `--lang` 时输出英文。
 
 ## 第 2 步：在夹具上走一遍会话
 
@@ -122,10 +122,10 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
    ```text
    待判断（1 项：未安排、需定下一步或复核到期）
      ■ 论文第二章  ［未安排］
-       （没有待复核的要求；按下一步推进）
+       （没有要复核的事项；按下一步推进）
    ```
 
-   显示「未安排」是正常的，因为本仓库 不带注意力安排。用 `python3 scripts/ros.py --root personal_vault close` 结束会话；新建的库会报告 `结果分类：complete（待办 0；…）`。如果在 `today` 读过之后又改了 `state`、`priority`、`question` 或 `responsibility`（比如为了改正任务总表问题），`close` 会把这次写入列为待确认的判断类字段，之后每次 `today` 也会列出；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault decide <编号> confirm` 并回答 `y` 即可（由助手转述的调用只记为代理转述）。
+   显示「未安排」是正常的，因为本仓库不带注意力安排。用 `python3 scripts/ros.py --root personal_vault close` 结束会话；新建的库会报告 `结果：complete（收尾时待办 0，…）`。如果在 `today` 读过之后又改了 `state`、`priority`、`question` 或 `responsibility`（比如为了改正任务总表问题），`close` 会把这次写入列为待确认的判断类字段，之后每次 `today` 也会列出；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault decide <编号> confirm` 并回答 `y` 即可（由助手转述的调用只记为代理转述）。
 
    `today` 出现「任务总表问题」时，每一行都写明是哪个字段、可以取哪些值，例如 `state「active」不是可用值（mainline, waiting, queued, conditional, closed, paused）`，照着改任务总表即可。虚构承诺还出现在「待判断」下，说明它们的块还留在文件里；如果只出现在「待你回答的问题」下并标着 `subject_absent`，说明你在替换之前运行过 `today`，那是虚构演示留下的记录：删掉 `personal_vault/06_active_context/work_state/`，再运行一次 `today`。卡片不在你写的路径上时，这里会显示 `source_path … 在这个文件夹里不存在`；`python3 scripts/ros.py --root personal_vault rules --check` 报告同样的问题，一切就位时报告 `问题 0 条`。用 `--init personal_vault --lang zh-CN` 建的库，`config/ros.json` 已设为中文输出。
 
@@ -136,10 +136,10 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
 ```text
 > [!judgment] j-reappraisal-effect
 > 结论：认知重评训练对焦虑症状有中等程度的改善。
-> 依据：01_knowledge/papers/reappraisal-meta.md · commitment:<你的 id>
+> 依据：01_knowledge/papers/reappraisal-meta.md
 ```
 
-用 `python3 scripts/ros.py --root personal_vault propose judgment --file <草稿> --target commitment:<你的 id>` 登记，再运行它打印的那行 `ros admit <候选编号>`；这时它提示今天没有开着的会话，是正常的。在本仓库里 `admit` 不写入任何东西，只打印它会对 `research-portfolio.md` 做的改动，依据的版本已经填好。照原样应用这段改动（或者请助手代为应用），之后 `today` 会显示这条判断是新的、尚未确认；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault admit --confirm j-reappraisal-effect` 并回答 `y`。回复会说这次修改没有事前授权、不算准入：本仓库对所有手工贴进去的改动都这样记录，不是你做错了什么。
+用 `python3 scripts/ros.py --root personal_vault propose judgment --file <草稿> --target commitment:<你的 id>` 登记，再运行它打印的那行 `ros admit <候选编号>`；这时它提示今天没有开着的会话，是正常的。在本仓库里 `admit` 不写入任何东西，只打印它会对 `research-portfolio.md` 做的改动，依据的版本已经填好。照原样应用这段改动（或者请助手代为应用），之后 `today` 会显示这条判断是新的、尚未确认；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault admit --confirm j-reappraisal-effect` 并回答 `y`。回复会说这条判断是直接写进文件的，记为事后确认，不算准入：本仓库对所有手工贴进去的改动都这样记录，不是你做错了什么。依据像这里一样写卡片，不要写它所在的承诺：承诺的日期或下一步一更新，依据写了承诺的判断就会回来。
 
 现在假设这篇元分析纳入的一项研究被撤稿了。在论文卡片里记下这件事，比如加一节「## 更正」，再运行一次 `today`：
 
@@ -151,7 +151,7 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
         C 维持现状，暂缓 → ros decide d2db02806a defer --until <日期>
 ```
 
-剔除那项研究后效应是否还成立，系统判断不了，由你决定选哪一项。选 A，本仓库打印出刷新依据版本的改动，照原样应用后再在终端确认。选 B，用一个新的 id 起草替代的判断，照上面的方式登记、应用，再删掉旧的判断块和 `judgments` 里的旧 id；随后 `today` 会列出两项要你在终端确认的事：新判断（`admit --confirm`）和旧判断的复核（`answer <编号> cancel --reason …`）；改过的 `judgments` 字段（`decide <编号> confirm`）由 `close` 和下一次 `today` 列出。编号和你的输出不同时，用终端里打印的那个。伦理方案修订、预注册更新或者数据替换，也都按同样的方式处理：更新对应卡片，`today` 会把依赖它的判断交回来。
+剔除那项研究后效应是否还成立，系统判断不了，由你决定选哪一项。选 A，本仓库打印出刷新依据版本的改动，照原样应用后再在终端确认。选 B，用一个新的 id 起草替代的判断，照[用户手册第 3 节](../../docs/user-manual.zh.md#来源变了怎么办)「来源变了怎么办」去做，那里列出了随后要做的确认。编号和你的输出不同时，用终端里打印的那个。伦理方案修订、预注册更新或者数据替换，也都按同样的方式处理：更新对应卡片，`today` 会把依赖它的判断交回来。
 
 ## 第 4 步：用 Dashboard 打开这个库（可选）
 
@@ -187,7 +187,7 @@ ResearchOS personal vault dashboard
 - 只读取用户提供的文件和公开链接；不绕过登录、付费墙、robots 限制或其他访问控制。
 - 私人、在投、未公开或边界不明的材料保持 `local_only`。
 - 电话、住址、证件号、签名和与研究无关的 CV 信息不写入卡片。
-- 合著只支持“合著者候选”，不推断指导、私交或未来合作。
+- 合著关系只说明对方是「合著者候选」，不推断指导、私交或未来合作。
 - 每个生成的解释在用户确认前都是候选。
 - 第一次只建一份档案、几篇论文、反复出现的合作者和一个项目；批量导入、插件和深读等一个闭环跑通后再做。
 

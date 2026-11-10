@@ -45,8 +45,6 @@ class Terminal(io.StringIO):
 # Narration in both languages; the ros output itself follows --lang.
 NARRATION = {
     "en": {
-        "skip": "On a first read you can skip the counter lines (\"scope / | … keys\", \"Unknowns, kept apart\", "
-                "\"Budget: boundaries\"); they are bookkeeping.",
         "1": "1. ros today — first session: the existing judgment has no admission receipt yet",
         "2": "2. ros admit --confirm — the researcher confirms it after the fact at the researcher's own terminal "
              "(the demo types y; it was written without prior authorization, so this is not an admission)",
@@ -77,7 +75,6 @@ NARRATION = {
         ],
     },
     "zh-CN": {
-        "skip": "第一次读可以跳过几行计数（「范围 /｜… 个键」「未知分三类」「预算：boundaries」），它们是记账用的。",
         "1": "1. ros today — 第一个会话：已有的判断还没有准入回执",
         "2": "2. ros admit --confirm — 研究者在自己的终端上事后确认（演示代为输入 y；它写入时没有事先授权，所以这不是准入）",
         "3": "3. 来源变化（基准协议改版）；ros today 标出依赖它的判断",
@@ -168,7 +165,7 @@ def main(argv=None) -> int:
     with tempfile.TemporaryDirectory(prefix="ros-demo-") as tmp:
         root = Path(tmp) / "scheduler-demo"
         shutil.copytree(DEMO, root, ignore=shutil.ignore_patterns("work_state"))
-        step(say["1"], say["skip"] + "\n\n" + run(root, "today", lang=lang))
+        step(say["1"], run(root, "today", lang=lang))
         step(say["2"], run(root, "admit", "--confirm", "j-occlusion-scope", lang=lang, answer="y"))
         benchmark = root / "01_knowledge" / "papers" / "example-benchmark.md"
         benchmark.write_text(benchmark.read_text(encoding="utf-8").replace(

@@ -55,7 +55,7 @@ from researchos_kernel.judgments import parse_judgments  # noqa: E402
 from researchos_kernel.atomic_files import atomic_write_text  # noqa: E402
 from researchos_kernel.ledger import (OPEN_STATUSES, SCOPE_INTENT, binding, digest, landed_or_undone,  # noqa: E402
                                      now_iso, requirement_binding)
-from researchos_kernel.messages import language, t  # noqa: E402
+from researchos_kernel.messages import MESSAGES, language, t  # noqa: E402
 from researchos_kernel.admission_state import initial_admission_state, transition_admission_state  # noqa: E402
 from researchos_kernel.candidate_envelope import normalize_candidate_envelope  # noqa: E402
 from researchos_adapters.filesystem_staging import (FilesystemStagingError, begin_canonical_staging,  # noqa: E402
@@ -154,14 +154,15 @@ def _boundary_change_details(result) -> dict:
     return {"baseline": "previous_boundary", "scope": "observed_graph", "items": rows}
 
 
-def _render_changes(lang: str, rows: list) -> list:
+def _render_changes(lang: str, rows: list, related: bool = True) -> list:
     lines = []
     for row in rows:
-        label = row["ref"] if row["title"] == row["ref"] else f"{row['title']} ({row['ref']})"
+        label = row["ref"] if row["title"] == row["ref"] else (f"{row['title']} ({row['ref']})" if lang == "en"
+                                                               else f"{row['title']}（{row['ref']}）")
         lines.append("  · " + t(lang, "change.row", change=t(lang, 'change.' + row['change']), label=label))
         lines += ["      " + t(lang, "change.related", id=req["issue_id"][:10],
                               status=req["status"], summary=req["summary"])
-                  for req in row.get("related_requirements", [])]
+                  for req in (row.get("related_requirements", []) if related else [])]
     return lines
 
 
@@ -479,14 +480,19 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
                removed=changed["removed"], transitions=data["transitions"], open=data["total_open"]), ""]
     change_rows = data["change_details"]["items"]
     lines.append(t(L, "today.changes"))
-    lines += _render_changes(L, change_rows if show_all else change_rows[:10])
+    # The open items a change touches are listed under To decide; --all and --json repeat them here.
+    lines += _render_changes(L, change_rows if show_all else change_rows[:10], related=show_all)
     if not change_rows:
         lines.append("  " + t(L, "none"))
     if not show_all and len(change_rows) > 10:
         lines.append("  " + t(L, "change.omitted", n=len(change_rows) - 10))
     lines.append("")
-    if shown:
+    quiet_scope = not (len((shown or {}).get("cross_scope_keys", [])) or coverage.get("coverage_unknown_in_scope", 0)
+                       or coverage.get("coverage_unknown_unowned", 0)
+                       or coverage.get("evaluated_match_count", 0) != coverage.get("in_scope_match_count", 0))
+    if shown and (show_all or not quiet_scope):
         # 完成报告要能核对范围：归属节点、跨范围键数、两类覆盖未知及其分母（覆盖计数是全范围的当前值）。
+        # 全部为零时默认不印；--all 与 --json 照旧给出。
         lines.append(t(L, "today.scope", node=shown["scope_node"], members=shown["scope_member_count"],
                        cross=len(shown["cross_scope_keys"]),
                        uncovered=coverage.get("coverage_unknown_in_scope", 0),
@@ -503,11 +509,13 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
         lines.append("  ! " + t(L, "today.spec_changed", parts=", ".join(data["spec_changes_pending"])))
     lines.append(t(L, "today.completion", unfinished=len(status["unfinished"]), held=len(status["held"]),
                    waiting=len(status["waiting"]), outside=status["out_of_scope_open"], unowned=status["unowned_open"]))
-    lines.append("  " + _unknowns_line(L, status))
+    if show_all or any(status.get("unknown_kinds", {}).values()):
+        lines.append("  " + _unknowns_line(L, status))
     lines += ["  ↻ " + t(L, "unknowns.run", run=run_id) for run_id in status["runs_unknown"]]
     if (shown or {}).get("narrowed_by"):
         lines.append("  " + t(L, "today.narrowed", intent=shown["narrowed_by"]))
-    lines.append("  " + _budget_line(L, budget["limits"], budget["spent"], budget["exhausted"]))
+    if show_all or budget["exhausted"]:
+        lines.append("  " + _budget_line(L, budget["limits"], budget["spent"], budget["exhausted"]))
     if budget["exhausted"]:
         # CC-10: the episode has stopped. It asks nothing more, dispatches nothing, and closes as budget_stopped.
         lines.append("  ! " + t(L, "budget.stopped", session=data["session_id"]))
@@ -522,7 +530,8 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
         return _render_group(L, row, marker=t(L, f"attention.{row['attention_state']}"))
 
     def question(row: dict) -> list:
-        return [f"  ? [{row['short_id']}] {row['summary']}", "      " + t(L, "question.why", why=row["why"])] + [
+        why = t(L, f"why.{row['why']}") if f"why.{row['why']}" in MESSAGES[language(L)] else row["why"]
+        return [f"  ? [{row['short_id']}] {row['summary']}", "      " + t(L, "question.why", why=why)] + [
             f"      {chr(65 + i)} {t(L, 'answer.' + option)} → ros answer {row['short_id']} {option}"
             + {"cancel": " --reason " + t(L, "ph.reason"), "defer": " --until " + t(L, "ph.date")}.get(option, "")
             for i, option in enumerate(row["options"])]
@@ -532,13 +541,16 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
         return ([t(L, f"today.{key}", n=len(rows))] + (["  " + t(L, "none")] if not rows else [])
                 + [line for row in rows for line in render(row)] + [""])
     # Today comes from the attention owner and is never truncated; triage only adds its proposals.
-    lines += section("today", group) + section("decision", group) + section("questions", question)
+    no_schedule = ctx.runtime_scope == "public_starter" and not show_all  # no attention owner ships here
+    lines += ([] if no_schedule and not data["today"] else section("today", group))
+    lines += section("decision", group) + section("questions", question)
     if data["waiting_on_trigger"]:
         lines.append(t(L, "today.waiting", n=len(data["waiting_on_trigger"])))
-        lines += [f"  … [{row['short_id']}] {row['summary']} — {row['trigger']}" for row in data["waiting_on_trigger"]]
+        lines += [f"  … [{row['short_id']}] {row['summary']} — {_trigger(L, row['trigger'])}" for row in data["waiting_on_trigger"]]
         lines.append("")
     colon = ": " if L == "en" else "："
-    lines += section("proposals", lambda row: [f"  · {row['commitment_title']}{colon}{row['reason']} → {row['command']}"])
+    if not no_schedule:  # `ros attend` writes nothing here, so its proposals lead nowhere
+        lines += section("proposals", lambda row: [f"  · {row['commitment_title']}{colon}{row['reason']} → {row['command']}"])
     elsewhere = sum(len(row["items"]) for row in data["needs_review"]) + len(data["network"])
     if show_all:
         lines.append(t(L, "today.elsewhere.title", n=elsewhere))
@@ -557,9 +569,14 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
 
 def _fill(lang: str, action: str, row: dict) -> str:
     action = action.replace(t(lang, "ph.requirement"), row["short_id"])
-    if row.get("due_date"):
+    if row.get("due_date") and (row.get("due_days") or 0) > 0:  # a deferral must end after today
         action = action.replace(t(lang, "ph.due"), row["due_date"])
     return action
+
+
+def _trigger(lang: str, trigger: str) -> str:
+    """A reopening trigger in words; other kinds keep their registered form."""
+    return t(lang, "trigger.date", date=trigger[5:]) if trigger.startswith("date:") else trigger
 
 
 def _render_group(lang: str, group: dict, *, marker: str) -> list:
@@ -630,7 +647,7 @@ def cmd_answer(ctx: Context, args) -> int:
     matches = [ask_id for ask_id, question in asks.items() if ask_id.startswith(args.question)
                and question.get("state") == "asked"]
     if len(matches) != 1:
-        raise SystemExit(f"question id {args.question!r} matches {len(matches)} open questions")
+        raise SystemExit(t(ctx.lang, "question.no_match", id=args.question, n=len(matches)))
     ask_id = matches[0]
     question = asks[ask_id]
     issue_id = (question.get("issue_ids") or [""])[0]
@@ -876,12 +893,13 @@ def _render_close(ctx: Context, data: dict, budget_line: str) -> str:
                uncovered=coverage.get("coverage_unknown_in_scope", 0), unowned=coverage.get("coverage_unknown_unowned", 0),
                evaluated=coverage.get("evaluated_match_count", 0), domain=coverage.get("in_scope_match_count", 0),
                outside=report["out_of_scope_open"], undefined=report["unowned_open"]),
-             _unknowns_line(L, report), budget_line]
+             ] + ([_unknowns_line(L, report)] if any(report.get("unknown_kinds", {}).values()) else []) \
+        + ([budget_line] if data.get("budget_exhausted") else [])
     if data["note"]:
         lines.append("  ! " + data["note"])
     if report.get("next_episode"):
         lines.append("  » " + t(L, "close.next_episode", n=len(report["next_episode"])))
-    lines += [f"  ⏸ [{row['short_id']}] {row['summary']} — {row['trigger']}" for row in data["held"]]
+    lines += [f"  ⏸ [{row['short_id']}] {row['summary']} — {_trigger(L, row['trigger'])}" for row in data["held"]]
     lines += [f"  ? [{row['ask_id']}] {row['summary']} — {t(L, 'close.pending_question')}" for row in data["pending_questions"]]
     # Kernel §2.1: ending the session does not end its runs; each keeps its own tracking.
     lines += ["  ↻ " + t(L, "unknowns.run", run=run_id) for run_id in data["open_runs"]]
@@ -911,7 +929,7 @@ def _render_close(ctx: Context, data: dict, budget_line: str) -> str:
             hint = t(L, "close.removed")
         else:
             hint = f"ros admit --confirm {row['judgment_id']}"
-        lines.append("  · " + t(L, "close.block", id=row["judgment_id"], change=row["change"],
+        lines.append("  · " + t(L, "close.block", id=row["judgment_id"], change=t(L, f"change.{row['change']}"),
                                  conclusion=row.get("conclusion", ""), hint=hint))
     for row in data["judgment_fields"]:
         lines.append("  · " + t(L, "close.field", id=row["commitment_id"], field=row["field"],
@@ -1337,7 +1355,7 @@ def _write_through_staging(ctx: Context, relative: str, new_text: str, *, run_id
         raise
 
 
-def _copy_fallback(ctx: Context, args, how: str, relative: str, new_text: str) -> int | None:
+def _copy_fallback(ctx: Context, args, how: str, relative: str, new_text: str, judgment_id: str = "") -> int | None:
     """Soul §5: the public starter keeps canonical promotion off and offers a copy fallback.
     A write that would land in a source is shown as the planned change and not made; nothing
     is decided or recorded. Returns None where promotion is allowed."""
@@ -1350,7 +1368,8 @@ def _copy_fallback(ctx: Context, args, how: str, relative: str, new_text: str) -
                                         fromfile=f"a/{relative}", tofile=f"b/{relative}"))
     reason = "public_starter: copy fallback only; nothing was written to or admitted into the durable sources"
     return emit(args, {"promoted": False, "how": how, "path": relative, "reason": reason, "planned_diff": diff},
-                t(ctx.lang, "admit.copy_fallback", how=how, path=relative) + "\n" + diff)
+                t(ctx.lang, "admit.copy_fallback", how=how, path=relative) + "\n" + diff
+                + ("\n" + t(ctx.lang, "admit.copy_next", path=relative, id=judgment_id) if judgment_id else ""))
 
 
 def _decision_channel(lang: str, how: str, object_id: str, declinable: bool = False) -> tuple:
@@ -1369,7 +1388,7 @@ def _decision_channel(lang: str, how: str, object_id: str, declinable: bool = Fa
         if sys.stdin.readline().strip().lower() not in {"y", "yes"}:
             if declinable:
                 return "researcher_decision", "terminal_declined"
-            raise SystemExit(f"not done: declined at the terminal ({how} {object_id})")
+            raise SystemExit(t(lang, "decline.stopped", how=how, id=object_id))
         return "researcher_decision", "terminal_confirmation"
     return "invoker_asserted", "channel:non_tty" + (",claude_code" if os.environ.get("CLAUDECODE") else "")
 
@@ -1549,7 +1568,7 @@ def _admit_judgment_candidate(ctx: Context, args, candidate_id: str, snapshot) -
                 field_change = {"commitment_id": cid, "field": "judgments",
                                 "before_digest": digest(before[cid].get("judgments")),
                                 "after_digest": digest(after[cid].get("judgments"))}
-        fallback = _copy_fallback(ctx, args, "admit_candidate", relative, new_text)
+        fallback = _copy_fallback(ctx, args, "admit_candidate", relative, new_text, judgment.id)
         if fallback is not None:
             return fallback
         decision = _record_decision(ctx, "admit_candidate", judgment.id, channel, candidate_id)
@@ -1617,7 +1636,7 @@ def cmd_admit(ctx: Context, args) -> int:
         except WritebackError as error:
             raise SystemExit(str(error))  # nothing decided: the target is not there or cannot be written
         if args.reconfirm:
-            fallback = _copy_fallback(ctx, args, how, relative, new_text)
+            fallback = _copy_fallback(ctx, args, how, relative, new_text, judgment_id)
             if fallback is not None:
                 return fallback
         channel = _decision_channel(ctx.lang, how, judgment_id)
@@ -1851,7 +1870,7 @@ def cmd_run(ctx: Context, args) -> int:
         raise SystemExit("the session Agent runs `ros context` and `ros propose` itself; `ros run` is for "
                          "provider:<id> or copy_packet")
     if kind == "provider" and ctx.runtime_scope == "public_starter":
-        raise SystemExit("the public starter is copy-only: use --executor copy_packet")
+        raise SystemExit(t(ctx.lang, "run.copy_only"))
     session = _session_for(ctx, args.target, args.session)  # run_requires_session
     if exhausted(*_session_account(ctx, session)):
         raise SystemExit(t(ctx.lang, "budget.stopped", session=session))  # CC-10: a stopped episode dispatches nothing
@@ -2018,10 +2037,12 @@ def main(argv=None) -> int:
     parser.add_argument("--lang", choices=["zh-CN", "en"], default="")
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--json", action="store_true", default=argparse.SUPPRESS)
+    # --lang is also accepted after the command, where people naturally add it.
+    common.add_argument("--lang", choices=["zh-CN", "en"], default=argparse.SUPPRESS)
     sub = parser.add_subparsers(dest="command", required=True)
 
     def command(name: str) -> argparse.ArgumentParser:
-        return sub.add_parser(name, parents=[common])  # every command also takes --json
+        return sub.add_parser(name, parents=[common])  # every command also takes --json and --lang
 
     p = command("today")
     p.add_argument("--for", dest="for_commitment")

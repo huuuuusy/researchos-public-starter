@@ -25,6 +25,7 @@ Release candidate for `v1.1.0`. This release adds no features. See the [V1.1 rel
 - Terminal-only answers and decisions print the `--reason` they need; an uploaded `*.tmp` file is no longer deleted at startup; damaged run-log lines no longer stop the server; the public Dashboard no longer lists `/data/`.
 - A personal-vault note that is not UTF-8 is named instead of ending the build in a traceback; `start_researchos.py --mode personal-vault --check` reports a missing CLI.
 - The first-run guide and `AGENTS.md` say when a hand-changed judgment-class field is listed for confirmation.
+- First-run and daily-use friction: `--lang` works after the command; the first-run judgment template bases a judgment on cards only; deadline options no longer print a refused deferral; `today` shows what needs a decision first and hides bookkeeping lines that are all zero (`--all` and `--json` keep everything); `admit` and `close` say what to do next; output terms follow the report (item, open, waiting on your answer, deferred); the manual gains "When a source changes".
 - `ros context` no longer delivers a source without a sensitivity label as internal; a question asked on an obsolete basis no longer holds work once the question budget is spent; an ownership move inside an unchanged scope is attributed to the scope.
 
 ## [1.0.4] - 2026-11-07

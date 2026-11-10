@@ -433,7 +433,8 @@ class RosKernelTest(unittest.TestCase):
     # Every finding and check the five script rules produce over a fixture that reaches each branch.
     # issue_id and read_set are persisted (a change re-opens every requirement as a new generation),
     # and summaries, details, options and check reasons are shown or recorded; this pins them all.
-    RULE_OUTPUT_DIGEST = "b713b7585b203779e90a1b9fb3305cfbfa0a7f6f6d85cadcd56c4d0b57009e57"
+    # 2026-11-10: re-pinned after the v1.1 wording pass (item terms, field and deadline options); ids and read sets unchanged.
+    RULE_OUTPUT_DIGEST = "69707cb16bf0b2572b419dc558d6e9f8a723db79258e36d6838b99d1556d53cf"
 
     def test_rule_findings_and_checks_stay_byte_for_byte_the_same(self) -> None:
         from researchos_kernel import rules as rule_table
@@ -1413,7 +1414,7 @@ class RosKernelTest(unittest.TestCase):
         self.assertIn("at the terminal", text, "输出明确提示需要研究者在终端确认")
         self.ros("decide", issue[:10], "cancel", "--reason", "decided here", answer="y")
         self.assertEqual(reasons(), ["researcher_decision:cancel"])
-        self.assertIn("declined", self.refusal("decide", issue[:10], "reopen", answer="n"))
+        self.assertRegex(self.refusal("decide", issue[:10], "reopen", answer="n"), "declined|在终端拒绝了")
         self.assertEqual(reasons(), ["researcher_decision:cancel"], "终端上拒绝：什么都不记")
         self.ros("decide", issue[:10], "reopen")
         self.assertEqual(reasons(), ["invoker_asserted:reopen"], "重开照常允许，照实记通道")
@@ -2177,7 +2178,7 @@ class RosKernelTest(unittest.TestCase):
     def test_only_a_terminal_answer_is_recorded_as_the_researchers_decision(self) -> None:
         self.add_alpha_judgment()
 
-        self.assertIn("declined at the terminal", self.refusal("admit", "--confirm", "j-alpha-scope", answer="n"))
+        self.assertRegex(self.refusal("admit", "--confirm", "j-alpha-scope", answer="n"), "declined|在终端拒绝了")
         self.assertEqual(self.admit_decisions(), [], "终端拒绝即不准入，也不留决定")
         self.ros("admit", "--confirm", "j-alpha-scope", answer="y")
         decision = self.admit_decisions()[-1]
@@ -2392,7 +2393,7 @@ class RosKernelTest(unittest.TestCase):
         self.assertEqual(decision["permission_state"], "invoker_asserted")
         self.assertIn("channel:non_tty", decision["detail"]["decision_evidence"])
         before = self.ledger().trajectory()
-        self.assertIn("declined", self.refusal("decide", item["short_id"], "defer", "--until", "2026-09-30", answer="n"))
+        self.assertRegex(self.refusal("decide", item["short_id"], "defer", "--until", "2026-09-30", answer="n"), "declined|在终端拒绝了")
         self.assertEqual(before, self.ledger().trajectory())
         self.ros("decide", item["short_id"], "defer", "--until", "2026-09-30", answer="y")
         report = self.ros("today")["completion"]
@@ -2595,9 +2596,11 @@ class RosKernelTest(unittest.TestCase):
         self.assertTrue(rows["commitment:alpha"]["related_requirements"])
         self.assertTrue(rows["01_knowledge/projects/alpha.md"]["related_requirements"],
                         "the source card exposes its commitment's current pending requirements")
-        self.assertIn("相对上一个 ros 边界", text)
-        self.assertIn("本轮全图变化", text)  # --for must not mislabel global observations as focused changes.
-        self.assertIn("不表示由本次修改触发", text)
+        self.assertIn("相对上次运行", text)
+        self.assertIn("上次运行以来的变化", text)  # --for must not mislabel global observations as focused changes.
+        self.assertNotIn("不一定由这次变化引起", text, "related items are listed under To decide, not repeated here")
+        self.write("01_knowledge/projects/alpha.md", "---\ntitle: Alpha\nid: alpha-project\n---\nEvidence v3\n")
+        self.assertIn("不一定由这次变化引起", self.capture_ros("--lang", "zh-CN", "today", "--for", "alpha", "--all")[1])
         self.assertEqual(view["changed"], {kind: sum(r["change"] == kind for r in rows.values())
                                            for kind in ("added", "modified", "removed")})
         self.assertEqual(self.ros("today", "--for", "alpha")["change_details"]["items"], [])
@@ -2649,7 +2652,7 @@ class RosKernelTest(unittest.TestCase):
         self.assertIsNone(closed["change_details"]["files"])
         self.assertIsNone(closed["change_details"]["removed_commitments"])
         self.assertNotEqual(closed["outcome"], "complete")
-        changes_section = text.split("Graph-wide file changes since session start", 1)[1].split("Fact-class changes", 1)[0]
+        changes_section = text.split("File changes since the session started", 1)[1].split("Fact-class changes", 1)[0]
         self.assertIn(closed["note"], changes_section)
         self.assertNotIn("  None", changes_section)
 
@@ -3042,11 +3045,11 @@ class RosKernelTest(unittest.TestCase):
 
     def test_terminal_question_is_readable_in_both_languages(self) -> None:
         self.add_alpha_judgment()
-        for lang, question in (("en", "Confirm judgment j-alpha-scope after the fact? [y/N] "),
-                               ("zh-CN", "事后确认判断 j-alpha-scope？ [y/N] ")):
+        for lang, question, declined in (("en", "Confirm judgment j-alpha-scope after the fact? [y/N] ", "declined"),
+                                         ("zh-CN", "事后确认判断 j-alpha-scope？ [y/N] ", "在终端拒绝了")):
             refusal, _, asked = self.run_ros("admit", "--confirm", "j-alpha-scope", lang=lang, answer="n",
                                              expect=SystemExit)
-            self.assertIn("declined at the terminal", refusal)
+            self.assertIn(declined, refusal)
             self.assertEqual(asked, question)
 
     def test_rule_descriptors_are_valid(self) -> None:

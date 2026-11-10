@@ -35,14 +35,14 @@ class RosDemoTest(unittest.TestCase):
         output = buffer.getvalue()
         self.assertIn("is not confirmed yet", output)
         self.assertIn('The basis of judgment "Compare A and B under occlusion first', output)
-        self.assertIn("Confirmed j-occlusion-scope after the fact", output)
+        self.assertIn("recorded as a confirmation after the fact, not an admission", output)
         reconfirm = output.split("━━ 5.")[1].split("━━ 6.")[0]
         self.assertIn("Nothing was written or admitted", reconfirm, "公开 starter 只走复制回退")
         self.assertIn("+> Basis: 01_knowledge/projects/occlusion-tracking.md", reconfirm, "展示的是计划中的依据改动")
         self.assertIn("at the researcher's own terminal", output)
         self.assertNotIn("her terminal", output)
         self.assertIn("session 20260920T", output, "the session id carries the pinned demo day")
-        self.assertLess(output.index("On a first read you can skip"), output.index("ResearchOS · 2026-09-20"))
+        self.assertNotIn("Unknowns, kept apart", output, "bookkeeping lines with nothing to report stay out of the default view")
         after = output.split("━━ What next")[1]
         self.assertIn("python3 scripts/ros_demo.py --init personal_vault", after)
         self.assertNotIn("cp -R", output)
@@ -121,7 +121,7 @@ class RosDemoTest(unittest.TestCase):
             run_id = re.search(r"\(run (ros-run-[0-9a-f]+)\)", packet).group(1)
             collected = ros_demo.run(root, "collect", run_id, "--file", str(sample))
             self.assertIn("returned 1 candidate(s)", collected)
-            self.assertIn("since the previous ros boundary: 0 newly observed, 0 version changes",
+            self.assertIn("since the last run: 0 new, 0 changed",
                           ros_demo.run(root, "today").lower(), "the sample answer is outside graph_roots")
 
 

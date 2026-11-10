@@ -441,7 +441,8 @@ def deadline_warning(snapshot, config, rule, ledger_state, today: date) -> list:
         if _check_deadline(snapshot, config, rule, f"commitment:{commitment.id}", ledger_state, today)[0] != UNMET:
             continue
         due, days, _ = _due_in(config, rule, commitment, today)
-        summary = (t(lang, "deadline.due_in", title=commitment.title, days=days, date=due.isoformat()) if days >= 0
+        summary = (t(lang, "deadline.due_today", title=commitment.title, date=due.isoformat()) if days == 0
+                   else t(lang, "deadline.due_in", title=commitment.title, days=days, date=due.isoformat()) if days > 0
                    else t(lang, "deadline.overdue", title=commitment.title, days=-days, date=due.isoformat()))
         findings.append(Finding(
             rule_id=rule["id"], rule_version=rule["version"], binding_key=f"commitment:{commitment.id}",  # the date lives in the read set: a new date advances the generation

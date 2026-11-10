@@ -41,13 +41,14 @@ The demo output and these guides use a few words in a narrow sense. For a first 
 | candidate | A model's output or a draft that has not been accepted yet. |
 | admission, admit | The researcher accepting a candidate into research state. This repository only shows the planned change; it never admits. |
 | judgment block | The `> [!judgment]` Markdown block that records one accepted judgment with its basis. |
-| requirement | A registered piece of maintenance work, such as rechecking a judgment after its source changed. |
-| held, waiting | Held work waits for the researcher's answer to one question. Waiting work waits for a trigger, such as a date. |
+| item | A registered piece of maintenance work, such as rechecking a judgment after its source changed; older output called it a requirement. |
+| waiting on your answer, deferred | Work waiting on your answer waits for the researcher's answer to one question. Deferred work waits for a trigger, such as a date. |
 | receipt | The record of what was done and checked. |
-| decision boundary | The moment the system looks at what has arrived and decides what to do next. The output calls it a "ros boundary". |
+| decision boundary | The moment the system looks at what has arrived and decides what to do next. The output calls it a "run". |
 | copy fallback, copy-only | This repository prepares text you copy into your own assistant instead of running or writing anything. |
 | `personal_vault/` | The git-ignored folder in your clone for your own material. |
-| public, internal, sensitive, private | A card's `sensitivity` label. `ros context` packs public and internal cards, packs a sensitive card only after you confirm it in your own terminal, and leaves out private cards and cards with no label; the line near its end, such as `[delivered 1; excluded 1]`, counts what it left out. The portfolio is internal by default, so a project's question and judgments are packed. The label does not stop an assistant from opening a file itself. |
+| vault, research graph, fixture | The folder of cards and portfolio that `--root` points to: `personal_vault/` is yours, and `examples/scheduler-demo/` (the fixture) is the fictional one. |
+| public, internal, sensitive, private | A card's `sensitivity` label. `ros context` packs public and internal cards, packs a sensitive card only after you confirm it in your own terminal, and leaves out private cards and cards with no label; the line near its end, such as `[delivered 1; excluded 1]`, counts what it left out. The shipped portfolio is labeled internal, so a project's question and judgments are packed; a card or portfolio with no label is not packed. The label does not stop an assistant from opening a file itself. |
 
 Three phrases in the demo output follow from these words, and none of them is an error. "No admission receipt yet" means that the fixture's judgment was written straight into the file: nobody admitted it, so no receipt of an admission exists, and `today` asks you to confirm it. "Confirmed … after the fact", together with "not an admission" or "not admitted", means that you said yes to a judgment that was already written; that closes the request to confirm it, but it does not admit anything. "Copy fallback" means that `ros` printed the change `admit` would make, as a diff, and wrote nothing.
 
@@ -56,7 +57,7 @@ Three phrases in the demo output follow from these words, and none of them is an
 Open the folder in Claude Code, Codex, Gemini CLI or another file-aware assistant. A first run needs four things: a goal, meaning what should be answered, organized or produced now; a source, meaning one file you provide or one explicit public link; a result, which is an answer, an openable artifact or a reviewable diff; and a boundary with a next step, saying what is sourced, what remains a candidate and what happens next. If you are unsure where to begin, or do not use a terminal yet, let the assistant guide you and copy only the command it gives:
 
 ```text
-I do not know how to use ResearchOS Public Starter yet. Act as my first-run guide. Read AGENTS.md only; if the environment already loaded it, do not reread it or scan the repository. Then explain in plain language: 1. what this project is for; 2. which path I should take now; 3. the next file or command; 4. what I should not put into a public repository. Do not write files yet; ask me at most two questions if needed.
+I do not know how to use ResearchOS Public Starter yet. Act as my guide. Read AGENTS.md only; if the environment already loaded it, do not reread it or scan the repository. Then explain in plain language: 1. what this project is for; 2. which path I should take now; 3. the next file or command; 4. what I should not put into a public repository. Do not write files yet; ask me at most two questions if needed.
 ```
 
 With a concrete task, hand over the source directly:
@@ -97,7 +98,7 @@ Reading tiers limit both the number of files and the estimated tokens of the fir
 
 Start in `Quick`; when you give an exact paper, draft or target path, Quick starts there. Standard may add one workflow, a project page and a few canonical files. Evidence adds only audits, reading notes or source files that answer the current verification question. Raise the tier only when you can name the missing fact or judgment, and when either limit would be exceeded, choose a smaller subset and work in batches. This keeps token use and unrelated context down while the long-term library stays complete. Reading tier and reasoning effort solve different problems: raise the tier when context is missing, and raise reasoning effort in the agent client when the judgment chain is complex. The model and reasoning effort belong to the agent client or a configured local runtime. The output type, whether answer, artifact or writeback proposal, is inferred from the task and the result contract, so you do not classify it in advance. Open discussion, reasoning and drafting happen in the assistant through the repository instructions and need no handoff.
 
-### What survives a source correction
+### Example from the report: what survives a source correction
 
 This fictional comparison reuses the [worked session in Section 4.1 of the report](technical-report.en.md) to show the state before and after a source correction. The candidate states which part is affected and the researcher decides; the prototype does not compute the partial semantic impact on its own.
 
@@ -142,7 +143,7 @@ Use a real task and a natural return after 24 to 72 hours. The competing baselin
 
 The scheduler and the Dashboard use two separate fictional worlds. The scheduler fixture in `examples/scheduler-demo/` is one research graph about an occlusion paper: two commitments, two cards and one judgment. The Dashboard demo in Section 4 shows six fictional agenda items from `08_exports/public_starter/demo-research-agenda.md`. Neither refers to the other.
 
-### Walk through a session
+### Walk through a session: today to close
 
 `ros` is the scheduler's command-line client. Every `ros …` that the CLI prints stands for `python3 scripts/ros.py --root <folder> …`, and `--root` goes before the subcommand. Run these from the repository folder:
 
@@ -168,6 +169,18 @@ python3 scripts/ros.py --root examples/scheduler-demo close
 `admit` prints the change it would make to `06_active_context/research-portfolio.md` and writes nothing. `close` ends the session and lists the candidate as still undecided.
 
 Two things in the output come from the date rather than from the fixture. Run on today's date, the walk-through flags the fixture's commitments as not recently verified, whereas `ros_demo.py` pins its date. On a fresh clone the first `today` may also report a source as "changed after verification", because the check compares the file's modification time, which the clone has just set, with the commitment's `last_verified` date. Without `--root`, `ros` reads this repository's own graph, which has no commitments.
+
+### When a source changes
+
+When you update a card that a judgment rests on, for example because a study is retracted, a protocol is amended or an archive publishes a corrected catalogue, the next `today` lists that judgment under "To decide" with three options. Whether it still holds is your call; the system cannot tell. Where the output says `ros …`, type `python3 scripts/ros.py --root personal_vault …`.
+
+- **A, it still holds.** Run the `ros admit --reconfirm <judgment id>` line it prints. This repository prints the change that pins the new versions; apply it as printed (or ask your assistant to), then confirm it in your own terminal with `ros admit --confirm <judgment id>` and answer `y`.
+- **B, it must change.** Draft the replacement with a new id, register it with `ros propose judgment --file <draft> --target commitment:<id>`, and apply the change that `ros admit <candidate id>` prints. Then delete the old block and its id from the commitment's `judgments` line. `today` then lists two confirmations for your terminal: the new judgment (`ros admit --confirm <new id>`) and the old one's recheck (`ros answer <id> cancel --reason …`). Answer the old recheck with `cancel`: its `narrow` option narrows that check, not your judgment. The changed `judgments` field (`ros decide <id> confirm`) is listed by `close` and by the next `today`.
+- **C, decide later.** `ros decide <id> defer --until <date>` keeps the recheck waiting until that date.
+
+A commitment field you change by hand works the same way. If you change `state`, `priority`, `question`, `responsibility` or `judgments` after `today` has read the commitment, `close` lists that write as a judgment-class field to confirm, and so does every `today` after it; confirm it in your own terminal with `ros decide <id> confirm` and answer `y`. A call relayed by an assistant is only recorded as asserted. Facts such as `last_verified`, `current_stage` or `next_step` need no confirmation.
+
+Base a judgment on the cards it rests on, not on its commitment: the commitment's version includes its dates and next step, so a judgment based on it would come back each time you update them.
 
 ### What `ros` writes in this repository
 
@@ -325,6 +338,8 @@ Your own material lives in `personal_vault/`, a folder inside your clone. Git ig
    ```bash
    python3 scripts/ros.py --root personal_vault today
    ```
+
+   A vault started with `--init personal_vault --lang zh-CN` has Chinese output set in its `config/ros.json`; to switch for one command, add `--lang en` or `--lang zh-CN`.
 
 5. Optionally, open the Dashboard on the same folder:
 
