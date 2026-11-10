@@ -125,7 +125,7 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
        （没有待复核的要求；按下一步推进）
    ```
 
-   显示「未安排」是正常的，因为本仓库 不带注意力安排。用 `python3 scripts/ros.py --root personal_vault close` 结束会话；新建的库会报告 `结果分类：complete（待办 0；…）`。如果在 `today` 读过之后又改了 `state`、`priority`、`question` 或 `responsibility`（比如为了改正任务总表问题），`today` 和 `close` 会把这次写入列为待确认的判断类字段；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault decide <编号> confirm` 并回答 `y` 即可（由助手转述的调用只记为代理转述）。
+   显示「未安排」是正常的，因为本仓库 不带注意力安排。用 `python3 scripts/ros.py --root personal_vault close` 结束会话；新建的库会报告 `结果分类：complete（待办 0；…）`。如果在 `today` 读过之后又改了 `state`、`priority`、`question` 或 `responsibility`（比如为了改正任务总表问题），`close` 会把这次写入列为待确认的判断类字段，之后每次 `today` 也会列出；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault decide <编号> confirm` 并回答 `y` 即可（由助手转述的调用只记为代理转述）。
 
    `today` 出现「任务总表问题」时，每一行都写明是哪个字段、可以取哪些值，例如 `state「active」不是可用值（mainline, waiting, queued, conditional, closed, paused）`，照着改任务总表即可。虚构承诺还出现在「待判断」下，说明它们的块还留在文件里；如果只出现在「待你回答的问题」下并标着 `subject_absent`，说明你在替换之前运行过 `today`，那是虚构演示留下的记录：删掉 `personal_vault/06_active_context/work_state/`，再运行一次 `today`。卡片不在你写的路径上时，这里会显示 `source_path … 在这个文件夹里不存在`；`python3 scripts/ros.py --root personal_vault rules --check` 报告同样的问题，一切就位时报告 `问题 0 条`。用 `--init personal_vault --lang zh-CN` 建的库，`config/ros.json` 已设为中文输出。
 
@@ -151,7 +151,7 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
         C 维持现状，暂缓 → ros decide d2db02806a defer --until <日期>
 ```
 
-剔除那项研究后效应是否还成立，系统判断不了，由你决定选哪一项。选 A，本仓库打印出刷新依据版本的改动，照原样应用后再在终端确认。选 B，用一个新的 id 起草替代的判断，照上面的方式登记、应用，再删掉旧的判断块和 `judgments` 里的旧 id；随后 `today` 会列出三项要你在终端确认的事：新判断（`admit --confirm`）、旧判断的复核（`answer <编号> cancel --reason …`）和改过的 `judgments` 字段（`decide <编号> confirm`）。编号和你的输出不同时，用终端里打印的那个。伦理方案修订、预注册更新或者数据替换，也都按同样的方式处理：更新对应卡片，`today` 会把依赖它的判断交回来。
+剔除那项研究后效应是否还成立，系统判断不了，由你决定选哪一项。选 A，本仓库打印出刷新依据版本的改动，照原样应用后再在终端确认。选 B，用一个新的 id 起草替代的判断，照上面的方式登记、应用，再删掉旧的判断块和 `judgments` 里的旧 id；随后 `today` 会列出两项要你在终端确认的事：新判断（`admit --confirm`）和旧判断的复核（`answer <编号> cancel --reason …`）；改过的 `judgments` 字段（`decide <编号> confirm`）由 `close` 和下一次 `today` 列出。编号和你的输出不同时，用终端里打印的那个。伦理方案修订、预注册更新或者数据替换，也都按同样的方式处理：更新对应卡片，`today` 会把依赖它的判断交回来。
 
 ## 第 4 步：用 Dashboard 打开这个库（可选）
 

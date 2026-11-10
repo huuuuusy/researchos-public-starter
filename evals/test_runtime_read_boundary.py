@@ -111,6 +111,7 @@ class RuntimeReadBoundaryTest(unittest.TestCase):
             self.assertTrue(boundary.public_dashboard_data_blocked("/data/researchos-local.json", True))
             self.assertTrue(boundary.public_dashboard_data_blocked("/data/../data/researchos-local.json", True))
             self.assertTrue(boundary.public_dashboard_data_blocked("/DATA/researchos-local.json", True))
+            self.assertTrue(boundary.public_dashboard_data_blocked("/data/", True))  # the directory listing
             self.assertFalse(boundary.public_dashboard_data_blocked("/data/researchos-local.json", False))
 
     def test_unregistered_md_yaml_and_pdf_are_hidden_from_preview_tree_and_projection(self) -> None:

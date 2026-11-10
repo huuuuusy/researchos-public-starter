@@ -28,12 +28,14 @@ def compact_jsonl_run_log(
     if not force and before_bytes <= max(1, int(max_bytes)):
         return {"before_bytes": before_bytes, "after_bytes": before_bytes, "retained_runs": 0}
     records: dict[str, dict[str, object]] = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
         if not line.strip():
             continue
         try:
             event = json.loads(line)
         except json.JSONDecodeError:
+            continue
+        if not isinstance(event, dict):  # a stray non-object line must not stop the server from starting
             continue
         run_id = str(event.get("id", "")).strip()
         if run_id:

@@ -80,8 +80,11 @@ class WorkSessionUploadStoreTest(unittest.TestCase):
             attachments = [store.upload_dir / f"material-{index}.pdf" for index in range(30)]
             for path in attachments:
                 path.write_bytes(b"user material")
-            orphan = store.upload_dir / "material.pdf.atomic.tmp"
+            user_tmp = store.save_stream("draft.tmp", io.BytesIO(b"user notes"), 10)  # the user's own .tmp file
+            attachments.append(root / str(user_tmp["path"]))
+            orphan = store.upload_dir / f"material-0123456789.pdf.{'a' * 32}.tmp"
             orphan.write_bytes(b"partial")
+            self.assertEqual(store.storage_receipt()["files"], 31)
             result = store.cleanup_generated_temporaries()
             self.assertEqual(result["removed_files"], 1)
             self.assertFalse(orphan.exists())
@@ -113,14 +116,14 @@ class WorkSessionUploadStoreTest(unittest.TestCase):
             active_context = root / "06_active_context"
             active_context.mkdir()
             (active_context / "work_state").symlink_to(outside, target_is_directory=True)
-            outside_temporary = outside / "outside.atomic.tmp"
+            outside_temporary = outside / f"outside.pdf.{'b' * 32}.tmp"
             outside_temporary.write_bytes(b"must remain")
 
             with self.assertRaises(WorkSessionUploadError) as save_error:
                 store.save_stream("paper.pdf", io.BytesIO(b"fixture"), 7)
             self.assertEqual(save_error.exception.error_type, "unsafe_upload_path")
             self.assertEqual(outside_temporary.read_bytes(), b"must remain")
-            self.assertEqual(sorted(path.name for path in outside.iterdir()), ["outside.atomic.tmp"])
+            self.assertEqual(sorted(path.name for path in outside.iterdir()), [f"outside.pdf.{'b' * 32}.tmp"])
 
             with self.assertRaises(WorkSessionUploadError) as cleanup_error:
                 store.cleanup_generated_temporaries()

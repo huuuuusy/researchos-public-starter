@@ -366,7 +366,7 @@ Agent 路线与 Dashboard 依赖同一套 Markdown 和确认规则，本仓库�
 }
 ```
 
-不要把公开 Dashboard 改成执行主机。如需使用两个本地命令行 provider 之一，先切换到 private 或 personal-vault 运行态，配置不纳入 Git，运行 provider 检查，再在那里启用它；命令行工具的登录信息留在仓库之外。检查命令是 `python3 scripts/validate_runtime_config.py` 和 `python3 scripts/start_researchos.py --mode public-starter --check --provider codex`。
+不要把公开 Dashboard 改成执行主机。如需使用两个本地命令行 provider 之一，先切换到 private 或 personal-vault 运行态，配置不纳入 Git，运行 provider 检查，再在那里启用它；命令行工具的登录信息留在仓库之外。检查命令是 `python3 scripts/validate_runtime_config.py` 和 `python3 scripts/start_researchos.py --mode personal-vault --check --provider codex`，后者会报告本机是否装了这个命令行工具。
 
 ## 6. 安全规则与常见错误
 

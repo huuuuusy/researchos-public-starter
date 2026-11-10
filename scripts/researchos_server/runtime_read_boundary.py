@@ -229,6 +229,6 @@ class RuntimeReadBoundary:
         normalized = ("/" + posixpath.normpath(str(request_path or "")).lstrip("/")).lower()
         return bool(
             public_starter
-            and normalized.startswith("/data/")
+            and (normalized == "/data" or normalized.startswith("/data/"))  # normpath turns /data/ into /data
             and normalized != "/data/researchos-dashboard.json"
         )

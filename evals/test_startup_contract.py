@@ -38,6 +38,16 @@ class StartupContractTest(unittest.TestCase):
         self.assertIn("port belongs to another service", output.getvalue())
         probe.assert_called_once_with("127.0.0.1", 8880, "personal_vault")
 
+    def test_personal_vault_check_reports_a_missing_cli(self) -> None:
+        missing = {"ok": False, "provider": "codex", "model": "auto", "message_en": "CLI unavailable", "message_zh": "不可用"}
+        with mock.patch.object(MODULE, "provider_adapter_status", return_value=missing) as probe, redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(MODULE.check_runtime("codex", public_starter=False), 1)
+        self.assertEqual("personal_vault", probe.call_args.kwargs["runtime_scope"])
+        self.assertIn("runtime_mode: personal vault", output.getvalue())
+        with mock.patch.object(MODULE, "provider_adapter_status") as probe, redirect_stdout(io.StringIO()):
+            self.assertEqual(MODULE.check_runtime("codex", public_starter=True), 0)  # the demo stays copy-only
+        probe.assert_not_called()
+
     def test_existing_shipped_projection_is_not_rebuilt_on_startup(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

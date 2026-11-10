@@ -286,6 +286,22 @@ class CodexRunnerUsageTest(unittest.TestCase):
             self.assertEqual("run_request_conflict", rejected["error_type"])
             thread.assert_not_called()
 
+    def test_damaged_run_log_lines_are_skipped_by_every_reader(self) -> None:
+        from researchos_server.runtime_retention import compact_jsonl_run_log
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            log = root / "runner.jsonl"
+            good = json.dumps({"id": "run-1", "status": "completed", "updated_at": "2026-11-10T00:00:00"})
+            log.write_bytes(b"[1, 2]\n" + good.encode() + b"\n\"text\"\n\xe4\xb8\n")  # non-objects, torn UTF-8
+            runner = CodexRunner(
+                root=root, command_runner=FakeCommandRunner(), log_jsonl=log, log_md=root / "runner.md",
+                runtime_scope="private", model_catalog=FakeModelCatalog(), public_starter=False,
+            )
+            self.assertEqual(["run-1"], [run["id"] for run in runner.reduced_runs()])
+            compacted = compact_jsonl_run_log(log, max_bytes=1, max_runs=10, output_limit=100, force=True)
+            self.assertEqual(1, compacted["retained_runs"])
+
     def test_malformed_nested_intent_fails_before_authority_model_log_or_thread(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

@@ -306,6 +306,28 @@ class RosKernelTest(unittest.TestCase):
         draft.write_text(self.DRAFT, encoding="utf-8")
         return self.ros("propose", "judgment", "--file", str(draft), "--target", self.CARD)["candidates"][0]
 
+    def test_propose_target_must_be_a_card_in_the_scanned_graph(self) -> None:
+        draft = self.tmp / "draft.md"
+        draft.write_text(self.DRAFT, encoding="utf-8")
+        self.write("notes.md", "# Outside the graph roots\n")
+        (self.tmp.parent / f"{self.tmp.name}-outside.md").write_text("# Outside the vault\n", encoding="utf-8")
+        self.addCleanup((self.tmp.parent / f"{self.tmp.name}-outside.md").unlink)
+        for target in ("notes.md", f"../{self.tmp.name}-outside.md", str(self.tmp / self.CARD)):
+            self.assertIn("not found in the scanned graph",
+                          self.refusal("propose", "judgment", "--file", str(draft), "--target", target))
+        self.assertEqual(self.ledger().candidates(), {})
+
+    def test_torn_candidate_line_does_not_swallow_the_next_candidate(self) -> None:
+        path = self.ledger().candidates_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text('{"candidate_id": "c-torn", "envel', encoding="utf-8")  # an interrupted append
+        candidate = self.propose_beta()
+        self.assertEqual(list(self.ledger().candidates()), [candidate])
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write("not json\n{}\n")  # damage before the last line is not an interrupted append
+        with self.assertRaisesRegex(ValueError, "corrupt record"):
+            self.ledger().candidates()
+
     def admit_decisions(self) -> list:
         return [row for row in self.ledger().trajectory()
                 if row["kind"] == "decision" and row["payload"]["operation"] in {"admit", "rollback", "retain_if_consistent"}]

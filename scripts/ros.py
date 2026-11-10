@@ -968,8 +968,8 @@ def _propose_judgments(ctx: Context, text: str, origin: str, target: str, *, exe
     if target.startswith("commitment:"):
         if target.split(":", 1)[1] not in result.snapshot.commitments:
             raise SystemExit(f"unknown commitment: {target}")
-    elif not (ctx.root / target).is_file():
-        raise SystemExit(f"target card not found: {target}")
+    elif target not in result.snapshot.nodes:  # as ros context: a card outside the scanned graph is never shown again
+        raise SystemExit(f"target card not found in the scanned graph: {target}")
     ids = [judgment.id for judgment in found]
     for judgment in found:  # every block is checked before any is recorded: all or none
         if judgment.id in result.snapshot.judgments or ids.count(judgment.id) > 1:
@@ -1738,7 +1738,8 @@ def cmd_decide(ctx: Context, args) -> int:
                                         "reason": payload["reason"], "decision_evidence": channel[1]})
         emit(args, {"issue_id": issue_id, **payload, "applied": False, "status": state["status"],
                     "permission_state": channel[0]},
-             t(ctx.lang, "decide.needs_terminal", id=issue_id[:10], action=args.action))
+             t(ctx.lang, "decide.needs_terminal", id=issue_id[:10], action=args.action,
+               reason_flag=t(ctx.lang, "decide.reason_flag") if args.action == "cancel" else ""))
         return 1
     with ctx.ledger.lock():
         trigger = state.get("reopen_trigger", "")

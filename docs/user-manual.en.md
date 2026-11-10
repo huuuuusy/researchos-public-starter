@@ -364,7 +364,7 @@ This repository registers two local providers, `codex` and `claude_code`, and bo
 }
 ```
 
-Do not turn the public Dashboard into an execution host. To use one of the two local CLI providers, first switch to a private or personal-vault runtime, keep its configuration untracked, run the provider checks and enable it there; the CLI keeps its own login outside the repository. The checks are `python3 scripts/validate_runtime_config.py` and `python3 scripts/start_researchos.py --mode public-starter --check --provider codex`.
+Do not turn the public Dashboard into an execution host. To use one of the two local CLI providers, first switch to a private or personal-vault runtime, keep its configuration untracked, run the provider checks and enable it there; the CLI keeps its own login outside the repository. The checks are `python3 scripts/validate_runtime_config.py` and `python3 scripts/start_researchos.py --mode personal-vault --check --provider codex`, which reports whether that CLI is installed.
 
 ## 6. Safety and common mistakes
 

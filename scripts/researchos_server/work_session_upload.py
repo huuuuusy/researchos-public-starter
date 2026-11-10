@@ -15,6 +15,10 @@ from pathlib import Path
 from typing import BinaryIO
 from urllib.parse import unquote
 
+# The name save_stream gives its in-progress copy (`<attachment>.<uuid4 hex>.tmp`). A completed
+# attachment never ends this way, even when the user's own file is called `draft.tmp`.
+GENERATED_TEMPORARY = re.compile(r"\.[0-9a-f]{32}\.tmp\Z")
+
 
 class WorkSessionUploadError(ValueError):
     """A user-recoverable local intake error with a stable API code."""
@@ -200,7 +204,7 @@ class WorkSessionUploadStore:
         upload_dir = self._validated_upload_dir(create=False)
         if upload_dir.exists():
             for path in upload_dir.iterdir():
-                if path.is_symlink() or not path.is_file() or path.name.endswith(".tmp"):
+                if path.is_symlink() or not path.is_file() or GENERATED_TEMPORARY.search(path.name):
                     continue
                 try:
                     used_bytes += path.stat().st_size
@@ -243,7 +247,7 @@ class WorkSessionUploadStore:
         removed_bytes = 0
         removed_files = 0
         for path in upload_dir.iterdir():
-            if path.is_symlink() or not path.is_file() or not path.name.endswith(".tmp"):
+            if path.is_symlink() or not path.is_file() or not GENERATED_TEMPORARY.search(path.name):
                 continue
             try:
                 stat = path.stat()

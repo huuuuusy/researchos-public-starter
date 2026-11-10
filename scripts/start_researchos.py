@@ -14,7 +14,10 @@ from pathlib import Path
 from urllib.error import URLError
 from urllib.request import urlopen
 
+from researchos_adapters.command_runner import CommandRunner
+from researchos_adapters.provider_adapter import provider_adapter_status
 from researchos_adapters.provider_config import load_runtime_config, provider_status
+from researchos_adapters.provider_registry import PROVIDERS
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -90,7 +93,11 @@ def ensure_public_projection() -> tuple[int, str]:
 
 
 def check_runtime(provider: str, public_starter: bool = True) -> int:
-    status = provider_status(provider, public_starter=public_starter)
+    if public_starter or provider not in PROVIDERS:
+        status = provider_status(provider, public_starter=public_starter)
+    else:  # a personal vault really dispatches, so report whether the CLI is installed and logged in
+        status = provider_adapter_status(provider, root=REPO_ROOT, command_runner=CommandRunner(REPO_ROOT),
+                                         runtime_scope="personal_vault")
     copy_only = public_starter and status.get("error_type") == "public_starter_copy_only"
     _print_status(
         "ResearchOS runtime check",
@@ -98,7 +105,7 @@ def check_runtime(provider: str, public_starter: bool = True) -> int:
             ("provider", status.get("provider")),
             ("ok", bool(status.get("ok") or copy_only)),
             ("model", status.get("model", "n/a")),
-            ("runtime_mode", status.get("runtime_mode", "public starter" if public_starter else "private vault")),
+            ("runtime_mode", "public starter" if public_starter else "personal vault"),  # this edition has no private mode
         ],
     )
     if not status.get("ok") and not copy_only:

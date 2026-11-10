@@ -317,12 +317,15 @@ class CodexRunner:
         records: dict[str, dict[str, object]] = {}
         if not self.log_jsonl.exists():
             return []
-        for line in self.log_jsonl.read_text(encoding="utf-8").splitlines():
+        # A torn multibyte write or a stray non-object line is skipped, as run_state does.
+        for line in self.log_jsonl.read_text(encoding="utf-8", errors="replace").splitlines():
             if not line.strip():
                 continue
             try:
                 event = json.loads(line)
             except json.JSONDecodeError:
+                continue
+            if not isinstance(event, dict):
                 continue
             run_id = str(event.get("id", "")).strip()
             if not run_id:

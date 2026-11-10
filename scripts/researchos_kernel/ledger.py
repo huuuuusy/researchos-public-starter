@@ -153,16 +153,16 @@ class Ledger:
 
     def _append(self, rows: list) -> list:
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self._drop_torn_tail()
+        self._drop_torn_tail(self.records_path)
         append_text(self.records_path, "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in rows))
         return rows
 
-    def _drop_torn_tail(self) -> None:
+    def _drop_torn_tail(self, path: Path) -> None:
         """A last line without its newline is an append that was interrupted before it was written
         (`records` already reads it as absent). Appending after it would bury it mid-file and make
         the ledger unreadable, so the unwritten fragment is cut before the next record."""
         try:
-            with open(self.records_path, "rb+") as handle:
+            with open(path, "rb+") as handle:
                 size = handle.seek(0, os.SEEK_END)
                 if size == 0:
                     return
@@ -298,6 +298,8 @@ class Ledger:
     def record_candidate(self, envelope: dict, payload: dict | None = None) -> dict:
         row = {"candidate_id": envelope["candidate_id"], "envelope": envelope, "payload": payload or {},
                "recorded_at": now_iso()}
+        self.candidates_path.parent.mkdir(parents=True, exist_ok=True)
+        self._drop_torn_tail(self.candidates_path)  # else the new row is glued to the fragment and lost
         append_text(self.candidates_path, json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
         return row
 
@@ -306,13 +308,16 @@ class Ledger:
         found = {}
         if not self.candidates_path.exists():
             return found
-        for line in self.candidates_path.read_text(encoding="utf-8").splitlines():
+        lines = self.candidates_path.read_text(encoding="utf-8").splitlines()
+        for number, line in enumerate(lines, 1):
             if not line.strip():
                 continue
             try:
                 row = json.loads(line)
-            except json.JSONDecodeError:
-                continue  # a torn last line is an interrupted append
+            except json.JSONDecodeError as error:
+                if number == len(lines):
+                    break  # a torn last line is an interrupted append
+                raise ValueError(f"{self.candidates_path.name}:{number}: corrupt record") from error
             found[row.get("candidate_id", "")] = row
         return found
 

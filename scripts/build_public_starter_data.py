@@ -353,6 +353,15 @@ def personal_asset_kind(metadata: dict[str, Any], path: Path) -> str:
     return ""
 
 
+def read_vault_text(path: Path, relative: str, failures: list[str]) -> str | None:
+    """A user's own note that is not UTF-8 (a GBK or Latin-1 file, say) is named and skipped, not a traceback."""
+    try:
+        return path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        failures.append(f"{relative}: not UTF-8 text; save it as UTF-8 to include it")
+        return None
+
+
 def validate_personal_onboarding_outputs(source_root: Path) -> list[str]:
     """Fail visibly when a started onboarding run cannot become indexed assets."""
     intake = source_root / "06_active_context" / "onboarding-intake.md"
@@ -371,7 +380,9 @@ def validate_personal_onboarding_outputs(source_root: Path) -> list[str]:
         if not path.is_file():
             failures.append(f"personal onboarding output missing: {relative}")
             continue
-        text = path.read_text(encoding="utf-8")
+        text = read_vault_text(path, relative, failures)
+        if text is None:
+            continue
         if not has_frontmatter(text):
             failures.append(f"personal onboarding output lacks YAML frontmatter: {relative}")
             continue
@@ -384,8 +395,8 @@ def validate_personal_onboarding_outputs(source_root: Path) -> list[str]:
     paper_root = source_root / "01_knowledge" / "papers" / "own_papers" / "reading_notes"
     for path in sorted(paper_root.glob("*.md")) if paper_root.is_dir() else []:
         relative = path.relative_to(source_root).as_posix()
-        text = path.read_text(encoding="utf-8")
-        if not has_frontmatter(text):
+        text = read_vault_text(path, relative, failures)
+        if text is None or not has_frontmatter(text):
             continue
         metadata = parse_frontmatter(text)
         if str(metadata.get("onboarding_origin", "")).strip() != "researchos_onboarding_v1":
@@ -410,8 +421,8 @@ def build_personal_vault_data(
     failures: list[str] = []
     source_root = vault_root or root
     for path in selected_language_files(personal_files(source_root), normalized_language):
-        text = path.read_text(encoding="utf-8")
-        if not has_frontmatter(text):
+        text = read_vault_text(path, path.relative_to(source_root).as_posix(), failures)
+        if text is None or not has_frontmatter(text):
             continue
         metadata = parse_frontmatter(text)
         asset_kind = personal_asset_kind(metadata, path)

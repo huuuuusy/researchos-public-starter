@@ -470,9 +470,13 @@ print(json.dumps({"builds": len(builds), "errors": errors, "alive": sum(thread.i
             urllib.request.urlopen(forged, timeout=5)
         self.assertEqual(403, host_context.exception.code)
 
-        for path in ("/data/researchos-local.json", "/data/%2e%2e/data/researchos-local.json"):
-            with self.subTest(path=path), self.assertRaises(urllib.error.HTTPError) as data_context:
-                urllib.request.urlopen(self.base + path, timeout=5)
+        # /data/README.md is in every checkout, so a 404 for it proves the guard ran rather than that
+        # the file happens to be absent (researchos-local.json only exists after a personal-vault build).
+        for method, path in (("GET", "/data/researchos-local.json"), ("GET", "/data/%2e%2e/data/researchos-local.json"),
+                             ("GET", "/data/README.md"), ("HEAD", "/data/README.md"), ("GET", "/data/")):
+            request = urllib.request.Request(self.base + path, method=method)
+            with self.subTest(method=method, path=path), self.assertRaises(urllib.error.HTTPError) as data_context:
+                urllib.request.urlopen(request, timeout=5)
             self.assertEqual(404, data_context.exception.code)
 
     def test_binary_upload_streams_without_deleting_existing_session_material(self) -> None:

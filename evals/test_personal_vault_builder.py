@@ -99,6 +99,19 @@ class PersonalVaultBuilderTest(unittest.TestCase):
             upgraded_projection = MODULE.build_personal_dashboard_projection(upgraded_data, root=root)
             self.assertEqual(upgraded_projection["asset_graph"]["papers"][0]["analysis_state"], "M2_refined_read")
 
+    def test_a_note_that_is_not_utf8_is_named_instead_of_crashing_the_build(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            vault = root / "personal_vault"
+            write_card(vault, "01_knowledge/papers/local-paper.md", 'type: reading_note\ntitle: "Local Paper"\nsensitivity: private')
+            latin1 = vault / "01_knowledge" / "projects" / "notes-latin1.md"
+            latin1.parent.mkdir(parents=True, exist_ok=True)
+            latin1.write_bytes("---\ntitle: Été\n---\n".encode("latin-1"))
+            write_agenda(vault)
+            data, failures = MODULE.build_personal_vault_data(root=root, content_language="en", vault_root=vault)
+            self.assertEqual(["01_knowledge/projects/notes-latin1.md: not UTF-8 text; save it as UTF-8 to include it"], failures)
+            self.assertEqual(["personal_vault/01_knowledge/papers/local-paper.md"], [record["path"] for record in data["records"]])
+
     def test_dedicated_ignored_overlay_is_the_only_personal_source(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
