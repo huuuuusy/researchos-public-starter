@@ -50,8 +50,8 @@ MESSAGES = {
         "ph.draft": "<草稿>", "ph.target": "<卡片或 commitment:id>",
         "network": "网络整体",
         "today.header": "ResearchOS · {date} · 会话 {session}",
-        "today.since": "相对上次运行：新发现 {added}、有改动 {modified}、移出 {removed} 项；事项变化 {transitions} 条；未关闭 {open} 条。",
-        "today.changes": "上次运行以来的变化（首次运行时所有卡片都算新发现；这里只是列出，不会自动变成待办）：",
+        "today.since": "相对上一次 ros 命令：新发现 {added}、有改动 {modified}、移出 {removed} 项；事项变化 {transitions} 条；未关闭 {open} 条。",
+        "today.changes": "上一次 ros 命令以来的变化（首次运行时所有卡片都算新发现；这里只是列出，不会自动变成待办）：",
         "change.row": "{change}：{label}",
         "change.added": "新增/新发现",
         "change.modified": "修改",
@@ -107,7 +107,7 @@ MESSAGES = {
         "today.spec_none": "这个会话开始时没有冻结规格（旧会话）：收尾后下一次 today 会冻结完整规格",
         "close.pending_question": "待你回答（不论其是否在本次范围内都列出）",
         "today.spec_changed": "本次会话开始后规格已变（{parts}）：本次仍按开始时冻结的规格进行；收尾后下一次 today 按新规格开新会话",
-        "run.prompt": "任务：为 {target} 起草至多 3 条判断，只依据下面给出的材料。\n要求：{instruction}\n输出格式：每条判断写成一个判断块——\n> [!judgment] j-<短 id>\n> 结论：<一句话>\n> 依据：<引用> · <引用>\n依据只能原样照抄下面材料里某一节 # 标题后的引用（如 commitment:<id> 或卡片路径），不加字段后缀；版本在登记时自动冻结。\n不要写其他内容。这些草稿只会成为候选，由研究者决定是否准入。",
+        "run.prompt": "任务：为 {target} 起草至多 3 条判断，只依据下面给出的材料。\n要求：{instruction}\n输出格式：每条判断写成一个判断块——\n> [!judgment] j-<短 id>\n> 结论：<一句话>\n> 依据：<引用> · <引用>\n依据只能原样照抄下面材料里某一节 # 标题后的卡片路径，不加字段后缀，也不要用 commitment:<id>（它的版本随日期和下一步变化）；版本在登记时自动冻结。\n不要写其他内容。这些草稿只会成为候选，由研究者决定是否准入。",
         "run.default": "指出这些材料支持或不支持的一条最关键判断",
         "today.stale_sessions": "还有 {n} 个前几天的会话没有收尾（{ids}）：它们不会被延续，用 ros close --session <id> 逐个收尾",
         "propose.unbound": "这份草稿没有归到任何今天开着的会话：先 ros today（或 --for 对应承诺），或用 --session 点名",
@@ -143,7 +143,7 @@ MESSAGES = {
         "empty": "空",
         "close.template": ("如果这次会话形成了新的判断（最多 3 条），请会话中的模型按下面格式写到一个文件，再运行\n"
                            "  ros propose judgment --file <文件> --target <卡片路径或 commitment:<id>>\n\n"
-                           "> [!judgment] j-<简短标识>\n> 结论：……\n> 依据：<卡片路径或 commitment:<id>> · ……\n"
+                           "> [!judgment] j-<简短标识>\n> 结论：……\n> 依据：<卡片路径> · ……（依据写卡片，不写 commitment:<id>）\n"
                            "> 适用条件：……\n> 放弃的选项：……\n\n没有判断就不用写；不确认就不会写入。"),
         "propose.done": "已登记 {n} 条候选：",
         "admit.done": "已准入 {id} → {path}:{line}",
@@ -166,7 +166,7 @@ MESSAGES = {
         "held.opt.cancel": "不再需要，取消",
         "receipt.revoked": "\n  已被回滚撤销（记录保留为历史）",
         "receipt.row": "关闭回执 {closure_receipt}：{episode}，{at}\n  理由：{reason}\n  候选 {candidate_id}；写入事务 {transaction_id}",
-        "admit.copy_next": "要留下它：把这段改动应用到 {path}，再在你自己的终端运行 ros admit --confirm {id}。改动里如果加了 judgments: 一行，之后 close 会列出它，届时用 ros decide <编号> confirm 确认。",
+        "admit.copy_next": "要留下它：把这段改动应用到 {path}，再在你自己的终端运行 ros admit --confirm {id}。改动里如果加了 judgments: 一行，close 可能会列出它；列出的话，用 ros decide <编号> confirm 确认。",
         "why.subject_absent": "这条事项所指的判断已不在了（被替换或删除）；不再需要就取消（cancel）",
         "decline.stopped": "没有执行：你在终端拒绝了 {id}",
         "question.no_match": "问题编号「{id}」对应 {n} 个未答问题",
@@ -228,8 +228,8 @@ MESSAGES = {
         "ph.draft": "<draft>", "ph.target": "<card or commitment:id>",
         "network": "Whole network",
         "today.header": "ResearchOS · {date} · session {session}",
-        "today.since": "Since the last run: {added} new, {modified} changed, {removed} removed; {transitions} item change(s); {open} open.",
-        "today.changes": "Changes since the last run (on a first run every card counts as new; listed only, not turned into work):",
+        "today.since": "Since the last ros command: {added} new, {modified} changed, {removed} removed; {transitions} item change(s); {open} open.",
+        "today.changes": "Changes since the last ros command (on a first run every card counts as new; listed only, not turned into work):",
         "change.row": "{change}: {label}",
         "change.added": "Added/newly observed",
         "change.modified": "Modified",
@@ -285,7 +285,7 @@ MESSAGES = {
         "today.spec_none": "This session froze no spec when it started (an older session); the next today after close freezes the full spec",
         "close.pending_question": "awaiting your answer (listed whether or not it is in this scope)",
         "today.spec_changed": "The spec changed after this session started ({parts}): this session keeps the spec it froze; after you close it, the next today opens a new session under the new spec",
-        "run.prompt": "Task: draft at most 3 judgments for {target}, using only the material below.\nFocus: {instruction}\nFormat: each judgment is one block —\n> [!judgment] j-<short id>\n> Conclusion: <one sentence>\n> Basis: <ref> · <ref>\nEach basis is copied exactly from a # heading of the material below (such as commitment:<id> or a card path), with no field suffix; versions are frozen when the draft is recorded.\nWrite nothing else. These drafts only become candidates; the researcher decides admission.",
+        "run.prompt": "Task: draft at most 3 judgments for {target}, using only the material below.\nFocus: {instruction}\nFormat: each judgment is one block —\n> [!judgment] j-<short id>\n> Conclusion: <one sentence>\n> Basis: <ref> · <ref>\nEach basis is a card path copied exactly from a # heading of the material below, with no field suffix and not commitment:<id> (its version changes with its dates and next step); versions are frozen when the draft is recorded.\nWrite nothing else. These drafts only become candidates; the researcher decides admission.",
         "run.default": "state the single most important judgment this material supports or does not support",
         "today.stale_sessions": "{n} session(s) from earlier days are still open ({ids}): they are not continued; close each with ros close --session <id>",
         "propose.unbound": "this draft belongs to no session open today: run ros today (or --for its commitment), or name one with --session",
@@ -321,7 +321,7 @@ MESSAGES = {
         "empty": "empty",
         "close.template": ("If this session produced judgments (at most 3), ask the session model to write them to a file in\n"
                            "this format, then run\n  ros propose judgment --file <file> --target <card path or commitment:<id>>\n\n"
-                           "> [!judgment] j-<short-id>\n> Conclusion: …\n> Basis: <card path or commitment:<id>> · …\n"
+                           "> [!judgment] j-<short-id>\n> Conclusion: …\n> Basis: <card path> · … (cards, not commitment:<id>)\n"
                            "> Conditions: …\n> Rejected: …\n\nNo judgment, nothing to write; nothing is written without confirmation."),
         "propose.done": "Registered {n} candidate(s):",
         "admit.done": "Admitted {id} → {path}:{line}",
@@ -344,7 +344,7 @@ MESSAGES = {
         "held.opt.cancel": "no longer needed: cancel",
         "receipt.revoked": "\n  revoked by a rollback (kept as history)",
         "receipt.row": "closure receipt {closure_receipt}: {episode}, {at}\n  reason: {reason}\n  candidate {candidate_id}; write transaction {transaction_id}",
-        "admit.copy_next": "To keep it: apply this change to {path}, then run ros admit --confirm {id} in your own terminal. If the change adds a judgments: line, close lists it afterwards; confirm it then with ros decide <id> confirm.",
+        "admit.copy_next": "To keep it: apply this change to {path}, then run ros admit --confirm {id} in your own terminal. If the change adds a judgments: line, close may list it; if it does, confirm it with ros decide <id> confirm.",
         "why.subject_absent": "the judgment this item was about is no longer there (replaced or removed); cancel it if it is no longer needed",
         "decline.stopped": "not done: you declined {id} at the terminal",
         "question.no_match": "question id '{id}' matches {n} open questions",

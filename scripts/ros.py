@@ -548,7 +548,7 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
         if data["network"]:
             lines += _render_group(L, {"commitment_title": t(L, "network"), "items": data["network"]}, marker="")
     else:
-        lines.append(t(L, "today.elsewhere.count", n=elsewhere))
+        lines += [t(L, "today.elsewhere.count", n=elsewhere)] * bool(elsewhere)
     if problems:
         lines.append(t(L, "today.problems", n=problems))
     if data["stale_sessions"]:

@@ -121,7 +121,7 @@ class RosDemoTest(unittest.TestCase):
             run_id = re.search(r"\(run (ros-run-[0-9a-f]+)\)", packet).group(1)
             collected = ros_demo.run(root, "collect", run_id, "--file", str(sample))
             self.assertIn("returned 1 candidate(s)", collected)
-            self.assertIn("since the last run: 0 new, 0 changed",
+            self.assertIn("since the last ros command: 0 new, 0 changed",
                           ros_demo.run(root, "today").lower(), "the sample answer is outside graph_roots")
 
 

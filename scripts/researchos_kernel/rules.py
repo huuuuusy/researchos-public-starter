@@ -450,8 +450,8 @@ def deadline_warning(snapshot, config, rule, ledger_state, today: date) -> list:
             read_set={"due": due.isoformat(), "state": commitment.state},
             commitment_id=commitment.id, consequence=TOUCHES_NEXT_STEP, due_days=days,
             details=[t(lang, "deadline.next", next=commitment.get("next_step") or t(lang, "not_written"))],
-            options=_options(
-                (t(lang, "deadline.opt.keep"), f"ros decide {t(lang, 'ph.requirement')} defer --until {t(lang, 'ph.due')}"),
+            options=_options(  # "on track" only while the date is still ahead: a deferral must end after today
+                *[(t(lang, "deadline.opt.keep"), f"ros decide {t(lang, 'ph.requirement')} defer --until {t(lang, 'ph.due')}")][:days > 0],
                 (t(lang, "deadline.opt.adjust"), t(lang, "deadline.opt.adjust.action")),
                 (t(lang, "deadline.opt.status_quo"), f"ros decide {t(lang, 'ph.requirement')} cancel --reason {t(lang, 'ph.reason')}")),
         ))

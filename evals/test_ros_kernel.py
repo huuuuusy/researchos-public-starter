@@ -433,8 +433,8 @@ class RosKernelTest(unittest.TestCase):
     # Every finding and check the five script rules produce over a fixture that reaches each branch.
     # issue_id and read_set are persisted (a change re-opens every requirement as a new generation),
     # and summaries, details, options and check reasons are shown or recorded; this pins them all.
-    # 2026-11-10: re-pinned after the v1.1 wording pass (item terms, field and deadline options); ids and read sets unchanged.
-    RULE_OUTPUT_DIGEST = "69707cb16bf0b2572b419dc558d6e9f8a723db79258e36d6838b99d1556d53cf"
+    # 2026-11-10: re-pinned after the v1.1 wording pass (item terms, field and deadline options, no "on track" once due); ids and read sets unchanged.
+    RULE_OUTPUT_DIGEST = "3d3690e213b68b9e8e1f44babd91e12b07962760ede4c9f745ba02104a95f689"
 
     def test_rule_findings_and_checks_stay_byte_for_byte_the_same(self) -> None:
         from researchos_kernel import rules as rule_table
@@ -2596,8 +2596,8 @@ class RosKernelTest(unittest.TestCase):
         self.assertTrue(rows["commitment:alpha"]["related_requirements"])
         self.assertTrue(rows["01_knowledge/projects/alpha.md"]["related_requirements"],
                         "the source card exposes its commitment's current pending requirements")
-        self.assertIn("相对上次运行", text)
-        self.assertIn("上次运行以来的变化", text)  # --for must not mislabel global observations as focused changes.
+        self.assertIn("相对上一次 ros 命令", text)
+        self.assertIn("上一次 ros 命令以来的变化", text)  # --for must not mislabel global observations as focused changes.
         self.assertNotIn("不一定由这次变化引起", text, "related items are listed under To decide, not repeated here")
         self.write("01_knowledge/projects/alpha.md", "---\ntitle: Alpha\nid: alpha-project\n---\nEvidence v3\n")
         self.assertIn("不一定由这次变化引起", self.capture_ros("--lang", "zh-CN", "today", "--for", "alpha", "--all")[1])

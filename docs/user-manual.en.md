@@ -44,7 +44,8 @@ The demo output and these guides use a few words in a narrow sense. For a first 
 | item | A registered piece of maintenance work, such as rechecking a judgment after its source changed; older output called it a requirement. |
 | waiting on your answer, deferred | Work waiting on your answer waits for the researcher's answer to one question. Deferred work waits for a trigger, such as a date. |
 | receipt | The record of what was done and checked. |
-| decision boundary | The moment the system looks at what has arrived and decides what to do next. The output calls it a "run". |
+| complete, complete_with_held, human_stopped, budget_stopped | The outcome `close` reports: nothing open; only work waiting on your answer or deferred; you ended the session with work still open; the session's budget ran out. Ending with work open is normal and is not an error. |
+| decision boundary | The moment the system looks at what has arrived and decides what to do next. The output calls it "the last ros command". |
 | copy fallback, copy-only | This repository prepares text you copy into your own assistant instead of running or writing anything. |
 | `personal_vault/` | The git-ignored folder in your clone for your own material. |
 | vault, research graph, fixture | The folder of cards and portfolio that `--root` points to: `personal_vault/` is yours, and `examples/scheduler-demo/` (the fixture) is the fictional one. |
