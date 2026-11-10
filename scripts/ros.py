@@ -157,8 +157,7 @@ def _boundary_change_details(result) -> dict:
 def _render_changes(lang: str, rows: list, related: bool = True) -> list:
     lines = []
     for row in rows:
-        label = row["ref"] if row["title"] == row["ref"] else (f"{row['title']} ({row['ref']})" if lang == "en"
-                                                               else f"{row['title']}（{row['ref']}）")
+        label = row["ref"] if row["title"] == row["ref"] else (row["title"] + ("（{}）", " ({})")[lang == "en"].format(row["ref"]))
         lines.append("  · " + t(lang, "change.row", change=t(lang, 'change.' + row['change']), label=label))
         lines += ["      " + t(lang, "change.related", id=req["issue_id"][:10],
                               status=req["status"], summary=req["summary"])
@@ -480,24 +479,18 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
                removed=changed["removed"], transitions=data["transitions"], open=data["total_open"]), ""]
     change_rows = data["change_details"]["items"]
     lines.append(t(L, "today.changes"))
-    # The open items a change touches are listed under To decide; --all and --json repeat them here.
     lines += _render_changes(L, change_rows if show_all else change_rows[:10], related=show_all)
     if not change_rows:
         lines.append("  " + t(L, "none"))
     if not show_all and len(change_rows) > 10:
         lines.append("  " + t(L, "change.omitted", n=len(change_rows) - 10))
     lines.append("")
-    quiet_scope = not (len((shown or {}).get("cross_scope_keys", [])) or coverage.get("coverage_unknown_in_scope", 0)
-                       or coverage.get("coverage_unknown_unowned", 0)
-                       or coverage.get("evaluated_match_count", 0) != coverage.get("in_scope_match_count", 0))
-    if shown and (show_all or not quiet_scope):
-        # 完成报告要能核对范围：归属节点、跨范围键数、两类覆盖未知及其分母（覆盖计数是全范围的当前值）。
-        # 全部为零时默认不印；--all 与 --json 照旧给出。
+    if shown and (show_all or (shown.get("cross_scope_keys") or coverage.get("coverage_unknown_in_scope") or coverage.get("coverage_unknown_unowned")
+                               or coverage.get("evaluated_match_count") != coverage.get("in_scope_match_count"))):
+        # 完成报告要能核对范围：归属节点、跨范围键数、两类覆盖未知及其分母；全部为零时只在 --all 与 --json 里给出。
         lines.append(t(L, "today.scope", node=shown["scope_node"], members=shown["scope_member_count"],
-                       cross=len(shown["cross_scope_keys"]),
-                       uncovered=coverage.get("coverage_unknown_in_scope", 0),
-                       unowned=coverage.get("coverage_unknown_unowned", 0),
-                       evaluated=coverage.get("evaluated_match_count", 0),
+                       cross=len(shown["cross_scope_keys"]), uncovered=coverage.get("coverage_unknown_in_scope", 0),
+                       unowned=coverage.get("coverage_unknown_unowned", 0), evaluated=coverage.get("evaluated_match_count", 0),
                        domain=coverage.get("in_scope_match_count", 0)))
         lines.append("")
     if not status.get("scope_frozen"):
@@ -509,13 +502,11 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
         lines.append("  ! " + t(L, "today.spec_changed", parts=", ".join(data["spec_changes_pending"])))
     lines.append(t(L, "today.completion", unfinished=len(status["unfinished"]), held=len(status["held"]),
                    waiting=len(status["waiting"]), outside=status["out_of_scope_open"], unowned=status["unowned_open"]))
-    if show_all or any(status.get("unknown_kinds", {}).values()):
-        lines.append("  " + _unknowns_line(L, status))
+    lines += ["  " + _unknowns_line(L, status)] * (show_all or any(status.get("unknown_kinds", {}).values()))
     lines += ["  ↻ " + t(L, "unknowns.run", run=run_id) for run_id in status["runs_unknown"]]
     if (shown or {}).get("narrowed_by"):
         lines.append("  " + t(L, "today.narrowed", intent=shown["narrowed_by"]))
-    if show_all or budget["exhausted"]:
-        lines.append("  " + _budget_line(L, budget["limits"], budget["spent"], budget["exhausted"]))
+    lines += ["  " + _budget_line(L, budget["limits"], budget["spent"], budget["exhausted"])] * (show_all or bool(budget["exhausted"]))
     if budget["exhausted"]:
         # CC-10: the episode has stopped. It asks nothing more, dispatches nothing, and closes as budget_stopped.
         lines.append("  ! " + t(L, "budget.stopped", session=data["session_id"]))
@@ -542,15 +533,13 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
                 + [line for row in rows for line in render(row)] + [""])
     # Today comes from the attention owner and is never truncated; triage only adds its proposals.
     no_schedule = ctx.runtime_scope == "public_starter" and not show_all  # no attention owner ships here
-    lines += ([] if no_schedule and not data["today"] else section("today", group))
-    lines += section("decision", group) + section("questions", question)
+    lines += ([] if no_schedule and not data["today"] else section("today", group)) + section("decision", group) + section("questions", question)
     if data["waiting_on_trigger"]:
         lines.append(t(L, "today.waiting", n=len(data["waiting_on_trigger"])))
-        lines += [f"  … [{row['short_id']}] {row['summary']} — {_trigger(L, row['trigger'])}" for row in data["waiting_on_trigger"]]
+        lines += [f"  … [{row['short_id']}] {row['summary']} — {t(L, 'trigger.date', date=row['trigger'][5:]) if row['trigger'].startswith('date:') else row['trigger']}" for row in data["waiting_on_trigger"]]
         lines.append("")
     colon = ": " if L == "en" else "："
-    if not no_schedule:  # `ros attend` writes nothing here, so its proposals lead nowhere
-        lines += section("proposals", lambda row: [f"  · {row['commitment_title']}{colon}{row['reason']} → {row['command']}"])
+    lines += [] if no_schedule else section("proposals", lambda row: [f"  · {row['commitment_title']}{colon}{row['reason']} → {row['command']}"])
     elsewhere = sum(len(row["items"]) for row in data["needs_review"]) + len(data["network"])
     if show_all:
         lines.append(t(L, "today.elsewhere.title", n=elsewhere))
@@ -572,11 +561,6 @@ def _fill(lang: str, action: str, row: dict) -> str:
     if row.get("due_date") and (row.get("due_days") or 0) > 0:  # a deferral must end after today
         action = action.replace(t(lang, "ph.due"), row["due_date"])
     return action
-
-
-def _trigger(lang: str, trigger: str) -> str:
-    """A reopening trigger in words; other kinds keep their registered form."""
-    return t(lang, "trigger.date", date=trigger[5:]) if trigger.startswith("date:") else trigger
 
 
 def _render_group(lang: str, group: dict, *, marker: str) -> list:
@@ -889,17 +873,15 @@ def _render_close(ctx: Context, data: dict, budget_line: str) -> str:
     lines = [t(L, "close.header", session=data["session_id"]), "",
              t(L, "close.outcome", outcome=data["outcome"], unfinished=len(report["unfinished"]), held=len(data["held"])),
              t(L, "close.scope", node=scope.get("scope_node", "?"), members=scope.get("scope_member_count", "?"),
-               cross=len(scope.get("cross_scope_keys", [])),
-               uncovered=coverage.get("coverage_unknown_in_scope", 0), unowned=coverage.get("coverage_unknown_unowned", 0),
-               evaluated=coverage.get("evaluated_match_count", 0), domain=coverage.get("in_scope_match_count", 0),
-               outside=report["out_of_scope_open"], undefined=report["unowned_open"]),
-             ] + ([_unknowns_line(L, report)] if any(report.get("unknown_kinds", {}).values()) else []) \
-        + ([budget_line] if data.get("budget_exhausted") else [])
+               cross=len(scope.get("cross_scope_keys", [])), uncovered=coverage.get("coverage_unknown_in_scope", 0),
+               unowned=coverage.get("coverage_unknown_unowned", 0), evaluated=coverage.get("evaluated_match_count", 0),
+               domain=coverage.get("in_scope_match_count", 0), outside=report["out_of_scope_open"], undefined=report["unowned_open"]),
+             ] + [_unknowns_line(L, report)] * any(report.get("unknown_kinds", {}).values()) + [budget_line] * bool(data.get("budget_exhausted"))
     if data["note"]:
         lines.append("  ! " + data["note"])
     if report.get("next_episode"):
         lines.append("  » " + t(L, "close.next_episode", n=len(report["next_episode"])))
-    lines += [f"  ⏸ [{row['short_id']}] {row['summary']} — {_trigger(L, row['trigger'])}" for row in data["held"]]
+    lines += [f"  ⏸ [{row['short_id']}] {row['summary']} — {t(L, 'trigger.date', date=row['trigger'][5:]) if row['trigger'].startswith('date:') else row['trigger']}" for row in data["held"]]
     lines += [f"  ? [{row['ask_id']}] {row['summary']} — {t(L, 'close.pending_question')}" for row in data["pending_questions"]]
     # Kernel §2.1: ending the session does not end its runs; each keeps its own tracking.
     lines += ["  ↻ " + t(L, "unknowns.run", run=run_id) for run_id in data["open_runs"]]
@@ -1368,8 +1350,7 @@ def _copy_fallback(ctx: Context, args, how: str, relative: str, new_text: str, j
                                         fromfile=f"a/{relative}", tofile=f"b/{relative}"))
     reason = "public_starter: copy fallback only; nothing was written to or admitted into the durable sources"
     return emit(args, {"promoted": False, "how": how, "path": relative, "reason": reason, "planned_diff": diff},
-                t(ctx.lang, "admit.copy_fallback", how=how, path=relative) + "\n" + diff
-                + ("\n" + t(ctx.lang, "admit.copy_next", path=relative, id=judgment_id) if judgment_id else ""))
+                t(ctx.lang, "admit.copy_fallback", how=how, path=relative) + "\n" + diff + ("\n" + t(ctx.lang, "admit.copy_next", path=relative, id=judgment_id) if judgment_id else ""))
 
 
 def _decision_channel(lang: str, how: str, object_id: str, declinable: bool = False) -> tuple:
@@ -1757,8 +1738,7 @@ def cmd_decide(ctx: Context, args) -> int:
                                         "reason": payload["reason"], "decision_evidence": channel[1]})
         emit(args, {"issue_id": issue_id, **payload, "applied": False, "status": state["status"],
                     "permission_state": channel[0]},
-             t(ctx.lang, "decide.needs_terminal", id=issue_id[:10], action=args.action,
-               reason_flag=t(ctx.lang, "decide.reason_flag") if args.action == "cancel" else ""))
+             t(ctx.lang, "decide.needs_terminal", id=issue_id[:10], action=args.action, reason_flag=t(ctx.lang, "decide.reason_flag") if args.action == "cancel" else ""))
         return 1
     with ctx.ledger.lock():
         trigger = state.get("reopen_trigger", "")
@@ -2037,7 +2017,6 @@ def main(argv=None) -> int:
     parser.add_argument("--lang", choices=["zh-CN", "en"], default="")
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--json", action="store_true", default=argparse.SUPPRESS)
-    # --lang is also accepted after the command, where people naturally add it.
     common.add_argument("--lang", choices=["zh-CN", "en"], default=argparse.SUPPRESS)
     sub = parser.add_subparsers(dest="command", required=True)
 
