@@ -2,6 +2,13 @@
   <strong>English</strong> | <a href="README.zh.md">中文</a>
 </p>
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/brand/researchos-logo-dark.svg">
+    <img src="docs/assets/brand/researchos-logo.svg" alt="ReSearchOS" width="360">
+  </picture>
+</p>
+
 # ResearchOS
 
 **Keep your research judgment yours.**
@@ -13,11 +20,11 @@
 **How it works.**
 
 1. **Your research lives in cards.** Paper, project and collaborator cards are ordinary Markdown files on your computer. Each judgment records what it rests on (which file, which version) and where it applies.
-2. **Start with `today`.** It lists what needs your decision. If a source file has changed, for example because you replaced a paper with its corrected version, it marks the judgments that depend on it for recheck.
+2. **Start with `today`.** It lists what needs your decision. If a source file has changed, for example because you replaced a paper's card with one for its corrected version, it marks the judgments that depend on it for recheck. It reads the cards, not the PDFs: a changed PDF goes unnoticed until you update its card.
 3. **Let the AI work, but only as candidates.** `context` picks just the material this task needs, `run` writes a task packet you paste into any assistant, and `collect` brings the answer back as a candidate, which never changes your cards by itself.
 4. **You decide.** You keep or refuse each candidate, and `close` ends the session by listing what changed and what is still open.
 
-The commands in this repository stop at candidates and never change your cards themselves: a change worth keeping is pasted in by you or your assistant from what they print, and then you confirm it; the prototype described in the [technical report](docs/technical-report.en.md) adds a step in which the researcher confirms at the terminal and the system writes. It is for individual researchers who track research judgments over months.
+The commands in this repository stop at candidates and never change your cards themselves: a change worth keeping is pasted in by you or your assistant from what they print, and then you confirm it; the prototype described in the [technical report](docs/technical-report.en.md) adds a step in which the researcher confirms at the terminal and the system writes. It is for individual researchers who track research judgments over months. This is the first stage: one person, files on your own computer, decisions made at your own terminal. Within that scope you can go step by step from writing a judgment down, to having it come back for recheck when its source changes, to closing the session. Working in a team, dependencies as fine as a single argument, and noticing a change while no command is running are not part of the first stage; the full list is in Supplementary Note 6 of the technical report. So far only the author has used it over months, and whether it helps has not yet been compared with simpler practice.
 
 **What you need first.** You do not need to code, but you need three things:
 
@@ -47,9 +54,11 @@ The [first-run guide](08_exports/public_starter/onboarding-step-by-step.md) take
 
 ![When a source changes, the system hands the judgment back and the researcher decides what to keep, narrow or withdraw: a fictional example.](docs/figures/readme/keep-update-hold-en.gif)
 
-## What it is and is not
+## What the first stage includes and does not include
 
-In the documentation's terms, ResearchOS is a local-primary system for continuously maintaining research state (see [Words you will meet](docs/user-manual.en.md#words-you-will-meet)). It is a small, file-based tool, not a hosted service, an autonomous scientist, a complete personal knowledge base, a question-answering tool detached from evidence, or a polished all-in-one product.
+In the documentation's terms, ResearchOS is a local-primary system for continuously maintaining research state (see [Words you will meet](docs/user-manual.en.md#words-you-will-meet)). The first stage includes the six session commands, `today`, `context`, `run`, `collect`, `admit` and `close`, working on one researcher's Markdown cards: a judgment remembers which source files and versions it rests on, and when one of them changes, the next command hands it back for recheck. The shipped `config/ros.json` sets `runtime_scope: public_starter`. [Section 3 of the User Manual](docs/user-manual.en.md#3-the-session-scheduler-and-command-line-checks) sets out what `ros` writes, what `admit` does, which `runtime_scope` value turns admission and dispatch on, and how personal-vault mode differs.
+
+It is a small, file-based tool, not a hosted service, an autonomous scientist, a complete personal knowledge base, a question-answering tool detached from evidence, or a polished all-in-one product. This repository is copy-only, and its data is fictional. It never admits anything: where the prototype in the report would write an accepted change, it shows the planned change for you to copy, which the documentation calls copy fallback. The optional Dashboard and the plugin system are frozen. [Supplementary Note 6](docs/technical-report-supplement.en.md) of the technical report lists, item by item, what else the first stage does not include.
 
 ## Try it
 
@@ -83,10 +92,6 @@ You then replace the fictional commitments and cards with one of your own and ru
 - `07_archive/` keeps public-safe history, `09_templates/` the card templates and data contracts, `corpus/` stays empty because raw material is never committed, and `distilled/` holds short public-safe method summaries.
 - `scripts/`, `config/`, `dashboard/` and `evals/` are the command-line tools, runtime configuration, optional Dashboard and tests.
 
-## What this repository does not do
-
-This repository is copy-only, and its data is fictional. It never admits anything: where the prototype in the report would write an accepted change, it shows the planned change for you to copy, which the documentation calls copy fallback. The shipped `config/ros.json` sets `runtime_scope: public_starter`. [Section 3 of the User Manual](docs/user-manual.en.md#3-the-session-scheduler-and-command-line-checks) sets out what `ros` writes, what `admit` does, which `runtime_scope` value turns admission and dispatch on, and how personal-vault mode differs. The optional Dashboard and the plugin system are frozen.
-
 ## Where to read next
 
 The [documentation index](docs/README.md) lists the guides in the order a newcomer needs them, with one line on when to read each. [AGENTS.md](AGENTS.md) tells a file-aware assistant how to work here.
@@ -95,7 +100,7 @@ The technical report ([English source](docs/technical-report.en.md) · [English 
 
 ## Status
 
-This is V1.0.4, released as `v1.0.4` on 2026-11-07 (see the [V1.0.4 release notes](docs/releases/v1.0.4.md) and the [changelog](CHANGELOG.md)).
+This is the V1.1 release candidate (`1.1.0-rc.1`); the latest release is `v1.0.4`, released on 2026-11-07 (see the [V1.1 release notes](docs/releases/v1.1.0.md) and the [changelog](CHANGELOG.md)). The 1.x series is the first stage of ResearchOS: one researcher, local files, decisions at the terminal.
 
 ## How to cite
 

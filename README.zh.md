@@ -2,6 +2,13 @@
   <a href="README.md">English</a> | <strong>中文</strong>
 </p>
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/brand/researchos-logo-dark.svg">
+    <img src="docs/assets/brand/researchos-logo.svg" alt="ReSearchOS" width="360">
+  </picture>
+</p>
+
 # ResearchOS
 
 **让科研判断始终属于研究者。**
@@ -13,11 +20,11 @@
 **它怎么做。**
 
 1. **研究写成卡片。** 论文卡、项目卡、合作者卡都是普通的 Markdown 文件，存在你自己电脑上。每条判断都写明依据（哪个文件的哪个版本）和适用范围。
-2. **开工先跑 `today`。** 它列出要你决定的事。某个来源文件变了，比如你换上了更正后的论文，它会把依赖这个来源的判断标为待复核。
+2. **开工先跑 `today`。** 它列出要你决定的事。某个来源文件变了，比如你换上了更正后的论文卡，它会把依赖这个来源的判断标为待复核。它读的是卡片，不是 PDF：PDF 本身变了，在你更新卡片之前它看不到。
 3. **让 AI 干活，但只收候选。** `context` 只挑这次需要的材料，`run` 生成一个任务包让你贴给任何助手，`collect` 把回答收回来作为候选，它不会自己改你的卡片。
 4. **由你拍板。** 哪些候选留下、哪些拒绝，你说了算；收工跑 `close`，列出这次变了什么、还有什么没做完。
 
-本仓库的命令做到候选为止，从不自己改你的卡片：要留下的改动，由你或你的助手照着它打印的内容贴进去，再由你确认；[技术报告](docs/technical-report.zh.md)描述的原型多一步：研究者在终端确认之后由系统写入。它适合需要长期跟踪研究判断的个人研究者。
+本仓库的命令做到候选为止，从不自己改你的卡片：要留下的改动，由你或你的助手照着它打印的内容贴进去，再由你确认；[技术报告](docs/technical-report.zh.md)描述的原型多一步：研究者在终端确认之后由系统写入。它适合需要长期跟踪研究判断的个人研究者。现在是第一阶段：一个人用，材料是你电脑上的文件，拍板在你自己的终端里。在这个范围里，从写下一条判断，到来源变了它回来等你复核，再到收工，可以一步步走完。多人协作、细到某一条论据的依赖、在你没运行命令时自动察觉变化，第一阶段都不包含，完整的清单在技术报告的补充说明 6。目前只有作者一个人长期在用，它有没有帮助还没有和更简单的做法比较过。
 
 **开始前要准备什么。** 不需要会写代码，但要有三样东西：
 
@@ -47,9 +54,11 @@
 
 ![来源变化时，系统把判断交回，保留、收窄或撤回由研究者决定：一个虚构的例子。](docs/figures/readme/keep-update-hold-zh.gif)
 
-## 它是什么、不是什么
+## 第一阶段包含什么、不包含什么
 
-按文档里的说法，ResearchOS 是一个持续维护研究状态、本地为主的系统（研究状态指什么，见[你会遇到的词](docs/user-manual.zh.md#你会遇到的词)）。它是小型文件化工具，不是托管服务、自治科研系统、完整个人知识库、脱离证据的万能问答，也不是精致的 all-in-one 产品。
+按文档里的说法，ResearchOS 是一个持续维护研究状态、本地为主的系统（研究状态指什么，见[你会遇到的词](docs/user-manual.zh.md#你会遇到的词)）。第一阶段包含一次会话的六条命令 `today`、`context`、`run`、`collect`、`admit` 和 `close`，作用在一位研究者的 Markdown 卡片上：判断记住它依据哪些来源文件的哪个版本，其中一个变了，下一条命令就把它交回来等复核。出厂 `config/ros.json` 设为 `runtime_scope: public_starter`。`ros` 写什么、`admit` 做什么、`runtime_scope` 取什么值才开启准入与派发、personal-vault 模式有何不同，见[用户手册第 3 节](docs/user-manual.zh.md#3-会话调度器与命令行检查)。
+
+它是小型文件化工具，不是托管服务、自治科研系统、完整个人知识库、脱离证据的万能问答，也不是精致的 all-in-one 产品。本仓库只复制，随附数据都是虚构的。它从不准入任何东西：报告中的原型会写入已接受改动的地方，这里只显示计划中的改动，由你自己复制，文档里把这叫作复制回退。可选的 Dashboard 和插件体系处于冻结状态。第一阶段还有哪些不包含，技术报告的[补充说明 6](docs/technical-report-supplement.zh.md) 逐条列出。
 
 ## 上手试一下
 
@@ -83,10 +92,6 @@ python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 - `07_archive/` 存公开安全的历史，`09_templates/` 存卡片模板和数据契约，`corpus/` 保持为空（原始材料从不提交），`distilled/` 存简短的公开安全方法摘要。
 - `scripts/`、`config/`、`dashboard/` 和 `evals/` 分别是命令行工具、运行配置、可选 Dashboard 和测试。
 
-## 本仓库不做什么
-
-本仓库只复制，随附数据都是虚构的。它从不准入任何东西：报告中的原型会写入已接受改动的地方，这里只显示计划中的改动，由你自己复制，文档里把这叫作复制回退。出厂 `config/ros.json` 设为 `runtime_scope: public_starter`。`ros` 写什么、`admit` 做什么、`runtime_scope` 取什么值才开启准入与派发、personal-vault 模式有何不同，见[用户手册第 3 节](docs/user-manual.zh.md#3-会话调度器与命令行检查)。可选的 Dashboard 和插件体系处于冻结状态。
-
 ## 接下来读什么
 
 [文档索引](docs/README.zh.md)按新手需要的顺序列出各份指南，每份用一句话说明什么时候读。[AGENTS.md](docs/reference/AGENTS.zh.md) 约束文件感知助手在这里怎样工作。
@@ -95,7 +100,7 @@ python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 
 ## 状态
 
-本仓库是 V1.0.4，已于 2026-11-07 以 `v1.0.4` 发布（见 [V1.0.4 发布说明](docs/releases/v1.0.4.zh.md)与[更新记录](CHANGELOG.md)）。
+本仓库是 V1.1 候选版本（`1.1.0-rc.1`）；最新发布版是 2026-11-07 发布的 `v1.0.4`（见 [V1.1 发布说明](docs/releases/v1.1.0.zh.md)与[更新记录](CHANGELOG.md)）。1.x 系列是 ResearchOS 的第一阶段：一位研究者、本机文件、终端上的决定。
 
 ## 如何引用
 

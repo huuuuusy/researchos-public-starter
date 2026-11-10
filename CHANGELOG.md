@@ -4,6 +4,29 @@ All notable changes to ResearchOS Public Starter are documented in this file.
 
 The format follows the spirit of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+The 1.x series is the first stage of ResearchOS: one researcher, local files, decisions at the terminal. Versions 1.0.1 to 1.0.3 revised the technical report and the documentation; as their entries say, the software behaviour was unchanged.
+
+## [Unreleased]
+
+Release candidate for `v1.1.0`. This release adds no features. See the [V1.1 release notes](docs/releases/v1.1.0.md).
+
+### What the first stage includes
+
+- The six session commands `ros today`, `context`, `run`, `collect`, `admit` and `close`, with the two ways of running them: this repository shows the planned change for you to paste in and confirm at your terminal, and the prototype described in the report writes it after the researcher confirms at the terminal.
+- Technical report V12, which describes this first stage.
+
+### What the first stage does not include
+
+- Supplementary Note 6 of the technical report lists the boundary item by item; the author is the only user so far, and no comparison with simpler practice or study of use has been run.
+
+### Fixed
+
+- `ros propose judgment --target` accepts only cards in the scanned graph; `candidates.jsonl` no longer loses the candidate written after a torn last line.
+- Terminal-only answers and decisions print the `--reason` they need; an uploaded `*.tmp` file is no longer deleted at startup; damaged run-log lines no longer stop the server; the public Dashboard no longer lists `/data/`.
+- A personal-vault note that is not UTF-8 is named instead of ending the build in a traceback; `start_researchos.py --mode personal-vault --check` reports a missing CLI.
+- The first-run guide and `AGENTS.md` say when a hand-changed judgment-class field is listed for confirmation.
+- `ros context` no longer delivers a source without a sensitivity label as internal; a question asked on an obsolete basis no longer holds work once the question budget is spent; an ownership move inside an unchanged scope is attributed to the scope.
+
 ## [1.0.4] - 2026-11-07
 
 Tagged `v1.0.4`. See the [V1.0.4 release notes](docs/releases/v1.0.4.md).

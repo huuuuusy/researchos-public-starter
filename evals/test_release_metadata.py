@@ -35,12 +35,12 @@ class ReleaseMetadataTest(unittest.TestCase):
 
         def read_with_stale_server_count(root: Path, relative: str) -> str:
             text = original_read(root, relative)
-            if relative == "docs/releases/v1.0.4.md":
+            if relative == f"docs/releases/v{MODULE.VERSION}.md":
                 return text.replace(
                     f"`{snapshot['reachable_server_modules']}` reachable public-server modules",
                     f"`{stale_count}` reachable public-server modules",
                 )
-            if relative == "docs/releases/v1.0.4.zh.md":
+            if relative == f"docs/releases/v{MODULE.VERSION}.zh.md":
                 return text.replace(
                     f"`{snapshot['reachable_server_modules']}` 个可达 public server 模块",
                     f"`{stale_count}` 个可达 public server 模块",
@@ -74,7 +74,7 @@ class ReleaseMetadataTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "CITATION.cff").write_text(
-                'cff-version: 1.2.0\nversion: "1.0.4"\ndate-released: "2026-08-20"\n',
+                f'cff-version: 1.2.0\nversion: "{MODULE.VERSION}"\ndate-released: "2026-08-20"\n',
                 encoding="utf-8",
             )
             detected_date, failures = MODULE.detect_release_stage(root)
@@ -82,7 +82,7 @@ class ReleaseMetadataTest(unittest.TestCase):
             self.assertEqual(failures, [])
 
             (root / "CITATION.cff").write_text(
-                'cff-version: 1.2.0\nversion: "1.0.4"\ndate-released: "2026-02-30"\n',
+                f'cff-version: 1.2.0\nversion: "{MODULE.VERSION}"\ndate-released: "2026-02-30"\n',
                 encoding="utf-8",
             )
             detected_date, failures = MODULE.detect_release_stage(root)
@@ -99,8 +99,8 @@ class ReleaseMetadataTest(unittest.TestCase):
                 "README.zh.md",
                 "LICENSE.md",
                 "dashboard/index.html",
-                "docs/releases/v1.0.4.md",
-                "docs/releases/v1.0.4.zh.md",
+                f"docs/releases/v{MODULE.VERSION}.md",
+                f"docs/releases/v{MODULE.VERSION}.zh.md",
                 *MODULE.RELEASE_ARTIFACTS,
             ):
                 target = root / relative
@@ -108,7 +108,7 @@ class ReleaseMetadataTest(unittest.TestCase):
                 shutil.copy2(ROOT / relative, target)
             (root / "evals").mkdir()
             (root / "dashboard/src").mkdir(parents=True)
-            for notes_relative in ("docs/releases/v1.0.4.md", "docs/releases/v1.0.4.zh.md"):
+            for notes_relative in (f"docs/releases/v{MODULE.VERSION}.md", f"docs/releases/v{MODULE.VERSION}.zh.md"):
                 notes = root / notes_relative
                 text = notes.read_text(encoding="utf-8")
                 declared = MODULE.declared_artifact_hashes(text)

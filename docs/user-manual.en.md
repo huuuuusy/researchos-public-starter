@@ -6,6 +6,8 @@
 
 This manual follows a reader from the first session to a private vault of their own: what this repository is and the words its output uses, how to run one research loop in an agent client, how to try the session scheduler, what the optional Dashboard shows, and how to replace the fictional demo with your own material. For a first run, follow the [first-run guide](../08_exports/public_starter/onboarding-step-by-step.md); this manual is the reference behind it. The [System Reference](system-reference.en.md) defines states, governance boundaries, architecture, code owners and directories. The [Governance and Extension Guide](governance-guide.en.md) covers publication, customization, plugins, contribution and the license.
 
+This is the first stage of ResearchOS: one person, files on your own computer, decisions made at your own terminal. What the first stage includes and does not include is set out once, in the [README](../README.md#what-the-first-stage-includes-and-does-not-include), with the full list in Supplementary Note 6 of the technical report.
+
 ## 1. What this repository is
 
 ResearchOS Public Starter is a public-safe reference implementation of a small, file-based tool for individual researchers who want their judgment to stay continuous across tools, projects and time. An agent client such as Claude Code or Codex, or another file-aware CLI, is the primary execution route and also the complete default route: you state one goal, provide the minimum source, receive an answer or artifact, and any durable change waits for your approval and validation. The first loop needs no Dashboard, plugin, model setting or knowledge of the whole repository. The optional Dashboard makes attention, linked material and review boundaries visible, but it does not accept judgments or enlarge execution permissions.
@@ -183,16 +185,16 @@ All 13 subcommands exist in this repository. Most commands first run one boundar
 
 | Command | In this repository |
 | --- | --- |
-| `today` | Copy-only fallback: lists changes and open requests and opens a session, but no attention schedule ships, so every commitment reads as unscheduled |
+| `today` | Copy only: lists changes and open requests and opens a session, but no attention schedule ships, so every commitment reads as unscheduled |
 | `close` | Same as the prototype in the report; the listed candidates stay undecided |
 | `propose judgment`, `episode-close`, `rule` | Same: registers a candidate |
-| `admit` | Copy-only fallback: `<candidate>` and `--reconfirm` show the planned difference; `--confirm` records a confirmation without writing, and applies only when you answer at your own terminal; `--rollback` is refused, because this repository writes no source and rolls none back |
+| `admit` | Shows the planned change only: `<candidate>` and `--reconfirm` show the planned difference; `--confirm` records a confirmation without writing, and applies only when you answer at your own terminal; `--rollback` is refused, because this repository writes no source and rolls none back |
 | `decide` | Same: records the decision; `cancel` and `confirm` apply only when you answer at your own terminal |
 | `answer` | Same: records the answer; `satisfied` and `cancel` close the request, so they apply only when you answer at your own terminal; `satisfied` is offered only where a check's basis is the researcher's judgment, which none of the shipped rules declares |
 | `state`, `context`, `rules`, `receipt` | Same; they only read |
-| `run` | Copy-only fallback: `--executor copy_packet` only; every provider is refused |
+| `run` | Copy only: `--executor copy_packet` only; every provider is refused |
 | `collect` | Same, except that no run-state ledger is kept |
-| `attend` | Copy-only fallback: shows the planned attention action and writes nothing |
+| `attend` | Shows the planned change only: the attention action, and writes nothing |
 
 For an engineering check, run `python3 scripts/validate_headless.py`. It verifies the complete no-dashboard profile, which must pass with the `dashboard/` directory absent: routing, receipts, runtime and provider boundaries, task extensions, public safety, links and focused zero-dashboard behavior, without weakening authority checks. It is not a prerequisite for reading a source in your agent client. The CLI route prepares the same loop of goal, source, result and boundary without starting a server or Dashboard; the second command names the one file to read for a first run, the [first-run guide](../08_exports/public_starter/onboarding-step-by-step.md):
 

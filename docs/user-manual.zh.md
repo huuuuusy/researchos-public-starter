@@ -6,6 +6,8 @@
 
 这份手册按读者的使用顺序展开：本仓库是什么、输出里的词是什么意思，怎样在 Agent 客户端里走一个研究闭环，怎样试用会话调度器，可选 Dashboard 显示什么，以及怎样用自己的材料替换虚构 demo。第一次上手请按[首次上手说明](../08_exports/public_starter/onboarding-step-by-step.zh.md)走，本手册是它背后的参考。状态、治理边界、架构、代码 owner 和目录的定义见[系统参考](system-reference.zh.md)；发布、自定义、插件、贡献与许可见[治理与扩展指南](governance-guide.zh.md)。
 
+现在是 ResearchOS 的第一阶段：一个人用，材料是你电脑上的文件，拍板在你自己的终端里。第一阶段包含什么、不包含什么，集中写在 [README](../README.zh.md#第一阶段包含什么不包含什么)，完整的清单在技术报告的补充说明 6。
+
 ## 1. 本仓库是什么
 
 ResearchOS Public Starter 是一个面向个人科研人员的小型文件化工具的公开安全参考实现，用来让判断在工具、项目和时间之间保持连续。Claude Code、Codex 等 Agent 客户端或其他文件感知 CLI 是主要执行路线，也是完整的默认路线：给出一个目标和最少来源，得到回答或成果，长期变化留在你的批准与验证之后。第一圈不需要 Dashboard、插件、模型设置，也不需要先理解整个仓库。可选 Dashboard 让注意力、关联资料和审阅边界可见，但不替研究者接受判断，也不扩大执行权限。
@@ -183,16 +185,16 @@ python3 scripts/ros.py --root examples/scheduler-demo close
 
 | 命令 | 本仓库里的行为 |
 | --- | --- |
-| `today` | 只复制降级：列出变化与待处理要求并开启会话，但不随附注意力安排，所有承诺都读作未排期 |
+| `today` | 只复制：列出变化与待处理要求并开启会话，但不随附注意力安排，所有承诺都读作未排期 |
 | `close` | 与报告中的原型同语义；列出的候选始终尚未决定 |
 | `propose judgment`、`episode-close`、`rule` | 同语义：登记候选 |
-| `admit` | 只复制降级：`<candidate>` 与 `--reconfirm` 显示拟议差异；`--confirm` 只记确认、不写入，且只有你在自己的终端回答时才生效；`--rollback` 被拒绝，因为这里不写来源，也就不回滚来源 |
+| `admit` | 只显示拟议改动：`<candidate>` 与 `--reconfirm` 显示拟议差异；`--confirm` 只记确认、不写入，且只有你在自己的终端回答时才生效；`--rollback` 被拒绝，因为这里不写来源，也就不回滚来源 |
 | `decide` | 同语义：记下决定；`cancel` 与 `confirm` 只有你在自己的终端回答时才生效 |
 | `answer` | 同语义：记下回答；`satisfied` 与 `cancel` 会关闭要求，因此只有你在自己的终端回答时才生效；只有检查依据是研究者判断时才提供 `satisfied`，出厂规则里没有这样的检查 |
 | `state`、`context`、`rules`、`receipt` | 同语义，只读 |
-| `run` | 只复制降级：只接受 `--executor copy_packet`，拒绝所有 provider |
+| `run` | 只复制：只接受 `--executor copy_packet`，拒绝所有 provider |
 | `collect` | 同语义，只是不记 run-state 账 |
-| `attend` | 只复制降级：显示拟议的注意力动作，不写入 |
+| `attend` | 只显示拟议改动：拟议的注意力动作，不写入 |
 
 工程检查运行 `python3 scripts/validate_headless.py`。它验证完整的无 Dashboard profile，这个 profile 必须在 `dashboard/` 目录不存在时通过：routing、receipts、runtime 与 provider 边界、task extensions、public safety、links 和 focused zero-dashboard 行为，且不为通过而放宽 authority 检查。它不是用 Agent 客户端读一份来源的前提。CLI 路线准备同一个“目标、来源、结果、边界”的闭环，不启动服务器或 Dashboard；第二条命令给出第一次上手要读的那一个文件，即[首次上手说明](../08_exports/public_starter/onboarding-step-by-step.zh.md)：
 
