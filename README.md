@@ -102,19 +102,19 @@ The technical report ([English source](docs/technical-report.en.md) · [English 
 
 ## Status
 
-This is the V1.1 release candidate (`1.1.0-rc.1`); the latest release is `v1.0.4`, released on 2026-11-07 (see the [V1.1 release notes](docs/releases/v1.1.0.md) and the [changelog](CHANGELOG.md)). The 1.x series is the first stage of ResearchOS: one researcher, local files, decisions at the terminal.
+This is V1.1, released as `v1.1.0` on 2026-11-11 (see the [V1.1 release notes](docs/releases/v1.1.0.md) and the [changelog](CHANGELOG.md)). The 1.x series is the first stage of ResearchOS: one researcher, local files, decisions at the terminal.
 
 ## How to cite
 
-The technical report and this repository are archived together on Zenodo, in one record that Zenodo lists as software under the title "ResearchOS Public Starter". Please cite them with the DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799), which always resolves to the latest version; to cite exactly this release, use [10.5281/zenodo.24038050](https://doi.org/10.5281/zenodo.24038050).
+The technical report and this repository are archived together on Zenodo, in one record that Zenodo lists as software under the title "ResearchOS Public Starter". Please cite them with the DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799), which always resolves to the latest archived version; v1.1.0 has no version DOI of its own yet, and the last archived version, v1.0.4, is [10.5281/zenodo.24038050](https://doi.org/10.5281/zenodo.24038050).
 
-> Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.0.4). Zenodo. https://doi.org/10.5281/zenodo.23769799
+> Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.1.0). Zenodo. https://doi.org/10.5281/zenodo.23769799
 
 ```bibtex
 @misc{hu2026researchos,
   author       = {Hu, Shiyu},
   title        = {{ReSearchOS}: A Reference Architecture for Sustained Human--{AI} Research},
-  howpublished = {Technical report (not peer reviewed), version 1.0.4, Zenodo},
+  howpublished = {Technical report (not peer reviewed), version 1.1.0, Zenodo},
   year         = {2026},
   doi          = {10.5281/zenodo.23769799},
   url          = {https://github.com/huuuuusy/researchos-public-starter}

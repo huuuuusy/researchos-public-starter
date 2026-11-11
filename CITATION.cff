@@ -5,7 +5,8 @@ type: software
 authors:
   - family-names: "Hu"
     given-names: "Shiyu"
-version: "1.1.0-rc.1"
+version: "1.1.0"
+date-released: "2026-11-11"
 doi: "10.5281/zenodo.23769799"
 repository-code: "https://github.com/huuuuusy/researchos-public-starter"
 url: "https://github.com/huuuuusy/researchos-public-starter"
