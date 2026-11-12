@@ -210,4 +210,12 @@ assert.equal(
   "newest-same-session"
 );
 
+// The public quick route names the manual section that holds the agent loop (Step 4 since the manual was reordered).
+const publicQuickZh = Router.buildPrompt({ intent: "解释一下这个概念" }, { publicStarter: true });
+assert(publicQuickZh.includes("先读 `docs/user-manual.zh.md` 第 4 节的「在 Agent 客户端里走一个闭环」"), publicQuickZh);
+assert(!publicQuickZh.includes("第 2 节"), publicQuickZh);
+const publicQuickEn = Router.buildPrompt({ intent: "Explain this concept" }, { publicStarter: true, language: "en" });
+assert(publicQuickEn.includes('read "One loop in your agent client" in Section 4 of `docs/user-manual.en.md`'), publicQuickEn);
+assert(!publicQuickEn.includes("Section 2"), publicQuickEn);
+
 console.log("Work session router regression passed.");

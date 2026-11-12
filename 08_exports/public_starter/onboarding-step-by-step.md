@@ -49,7 +49,7 @@ In step 5 the reconfirmation is printed as a diff and not written, and in step 6
 
 ## Step 2: Walk through one session on the fixture
 
-The demo ran by itself. Now run the same kind of session one command at a time on the fixture in `examples/scheduler-demo/`. Section 3 of the User Manual, "Walk through a session", lists the six commands in order (`today`, `context`, `run`, `collect`, `admit` and `close`) and says what each does. The first is:
+The demo ran by itself. Now run the same kind of session one command at a time on the fixture in `examples/scheduler-demo/`. Section 3 of the User Manual, under "Asking an assistant to draft: context, run, collect", lists the six commands in order (`today`, `context`, `run`, `collect`, `admit` and `close`) and says what each does. The first is:
 
 ```bash
 python3 scripts/ros.py --root examples/scheduler-demo today
@@ -99,7 +99,7 @@ Candidates returned or proposed since this session started that are neither admi
    - source_path: 01_knowledge/projects/thesis-ch2.md
    ```
 
-   Section 5 of the User Manual lists the values each field accepts.
+   Appendix A of the User Manual lists the values each field accepts.
 
 3. Delete the two fictional cards, `personal_vault/01_knowledge/projects/occlusion-tracking.md` and `personal_vault/01_knowledge/papers/example-benchmark.md`, and create your own card at the `source_path` you wrote, starting from a template:
 
@@ -153,7 +153,7 @@ Now suppose one study included in the meta-analysis is retracted. Note it on the
         C Keep as is for now → ros decide d2db02806a defer --until <date>
 ```
 
-Whether the effect survives without that study is not something the system can tell; you choose among the three. For A, this repository prints the change that pins the new versions; apply it as printed and confirm it in your terminal. For B, draft the replacement with a new id and follow "When a source changes" in [Section 3 of the User Manual](../../docs/user-manual.en.md#when-a-source-changes), which lists the confirmations it leads to. When your ids differ from these, use the ones your terminal prints. An ethics amendment, an updated preregistration or replaced data works the same way: update the card, and `today` brings back the judgments that rest on it.
+Whether the effect survives without that study is not something the system can tell; you choose among the three. For A, this repository prints the change that pins the new versions; apply it as printed and confirm it in your terminal. For B, draft the replacement with a new id and follow "Replacing a judgment" in [Appendix B of the User Manual](../../docs/user-manual.en.md#appendix-b-replacing-a-judgment-and-confirming-commitment-fields-you-changed), which lists the confirmations it leads to. When your ids differ from these, use the ones your terminal prints. An ethics amendment, an updated preregistration or replaced data works the same way: update the card, and `today` brings back the judgments that rest on it.
 
 ## Step 4: Open the vault in the Dashboard (optional)
 
@@ -172,7 +172,7 @@ ResearchOS personal vault dashboard
 
 Open `http://127.0.0.1:8881/`. This mode reads only your vault and never shows the fictional demo data, so there is nothing to disable. Now shows your commitment and Library shows your cards. When you start work on an item, ResearchOS creates a bounded Work Session and routes it from Now into Work, the drawer of that item; a locally installed Codex CLI runs only after you submit the task, and only inside `personal_vault/`. Needs Review shows the returned result explicitly, with its evidence boundary, artifact paths, decision state and continuity handoff; nothing becomes durable memory until you confirm it.
 
-**If it looks different.** The server reads the cards when it starts, so restart it after adding or editing a card. If the port is already in use, pass another number to `--port`. Section 5 of the User Manual lists the folders the first start creates. To reopen the fictional demo separately, run `python3 scripts/start_researchos.py --mode dashboard --port 8880`.
+**If it looks different.** The server reads the cards when it starts, so restart it after adding or editing a card. If the port is already in use, pass another number to `--port`. "The optional Dashboard" in Section 6 of the User Manual lists the folders the first start creates. To reopen the fictional demo separately, run `python3 scripts/start_researchos.py --mode dashboard --port 8880`.
 
 ## Step 5: Check that the first run is done
 

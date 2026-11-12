@@ -18,6 +18,7 @@ Goes in personal_vault/01_knowledge/papers/. This skeleton also covers sources o
 When the source is corrected or revised (an erratum, a new questionnaire version, a corrected catalogue, an amended protocol), update its version on this card first; the judgments that rest on it then come back for review.
 public_boundary: published (or publicly available) / preprint / unpublished
 analysis_state: M1 registered / M2 close-read usable / M3 cross-project deepening
+related_people, related_projects: paths of other cards, counted from the root of the vault, for example 01_knowledge/papers/x.md, not papers/x.md.
 -->
 
 # Title of the paper or source

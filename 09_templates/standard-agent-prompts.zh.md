@@ -43,7 +43,7 @@ exportable_to:
 ```
 
 ```text
-我刚下载 ResearchOS Public Starter。请先只读 AGENTS.md，再判断是否需要读 docs/user-manual.zh.md 第 2 节，然后带我完成最小安全第一步。
+我刚下载 ResearchOS Public Starter。请先只读 AGENTS.md，再判断是否需要读 docs/user-manual.zh.md 第 4 节的「在 Agent 客户端里走一个闭环」，然后带我完成最小安全第一步。
 
 暂时不要写文件。请先告诉我：
 1. 我应该走哪条路线：学习 demo、启动仪表盘、替换示例材料、创建卡片、处理 Inbox，还是检查发布状态。

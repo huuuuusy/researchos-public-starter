@@ -24,7 +24,7 @@ exportable_to:
 
 ## 自己的材料放进 `personal_vault/`
 
-你自己的卡片放在 `personal_vault/`，这是 clone 里一个被 Git 忽略的文件夹；下面的分层路径都相对于它，例如论文笔记放进 `personal_vault/01_knowledge/`，当前状态放进 `personal_vault/06_active_context/`。仓库根目录下的分层目录存放本仓库 自己的说明和虚构示例，不要把你的材料放在那里。含有真实材料的 clone 不要推送到公开远程仓库；想给库做版本管理，就另建一个没有公开远程的私人仓库副本。建库步骤见[用户手册第 5 节](../user-manual.zh.md#5-用自己的材料)的“开始自己的”。
+你自己的卡片放在 `personal_vault/`，这是 clone 里一个被 Git 忽略的文件夹；下面的分层路径都相对于它，例如论文笔记放进 `personal_vault/01_knowledge/`，当前状态放进 `personal_vault/06_active_context/`。仓库根目录下的分层目录存放本仓库 自己的说明和虚构示例，不要把你的材料放在那里。含有真实材料的 clone 不要推送到公开远程仓库；想给库做版本管理，就另建一个没有公开远程的私人仓库副本。建库步骤见[用户手册第 2 节](../user-manual.zh.md#2-第-2-步建好你自己的库)。
 
 ## 一句话规则
 

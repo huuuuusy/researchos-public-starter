@@ -13,6 +13,7 @@ updated: YYYY-MM-DD
 <!-- 填写说明（可删）
 放在 personal_vault/02_decisions/，文件名以日期开头。
 status：active / superseded / closed
+related_people、related_projects、related_papers 里写别的卡片的路径，从库的根目录算起，例如 01_knowledge/papers/x.md，不要写成 papers/x.md。
 -->
 
 # 一句话写清决定了什么

@@ -18,6 +18,7 @@ updated: YYYY-MM-DD
 来源更正或改版时（论文勘误、问卷换版、目录更正、方案修订），先改这张卡的 version，依赖它的判断会回来等复核。
 public_boundary：published 已发表或公开 / preprint 预印本 / unpublished 未发表
 analysis_state：M1 已登记 / M2 精读可用 / M3 跨项目深化
+related_people、related_projects 里写别的卡片的路径，从库的根目录算起，例如 01_knowledge/papers/x.md，不要写成 papers/x.md。
 -->
 
 # 论文或来源的题目

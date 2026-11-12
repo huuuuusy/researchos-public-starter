@@ -2281,6 +2281,86 @@ class RosKernelTest(unittest.TestCase):
         self.assertEqual(self.ledger().candidates()[candidate]["payload"]["admission_state"]["mutation_state"],
                          "not_requested")
 
+    def paste(self, relative: str, steps: list, printed: str) -> None:
+        """Do what the printed steps say, as a person with an editor would: only text that was printed is pasted."""
+        lines = (self.tmp / relative).read_text(encoding="utf-8").splitlines()
+        for step in steps:
+            self.assertIn("\n\n" + step["text"] + "\n", printed, "the text to paste is printed whole, on its own lines")
+            text = step["text"].splitlines()
+            if step["action"] in {"replace", "replace_block"}:
+                self.assertEqual(lines[step["first_line"] - 1], step["was"])
+                lines[step["first_line"] - 1:step["last_line"]] = text
+            else:
+                self.assertEqual(lines[step["after_line"] - 1], step["was"])
+                lines[step["after_line"]:step["after_line"]] = text if step["action"] == "insert_line_after" else ["", *text, ""]
+        self.write(relative, "\n".join(lines) + "\n")
+
+    def assert_pasted_as_planned(self, relative: str, shown: dict) -> None:
+        added = [line[1:] for line in shown["planned_diff"].splitlines()
+                 if line.startswith("+") and not line.startswith("+++") and line[1:].strip()]
+        pasted = (self.tmp / relative).read_text(encoding="utf-8").splitlines()
+        self.assertEqual([line for line in added if line not in pasted], [], "every planned line is in the file")
+
+    def test_the_public_starter_prints_text_that_pastes_back_and_confirms(self) -> None:
+        """After the diff, the copy fallback prints the whole judgment block and the judgments: line with where
+        each goes; pasted as printed, `ros admit --confirm` takes effect. The diff stays, for checking."""
+        from researchos_kernel.rules import PURPOSE_VERSION
+        portfolio = "06_active_context/research-portfolio.md"
+        self.edit_config(runtime_scope="public_starter")
+        self.ros("today")
+        # A card: the block goes after the last line, under a new Judgments heading.
+        shown, text = self.capture_ros("--lang", "zh-CN", "admit", self.propose_beta())
+        self.assertIn("+> [!judgment] j-beta-next", text, "the diff is kept")
+        self.assertLess(text.index("+> [!judgment] j-beta-next"), text.index("要贴的文本在下面"), "the text to paste follows the diff")
+        self.assertIn(f"照上面的说明把文本贴进 {self.CARD} 并保存", text)
+        self.assertEqual([step["action"] for step in shown["paste"]], ["insert_after", "insert_after"])
+        self.assertIn("2. 在第 4 行（# Beta）之后贴入下面这段，前后各留一个空行：\n\n## Judgments\n", text)
+        self.assertTrue(shown["paste"][0]["text"].startswith("> [!judgment] j-beta-next\n> 结论：Survey the reviewers first\n"))
+        self.paste(self.CARD, shown["paste"], text)
+        self.assert_pasted_as_planned(self.CARD, shown)
+        self.assertEqual(self.ros("admit", "--confirm", "j-beta-next", answer="y")["judgment_id"], "j-beta-next")
+        # A commitment without a judgments: line: the block at the end of the item, the line under its last field.
+        pin = self.boundary().snapshot.resolve("01_knowledge/projects/alpha.md")[1][:8]
+        for name, line_step, was in (("one", "insert_line_after", "- source_path: 01_knowledge/projects/alpha.md"),
+                                     ("two", "replace", "- judgments: j-one")):
+            self.write("draft.md", self.RUN_DRAFT.format(id=name, pin=pin))
+            candidate = self.ros("propose", "judgment", "--file", str(self.tmp / "draft.md"), "--target", "commitment:alpha")["candidates"][0]
+            shown, text = self.capture_ros("--lang", "en", "admit", candidate)
+            self.assertEqual([(step["action"], step["was"]) for step in shown["paste"]][-1], (line_step, was))
+            self.assertEqual(shown["paste"][-1]["text"], "- judgments: j-one" + ", j-two" * (name == "two"))
+            self.assertTrue(shown["paste"][0]["text"].startswith(f"> [!judgment] j-{name}\n"))
+            self.assertIn("The text to paste is below (the diff above is only for checking", text)
+            self.assertIn(f"paste the text into {portfolio} as described above and save, then run ros admit --confirm j-{name}", text)
+            self.paste(portfolio, shown["paste"], text)
+            self.assert_pasted_as_planned(portfolio, shown)
+            self.assertEqual(self.ros("admit", "--confirm", f"j-{name}", answer="y")["judgment_id"], f"j-{name}")
+            field = digest(["field:alpha#judgments", PURPOSE_VERSION])[:10]
+            self.assertIn(field, [row["short_id"] for row in self.ros("today")["completion"]["unfinished"]])
+            self.ros("decide", field, "confirm", answer="y")
+        # A reconfirmation: the whole block is replaced, not single lines of it.
+        self.write("01_knowledge/projects/alpha.md", "---\ntitle: Alpha\nid: alpha-project\n---\n# Alpha\nEvidence v2\n")
+        new_pin = self.boundary().snapshot.resolve("01_knowledge/projects/alpha.md")[1][:8]
+        for lang, said in (("zh-CN", "行的判断块 j-one 整块换成下面这段："), ("en", "Replace the whole judgment block j-one at line(s) ")):
+            shown, text = self.capture_ros("--lang", lang, "admit", "--reconfirm", "j-one")
+            self.assertIn(said, text)
+        (step,) = shown["paste"]
+        self.assertEqual((step["action"], step["was"], step["last_line"] - step["first_line"]), ("replace_block", "> [!judgment] j-one", 3))
+        self.assertIn(f"01_knowledge/projects/alpha.md@{new_pin}", step["text"])
+        self.assertTrue(step["text"].startswith("> [!judgment] j-one\n> Conclusion: Occlusion results do not transfer yet\n"), "the conclusion is untouched")
+        self.paste(portfolio, shown["paste"], text)
+        self.assert_pasted_as_planned(portfolio, shown)
+        blocks = {j.id: j.raw for j in parse_judgments((self.tmp / portfolio).read_text(encoding="utf-8"), portfolio)[0]}
+        self.assertEqual(blocks["j-one"], step["text"], "the old block is gone and the printed one stands in its place")
+        self.assertEqual(sorted(blocks), ["j-one", "j-two"])
+        self.assertEqual(self.ros("admit", "--confirm", "j-one", answer="y")["judgment_id"], "j-one")
+        self.assertIn("already confirmed or admitted", self.refusal("admit", "--confirm", "j-one", answer="y"))
+
+    def test_the_private_admission_writes_and_prints_no_text_to_paste(self) -> None:
+        shown, text = self.capture_ros("--lang", "zh-CN", "admit", self.propose_beta())
+        self.assertNotIn("paste", shown)
+        self.assertNotIn("要贴的文本", text)
+        self.assertIn("> [!judgment] j-beta-next", (self.tmp / self.CARD).read_text(encoding="utf-8"), "it is written, as before")
+
     def test_hj2_ros_propose_creates_candidate_envelope_not_private_candidate_store(self) -> None:
         candidate = self.propose_beta()
         ledger = self.ledger()
@@ -2676,12 +2756,52 @@ class RosKernelTest(unittest.TestCase):
         self.ros("decide", issue[:10], "defer", "--until", "2026-09-25")
         view = self.ros("today")
         work = lambda v: json.dumps([v["today"], v["decision"], v["needs_review"], v["network"]])
-        self.assertNotIn(issue, work(view), "延期期间不作为待办出现")
+        self.assertIn(issue, work(view), "代理转述的延期没有生效：照常列出")
         self.assertIn(issue, [row["issue_id"] for row in view["completion"]["unfinished"]], "非终端延期仍是未完成工作")
+        self.ros("decide", issue[:10], "defer", "--until", "2026-09-25", answer="y")
+        view = self.ros("today")
+        self.assertNotIn(issue, work(view), "研究者在终端确认的延期，期间不作为待办出现")
+        self.assertNotIn(issue, [row["issue_id"] for row in view["completion"]["unfinished"]])
         later = self.ros("today", today=date(2026, 9, 26))
         self.assertIn(issue, work(later))
         self.ros("decide", issue[:10], "cancel", "--reason", "survey paused", answer="y")
         self.assertEqual(self.boundary().states["issues"][issue]["status"], "cancelled")
+
+    def test_a_relayed_defer_says_it_is_not_in_effect_and_today_still_names_the_item(self) -> None:
+        """An agent running `ros decide … defer` through a pipe is told, as with `ros admit --confirm`, that
+        the call is only recorded as relayed and which line the researcher runs; `today` keeps listing the
+        item, so its count never points at a commitment with no name."""
+        view = self.ros("today")
+        item = view["completion"]["unfinished"][0]
+        short = item["short_id"]
+        for lang, told in (("zh-CN", ("未生效", "代理转述（invoker_asserted）", "仍算待办", "在自己的终端运行")),
+                           ("en", ("Not in effect", "asserted by the invoker", "still counts as to do", "in their own terminal"))):
+            code, text, asked = self.run_ros("decide", short, "defer", "--until", "2026-09-30", json_out=False, lang=lang)
+            self.assertEqual((code, asked), (0, ""), "no terminal: nothing is asked")
+            for phrase in (*told, f"ros decide {short} defer --until 2026-09-30"):
+                self.assertIn(phrase, text)
+            self.assertNotIn(ros.t(lang, "decide.done", id=short, action="defer"), text)
+        relayed = self.ros("decide", short, "defer", "--until", "2026-09-30", "--reason", "after the camera ready")
+        self.assertEqual((relayed["permission_state"], relayed["in_effect"]), ("invoker_asserted", False))
+        self.assertIn('--reason "after the camera ready"',
+                      self.run_ros("decide", short, "defer", "--until", "2026-09-30", "--reason", "after the camera ready",
+                                   json_out=False, lang="en")[1])
+        for lang in ("zh-CN", "en"):
+            for flags in ((), ("--all",)):
+                data, text = self.capture_ros("--lang", lang, "today", *flags)
+                self.assertIn(item["issue_id"], [row["issue_id"] for row in data["completion"]["unfinished"]])
+                self.assertIn(f"[{short}]", text, "the item is still listed where it was")
+                shown = {row["issue_id"] for group in data["today"] + data["decision"] + data["needs_review"]
+                         for row in group["items"]} | {row["issue_id"] for row in data["network"] + data["waiting_on_trigger"]}
+                self.assertEqual([row["short_id"] for row in data["completion"]["unfinished"] if row["issue_id"] not in shown],
+                                 [], "every item counted as to do is listed somewhere with its commitment")
+                self.assertNotIn("在里", text)
+                self.assertNotIn(", in ;", text)
+        confirmed, text, _ = self.run_ros("decide", short, "defer", "--until", "2026-09-30", json_out=False, lang="zh-CN", answer="y")
+        self.assertEqual(text.strip(), ros.t("zh-CN", "decide.done", id=short, action="defer"), "at the terminal it is simply recorded")
+        data, text = self.capture_ros("--lang", "zh-CN", "today", "--all")
+        self.assertNotIn(f"[{short}]", text, "deferred by the researcher: off the lists until its date")
+        self.assertIn(item["issue_id"], [row["issue_id"] for row in data["completion"]["waiting"]])
 
     def test_an_unevaluated_rule_never_resolves_its_own_requirements(self) -> None:
         """A broken, disabled or out-of-scope descriptor says nothing about the requirements it opened."""

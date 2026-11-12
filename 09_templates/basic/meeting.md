@@ -14,6 +14,7 @@ updated: YYYY-MM-DD
 Goes in personal_vault/06_active_context/meetings/, with the date at the start of the file name.
 participants: names, or paths of person cards
 sensitivity: it records what others said, so use sensitive
+related_projects, related_papers: paths of other cards, counted from the root of the vault, for example 01_knowledge/papers/x.md, not papers/x.md.
 -->
 
 # YYYY-MM-DD Meeting name

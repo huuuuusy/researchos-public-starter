@@ -15,6 +15,7 @@ updated: YYYY-MM-DD
 Goes in personal_vault/01_knowledge/capsules/. Needed only when a direction has several cards.
 group_level: G0 single card / G1 basic group / G2 direction group
 source_files: the cards this page summarises
+source_files: paths of other cards, counted from the root of the vault, for example 01_knowledge/papers/x.md, not papers/x.md.
 -->
 
 # Direction name summary

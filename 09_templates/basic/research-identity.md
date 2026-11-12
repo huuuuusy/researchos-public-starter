@@ -13,6 +13,7 @@ updated: YYYY-MM-DD
 <!-- How to fill in (delete when done)
 Goes in personal_vault/00_identity/research-identity.md. It is the entry to the whole vault, and an assistant reads it first.
 source_files: the direction summaries and cognition-layer cards this page summarises.
+source_files: paths of other cards, counted from the root of the vault, for example 01_knowledge/papers/x.md, not papers/x.md.
 -->
 
 # Research identity

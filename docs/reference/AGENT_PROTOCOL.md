@@ -49,7 +49,7 @@ Identify task type
   -> propose additional durable writeback only when justified
 ```
 
-When `AGENTS.md` is not loaded, the single route file is Section 2 of `docs/user-manual.en.md`, this protocol, the context-budget protocol, or the relevant task-matrix row. Do not preload all entry files.
+When `AGENTS.md` is not loaded, the single route file is "One loop in your agent client" in Section 4 of `docs/user-manual.en.md`, this protocol, the context-budget protocol, or the relevant task-matrix row. Do not preload all entry files.
 
 ## Authorization And Completion
 

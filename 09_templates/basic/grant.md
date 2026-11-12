@@ -16,6 +16,7 @@ updated: YYYY-MM-DD
 Goes in personal_vault/06_active_context/grants/, one card per application.
 status: planning / drafting / submitted / awarded / declined / withdrawn
 Anything about co-applicants beyond their role belongs on their person cards.
+related_people, related_projects: paths of other cards, counted from the root of the vault, for example 01_knowledge/papers/x.md, not papers/x.md.
 -->
 
 # Short name of the application

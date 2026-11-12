@@ -37,7 +37,7 @@ ResearchOS 是给个人科研人员使用的小型文件化工具，用来让判
 
 ### 三种运行方式
 
-[用户手册第 1 节](user-manual.zh.md#1-本仓库是什么)用白话对比了同一套代码的三种用法；下表是同一对比的工程细节。
+[用户手册附录 D](user-manual.zh.md#附录-d第一阶段的范围)用白话对比了同一套代码的三种用法；下表是同一对比的工程细节。
 
 | 能力 | 本仓库 | personal-vault 模式 | 报告中的原型 |
 | --- | --- | --- | --- |
@@ -64,11 +64,11 @@ personal-vault 模式下，服务端 Review 状态、选择的工作副本、run
 | `Preview` | 文件、候选和证据片段预览。 | Markdown 如何被读取。 |
 | `Agent` | 交接与能力状态。 | 本仓库固定为 copy-only；所有执行只属于 personal-vault 模式或报告中的原型。 |
 
-Claude Code、Codex 或其他文件感知 Agent 是主要执行面。Dashboard 是跨会话注意力与控制面，按下一步何时再次占用注意力（今日 / 明日 / 未来 / 搁置）显示虚构或本地 Work Item，Markdown 仍是 authority。Dashboard 不是第二个聊天入口，也不是使用 Agent 的前置条件。生成的 JSON 文件为 Dashboard 提供数据，验证脚本检查配置、模型提供方注册表、生成的启动数据和公开发布边界。本仓库固定为 copy-only，见[用户手册第 4 节](user-manual.zh.md#4-可选的-dashboard)；排期、完成和长期写回保持禁用，按钮只演示同一交互语法，不假装已经修改数据。
+Claude Code、Codex 或其他文件感知 Agent 是主要执行面。Dashboard 是跨会话注意力与控制面，按下一步何时再次占用注意力（今日 / 明日 / 未来 / 搁置）显示虚构或本地 Work Item，Markdown 仍是 authority。Dashboard 不是第二个聊天入口，也不是使用 Agent 的前置条件。生成的 JSON 文件为 Dashboard 提供数据，验证脚本检查配置、模型提供方注册表、生成的启动数据和公开发布边界。本仓库固定为 copy-only，见[用户手册第 6 节](user-manual.zh.md#可选的-dashboard)；排期、完成和长期写回保持禁用，按钮只演示同一交互语法，不假装已经修改数据。
 
 skill/Agent 是深度读取、修改、成果生成和验证的执行路线，ChatGPT 类通用助手可以辅助开放讨论。Dashboard 以统一工作台呈现现在与资料两个语义区域，而不是第二个编辑器。`现在`负责分配注意力：完整的 Today 列表、一个当前研究焦点、月/周日历、全部活动或等待项目，以及精确事项内的 Work/Review 抽屉；复核日或外部事件到达时，等待或暂停的项目可以回到这里供判断，但不会因此变成可执行任务。`资料`只通过最多少量明确选择的 Commitment lens 连接公开安全的来源、人物、论断、证据、线程和成果，不承载日历或项目状态板。项目是长期容器，当天可安排的是它当前唯一的下一步 Work Item。月历只消费显式日期，点击事件只返回精确事项，不拥有生命周期写入。Work/Review 只在精确事项内区分有界执行、返回结果、候选变化、研究者处置、写回与验证状态、回执和连续性交接，抽屉保存精确的 session 与 run 身份。
 
-核心 authority 协议和长期记忆不依赖 Dashboard。插件只能贡献领域投影和受控动作。导航由应用壳拥有；Work Session、Review、准入和存储安全是内核协议；Project/Commitment 生命周期与 attention 由 `research_portfolio` 能力层拥有。`现在`与日历只投影这些状态，不拥有其持久权威；本仓库的日历变化仍是不保存的预览。`Start / Today / Agent`、`Assets`、`Next`、`Work` 与 `Review / Inbox` 只作输入 alias；携带 item 的 Work/Review 路由进入 `Now?item=<id>&panel=<work|review>`，身份缺失时失败关闭，输出只使用 canonical ID。公开 demo 只使用虚构事项和 copy-only 交接；它与 personal-vault 模式能运行和写入什么，见用户手册第 [3](user-manual.zh.md#3-会话调度器与命令行检查) 节和第 [4](user-manual.zh.md#4-可选的-dashboard) 节。
+核心 authority 协议和长期记忆不依赖 Dashboard。插件只能贡献领域投影和受控动作。导航由应用壳拥有；Work Session、Review、准入和存储安全是内核协议；Project/Commitment 生命周期与 attention 由 `research_portfolio` 能力层拥有。`现在`与日历只投影这些状态，不拥有其持久权威；本仓库的日历变化仍是不保存的预览。`Start / Today / Agent`、`Assets`、`Next`、`Work` 与 `Review / Inbox` 只作输入 alias；携带 item 的 Work/Review 路由进入 `Now?item=<id>&panel=<work|review>`，身份缺失时失败关闭，输出只使用 canonical ID。公开 demo 只使用虚构事项和 copy-only 交接；它与 personal-vault 模式能运行和写入什么，见用户手册[附录 A](user-manual.zh.md#本仓库里-ros-写什么)和[第 6 节](user-manual.zh.md#可选的-dashboard)。
 
 待复核状态带有时间边界：重新加入会清除同一 action 的 archive/resolved 遮罩，旧的 completed run 不能处理后来加入的请求。界面语言是浏览器偏好；活跃 prompt/模板语言在生成投影时冻结。
 
@@ -101,7 +101,7 @@ ResearchOS 不用一个含混的 status 同时表达所有含义：
 
 ## 中断后接续与 ResearchOS 之外的修改
 
-本节是[用户手册第 2 节](user-manual.zh.md#2-在-agent-客户端里走一个闭环)两段简短说明背后的技术细节。
+本节是[用户手册第 6 节](user-manual.zh.md#中断了怎么接上)两段简短说明背后的技术细节。
 
 **交接的内容。** 需要跨中断保留有价值的工作时，在 `personal_vault/` 中保留成果和一份简短交接：问题；来源及版本；最后确认的判断（没有就写无）；候选及其未解决边界；下一安全动作；实际的决定、修改与验证证据。交接不授权把候选升级为正典。回来后先复核变化的来源再继续；既有有效授权在原范围内继续适用，不因流程换阶段而重复询问。
 
@@ -294,11 +294,11 @@ Markdown 材料、用户明确确认和已记录规则是权威输入；Dashboar
 
 ### 低冗余运行契约
 
-Work Session 恢复历史最多保留 10 项摘要，而不是完整聊天；其他浏览器列表也必须有明确条目上限。在 personal-vault 模式与报告中的原型中，用户选择的会话附件不设产品级大小、数量或保存期限配额，上限只是本机文件系统和运行环境；公开 demo 接受单个不超过 1 GiB 的文件。附件不因空间阈值自动删除，上传采用流式写盘。runner JSONL 超过 5 MB 后压缩为最近 80 个 run 的合并状态，移除 prompt，并限制保留的输出。公开 demo 拒绝所有 runner 提交（见[用户手册第 4 节](user-manual.zh.md#4-可选的-dashboard)）。Demo JSON 与 Dashboard JSON 是覆盖式、可重建的投影，不是不断追加的历史数据库。已完成的会话附件由用户控制，启动时只清除上传 owner 自己留下的 `.tmp` 残片。会话副本较大或本机可用空间较低时，只返回非阻断的空间回执；提醒不得删除材料，也不得联动停用其他功能。
+Work Session 恢复历史最多保留 10 项摘要，而不是完整聊天；其他浏览器列表也必须有明确条目上限。在 personal-vault 模式与报告中的原型中，用户选择的会话附件不设产品级大小、数量或保存期限配额，上限只是本机文件系统和运行环境；公开 demo 接受单个不超过 1 GiB 的文件。附件不因空间阈值自动删除，上传采用流式写盘。runner JSONL 超过 5 MB 后压缩为最近 80 个 run 的合并状态，移除 prompt，并限制保留的输出。公开 demo 拒绝所有 runner 提交（见[用户手册第 6 节](user-manual.zh.md#可选的-dashboard)）。Demo JSON 与 Dashboard JSON 是覆盖式、可重建的投影，不是不断追加的历史数据库。已完成的会话附件由用户控制，启动时只清除上传 owner 自己留下的 `.tmp` 残片。会话副本较大或本机可用空间较低时，只返回非阻断的空间回执；提醒不得删除材料，也不得联动停用其他功能。
 
 ### 本地 HTTP 端点
 
-本地端点在 `127.0.0.1` 上服务 Dashboard，不是公网 API。公开 demo 中，所有写入或运行更新的端点都返回 403 `public_starter_writeback_blocked`，只在 personal-vault 模式下执行；所有 `/codex-runner` 提交都失败关闭。会启动本地工作的读取端点（`/model-catalog`、`/evolution-plan`、`/provider-status`、`/codex-runner`、`/source-tree` 与 `/source-info`）会拒绝浏览器标明来自其他站点的请求。公开 demo 可能写入哪些文件，见[用户手册第 4 节](user-manual.zh.md#4-可选的-dashboard)。
+本地端点在 `127.0.0.1` 上服务 Dashboard，不是公网 API。公开 demo 中，所有写入或运行更新的端点都返回 403 `public_starter_writeback_blocked`，只在 personal-vault 模式下执行；所有 `/codex-runner` 提交都失败关闭。会启动本地工作的读取端点（`/model-catalog`、`/evolution-plan`、`/provider-status`、`/codex-runner`、`/source-tree` 与 `/source-info`）会拒绝浏览器标明来自其他站点的请求。公开 demo 可能写入哪些文件，见[用户手册第 6 节](user-manual.zh.md#可选的-dashboard)。
 
 | 端点 | 方法 | 作用 |
 | --- | --- | --- |
@@ -358,7 +358,7 @@ Work Session 恢复历史最多保留 10 项摘要，而不是完整聊天；其
 | `scripts/` | 启动、生成、验证与维护；`researchos_kernel/` 是状态转换规则与协议合同，`researchos_adapters/` 是来源快照、暂存写入、run state、context pack 与 provider 启动边界，`researchos_server/` 是 Dashboard 服务器的 store 与 runner，`researchos_data/` 是上文列出的收窄 owner 集合。 | 密钥或本机路径。 |
 | `docs/` | 中英成对的指南、报告与参考政策。 | 不成对的读者文档。 |
 
-`08_exports/public_starter/` 案例默认进入公开 demo 投影；维护者可以按[用户手册第 5 节](user-manual.zh.md#5-用自己的材料)关闭，关闭后示例文件保留为只读对照。新用户自己的材料放进 Git 忽略的 `personal_vault/`，它沿用同样的分层布局；`08_exports/public_starter/onboarding-step-by-step.zh.md` 是从示例走到个人库的首次上手说明。其他人物、项目、报告和深读，等第一批结果复核之后再加。邮件、外部调研论文、审稿任务、预算、算力、数据集权限等重复出现、需要自己生命周期的新类别，先走[扩展阶梯](governance-guide.zh.md#扩展阶梯)，并读 `05_workflows/research_management/asset-type-extension-workflow.zh.md` 和 `09_templates/data_contracts/researchos-extension-contract-v1.zh.md`，再决定是否新增目录、模板、脚本或 Dashboard 界面。
+`08_exports/public_starter/` 案例默认进入公开 demo 投影；维护者可以按[用户手册附录 E](user-manual.zh.md#关闭示例案例)关闭，关闭后示例文件保留为只读对照。新用户自己的材料放进 Git 忽略的 `personal_vault/`，它沿用同样的分层布局；`08_exports/public_starter/onboarding-step-by-step.zh.md` 是从示例走到个人库的首次上手说明。其他人物、项目、报告和深读，等第一批结果复核之后再加。邮件、外部调研论文、审稿任务、预算、算力、数据集权限等重复出现、需要自己生命周期的新类别，先走[扩展阶梯](governance-guide.zh.md#扩展阶梯)，并读 `05_workflows/research_management/asset-type-extension-workflow.zh.md` 和 `09_templates/data_contracts/researchos-extension-contract-v1.zh.md`，再决定是否新增目录、模板、脚本或 Dashboard 界面。
 
 官方入口文档按语言成对维护，不在同一个 Agent 可读文件里放两套语言；每个成对文件右上角都有指向另一语言的切换链接。底层 demo/case 记录由 `public_starter.content_language` 选择：`en` 使用英文文件，`zh-CN` 使用 `.zh.md` 文件，中性文件两边都保留。另一种语言的文件只作参照。生成器也把任务模板和 assistant prompt 冻结在所选内容语言；生成的 Dashboard 数据不携带非活跃语言的 prompt/模板变体，所以切换界面语言不会把它们悄悄带进上下文。需要切换模板语言时，修改 `content_language` 或传入 `--language`，然后重建。
 

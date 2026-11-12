@@ -46,12 +46,12 @@ The assistant downloads it, shows you in a few sentences what it does on a ficti
 
 Already downloaded it? Open the folder in Codex or Claude Code and say one sentence: “Walk me through the First Run in AGENTS.md.”
 
-Only have ChatGPT or Claude in a browser, with no terminal? [Without a terminal](docs/user-manual.en.md#without-a-terminal-a-browser-chat) in Section 2 of the User Manual says what still works.
+Only have ChatGPT or Claude in a browser, with no terminal? [Without a terminal](docs/user-manual.en.md#without-a-terminal-a-browser-chat) in Section 6 of the User Manual says what still works.
 
 **Or do it yourself in 10 minutes**
 
 1. Run the demo on fictional data: `python3 scripts/ros_demo.py`.
-2. Walk through the same session yourself, one command at a time ([User Manual, Section 3](docs/user-manual.en.md#3-the-session-scheduler-and-command-line-checks)).
+2. Walk through the same session yourself, one command at a time ([User Manual, Section 3](docs/user-manual.en.md#3-step-3-the-first-source-change)).
 3. Start your own: `python3 scripts/ros_demo.py --init personal_vault`.
 
 The [first-run guide](08_exports/public_starter/onboarding-step-by-step.md) takes you through all three and says what you should see at each step.
@@ -62,9 +62,9 @@ The [first-run guide](08_exports/public_starter/onboarding-step-by-step.md) take
 
 ResearchOS is a local-primary system for continuously maintaining research state: it lives on your own computer and keeps track of where your research stands (see [Words you will meet](docs/user-manual.en.md#words-you-will-meet) for what research state means). The first stage covers one researcher's own Markdown cards: each judgment remembers which source files and versions it rests on, and when one of them changes, the next command hands it back for you to recheck. You can go step by step from writing a judgment down, to having it come back for recheck when its source changes, to closing the session.
 
-These are the commands you use day to day. Start with `today`. When the assistant works in this folder, it fetches the cards it needs with `context` and then does the work; what you want to keep as a judgment is registered as a candidate with `propose`, and `admit` prints the change that would write a candidate into a card. `rules --check` checks the commitment list for fields filled in wrongly; the commitment list is the file `06_active_context/research-portfolio.md`, which holds each project's one current next step. End with `close`. When you hand work to another assistant, `run` writes a task packet and `collect` brings the answer back as a candidate. `ros` has 13 subcommands in all; [Section 3 of the User Manual](docs/user-manual.en.md#3-the-session-scheduler-and-command-line-checks) lists what each one does in this repository.
+These are the commands you use day to day. Start with `today`. When the assistant works in this folder, it fetches the cards it needs with `context` and then does the work; what you want to keep as a judgment is registered as a candidate with `propose`, and `admit` prints the change that would write a candidate into a card. `rules --check` checks the commitment list for fields filled in wrongly; the commitment list is the file `06_active_context/research-portfolio.md`, which holds each project's one current next step. End with `close`. When you hand work to another assistant, `run` writes a task packet and `collect` brings the answer back as a candidate. `ros` has 13 subcommands in all; [Appendix A of the User Manual](docs/user-manual.en.md#what-ros-writes-in-this-repository) lists what each one does in this repository.
 
-In this repository `ros` prints the change for you to paste and never writes your cards itself: a change worth keeping is pasted into the card by you or your assistant, exactly as printed, and then you confirm it at your own terminal. The documentation calls this copy fallback. The optional Dashboard is a page in your browser for looking over your cards and schedule; in personal-vault mode (when you use your own material), it can write into `personal_vault/` after you confirm. The prototype described in the [technical report](docs/technical-report.en.md) adds a step this repository does not have: after you confirm at the terminal, the system writes the change into the card itself. (Technical detail: the prototype turns that step on with `runtime_scope: private` in `config/ros.json`; this repository ships with `public_starter` and does not support `private`; [Supplementary Note 2](docs/technical-report-supplement.en.md#supplementary-note-2-session-operations-and-implementation-mappings) of the technical report describes how the prototype's commands write.) [Section 3 of the User Manual](docs/user-manual.en.md#3-the-session-scheduler-and-command-line-checks) sets out which files `ros` writes, what `admit` does and how personal-vault mode differs.
+In this repository `ros` prints the change for you to paste and never writes your cards itself: a change worth keeping is pasted into the card by you or your assistant, exactly as printed, and then you confirm it at your own terminal. The documentation calls this copy fallback. The optional Dashboard is a page in your browser for looking over your cards and schedule; in personal-vault mode (when you use your own material), it can write into `personal_vault/` after you confirm. The prototype described in the [technical report](docs/technical-report.en.md) adds a step this repository does not have: after you confirm at the terminal, the system writes the change into the card itself. (Technical detail: the prototype turns that step on with `runtime_scope: private` in `config/ros.json`; this repository ships with `public_starter` and does not support `private`; [Supplementary Note 2](docs/technical-report-supplement.en.md#supplementary-note-2-session-operations-and-implementation-mappings) of the technical report describes how the prototype's commands write.) [Appendix A of the User Manual](docs/user-manual.en.md#what-ros-writes-in-this-repository) sets out which files `ros` writes, what `admit` does and how personal-vault mode differs.
 
 The first stage is a set of files and a few commands on your computer, not a hosted service; it keeps track of judgments and what they rest on, does not do research for you, and is not a complete personal knowledge base, a question-answering tool detached from evidence or a polished all-in-one product. This repository is copy-only, and its data is fictional. It never takes a candidate into your research record by itself (the documentation calls that admission): where the prototype in the report would write an accepted change, it shows you the planned change. The first stage does not include working in a team, dependencies as fine as a single argument, or noticing a change while no command is running; the optional Dashboard and the plugin system work but are frozen, so no features are added to them in this stage. [Supplementary Note 6](docs/technical-report-supplement.en.md) of the technical report has the full list.
 
@@ -80,7 +80,7 @@ python3 scripts/ros_demo.py
 
 A source card changes, and the judgment that depends on it is flagged for recheck. The researcher reconfirms it, and the output shows that as a planned change without admitting it. At close the recheck is still pending. The output uses a few words in a narrow sense, such as candidate, admission, item and waiting on your answer; [Words you will meet](docs/user-manual.en.md#words-you-will-meet) explains each in one line. Where the output says `ros …`, it means `python3 scripts/ros.py --root <folder> …`, with the vault folder that holds the cards, such as your own `personal_vault`.
 
-You can also skip the scheduler (the `ros` commands) and open the folder in Claude Code, Codex or another file-aware agent with one goal and one source; [Section 2 of the User Manual](docs/user-manual.en.md#2-one-loop-in-your-agent-client) gives the prompt.
+You can also skip the scheduler (the `ros` commands) and open the folder in Claude Code, Codex or another file-aware agent with one goal and one source; [Section 4 of the User Manual](docs/user-manual.en.md#one-loop-in-your-agent-client) gives the prompt.
 
 ## Start your own
 
@@ -90,7 +90,7 @@ Your own material goes in `personal_vault/`, a folder inside your clone that Git
 python3 scripts/ros_demo.py --init personal_vault
 ```
 
-You then replace the fictional commitments and cards with one of your own and run `python3 scripts/ros.py --root personal_vault today`. The [first-run guide](08_exports/public_starter/onboarding-step-by-step.md) gives each step and what you should see; [Section 5 of the User Manual](docs/user-manual.en.md#5-your-own-material) is the reference for the fields. [Example cards](examples/starter-cards/en/README.md) show each kind of card filled in, from a research identity page and a direction summary to project, paper, decision, heuristic, person and meeting cards, and [`09_templates/basic/`](09_templates/basic/README.md) has the blank skeletons. An optional Dashboard reads the same folder. Never push a copy of the repository (a clone) that contains real material to a public remote repository.
+You then replace the fictional commitments and cards with one of your own and run `python3 scripts/ros.py --root personal_vault today`. The [first-run guide](08_exports/public_starter/onboarding-step-by-step.md) gives each step and what you should see; [Appendix A of the User Manual](docs/user-manual.en.md#commitment-fields-and-their-values) is the reference for the fields. [Example cards](examples/starter-cards/en/README.md) show each kind of card filled in, from a research identity page and a direction summary to project, paper, decision, heuristic, person and meeting cards, and [`09_templates/basic/`](09_templates/basic/README.md) has the blank skeletons. An optional Dashboard reads the same folder. Never push a copy of the repository (a clone) that contains real material to a public remote repository.
 
 ## What is in the folder
 
@@ -108,7 +108,7 @@ The technical report ([English source](docs/technical-report.en.md) · [English 
 
 ## Status
 
-This is V1.2, released as `v1.2.0` on 2026-11-12 (see the [V1.2 release notes](docs/releases/v1.2.0.md) and the [changelog](CHANGELOG.md)). The 1.x series is the first stage of ResearchOS: one researcher, local files, decisions at the terminal.
+This is V1.2.1, release candidate `v1.2.1-rc.1` (see the [V1.2.1 release notes](docs/releases/v1.2.1.md) and the [changelog](CHANGELOG.md)); the last release is `v1.2.0`, 2026-11-12. The 1.x series is the first stage of ResearchOS: one researcher, local files, decisions at the terminal.
 
 ## How to cite
 

@@ -14,6 +14,7 @@ Goes in personal_vault/06_active_context/reviews/, with the due date at the star
 The manuscript is confidential. Never put it, its figures or passages of its text in the vault; this card holds only where it is and your own comments. Before showing an assistant anything about it, check whether the review process allows that at all.
 status: drafting / submitted / closed
 sensitivity: sensitive, so ros context asks you before packing it
+related_projects: paths of other cards, counted from the root of the vault, for example 01_knowledge/papers/x.md, not papers/x.md.
 -->
 
 # Review: short working name of the manuscript

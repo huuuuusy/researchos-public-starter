@@ -113,8 +113,8 @@
     }
     if (options.publicStarter === true) {
       return isZh
-        ? "上下文路由：quick。优先只根据用户目标回答；确需 ResearchOS 背景时，先读 `docs/user-manual.zh.md` 第 2 节，再最多读取 2 个由它直接路由的 canonical 文件。信息足够就停止，不做整库扫描，也不默认读取运行日志、历史审计、raw corpus 或 people-sensitive 材料。"
-        : "Context route: quick. Answer from the user goal first. If ResearchOS context is required, read Section 2 of `docs/user-manual.en.md` and at most two canonical files directly routed from it. Stop when sufficient; do not scan the repository or read runtime logs, historical audits, raw corpus, or people-sensitive material by default.";
+        ? "上下文路由：quick。优先只根据用户目标回答；确需 ResearchOS 背景时，先读 `docs/user-manual.zh.md` 第 4 节的「在 Agent 客户端里走一个闭环」，再最多读取 2 个由它直接路由的 canonical 文件。信息足够就停止，不做整库扫描，也不默认读取运行日志、历史审计、raw corpus 或 people-sensitive 材料。"
+        : "Context route: quick. Answer from the user goal first. If ResearchOS context is required, read \"One loop in your agent client\" in Section 4 of `docs/user-manual.en.md` and at most two canonical files directly routed from it. Stop when sufficient; do not scan the repository or read runtime logs, historical audits, raw corpus, or people-sensitive material by default.";
     }
     return isZh
       ? "上下文路由：quick。优先只根据用户目标回答；确需 ResearchOS 背景时，先读 `START_HERE.md`，再最多读取 2 个由它直接路由的 canonical 文件。信息足够就停止，不做整库扫描，也不默认读取运行日志、历史审计、raw corpus 或 people-sensitive 材料。"

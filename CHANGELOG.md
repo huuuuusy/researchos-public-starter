@@ -6,6 +6,22 @@ The format follows the spirit of [Keep a Changelog](https://keepachangelog.com/e
 
 The 1.x series is the first stage of ResearchOS: one researcher, local files, decisions at the terminal. Versions 1.0.1 to 1.0.3 revised the technical report and the documentation; as their entries say, the software behaviour was unchanged.
 
+## [Unreleased]
+
+Release candidate `v1.2.1-rc.1`. The rules for judgments and admission are unchanged. See the [V1.2.1 release notes](docs/releases/v1.2.1.md).
+
+### Changed
+
+- When an assistant runs `ros decide <id> defer` without a terminal, `ros` now says the deferral is not in effect, that only the researcher's own confirmation at the terminal defers the item, and which line to run. The item stays listed in `today`, `today --all` and `close`. Before, the item was hidden from `today` while `close` still counted it, and the count line printed an empty commitment name. `--json` reports `in_effect: false`.
+- After the diff, `ros admit` and `ros admit --reconfirm` print the text to paste and where it goes (which lines to replace or where to insert, bottom first so line numbers stay valid); the diff is kept for checking. `--json` carries it as `paste`. The prototype, which writes the change itself, is unchanged.
+- The Dashboard's quick-route note in a task packet points to "One loop in your agent client" in Section 4 of the manual instead of Section 2 (an approved one-line change in frozen code).
+
+- The User Manual is ordered by the reader's progress instead of by system part: five steps (what this repository is, build your own vault, the first source change, let the vault grow, working style with maturity and the vault check), a sixth section for other ways to use it, and five appendices (command and field reference, replacing a judgment, safety, what the first stage covers, maintainers). Each step says what you will use, what to do, what you should see and what you can do afterwards, with whole commands and output taken from v1.2.0. No statement was dropped; Section 3 still holds the session commands from `today` to `close`.
+- Step 2 of the manual now includes writing and confirming a first judgment; the steps for replacing a judgment and for confirming a hand-changed commitment field are in Appendix B, and say to confirm a judgment-class field after `close`.
+- The Chinese manual and first-run guide walk the session on the Chinese demo vault, `examples/scheduler-demo-zh/`.
+- The basic card skeletons and the example-card README say that paths in `related_*` and `source_files` are counted from the root of the vault.
+- Links and section numbers that point into the manual are updated in the README, `AGENTS.md`, the System Reference, the Governance and Extension Guide, the first-run guide and the other entry files; `ros_demo.py --init` now points to Appendix A for the commitment fields.
+
 ## [1.2.0] - 2026-11-12
 
 Tagged `v1.2.0`. The rules for judgments and admission are unchanged; `ros` gains the attention schedule, and its output changes are listed below. See the [V1.2 release notes](docs/releases/v1.2.0.md).
@@ -102,7 +118,7 @@ First stable release, tagged `v1.0.0`; citation metadata carries version `1.0.0`
 
 ### Included and Changed
 
-- The copy-only edition of the reference implementation, with fictional data, the shared kernel, scripts, contracts and synthetic tests. Provider mode remains `copy_only`, and the shipped `config/ros.json` sets `runtime_scope: public_starter`, so `ros admit` only shows the planned difference through copy fallback and writes no source; the admission and dispatch code stays off unless `runtime_scope` is explicitly `"private"` (see [User Manual Section 3](docs/user-manual.en.md#3-the-session-scheduler-and-command-line-checks)). Attention scheduling, admission writeback, maintenance writes, completion records and the live diagnostic chain remain private-prototype capabilities.
+- The copy-only edition of the reference implementation, with fictional data, the shared kernel, scripts, contracts and synthetic tests. Provider mode remains `copy_only`, and the shipped `config/ros.json` sets `runtime_scope: public_starter`, so `ros admit` only shows the planned difference through copy fallback and writes no source; the admission and dispatch code stays off unless `runtime_scope` is explicitly `"private"` (see [User Manual Appendix A](docs/user-manual.en.md#what-ros-writes-in-this-repository)). Attention scheduling, admission writeback, maintenance writes, completion records and the live diagnostic chain remain private-prototype capabilities.
 - Agent/CLI entry and one Unified Desk with Now and Library semantic areas support reading public-safe sources, inspecting fictional projections, previewing attention dates and copying task packets. Public mode is credential-free and copy-only: it never starts local Codex or a remote provider. The separately configured personal-vault mode can start a locally installed Codex CLI; `ros` itself does not change with that mode. Copying does not accept a durable change.
 - The repository includes the Claude Code CLI reference adapter and its `claude_code` provider registration for reading and tests only; `ros` in the public edition dispatches to no local CLI.
 - Shared kernel behavior for completion, deferral, rule validation, maintenance-failure handling and dependency blocking is available for code inspection and temporary synthetic tests; it does not enable private write workflows publicly.

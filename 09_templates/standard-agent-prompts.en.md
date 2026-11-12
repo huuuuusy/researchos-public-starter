@@ -43,7 +43,7 @@ Tell me:
 ```
 
 ```text
-I just cloned ResearchOS Public Starter. Read AGENTS.md only, then decide whether Section 2 of docs/user-manual.en.md is needed. Guide me through the smallest safe first step.
+I just cloned ResearchOS Public Starter. Read AGENTS.md only, then decide whether "One loop in your agent client" in Section 4 of docs/user-manual.en.md is needed. Guide me through the smallest safe first step.
 
 Do not write files yet. First tell me:
 1. What route I should take: learn the demo, start the dashboard, replace examples with my own material, create cards, process Inbox, or validate release readiness.

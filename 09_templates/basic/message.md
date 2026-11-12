@@ -15,6 +15,7 @@ Goes in personal_vault/06_active_context/messages/, with the date at the start o
 status: draft / sent / not sent
 An assistant may draft the text; you check the facts and send it yourself.
 sensitivity: it is written to a real person, so use sensitive
+related_people, related_projects: paths of other cards, counted from the root of the vault, for example 01_knowledge/papers/x.md, not papers/x.md.
 -->
 
 # Short description of the message

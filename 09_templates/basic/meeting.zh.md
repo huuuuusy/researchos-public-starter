@@ -14,6 +14,7 @@ updated: YYYY-MM-DD
 放在 personal_vault/06_active_context/meetings/，文件名以日期开头。
 participants：可以写人名，也可以写人物卡路径
 sensitivity：记了别人说的话，用 sensitive
+related_projects、related_papers 里写别的卡片的路径，从库的根目录算起，例如 01_knowledge/papers/x.md，不要写成 papers/x.md。
 -->
 
 # YYYY-MM-DD 会议名

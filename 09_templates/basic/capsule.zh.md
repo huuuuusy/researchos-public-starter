@@ -15,6 +15,7 @@ updated: YYYY-MM-DD
 放在 personal_vault/01_knowledge/capsules/。一个方向有好几张卡时才需要。
 group_level：G0 单卡 / G1 基础组合 / G2 方向组合
 source_files：这一页概括的卡片
+source_files 里写别的卡片的路径，从库的根目录算起，例如 01_knowledge/papers/x.md，不要写成 papers/x.md。
 -->
 
 # 方向名 摘要

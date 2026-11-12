@@ -18,6 +18,7 @@ Goes in personal_vault/04_people/collaborators/. For your own profile use person
 relationship_type: collaborator / candidate / public_role_only
 relationship_maturity: R0 to check / R1 registered / R2 collaboration record usable / R3 cross-project context
 sensitivity: use sensitive for a real person, so ros context asks you before packing it; private is never packed
+related_projects, related_papers: paths of other cards, counted from the root of the vault, for example 01_knowledge/papers/x.md, not papers/x.md.
 -->
 
 # Name

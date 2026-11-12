@@ -14,6 +14,7 @@ Goes in personal_vault/03_cognition/heuristics/.
 confidence: low / medium / high, depending on how many examples support it.
 status: provisional / stable; change to stable once it has proved useful.
 This describes how you work, so an assistant shows you its draft and writes it only after you agree.
+related_examples: paths of other cards, counted from the root of the vault, for example 01_knowledge/papers/x.md, not papers/x.md.
 -->
 
 # One sentence stating the habit

@@ -13,7 +13,7 @@ The documents are listed in the order a newcomer needs them. Read the one that a
 
 ## Use it
 
-- [User Manual](user-manual.en.md): read the section you need when the guide sends you there or you want more detail. Section 1 explains the words used in the output, Section 2 one loop in your agent client, Section 3 the session scheduler, Section 4 the optional Dashboard, Section 5 your own material and Section 6 safety.
+- [User Manual](user-manual.en.md): read the section you need when the guide sends you there or you want more detail. It has five steps: Section 1 says what this repository is and explains the words used in the output, Section 2 builds your own vault, Section 3 covers the first source change and the commands of one full session, Section 4 lets the vault grow and includes one loop in your agent client, and Section 5 covers working style, maturity and the vault check. Section 6 holds other ways to use it, including a browser-only setup and the optional Dashboard; the appendices hold the command and field reference, the safety rules and what the first stage covers.
 
 ## Understand or change it
 

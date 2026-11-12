@@ -42,8 +42,14 @@ def _visible(state: dict, today: date) -> bool:
     if state["status"] == "open":
         return True
     if state["status"] == "deferred":
+        # Hidden only while boundary.completion exempts it: deferred by the researcher at the terminal, to a
+        # date still ahead. A deferral an agent relayed stays listed, or today would count work it does not show.
         until = state.get("deferred_until", "")
-        return bool(until) and until <= today.isoformat()
+        decision = state.get("decision", {})
+        detail = decision.get("detail", {})
+        by_researcher = (decision.get("permission_state") == "researcher_decision" and decision.get("operation") == "defer"
+                         and detail.get("decision_evidence") == "terminal_confirmation" and detail.get("until") == until)
+        return not (by_researcher and until and until > today.isoformat())
     return False
 
 

@@ -12,7 +12,7 @@ The primary ResearchOS route is Markdown plus a repository-aware agent or CLI. T
 python3 scripts/start_researchos.py --mode dashboard --port 8880
 ```
 
-The other modes, including the status check, are listed in [Section 4 of the User Manual](../docs/user-manual.en.md#4-the-optional-dashboard). For the first material set and the separate, git-ignored personal-vault projection, follow [Section 5](../docs/user-manual.en.md#5-your-own-material); this version does not show the first-run setup form that the [onboarding steps](../08_exports/public_starter/onboarding-step-by-step.md) use. Personal-vault execution depends on its separately registered runtime and permissions; starting the public demo never enables it.
+The other modes, including the status check, are listed in [Section 6 of the User Manual](../docs/user-manual.en.md#the-optional-dashboard). For the first material set and the separate, git-ignored personal-vault projection, follow [Section 2](../docs/user-manual.en.md#2-step-2-build-your-own-vault); this version does not show the first-run setup form that the [onboarding steps](../08_exports/public_starter/onboarding-step-by-step.md) use. Personal-vault execution depends on its separately registered runtime and permissions; starting the public demo never enables it.
 
 Open the dashboard only through the launcher. `serve_dashboard.py` sends `Cache-Control: no-store` on every response, so neither the script and stylesheet references in `index.html` nor the imports in `style.css` carry `?v=` cache numbers, and the validators reject new ones; another static server may let the browser keep stale JS or CSS.
 
@@ -29,4 +29,4 @@ Open the dashboard only through the launcher. `serve_dashboard.py` sends `Cache-
 
 The Dashboard hosts capability plugins and owns presentation, routing, accessibility and render lifecycle. It does not own canonical authority, domain writes, provider policy or admission decisions. Public-starter displays fictional or sanitized records and remains copy-only: no local Codex probe, provider execution or canonical writeback. Legacy routes fail closed without an exact item identity. Headless tools remain usable without the Dashboard.
 
-See the [Client Shell Contract](../09_templates/data_contracts/researchos-client-shell-v1.json) for machine-readable boundaries, and [Section 4 of the User Manual](../docs/user-manual.en.md#4-the-optional-dashboard) for current interactions, language behavior and runtime details. This entrypoint does not duplicate their full workflows.
+See the [Client Shell Contract](../09_templates/data_contracts/researchos-client-shell-v1.json) for machine-readable boundaries, and [Section 6 of the User Manual](../docs/user-manual.en.md#the-optional-dashboard) for current interactions, language behavior and runtime details. This entrypoint does not duplicate their full workflows.

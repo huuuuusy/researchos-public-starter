@@ -24,7 +24,7 @@ This guide explains where new ResearchOS material should go. Core rule: raw mate
 
 ## Your Own Material Goes in `personal_vault/`
 
-Your own cards live in `personal_vault/`, a folder inside your clone that Git ignores; the layer paths below are relative to it, so a paper note goes in `personal_vault/01_knowledge/` and the current state in `personal_vault/06_active_context/`. The layer folders at the repository root hold this repository's own notes and fictional examples; do not add your material there. Never push a clone that contains real material to a public remote; to version the vault, keep a private copy of the repository without a public remote. To create the vault, follow "Start your own" in [Section 5 of the User Manual](../user-manual.en.md#5-your-own-material).
+Your own cards live in `personal_vault/`, a folder inside your clone that Git ignores; the layer paths below are relative to it, so a paper note goes in `personal_vault/01_knowledge/` and the current state in `personal_vault/06_active_context/`. The layer folders at the repository root hold this repository's own notes and fictional examples; do not add your material there. Never push a clone that contains real material to a public remote; to version the vault, keep a private copy of the repository without a public remote. To create the vault, follow [Section 2 of the User Manual](../user-manual.en.md#2-step-2-build-your-own-vault).
 
 ## One-Line Rule
 

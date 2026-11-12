@@ -14,6 +14,7 @@ updated: YYYY-MM-DD
 稿件是保密的。不要把稿件、其中的图或成段原文放进库里；这张卡只记稿件在哪里和你自己的意见。给助手看任何相关内容之前，先确认审稿流程是否允许。
 status：drafting / submitted / closed
 sensitivity：用 sensitive，ros context 打包前会先问你
+related_projects 里写别的卡片的路径，从库的根目录算起，例如 01_knowledge/papers/x.md，不要写成 papers/x.md。
 -->
 
 # 审稿：稿件的简短代称

@@ -14,6 +14,7 @@ updated: YYYY-MM-DD
 Goes in personal_vault/01_knowledge/projects/, at the path the commitment's source_path names.
 status: active / paused / closed
 project_maturity: I0 to decide / I1 project sandbox / I2 incubating / I3 independent project
+related_people, related_papers: paths of other cards, counted from the root of the vault, for example 01_knowledge/papers/x.md, not papers/x.md.
 -->
 
 # Project name

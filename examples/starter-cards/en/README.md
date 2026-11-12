@@ -26,6 +26,7 @@ The boundary card is read before anything goes out: a talk, a proposal, an email
 An assistant reads your vault from the surface down and stops as soon as a layer is enough. Cards are written to support that.
 
 - **Layer 1: summaries.** The frontmatter and the `Agent Summary`. This paragraph has to stand on its own: what this is, where it stands, when to read the card and what not to use it for. The research identity page is the entry to the whole vault and a direction summary is the entry to one direction; both point a task to the cards it needs. A summary's table names the cards, but packing a direction summary hands over only that page; the assistant fetches each card it needs with `python3 scripts/ros.py --root personal_vault context <card path>`, so that the context receipt covers it.
+  In the frontmatter, `related_*` and `source_files` hold the paths of other cards, counted from the root of the vault, for example `01_knowledge/papers/example-benchmark.md` and not `papers/example-benchmark.md`; otherwise the vault check reports a link to a file that does not exist.
 - **Layer 2: card bodies.** Read only when the task needs the detail.
 - **Layer 3: evidence.** Originals, notes and experiment logs stay where they are; the card's "Evidence boundary" says where, and they are not read by default. They are read only to verify something before formal writing or external use.
 

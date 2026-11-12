@@ -4,6 +4,7 @@ Nothing here writes. Each ``plan_*`` returns (path, new text, preimage digest) f
 the caller lands it through the staging owner (``ros._land``), which writes atomically and
 checks the preimage. ``landed`` and ``closed_episode`` then re-read the file and parse it
 back, so the caller records an effect bound to the exact block hash (or closure) that landed.
+``paste_plan`` turns a judgment plan into text to paste, for the copy-only starter that lands nothing.
 """
 
 from __future__ import annotations
@@ -14,6 +15,7 @@ from datetime import date
 from pathlib import Path
 
 from researchos_kernel.judgments import BasisRef, parse_judgments, render_judgment
+from researchos_kernel.messages import t
 
 from .markdown_repo import split_frontmatter, commitment_block_span
 
@@ -118,6 +120,43 @@ def plan_reconfirm(root: Path, snapshot, judgment_id: str, today: date, lang: st
     if "\r\n" in raw:
         block = block.replace("\n", "\r\n")
     return judgment.path, text.replace(raw, block, 1), hashlib.sha256(before).hexdigest()
+
+
+def paste_plan(lang: str, relative: str, before: str, after: str, judgment_id: str) -> tuple:
+    """(steps, text): what to paste where so that ``relative`` ends as the plan does (blank lines aside): the
+    whole judgment block, and the judgments: line when it changes. Line numbers are those of the file as it
+    is; the steps go from the bottom of the file up, so doing one does not move the lines of the next."""
+    import difflib
+    old_lines, new_lines = before.splitlines(), after.splitlines()
+    was = next((j for j in parse_judgments(before, relative)[0] if j.id == judgment_id), None)
+    steps = []
+    if was:  # a reconfirmation rewrites lines inside the block: hand over the block whole
+        now = next(j for j in parse_judgments(after, relative)[0] if j.id == judgment_id)
+        steps.append({"action": "replace_block", "first_line": was.line, "last_line": was.line + len(was.raw.splitlines()) - 1,
+                      "was": old_lines[was.line - 1], "text": now.raw})
+    opcodes = [] if was else difflib.SequenceMatcher(None, old_lines, new_lines, autojunk=False).get_opcodes()
+    for tag, i1, i2, j1, j2 in reversed(opcodes):
+        chunk = "\n".join(new_lines[j1:j2]).strip("\n")
+        if tag == "equal" or not chunk.strip():
+            continue
+        replaced = [index for index in range(i1, i2) if old_lines[index].strip()]
+        if replaced:
+            steps.append({"action": "replace", "first_line": replaced[0] + 1, "last_line": replaced[-1] + 1,
+                          "was": old_lines[replaced[0]], "text": chunk})
+            continue
+        while i1 and not old_lines[i1 - 1].strip():
+            i1 -= 1  # after the last line with text; the blank lines around a pasted block are the reader's to leave
+        for part in reversed(re.split(r"\n\s*\n", chunk)):  # each paragraph on its own: a field line sits tight, a block does not
+            tight = all(line.startswith("- ") for line in part.splitlines())
+            steps.append({"action": "insert_line_after" if tight else "insert_after", "after_line": i1,
+                          "was": old_lines[i1 - 1] if i1 else "", "text": part})
+    text = "\n" + t(lang, "admit.paste.intro", path=relative) + "\n"
+    for number, step in enumerate(steps, 1):
+        first, last = step.get("first_line", step.get("after_line")), step.get("last_line", 0)
+        key = "insert_top" if first == 0 else step["action"]
+        text += "\n" + t(lang, f"admit.paste.{key}", n=number, id=judgment_id, was=step["was"].strip()[:60],
+                         lines=first if last in (0, first) else f"{first}–{last}") + "\n\n" + step["text"] + "\n"
+    return steps, text
 
 
 def landed(root: Path, relative: str, judgment_id: str) -> dict:

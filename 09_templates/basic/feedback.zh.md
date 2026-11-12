@@ -14,6 +14,7 @@ updated: YYYY-MM-DD
 related_people：学生或被指导者人物卡的路径
 写工作本身和下一步，不对人下结论。
 sensitivity：写的是真实的人，用 sensitive
+related_people、related_projects 里写别的卡片的路径，从库的根目录算起，例如 01_knowledge/papers/x.md，不要写成 papers/x.md。
 -->
 
 # YYYY-MM-DD 对学生工作的反馈

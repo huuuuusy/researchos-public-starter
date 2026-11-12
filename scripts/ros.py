@@ -46,7 +46,7 @@ from researchos_adapters.dispatch import (launched_nothing, provider_for, run_le
                                           run_record)
 from researchos_adapters.markdown_repo import build_snapshot, load_config, portfolio_problems  # noqa: E402
 from researchos_adapters.writeback import (WritebackError, closed_episode, episode_state_of,  # noqa: E402
-                                          landed as landed_block, pin_basis, plan_admit, plan_episode_close, plan_reconfirm)
+                                          landed as landed_block, paste_plan, pin_basis, plan_admit, plan_episode_close, plan_reconfirm)
 from researchos_kernel import KERNEL_VERSION  # noqa: E402
 from researchos_kernel.boundary import (BUDGET_COMPONENTS, budget_problems, budget_spent,  # noqa: E402
                                        completion, declared_budget, exhausted, frozen_budget, ledger_for,
@@ -1331,19 +1331,18 @@ def _write_through_staging(ctx: Context, relative: str, new_text: str, *, run_id
 
 def _copy_fallback(ctx: Context, args, how: str, relative: str, new_text: str, judgment_id: str = "", field_of: str = "") -> int | None:
     """Soul §5: the public starter keeps canonical promotion off and offers a copy fallback.
-    A write that would land in a source is shown as the planned change and not made; nothing
-    is decided or recorded. Returns None where promotion is allowed."""
+    A write that would land in a source is shown as the planned change and not made; nothing is decided
+    or recorded. A judgment's text to paste follows the diff. Returns None where promotion is allowed."""
     if ctx.runtime_scope != "public_starter":
         return None
     import difflib
-    path = ctx.root / relative
-    before = path.read_text(encoding="utf-8").splitlines(keepends=True) if path.is_file() else []
-    diff = "".join(difflib.unified_diff(before, new_text.splitlines(keepends=True),
-                                        fromfile=f"a/{relative}", tofile=f"b/{relative}"))
+    before = (ctx.root / relative).read_text(encoding="utf-8") if (ctx.root / relative).is_file() else ""
+    diff = "".join(difflib.unified_diff(before.splitlines(keepends=True), new_text.splitlines(keepends=True), fromfile=f"a/{relative}", tofile=f"b/{relative}"))
     reason = "public_starter: copy fallback only; nothing was written to or admitted into the durable sources"
     field = t(ctx.lang, "admit.copy_field", commitment=field_of, issue=digest([f"field:{field_of}#judgments", PURPOSE_VERSION])[:10]) if field_of else ""
-    return emit(args, {"promoted": False, "how": how, "path": relative, "reason": reason, "planned_diff": diff},
-                t(ctx.lang, "admit.copy_fallback", how=how, path=relative) + "\n" + diff + ("\n" + t(ctx.lang, "admit.copy_next", path=relative, id=judgment_id, field=field) if judgment_id else ""))
+    steps, pasted = paste_plan(ctx.lang, relative, before, new_text, judgment_id) if judgment_id else ([], "")
+    return emit(args, {"promoted": False, "how": how, "path": relative, "reason": reason, "planned_diff": diff, **({"paste": steps} if judgment_id else {})},
+                t(ctx.lang, "admit.copy_fallback", how=how, path=relative) + "\n" + diff + (pasted + "\n" + t(ctx.lang, "admit.copy_next", path=relative, id=judgment_id, field=field) if judgment_id else ""))
 
 
 def _decision_channel(lang: str, how: str, object_id: str, declinable: bool = False) -> tuple:
@@ -1756,7 +1755,9 @@ def cmd_decide(ctx: Context, args) -> int:
         to = {"defer": "deferred", "cancel": "cancelled", "reopen": "open", "confirm": "resolved"}[args.action]
         ctx.ledger.transition(bound, to, f"{channel[0]}:{args.action}", summary=state.get("summary", ""),
                               until=until)
-    return emit(args, {"issue_id": issue_id, **payload}, t(ctx.lang, "decide.done", id=issue_id[:10], action=args.action))
+    relayed = args.action == "defer" and channel[0] != "researcher_decision"  # on record, exempts nothing: say so
+    return emit(args, {"issue_id": issue_id, **payload, **({"permission_state": channel[0], "in_effect": False} if relayed else {})},
+                t(ctx.lang, "decide.defer_relayed" if relayed else "decide.done", id=issue_id[:10], action=args.action, until=until, reason_flag=f" --reason {json.dumps(args.reason, ensure_ascii=False)}" * bool(args.reason)))
 
 
 # -- state / context / rules ---------------------------------------------------------------------

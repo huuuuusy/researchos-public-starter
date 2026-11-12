@@ -18,6 +18,7 @@ updated: YYYY-MM-DD
 relationship_type：collaborator / candidate / public_role_only
 relationship_maturity：R0 待核对 / R1 已登记 / R2 协作资料可用 / R3 跨项目上下文
 sensitivity：写真实的人用 sensitive：ros context 要你确认才打包；private 从不打包
+related_projects、related_papers 里写别的卡片的路径，从库的根目录算起，例如 01_knowledge/papers/x.md，不要写成 papers/x.md。
 -->
 
 # 姓名

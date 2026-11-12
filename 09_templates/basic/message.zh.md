@@ -15,6 +15,7 @@ updated: YYYY-MM-DD
 status：draft / sent / not sent
 助手可以起草；事实由你核对，信由你自己发。
 sensitivity：写给真实的人，用 sensitive
+related_people、related_projects 里写别的卡片的路径，从库的根目录算起，例如 01_knowledge/papers/x.md，不要写成 papers/x.md。
 -->
 
 # 这封信的简短说明

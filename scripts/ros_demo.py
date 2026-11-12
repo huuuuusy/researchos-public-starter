@@ -75,7 +75,7 @@ NARRATION = {
             "Started {folder}/ from the fictional demo graph, without the demo's ros records, sample answer "
             "and judgment. Next:",
             "  1. In {folder}/06_active_context/research-portfolio.md, replace the two fictional commitments "
-            "with one of your own (fields: docs/user-manual.en.md §5).",
+            "with one of your own (fields: docs/user-manual.en.md, Appendix A).",
             "  2. Replace the two fictional cards under {folder}/01_knowledge/ with one card of your own at the "
             "path its source_path names, starting from 09_templates/basic/project.md; examples/starter-cards/en/ "
             "shows every kind of card filled in.",
@@ -105,7 +105,7 @@ NARRATION = {
         "init.done": [
             "已从虚构演示库建好 {folder}/，演示的 ros 记录、示例回答和判断没有带过来。接下来：",
             "  1. 在 {folder}/06_active_context/research-portfolio.md 里，把两项虚构承诺换成你自己的一项"
-            "（字段见 docs/user-manual.zh.md 第 5 节）。",
+            "（字段见 docs/user-manual.zh.md 附录 A）。",
             "  2. 把 {folder}/01_knowledge/ 下的两张虚构卡片换成你自己的一张，放在 source_path 指向的位置，"
             "可以从 09_templates/basic/project.zh.md 开始；每类卡填好的样子见 examples/starter-cards/zh-CN/。",
             "  3. 运行：python3 scripts/ros.py --root {folder} today",

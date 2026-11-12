@@ -16,6 +16,7 @@ updated: YYYY-MM-DD
 放在 personal_vault/06_active_context/grants/，一份申请一张卡。
 status：planning / drafting / submitted / awarded / declined / withdrawn
 合作申请人除了角色以外的情况，写到各自的人物卡上。
+related_people、related_projects 里写别的卡片的路径，从库的根目录算起，例如 01_knowledge/papers/x.md，不要写成 papers/x.md。
 -->
 
 # 申请的简称

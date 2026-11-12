@@ -40,7 +40,7 @@ python3 scripts/ros_demo.py --lang zh-CN
 ```text
 ━━ 3. 来源变化（基准协议改版）；ros today 标出依赖它的判断
 …
-    · [b5d4e33c7c] 判断「Compare A and B under occlusion first; do not enlarge the dataset yet.」的依据变了
+    · [b5d4e33c7c] 判断「先在遮挡条件下比较 A 和 B，暂不扩大数据集。」的依据变了
 ```
 
 第 5 步把重新确认打印成 diff，不写入；第 6 步收尾时复核仍待处理。「还没有准入回执」「不算准入」「复制回退」这类说法都不是报错，它们说的是什么都没有准入，本仓库本来就是这样工作的。
@@ -49,10 +49,10 @@ python3 scripts/ros_demo.py --lang zh-CN
 
 ## 第 2 步：在夹具上走一遍会话
 
-演示是自动跑完的。现在在 `examples/scheduler-demo/` 的夹具上，一条命令一条命令地走一遍同样的会话。用户手册第 3 节的「自己走一遍会话」按顺序列出六条命令（`today`、`context`、`run`、`collect`、`admit` 和 `close`），并说明每条做什么。第一条是：
+演示是自动跑完的。现在在 `examples/scheduler-demo-zh/` 的夹具上，一条命令一条命令地走一遍同样的会话。用户手册第 3 节的「请助手起草：context、run、collect」按顺序列出六条命令（`today`、`context`、`run`、`collect`、`admit` 和 `close`），并说明每条做什么。第一条是：
 
 ```bash
-python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
+python3 scripts/ros.py --root examples/scheduler-demo-zh today
 ```
 
 **应该看到什么。** `today` 开启会话，在「待判断」下列出夹具里的承诺。`run` 写出任务包并打印 run id；`collect` 读回示例回答，打印候选 id；每个 id 都要填进下一条命令。`admit` 打印一段 diff，并说明未写入、未准入。`close` 结束会话，把这个候选列为尚未决定：
@@ -62,7 +62,7 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
   · 候选 c-621349ea：commitment:occlusion-paper
 ```
 
-**看到的不一样时。** 手册里的命令不带 `--lang zh-CN`，输出是英文；想看中文，就在每条命令的 `--root …` 后面加上它。你的 id 和手册里的示例不同，用终端里打印的那个。按当天日期运行时，`today` 还会说承诺已有若干天未核实；新 clone 上某份来源还可能显示「在核实后有更新」。两者都来自日期，原因见手册第 3 节。`today` 什么都没列出时，检查 `--root examples/scheduler-demo` 是否写在子命令之前：不写它，`ros` 读的是本仓库自己的图，其中没有承诺；写在子命令之后，会被当作无法识别的参数拒绝。走查留下的记录在 Git 忽略的 `examples/scheduler-demo/06_active_context/work_state/` 里，第 3 步不会把它们复制过去。
+**看到的不一样时。** 你的 id 和手册里的示例不同，用终端里打印的那个。按当天日期运行时，`today` 还会说承诺已有若干天未核实；新 clone 上某份来源还可能显示「在核实后有更新」。两者都来自日期，原因见手册第 3 节。`today` 什么都没列出时，检查 `--root examples/scheduler-demo-zh` 是否写在子命令之前：不写它，`ros` 读的是本仓库自己的图，其中没有承诺；写在子命令之后，会被当作无法识别的参数拒绝。走查留下的记录在 Git 忽略的 `examples/scheduler-demo-zh/06_active_context/work_state/` 里，第 3 步不会把它们复制过去。
 
 ## 第 3 步：建自己的库
 
@@ -99,7 +99,7 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
    - source_path: 01_knowledge/projects/thesis-ch2.md
    ```
 
-   每个字段能取哪些值，见用户手册第 5 节。
+   每个字段能取哪些值，见用户手册附录 A。
 
 3. 删掉两张虚构卡片 `personal_vault/01_knowledge/projects/occlusion-tracking.md` 和 `personal_vault/01_knowledge/papers/example-benchmark.md`，在你写的 `source_path` 上从模板建一张自己的卡片：
 
@@ -153,7 +153,7 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
         C 维持现状，暂缓 → ros decide d2db02806a defer --until <日期>
 ```
 
-剔除那项研究后效应是否还成立，系统判断不了，由你决定选哪一项。选 A，本仓库打印出刷新依据版本的改动，照原样应用后再在终端确认。选 B，用一个新的 id 起草替代的判断，照[用户手册第 3 节](../../docs/user-manual.zh.md#来源变了怎么办)「来源变了怎么办」去做，那里列出了随后要做的确认。编号和你的输出不同时，用终端里打印的那个。伦理方案修订、预注册更新或者数据替换，也都按同样的方式处理：更新对应卡片，`today` 会把依赖它的判断交回来。
+剔除那项研究后效应是否还成立，系统判断不了，由你决定选哪一项。选 A，本仓库打印出刷新依据版本的改动，照原样应用后再在终端确认。选 B，用一个新的 id 起草替代的判断，照[用户手册附录 B](../../docs/user-manual.zh.md#附录-b替换一条判断以及改过承诺字段之后的确认)「替换一条判断」去做，那里列出了随后要做的确认。编号和你的输出不同时，用终端里打印的那个。伦理方案修订、预注册更新或者数据替换，也都按同样的方式处理：更新对应卡片，`today` 会把依赖它的判断交回来。
 
 ## 第 4 步：用 Dashboard 打开这个库（可选）
 
@@ -172,7 +172,7 @@ ResearchOS personal vault dashboard
 
 打开 `http://127.0.0.1:8881/`。这个模式只读你的库，从不显示虚构示例数据，所以没有什么需要关闭。`现在`显示你的承诺，`资料`显示你的卡片。在某个事项上开始工作时，ResearchOS 会建立一个有边界的 Work Session，并从`现在`进入`推进`，也就是该事项的抽屉；本机安装的 Codex CLI 只在你提交任务后运行，而且只在 `personal_vault/` 内写入。`待复核`会明确显示返回结果，连同证据边界、成果路径、决定状态和接续交接；你确认之前，什么都不会成为长期记忆。
 
-**看到的不一样时。** 服务器在启动时读取卡片，新建或修改卡片后要重启它。端口被占用时，给 `--port` 换一个数。第一次启动会建哪些文件夹，见用户手册第 5 节。想另外打开虚构示例，运行 `python3 scripts/start_researchos.py --mode dashboard --port 8880`。
+**看到的不一样时。** 服务器在启动时读取卡片，新建或修改卡片后要重启它。端口被占用时，给 `--port` 换一个数。第一次启动会建哪些文件夹，见用户手册第 6 节的「可选的 Dashboard」。想另外打开虚构示例，运行 `python3 scripts/start_researchos.py --mode dashboard --port 8880`。
 
 ## 第 5 步：核对第一轮是否完成
 

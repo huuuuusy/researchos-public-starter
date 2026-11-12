@@ -15,6 +15,7 @@ A mental model says how something in your field works, as you use it to reason; 
 confidence: low / medium / high, depending on how well the sources and examples support it.
 status: provisional / stable; change to stable once it has held up in several cases.
 This describes how you reason, so an assistant shows you its draft and writes it only after you agree.
+related_examples: paths of other cards, counted from the root of the vault, for example 01_knowledge/papers/x.md, not papers/x.md.
 -->
 
 # One sentence stating the model

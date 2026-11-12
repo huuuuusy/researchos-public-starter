@@ -14,6 +14,7 @@ Goes in personal_vault/04_people/feedback/, with the date at the start of the fi
 related_people: the path of the student's or mentee's person card
 Write about the work and the next step, not a verdict on the person.
 sensitivity: it is about a real person, so use sensitive
+related_people, related_projects: paths of other cards, counted from the root of the vault, for example 01_knowledge/papers/x.md, not papers/x.md.
 -->
 
 # YYYY-MM-DD Feedback on a student's work

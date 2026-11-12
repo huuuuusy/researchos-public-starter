@@ -13,6 +13,7 @@ updated: YYYY-MM-DD
 <!-- 填写说明（可删）
 放在 personal_vault/00_identity/research-identity.md。这是整个库的入口，助手每次先读这一页。
 source_files：这一页概括的方向摘要和认知层卡片。
+source_files 里写别的卡片的路径，从库的根目录算起，例如 01_knowledge/papers/x.md，不要写成 papers/x.md。
 -->
 
 # 研究身份摘要

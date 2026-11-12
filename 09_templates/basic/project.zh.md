@@ -14,6 +14,7 @@ updated: YYYY-MM-DD
 放在 personal_vault/01_knowledge/projects/，路径和承诺清单（06_active_context/research-portfolio.md）里承诺的 source_path 一致。
 status：active / paused / closed
 project_maturity：I0 待判断 / I1 项目沙盒 / I2 正在孵化 / I3 独立项目
+related_people、related_papers 里写别的卡片的路径，从库的根目录算起，例如 01_knowledge/papers/x.md，不要写成 papers/x.md。
 -->
 
 # 项目名

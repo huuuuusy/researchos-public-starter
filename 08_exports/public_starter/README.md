@@ -53,7 +53,7 @@ The earlier `fake-*`, `walkthrough`, and `example-original-developer-*` files we
 
 ## Case Toggle
 
-These cases feed the public demo projection by default. A personal vault never shows them, so you do not need to disable them to use your own material. Maintainers can switch them off as described in Section 5 of the User Manual; the files stay as reference-only placement guides.
+These cases feed the public demo projection by default. A personal vault never shows them, so you do not need to disable them to use your own material. Maintainers can switch them off as described in Appendix E of the User Manual; the files stay as reference-only placement guides.
 
 ## Agent Summary
 

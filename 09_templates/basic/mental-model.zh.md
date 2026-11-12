@@ -15,6 +15,7 @@ updated: YYYY-MM-DD
 confidence：low / medium / high，看来源和例子支撑得怎样。
 status：provisional / stable，在几个案例里都站得住之后改成 stable。
 这是你推理的方式，助手起草后先给你看，你同意才写。
+related_examples 里写别的卡片的路径，从库的根目录算起，例如 01_knowledge/papers/x.md，不要写成 papers/x.md。
 -->
 
 # 一句话写清这个模型

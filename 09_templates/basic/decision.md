@@ -13,6 +13,7 @@ updated: YYYY-MM-DD
 <!-- How to fill in (delete when done)
 Goes in personal_vault/02_decisions/, with the date at the start of the file name.
 status: active / superseded / closed
+related_people, related_projects, related_papers: paths of other cards, counted from the root of the vault, for example 01_knowledge/papers/x.md, not papers/x.md.
 -->
 
 # One sentence saying what was decided
