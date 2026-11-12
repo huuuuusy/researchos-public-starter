@@ -112,7 +112,7 @@ This is V1.2, released as `v1.2.0` on 2026-11-12 (see the [V1.2 release notes](d
 
 ## How to cite
 
-The technical report and this repository are archived together on Zenodo, in one record that Zenodo lists as software under the title "ResearchOS Public Starter". Please cite them with the DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799), which always resolves to the latest archived version; v1.1.0 and v1.2.0 have no version DOI of their own yet, and the last archived version, v1.0.4, is [10.5281/zenodo.24038050](https://doi.org/10.5281/zenodo.24038050).
+The technical report and this repository are archived together on Zenodo, in one record that Zenodo lists as software under the title "ResearchOS Public Starter". Please cite them with the DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799), which always resolves to the latest archived version; the version DOI of v1.2.0 is [10.5281/zenodo.24156065](https://doi.org/10.5281/zenodo.24156065) (v1.1.0 was not archived separately).
 
 > Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.1.0). Zenodo. https://doi.org/10.5281/zenodo.23769799
 
