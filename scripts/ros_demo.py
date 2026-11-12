@@ -4,12 +4,15 @@
     python3 scripts/ros_demo.py [--lang en|zh-CN]
     python3 scripts/ros_demo.py --init personal_vault   # start your own vault from the demo graph
 
+With ``--lang zh-CN`` both read the Chinese fixture ``examples/scheduler-demo-zh/``: the same story, ids and
+commands, written in Chinese.
+
 Steps: session start -> a source card changes -> the judgment that depends on it is
 flagged -> the researcher re-checks; the public starter shows the reconfirmation as a
 planned change instead of writing it (the public starter only offers a copy fallback) -> session
 close. The tracked demo files are never modified.
 
-``--init <folder>`` copies the demo graph into a folder that has no portfolio yet, leaving out what a
+``--init <folder>`` copies the demo vault into a folder that has no commitment list yet, leaving out what a
 walk-through on the fixture leaves behind (its ros records and the sample answer) and the fictional
 judgment, and prints the next steps.
 """
@@ -32,6 +35,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import ros  # noqa: E402
 
 DEMO = ROOT / "examples" / "scheduler-demo"
+DEMO_ZH = ROOT / "examples" / "scheduler-demo-zh"
 TODAY = "2026-09-20"
 
 
@@ -53,6 +57,8 @@ NARRATION = {
         "5": "5. After re-checking, the researcher asks to reconfirm; the public starter shows the planned change "
              "and writes nothing (copy fallback)",
         "6": "6. ros close — the session ends with the re-check still listed as pending",
+        "protocol": ("Version 1 of the protocol.",
+                     "Version 2 of the protocol: the heavy-occlusion split was relabelled."),
         "next": "What next",
         "next.body": [
             "  · Walk through it yourself on the fixture: docs/user-manual.en.md §3.",
@@ -62,7 +68,8 @@ NARRATION = {
             "      python3 scripts/ros.py --root personal_vault today",
             "  · `ros …` in the output above means `python3 scripts/ros.py --root <folder> …`.",
         ],
-        "init.exists": "ros_demo: {portfolio} already exists; --init only starts a folder that has no portfolio yet",
+        "init.exists": "ros_demo: {portfolio} already exists; --init only starts a folder that has no commitment list yet",
+        "demo.title": "Demo Commitments (fictional)",
         "init.title": "My Research Commitments",
         "init.done": [
             "Started {folder}/ from the fictional demo graph, without the demo's ros records, sample answer "
@@ -82,6 +89,7 @@ NARRATION = {
         "4": "4. ros state — 这项承诺的 Q、E、J、B、N",
         "5": "5. 复核后研究者要求重新确认；公开 starter 只展示计划中的改动，不写入（复制回退）",
         "6": "6. ros close — 会话结束，复核仍列为待处理",
+        "protocol": ("协议第 1 版。", "协议第 2 版：重度遮挡子集重新标注了。"),
         "next": "接下来",
         "next.body": [
             "  · 在这个示例上自己走一遍：docs/user-manual.zh.md 第 3 节。",
@@ -91,21 +99,11 @@ NARRATION = {
             "      python3 scripts/ros.py --root personal_vault today",
             "  · 上面输出里的 `ros …` 指 `python3 scripts/ros.py --root <文件夹> …`。",
         ],
-        "init.exists": "ros_demo：{portfolio} 已经存在；--init 只用于还没有任务总表的文件夹",
+        "init.exists": "ros_demo：{portfolio} 已经存在；--init 只用于还没有承诺清单的文件夹",
+        "demo.title": "演示承诺（虚构）",
         "init.title": "我的研究承诺",
-        # The fictional commitments read in the vault's language until the user replaces them.
-        "init.replace": [
-            ("### Occlusion Transfer Paper", "### 遮挡迁移论文（虚构）"),
-            ("- accountable_owner: You", "- accountable_owner: 你"),
-            ("- role_summary: First author; owns the comparison and the paper's claim", "- role_summary: 第一作者，负责方法比较和论文主张"),
-            ("- question: Does method A still beat method B under heavy occlusion?", "- question: 方法 A 在重度遮挡下还好于方法 B 吗？"),
-            ("- next_step: Run the occlusion comparison on the example benchmark", "- next_step: 在示例基准上跑遮挡条件下的比较"),
-            ("### Workshop Talk", "### 研讨会报告（虚构）"),
-            ("- role_summary: Speaker; owns the talk outline", "- role_summary: 报告人，负责报告提纲"),
-            ("- next_step: Draft the outline after the comparison", "- next_step: 比较做完后写报告提纲"),
-        ],
         "init.done": [
-            "已从虚构演示图建好 {folder}/，演示的 ros 记录、示例回答和判断没有带过来。接下来：",
+            "已从虚构演示库建好 {folder}/，演示的 ros 记录、示例回答和判断没有带过来。接下来：",
             "  1. 在 {folder}/06_active_context/research-portfolio.md 里，把两项虚构承诺换成你自己的一项"
             "（字段见 docs/user-manual.zh.md 第 5 节）。",
             "  2. 把 {folder}/01_knowledge/ 下的两张虚构卡片换成你自己的一张，放在 source_path 指向的位置，"
@@ -147,14 +145,12 @@ def init(folder: str, say: dict, lang: str = "en") -> int:
     def copy_new(source: str, destination: str) -> None:
         if not Path(destination).exists():
             shutil.copy2(source, destination)
-    shutil.copytree(DEMO, target, ignore=shutil.ignore_patterns("work_state", "sample-answer.md"),
+    shutil.copytree(DEMO if lang == "en" else DEMO_ZH, target, ignore=shutil.ignore_patterns("work_state", "sample-answer.md"),
                     copy_function=copy_new, dirs_exist_ok=True)
     text = portfolio.read_text(encoding="utf-8")
     text = re.sub(r"^- judgments:.*\n", "", text, flags=re.MULTILINE)
     text = re.sub(r"\n> \[!judgment\][^\n]*\n(?:>[^\n]*\n)*", "", text)
-    text = text.replace("Demo Commitments (fictional)", say["init.title"])
-    for english, translated in say.get("init.replace", []):
-        text = text.replace(english, translated)
+    text = text.replace(say["demo.title"], say["init.title"])
     config = target / "config" / "ros.json"
     settings = json.loads(config.read_text(encoding="utf-8"))
     settings["language"] = lang
@@ -179,13 +175,11 @@ def main(argv=None) -> int:
         return init(args.init, say, lang)
     with tempfile.TemporaryDirectory(prefix="ros-demo-") as tmp:
         root = Path(tmp) / "scheduler-demo"
-        shutil.copytree(DEMO, root, ignore=shutil.ignore_patterns("work_state"))
+        shutil.copytree(DEMO if lang == "en" else DEMO_ZH, root, ignore=shutil.ignore_patterns("work_state"))
         step(say["1"], run(root, "today", lang=lang))
         step(say["2"], run(root, "admit", "--confirm", "j-occlusion-scope", lang=lang, answer="y"))
         benchmark = root / "01_knowledge" / "papers" / "example-benchmark.md"
-        benchmark.write_text(benchmark.read_text(encoding="utf-8").replace(
-            "Version 1 of the protocol.", "Version 2 of the protocol: the heavy-occlusion split was relabelled."),
-            encoding="utf-8")
+        benchmark.write_text(benchmark.read_text(encoding="utf-8").replace(*say["protocol"]), encoding="utf-8")
         # The same intent on the same day continues session 1; `today --for` would open a second session.
         step(say["3"], run(root, "today", lang=lang))
         step(say["4"], run(root, "state", "occlusion-paper", lang=lang))

@@ -18,7 +18,7 @@ ros today reads this file. In the public starter ros never writes it: you, or th
 
 ## Agent Summary
 
-Short-term attention only: which commitment to look at on which day, which ones are parked until a review date, and which ones have finished their current step. Facts and judgments stay in the commitment list and cards; nothing here changes a commitment's state, deadline or next step.
+Short-term attention only: which commitment to look at on which day, which ones are parked until a review date, and which ones have finished their current step. Facts and judgments stay in the commitment list (`06_active_context/research-portfolio.md`) and cards; nothing here changes a commitment's state, deadline or next step.
 
 ## Entry format
 

@@ -2,6 +2,8 @@
 
 这里有十二张虚构的卡片，讲的是同一件事：一位做视觉跟踪的研究者，在一次会上得知基准要改版，于是决定推迟一组实验；另有一张风格卡，记这位研究者怎样写这篇论文，一张边界卡记什么不能外传，两张索引记每项成果能对外说什么、谁做了什么。每张卡都可以照着改成你自己的；对应的空白骨架在 [`09_templates/basic/`](../../../09_templates/basic/README.zh.md)。这些卡只供参照，不会被复制进你的 `personal_vault/`。
 
+**不做视觉跟踪也一样用。** 示例的领域是视觉跟踪，换成别的研究，这些卡照样对得上。做问卷调查时，一张「论文卡」可以记一版问卷，例子里的「基准改版」就相当于问卷又发了一轮或改了题目；做档案研究时，论文卡可以记一份档案目录或校勘本，「基准改版」相当于档案馆发布了更正后的目录；做实验室研究时，论文卡可以记一份实验方案，「基准改版」相当于方案做了修订。项目卡、决策卡、人物卡和会议卡不用换名字，照样记你的项目、决定、合作者和会议。
+
 | 卡片 | 放在哪里 | 记什么 |
 | --- | --- | --- |
 | [研究身份摘要](00_identity/research-identity.md) | `00_identity/` | 你是谁、现在的主线、你的做法；助手每次先读这一页 |
@@ -31,7 +33,7 @@
 
 ## 成熟度
 
-每类卡用一个字段标它长到了哪一步：论文和报告卡用 `analysis_state`（M1 到 M3），项目卡用 `project_maturity`（I0 到 I3），人物卡用 `relationship_maturity`（R0 到 R3），方向摘要用 `group_level`（G0 到 G2）；启发式卡用 `confidence` 和 `status`（provisional、stable），风格卡只用 `status`（provisional、confirmed）。只有来源、链接和确认变多了才升级，字数变多不算。各级的含义统一写在[卡片成熟度说明](../../../08_exports/public_starter/onboarding-card-maturity-rubric.zh.md)里。
+每类卡用一个字段标它长到了哪一步：论文和报告卡用 `analysis_state`（M1 到 M3），项目卡用 `project_maturity`（I0 到 I3），人物卡用 `relationship_maturity`（R0 到 R3），方向摘要用 `group_level`（G0 到 G2）；启发式卡用 `confidence` 和 `status`（provisional、stable），风格卡只用 `status`（provisional、confirmed）。只有来源、链接和确认变多了才升级，字数变多不算。这些代号（如 `M1_registered`、`I1_sandbox`、`G2_direction_abstraction`）都是可选的标签，不想管就留着骨架里的默认值：`ros` 不看它们，只有可选的 Dashboard 用它们显示一张卡长到了哪一步。各级的含义统一写在[卡片成熟度说明](../../../08_exports/public_starter/onboarding-card-maturity-rubric.zh.md)里。
 
 ## 敏感性
 

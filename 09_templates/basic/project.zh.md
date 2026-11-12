@@ -11,7 +11,7 @@ updated: YYYY-MM-DD
 ---
 
 <!-- 填写说明（可删）
-放在 personal_vault/01_knowledge/projects/，路径和任务总表里承诺的 source_path 一致。
+放在 personal_vault/01_knowledge/projects/，路径和承诺清单（06_active_context/research-portfolio.md）里承诺的 source_path 一致。
 status：active / paused / closed
 project_maturity：I0 待判断 / I1 项目沙盒 / I2 正在孵化 / I3 独立项目
 -->

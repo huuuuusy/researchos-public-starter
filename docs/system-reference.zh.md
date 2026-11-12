@@ -35,6 +35,23 @@ ResearchOS 是给个人科研人员使用的小型文件化工具，用来让判
   -> 验证后的公开安全输出
 ```
 
+### 三种运行方式
+
+[用户手册第 1 节](user-manual.zh.md#1-本仓库是什么)用白话对比了同一套代码的三种用法；下表是同一对比的工程细节。
+
+| 能力 | 本仓库 | personal-vault 模式 | 报告中的原型 |
+| --- | --- | --- | --- |
+| 数据 | 虚构、公开安全 | git 忽略的 `personal_vault/` 下的真实材料 | 真实的本地研究材料 |
+| 项目组合、任务处理和资料卡片 | 有 | 有 | 有 |
+| 即时结果 | 只生成可复制任务包；不在页面内执行 | 由本机 Codex 给出的页面内本地回答或成果 | 页面内本地回答或成果 |
+| 待复核动作 | 只交接候选，不执行持久写回 | 复制或受控执行 | 复制或受控执行 |
+| 本地 runner 和执行设置 | 不启动本机 runner；仅登记维护动作 | 本机安装的 Codex CLI，只写 `personal_vault/` | 支持 workspace-write 的受控执行 |
+| 私人系统联动 | 不包含：不发现、不调用、不共享运行态 | 不包含 | 只属于私人部署，并服从本地 authority |
+| 长期写回 | 无 | Dashboard 经确认后写入 `personal_vault/`；`ros` 仍只复制 | 只有研究者批准并验证后才允许，包括 `ros admit` |
+| 公开导出 | demo 安全内容 | 必须单独经过 safe-export 复查 | 必须单独经过 safe-export 复查 |
+
+personal-vault 模式下，服务端 Review 状态、选择的工作副本、runner 回执和本机 Codex 的可写 sandbox 都以 `personal_vault/` 为写入根；Agent 可以把公开模板当作只读参照，但不能借个人模式的 `workspace-write` 修改受跟踪的 demo 文件。Agent 路线本身不依赖 Codex：Claude Code、Codex 或其他文件感知 CLI 都可以执行；只有 personal-vault Dashboard 的页面内回答调用本机 Codex CLI。
+
 ## 主要路线与辅助界面
 
 | 界面 | 作用 | 看什么 |
@@ -65,7 +82,7 @@ skill/Agent 是深度读取、修改、成果生成和验证的执行路线，Ch
 
 账本用状态 `waiting` 记录三种情形：有界问题已提出、尚未回答，报告称挂起；研究者带触发延期或收窄范围；阻塞依赖在冻结范围之外。后两类才是报告所说的等待，当前内核尚无“范围外阻塞依赖等待”的产生路径。提问未答属于等待人工判断的挂起，不等于已获准延期。因范围内依赖而等待、执行方自行延期，都不计入完成。Done 的等待集承认研究者渠道的延期或收窄范围，包括终端确认的 `decide defer`。前次规格不可重算要求（`spec:`）、break-glass 确认要求（`field:` 等现有 binding）和范围内覆盖未知要求，只要未关闭，Done 一律为假，即使已延期、等待或提问未答。合法等待不代表要求已解决。
 
-**上下文外发。** `ros context` 包被云端会话 Agent 读取时会离开本机，尽管该 Agent 不是 provider。研究者启动的会话可为所请求的承诺或卡片交付 public/internal 来源，无须再次确认。sensitive 来源每次须研究者本人在本机终端确认；Agent 代给参数不算确认。private 和未知级别一律排除。private 承诺总表可在来源自身声明哪些字段按 internal 交付；未声明字段与标题仍属 private，请求所用承诺 id 随请求交付，声明不降低来源级别。sensitive 和未知来源不适用该例外。
+**上下文外发。** `ros context` 包被云端会话 Agent 读取时会离开本机，尽管该 Agent 不是 provider。研究者启动的会话可为所请求的承诺或卡片交付 public/internal 来源，无须再次确认。sensitive 来源每次须研究者本人在本机终端确认；Agent 代给参数不算确认。private 和未知级别一律排除。private 承诺清单可在来源自身声明哪些字段按 internal 交付；未声明字段与标题仍属 private，请求所用承诺 id 随请求交付，声明不降低来源级别。sensitive 和未知来源不适用该例外。
 
 每次交付记录去向服务、用途、已交付与已排除来源；无法识别去向时记为未知。Agent 直接读文件，以及 `ros today`、`ros state` 等其他命令输出，不在这条交付记录内；其外发情况是未知，不能声称已覆盖。撤销只阻止后续交付，不能收回已交付内容。会话交付许可不等于公开发布许可；本仓库的安全导出规则与 `copy_only` 边界继续适用。
 
@@ -81,6 +98,24 @@ ResearchOS 不用一个含混的 status 同时表达所有含义：
 | 敏感性 | `public_safe`、`internal`、`private`、`local_only` | 说明材料或派生判断可以流向哪里。 |
 
 来源路径表示输入证据，不是保存目标。任务完成后，证据仍是候选，除非另有证据判断记录；候选获批后，也必须有明确写回目标和验证结果，才成为 validated write-back。Workflow、EvidenceState、Authority、Sensitivity 和 EvidenceKind 只由 `researchos-primitive-contract-v1.json` 定义；view 和 app 不得维护另一套状态枚举。
+
+## 中断后接续与 ResearchOS 之外的修改
+
+本节是[用户手册第 2 节](user-manual.zh.md#2-在-agent-客户端里走一个闭环)两段简短说明背后的技术细节。
+
+**交接的内容。** 需要跨中断保留有价值的工作时，在 `personal_vault/` 中保留成果和一份简短交接：问题；来源及版本；最后确认的判断（没有就写无）；候选及其未解决边界；下一安全动作；实际的决定、修改与验证证据。交接不授权把候选升级为正典。回来后先复核变化的来源再继续；既有有效授权在原范围内继续适用，不因流程换阶段而重复询问。
+
+**核对回执与来源。** 回执不需要 Dashboard 或浏览器状态就能读取和核对。`receipt_cli.py validate` 和 `inspect` 只检查结构，输出区分 asserted states 与 checked states：生产者可信度未验证，来源新鲜度未检查，人类决定未认证。旧回执在来源更新后仍可读取，但不能证明当前文件与当时相同。从交接继续之前，运行
+
+```bash
+python3 scripts/receipt_cli.py --root . recheck-source --input handoff.json --source result.md
+```
+
+并传入构建交接时同一个相对文件引用。命令核对身份和当前哈希，拒绝缺失、已变更或错配的来源；哈希相符既不认证回执作者，也不认证人类决定。把结果文件、任务计划（含扩展版本和 resume 命令）与交接放在一起；它们是产物和证据，不自动成为已准入记忆。
+
+**换一个运行时重新路由。** 不同 runtime 的任务族 ID 不能当作完全相同而直接重放。需要在目标 runtime 重新分类一个可移植意图时，使用 `python3 scripts/plan_context.py --intent-json intent.json --reroute-intent`。它清除旧的分类建议、authority owner、承诺和 thread 身份，不能复用先前回执，也不授予写入或外部权限；目标 runtime 重新检查来源，必要时请求澄清。这是一次新的路由裁决，不是无缝接续，也不授权外发私人材料。
+
+**在 ResearchOS 之外做的修改。** 无界面 CLI 负责规划、核对来源和记录候选交接，不签署人类决定，也不执行正典升级。policy/staging 内核可以支持受控的宿主动作，但任意 Agent 编辑不会自动经过它。外部 Agent 做出的已授权修改，要保留候选 diff、宿主中的明确用户决定、精确目标、前后 revision、验证结果和回滚坐标。没有可信绑定时，把执行证据标为 external-host，或标为未经 ResearchOS machine gateway 管理。这个标记不否认用户授权，只防止事后伪造机器授权；构造出来的决定引用绝不能称为已核验。完整的机器治理外部宿主写入链需要可信宿主集成，本版不声称已经具备。
 
 ## 内核与扩展架构
 

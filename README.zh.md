@@ -21,8 +21,8 @@
 
 1. **研究写成卡片。** 论文卡、项目卡、合作者卡都是普通的 Markdown 文件，存在你自己电脑上。每条判断都写明依据（哪个文件的哪个版本）和适用范围。
 2. **开工先跑 `today`。** 它列出要你决定的事。某个来源文件变了，比如你换上了更正后的论文卡，它会把依赖这个来源的判断标为待复核。它读的是卡片，不是 PDF：PDF 本身变了，在你更新卡片之前它看不到。
-3. **让 AI 干活，但只收候选。** `context` 只挑这次需要的材料，`run` 生成一个任务包让你贴给任何助手，`collect` 把回答收回来作为候选，它不会自己改你的卡片。
-4. **由你拍板。** 哪些候选留下、哪些拒绝，你说了算；收工跑 `close`，列出这次变了什么、还有什么没做完。
+3. **让 AI 干活，产出先当候选。** 助手在这个文件夹里工作时，先用 `context` 只取这次需要的卡片，再动手做事；你想留作判断的内容，由助手用 `propose` 登记成候选。要把活交给另一个助手，`run` 生成一个可以贴过去的任务包，`collect` 把那边的回答收回来，同样作为候选。这些命令只打印改动，不写你的卡片。
+4. **由你拍板。** 哪些候选留下、哪些不要，你说了算：要留下的改动由你或助手照着打印的内容贴进卡片，再由你自己确认。收工跑 `close`，列出这次变了什么、还有什么没做完。
 
 现在是第一阶段：一个人用，材料是你电脑上的文件，拍板在你自己的终端里。目前只有作者一个人长期在用，它有没有帮助还没有和更简单的做法比较过。
 
@@ -39,12 +39,12 @@
 **一句话上手。** 打开你的 AI 助手，发送：
 
 ```text
-帮我装好 ResearchOS（https://github.com/huuuuusy/researchos-public-starter），按它 AGENTS.md 里的 First Run 一步步带我设置，用中文和我交流。我不会编程，请每一步都用通俗的话告诉我在做什么。
+帮我装好 ResearchOS（https://github.com/huuuuusy/researchos-public-starter），按 docs/reference/AGENTS.zh.md 的「首次上手」一步步带我设置，用中文和我交流。我不会编程，请每一步都用通俗的话告诉我在做什么。
 ```
 
-助手会把它下载下来，先在虚构的例子上用几句话讲清它做什么，再问你的发表清单（个人主页、Google Scholar、知网或直接粘贴都可以）、几篇论文、合作者和一个正在做的项目，据此建好你自己的库。大约半小时到一小时，事先什么都不用读。写入前它会先把卡片清单给你看，卡片只写进你电脑上那个 Git 忽略的文件夹。没有装 git 的话，助手也可以从同一个页面下载 ZIP。
+助手会把它下载下来，先在虚构的例子上用几句话讲清它做什么，再问你的发表清单（个人主页、Google Scholar、知网或直接粘贴都可以）、几篇论文、合作者和一个正在做的项目，据此建好你自己的库，也就是放你自己卡片的那个文件夹。大约半小时到一小时，事先什么都不用读。写入前它会先把卡片清单给你看，卡片只写进你电脑上那个 Git 忽略的文件夹。没有装 git 的话，助手也可以从同一个页面下载 ZIP。
 
-已经下载好了？在 Codex 或 Claude Code 里打开这个文件夹，说一句：「读一下 AGENTS.md，按 First Run 带我上手。」
+已经下载好了？在 Codex 或 Claude Code 里打开这个文件夹，说一句：「按 docs/reference/AGENTS.zh.md 的「首次上手」带我上手，用中文和我交流。」
 
 只在浏览器里用 ChatGPT 或 Claude、没有终端？用户手册第 2 节的[没有终端](docs/user-manual.zh.md#没有终端只在浏览器里聊天)写了这时还能怎么用。
 
@@ -56,17 +56,21 @@
 
 [首次上手说明](08_exports/public_starter/onboarding-step-by-step.zh.md)带你走完这三步，并写明每一步应该看到什么。
 
-![来源变化时，系统把判断交回，保留、收窄或撤回由研究者决定：一个虚构的例子。](docs/figures/readme/keep-update-hold-zh.gif)
+![来源变化时，系统把判断交回，保留、收窄还是留作未决由研究者决定：一个虚构的例子。](docs/figures/readme/keep-update-hold-zh.gif)
 
 ## 第一阶段包含什么、不包含什么
 
-按文档里的说法，ResearchOS 是一个持续维护研究状态、本地为主的系统（研究状态指什么，见[你会遇到的词](docs/user-manual.zh.md#你会遇到的词)）。第一阶段包含一次会话的六条命令 `today`、`context`、`run`、`collect`、`admit` 和 `close`，作用在一位研究者的 Markdown 卡片上：判断记住它依据哪些来源文件的哪个版本，其中一个变了，下一条命令就把它交回来等复核。在这个范围里，从写下一条判断，到来源变了它回来等你复核，再到收工，可以一步步走完。本仓库的命令做到候选为止，从不自己改你的卡片：要留下的改动，由你或你的助手照着它打印的内容贴进去，再由你确认；[技术报告](docs/technical-report.zh.md)描述的原型多一步：研究者在终端确认之后由系统写入。出厂 `config/ros.json` 设为 `runtime_scope: public_starter`。`ros` 写什么、`admit` 做什么、`runtime_scope` 取什么值才开启准入与派发、personal-vault 模式有何不同，见[用户手册第 3 节](docs/user-manual.zh.md#3-会话调度器与命令行检查)。
+ResearchOS 是一个持续维护研究状态、本地为主的系统：它放在你自己的电脑上，记着你的研究进行到哪一步（研究状态指什么，见[你会遇到的词](docs/user-manual.zh.md#你会遇到的词)）。第一阶段只管一位研究者自己的 Markdown 卡片：每条判断记住它依据哪些来源文件的哪个版本，其中一个变了，下一条命令就把它交回来等你复核。从写下一条判断，到来源变了它回来等你复核，再到收工，可以一步步走完。
 
-它是一个基于文件的小工具，不是在线托管的服务，不会自己做科研，不是完整的个人知识库，不是脱离证据的万能问答，也不是精雕细琢、什么都包的成品。本仓库只生成供你复制的内容，随附数据都是虚构的。它从不准入任何东西：报告中的原型会写入已接受改动的地方，这里只显示计划中的改动，由你自己复制，文档里称为「复制回退」。可选的 Dashboard 和插件体系处于冻结状态。多人协作、细到某一条论据的依赖、在你没运行命令时自动察觉变化，第一阶段都不包含；完整的清单见技术报告的[补充说明 6](docs/technical-report-supplement.zh.md)，逐条列出。
+平时用到的命令有这几条。开工用 `today`。助手在这个文件夹里工作时，用 `context` 取它需要的卡片，然后直接做事；你想留作判断的内容，用 `propose` 登记成候选，`admit` 打印把候选写进卡片的改动。`rules --check` 检查承诺清单有没有填错；承诺清单是 `06_active_context/research-portfolio.md` 这个文件，记着每个项目眼下的那一个下一步。收工用 `close`。把活交给另一个助手时，再用 `run` 生成任务包、用 `collect` 把回答收回来作为候选。`ros` 一共 13 个子命令，[用户手册第 3 节](docs/user-manual.zh.md#3-会话调度器与命令行检查)逐个列出它们在本仓库里做什么。
+
+本仓库的 `ros` 只打印改动、由你复制进去，自己不写你的卡片：要留下的改动，由你或你的助手照着它打印的内容贴进卡片，再由你在自己的终端确认。文档把这种做法叫「复制回退」。可选的 Dashboard 是一个在浏览器里看卡片和日程的页面；在 personal-vault 模式下（用你自己的材料时），它经你确认后会写入 `personal_vault/`。[技术报告](docs/technical-report.zh.md)描述的原型多一步：你在终端确认之后，由系统自己写进卡片，本仓库没有这一步。（技术细节：原型用 `config/ros.json` 里的 `runtime_scope: private` 打开这一步，本仓库出厂设为 `public_starter`，不支持 `private`；原型各条命令怎样写入，见技术报告的[补充说明 2](docs/technical-report-supplement.zh.md#补充说明-2-会话操作与实现映射)。）`ros` 会写哪些文件、`admit` 做什么、personal-vault 模式有何不同，见[用户手册第 3 节](docs/user-manual.zh.md#3-会话调度器与命令行检查)。
+
+第一阶段的范围是：你电脑上的一组文件和几条命令，不是在线服务；它只管判断和判断的依据，不替你做研究，也不是完整的个人知识库、离开证据的问答工具或包办一切的成品。本仓库只生成供你复制的内容，随附的数据都是虚构的。它从不自己把候选收进你的研究记录（文档里叫「准入」）：原型会写入已接受的改动，这里只把计划中的改动显示给你。第一阶段不含多人协作、细到某一条论据的依赖、没运行命令时自动察觉变化；可选的 Dashboard 和插件体系能用，但已冻结，这一阶段不再加功能。完整清单见技术报告的[补充说明 6](docs/technical-report-supplement.zh.md)。
 
 ## 跑一下演示
 
-除了 Python，不需要再装任何东西：不需要依赖包、API key、数据库或服务器。支持 macOS 与 Linux；Windows 请在 WSL（Windows Subsystem for Linux）中运行，因为它依赖的文件锁在原生 Windows 的 Python 中不可用。在仓库文件夹里运行演示，它在一份虚构研究图的临时副本上运行：
+除了 Python 3.10 或更新版本，不用再装别的：不需要依赖包、API key、数据库或服务器。支持 macOS 与 Linux；Windows 请在 WSL（Windows Subsystem for Linux）中运行，因为它依赖的文件锁在原生 Windows 的 Python 中不可用。在仓库文件夹里运行演示，它在虚构演示库的一份临时副本上运行，不改动任何东西：
 
 ```bash
 python3 scripts/ros_demo.py --lang zh-CN
@@ -74,26 +78,26 @@ python3 scripts/ros_demo.py --lang zh-CN
 
 ![虚构演示上的一次会话，内容取自 python3 scripts/ros_demo.py --lang zh-CN 的输出。](docs/figures/readme/session-zh.gif)
 
-来源卡片变化，依赖它的判断被标为待复核。研究者认为判断仍成立，输出只显示将要做的改动，并不真正准入。收尾时复核仍待处理。输出里有几个词用的是特定意思，比如候选、准入、事项、待答；[你会遇到的词](docs/user-manual.zh.md#你会遇到的词)每个用一句话说明。输出里写的 `ros …`，指 `python3 scripts/ros.py --root <文件夹> …`，文件夹就是存放研究图的那个目录。
+来源卡片变化，依赖它的判断被标为待复核。研究者认为判断仍成立，输出只显示将要做的改动，并不真正准入。收尾时复核仍待处理。输出里有几个词用的是特定意思，比如候选、准入、事项、待答；[你会遇到的词](docs/user-manual.zh.md#你会遇到的词)每个用一句话说明。输出里写的 `ros …`，指 `python3 scripts/ros.py --root <文件夹> …`，文件夹就是放卡片的那个库，比如你自己的 `personal_vault`。
 
-也可以不用调度器，直接用 Claude Code、Codex 或其他能读写本地文件的 AI 助手打开本文件夹，给出一个目标和一份来源；提示词见[用户手册第 2 节](docs/user-manual.zh.md#2-在-agent-客户端里走一个闭环)。
+也可以不用调度器（`ros` 这套命令），直接用 Claude Code、Codex 或其他能读写本地文件的 AI 助手打开本文件夹，给出一个目标和一份来源；提示词见[用户手册第 2 节](docs/user-manual.zh.md#2-在-agent-客户端里走一个闭环)。
 
 ## 开始自己的
 
-你自己的材料放在 `personal_vault/`，这是下载下来的仓库里一个 Git 会忽略的文件夹。下面这条命令从演示研究图复制出一份作为起点，不带演示留下的记录，也不带虚构的判断：
+你自己的材料放在 `personal_vault/`，这是下载下来的仓库里一个 Git 会忽略的文件夹。下面这条命令把演示库复制一份作为起点，不带演示留下的记录，也不带虚构的判断：
 
 ```bash
 python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 ```
 
-接着把虚构的承诺和卡片换成你自己的一项和一张，再运行 `python3 scripts/ros.py --root personal_vault today`。每一步怎么做、应该看到什么，见[首次上手说明](08_exports/public_starter/onboarding-step-by-step.zh.md)；字段说明见[用户手册第 5 节](docs/user-manual.zh.md#5-用自己的材料)。[示例卡片](examples/starter-cards/zh-CN/README.md)给出每类卡填好的样子，从研究身份摘要、方向摘要到项目、论文、决策、启发式、人物和会议卡；空白骨架在 [`09_templates/basic/`](09_templates/basic/README.zh.md)。可选的 Dashboard 读取同一个文件夹。含有真实材料的 clone 不要推送到公开远程仓库。
+接着把虚构的承诺和卡片换成你自己的一项和一张，再运行 `python3 scripts/ros.py --root personal_vault today`。每一步怎么做、应该看到什么，见[首次上手说明](08_exports/public_starter/onboarding-step-by-step.zh.md)；字段说明见[用户手册第 5 节](docs/user-manual.zh.md#5-用自己的材料)。[示例卡片](examples/starter-cards/zh-CN/README.md)给出每类卡填好的样子，从研究身份摘要、方向摘要到项目、论文、决策、启发式、人物和会议卡；空白骨架在 [`09_templates/basic/`](09_templates/basic/README.zh.md)。可选的 Dashboard 读取同一个文件夹。含有真实材料的仓库副本（clone）不要推送到公开的远程仓库。
 
 ## 文件夹里有什么
 
-- `examples/scheduler-demo/` 和 `08_exports/public_starter/` 是虚构演示：前者是调度器用的研究图，后者是 Dashboard 的示例议程和上手示例。
+- `examples/scheduler-demo/` 和 `08_exports/public_starter/` 是虚构演示：前者是调度器用的演示库，后者是 Dashboard 的示例议程和上手示例。
 - `personal_vault/` 放你自己的材料，由你创建，Git 忽略它。
-- `00_identity/` 到 `06_active_context/` 是一个库的各层（身份、知识、决策、认知、人物、工作流、当前状态）。这里放的是各层说明和公开安全的方法笔记；`personal_vault/` 用同样的布局。
-- `07_archive/` 存公开安全的历史，`09_templates/` 存卡片模板和数据契约，`corpus/` 保持为空（原始材料从不提交），`distilled/` 存简短的公开安全方法摘要。
+- `00_identity/` 到 `06_active_context/` 是一个库的各层（身份、知识、决策、认知、人物、工作流、当前状态）。这里放的是各层说明和可以公开的方法笔记；`personal_vault/` 用同样的布局。
+- `07_archive/` 存可以公开的历史，`09_templates/` 存卡片模板和数据格式约定，`corpus/` 保持为空（原始材料从不提交），`distilled/` 存简短的、可以公开的方法摘要。
 - `scripts/`、`config/`、`dashboard/` 和 `evals/` 分别是命令行工具、运行配置、可选 Dashboard 和测试。
 
 ## 接下来读什么

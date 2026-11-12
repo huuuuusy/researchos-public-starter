@@ -78,7 +78,7 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
    已从虚构演示图建好 personal_vault/，演示的 ros 记录、示例回答和判断没有带过来。接下来：
    ```
 
-   后面跟着下面这三步。如果提示 `research-portfolio.md 已经存在；--init 只用于还没有任务总表的文件夹`，说明你以前建过库：直接改那一份，或者把它挪开再重建。`personal_vault/` 已经存在但还没有任务总表也没关系，比如你先打开过 personal-vault Dashboard。
+   后面跟着下面这三步。如果提示 `research-portfolio.md 已经存在；--init 只用于还没有承诺清单的文件夹`，说明你以前建过库：直接改那一份，或者把它挪开再重建。`personal_vault/` 已经存在但还没有承诺清单也没关系，比如你先打开过 personal-vault Dashboard。
 
 2. 打开 `personal_vault/06_active_context/research-portfolio.md`。保留开头的 frontmatter 和标题，把两项虚构承诺，即 `### 遮挡迁移论文（虚构）` 和 `### 研讨会报告（虚构）` 连同各自的字段列表，换成你自己的一项。下面是最小的完整承诺，把值改成你自己的，`last_verified` 写今天的日期：
 
@@ -122,14 +122,14 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
    应该在「待判断」下看到你的承诺，而且只有你的：
 
    ```text
-   待判断（1 项承诺：未安排、需定下一步或复核到期）
+   待判断（1 项承诺：未安排、需定下一步、复核到期，或有判断事项等你处理）
      ■ 论文第二章  ［未安排］
        （没有要复核的事项）下一步：在新划分上重跑基线；排到今天：ros attend thesis-ch2 today
    ```
 
-   显示「未安排」是正常的：还没有排期。你决定什么时候做之后，`ros attend <id> today` 会给出要放进注意力安排的条目，贴进去之后 `today` 会在「今日」下列出这项承诺；排到以后或搁置的，列在「不在今日」那一行。用 `python3 scripts/ros.py --root personal_vault close` 结束会话；新建的库会报告 `结果：complete（收尾时待办 0，…）`。如果在 `today` 读过之后又改了 `state`、`priority`、`question` 或 `responsibility`（比如为了改正任务总表问题），`close` 会把这次写入列为待确认的判断类字段，之后每次 `today` 也会列出；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault decide <编号> confirm` 并回答 `y` 即可（由助手转述的调用只记为代理转述）。
+   显示「未安排」是正常的：还没有排期。你决定什么时候做之后，`ros attend <id> today` 会给出要放进注意力安排的条目，贴进去之后 `today` 会在「今日」下列出这项承诺；排到以后或搁置的，列在「不在今日」那一行。用 `python3 scripts/ros.py --root personal_vault close` 结束会话；新建的库会报告 `结果：完成（complete）；收尾时待办 0，…`。如果在 `today` 读过之后又改了 `state`、`priority`、`question` 或 `responsibility`（比如为了改正承诺清单问题），这次会话接下来的 `today` 和 `close` 都会把这次写入列为待确认的判断类字段，之后每次 `today` 也会列出；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault decide <编号> confirm` 并回答 `y` 即可（由助手转述的调用只记为代理转述）。
 
-   `today` 出现「任务总表问题」时，每一行都写明是哪个字段、可以取哪些值，例如 `state「active」不是可用值（mainline, waiting, queued, conditional, closed, paused）`，照着改任务总表即可。虚构承诺还出现在「待判断」下，说明它们的块还留在文件里；如果只出现在「待你回答的问题」下并标着 `subject_absent`，说明你在替换之前运行过 `today`，那是虚构演示留下的记录：删掉 `personal_vault/06_active_context/work_state/`，再运行一次 `today`。卡片不在你写的路径上时，这里会显示 `source_path … 在这个文件夹里不存在`；`python3 scripts/ros.py --root personal_vault rules --check` 报告同样的问题，一切就位时报告 `问题 0 条`。用 `--init personal_vault --lang zh-CN` 建的库，`config/ros.json` 已设为中文输出。
+   `today` 出现「承诺清单问题」时，每一行都写明是哪个字段、可以取哪些值，例如 `state「active」不是可用值（mainline, waiting, queued, conditional, closed, paused）`，照着改承诺清单即可。虚构承诺还出现在「待判断」下，说明它们的块还留在文件里；如果只出现在「待你回答的问题」下并标着 `subject_absent`，说明你在替换之前运行过 `today`，那是虚构演示留下的记录：删掉 `personal_vault/06_active_context/work_state/`，再运行一次 `today`。卡片不在你写的路径上时，这里会显示 `source_path … 在这个文件夹里不存在`；`python3 scripts/ros.py --root personal_vault rules --check` 报告同样的问题，一切就位时报告 `问题 0 条`。用 `--init personal_vault --lang zh-CN` 建的库，`config/ros.json` 已设为中文输出。
 
 ### 加一条判断，看来源变化时会发生什么
 
@@ -180,7 +180,7 @@ ResearchOS personal vault dashboard
 
 - `python3 scripts/ros.py --root personal_vault today` 列出一项你自己的承诺，没有虚构承诺；
 - 它的卡片在 `source_path` 上，写明了来源边界，`ros rules --check` 报告问题 0 条；
-- 任务总表里有你的一条判断，你已在自己的终端确认过它；没有判断，来源变了也不会有提醒；
+- 承诺清单里有你的一条判断，你已在自己的终端确认过它；没有判断，来源变了也不会有提醒；
 - `git status` 里没有因你的材料产生的改动。`personal_vault/` 被 Git 忽略，根本不会出现在那里。
 
 ### 哪些东西不进公开 clone

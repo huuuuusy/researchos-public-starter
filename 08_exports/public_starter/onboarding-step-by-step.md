@@ -78,7 +78,7 @@ Candidates returned or proposed since this session started that are neither admi
    Started personal_vault/ from the fictional demo graph, without the demo's ros records, sample answer and judgment. Next:
    ```
 
-   followed by the three next steps below. If it says `research-portfolio.md already exists; --init only starts a folder that has no portfolio yet`, you have started a vault before: edit that one, or move it aside to start again. It is fine if `personal_vault/` already exists without a portfolio, for example because you opened the personal-vault Dashboard first.
+   followed by the three next steps below. If it says `research-portfolio.md already exists; --init only starts a folder that has no commitment list yet`, you have started a vault before: edit that one, or move it aside to start again. It is fine if `personal_vault/` already exists without a commitment list, for example because you opened the personal-vault Dashboard first.
 
 2. Open `personal_vault/06_active_context/research-portfolio.md`. Keep the frontmatter and the headings at the top, and replace the two fictional commitments, `### Occlusion Transfer Paper` and `### Workshop Talk` with their field lists, by one of your own. This is the smallest complete commitment; change the values to yours, with today's date as `last_verified`:
 
@@ -122,14 +122,14 @@ Candidates returned or proposed since this session started that are neither admi
    You should see your commitment, and only yours, under "To decide":
 
    ```text
-   To decide (1 commitment(s): unscheduled, needing a next step, or due for review)
+   To decide (1 commitment(s): unscheduled, needing a next step, due for review, or with a judgment item waiting on you)
      ■ Thesis chapter 2  [unscheduled]
        (nothing to review) next step: Rerun the baseline on the new split; to schedule it for today: ros attend thesis-ch2 today
    ```
 
-   `[unscheduled]` is normal: nothing is scheduled yet. When you decide when to work on it, `ros attend <id> today` prints the entry for your attention schedule, and once it is pasted `today` lists the commitment under Today; one you moved to a later day or parked is named on the `Not in Today` line instead. End the session with `python3 scripts/ros.py --root personal_vault close`; for a fresh vault it reports `Outcome: complete (0 to do and 0 waiting or deferred at close; …)`. If you changed `state`, `priority`, `question` or `responsibility` after `today` had already read them, for example to fix a portfolio problem, `close` lists that write as a judgment-class field to confirm, and so does every `today` after it; confirm it in your own terminal with `python3 scripts/ros.py --root personal_vault decide <id> confirm` and answer `y` (a call relayed by an assistant is only recorded as asserted).
+   `[unscheduled]` is normal: nothing is scheduled yet. When you decide when to work on it, `ros attend <id> today` prints the entry for your attention schedule, and once it is pasted `today` lists the commitment under Today; one you moved to a later day or parked is named on the `Not in Today` line instead. End the session with `python3 scripts/ros.py --root personal_vault close`; for a fresh vault it reports `Outcome: done (complete); 0 to do and 0 waiting or deferred at close, …`. If you changed `state`, `priority`, `question` or `responsibility` after `today` had already read them, for example to fix a commitment list problem, the session's next `today` and its `close` list that write as a judgment-class field to confirm, and so does every `today` after it; confirm it in your own terminal with `python3 scripts/ros.py --root personal_vault decide <id> confirm` and answer `y` (a call relayed by an assistant is only recorded as asserted).
 
-   If `today` shows a "Portfolio problems" block, each line names the field and the values it accepts, for example `state "active" is not a valid value (mainline, waiting, queued, conditional, closed, paused)`; fix it in the portfolio. If the fictional commitments still appear under "To decide", their blocks are still in the file. If they appear only under "Questions for you", marked `subject_absent`, you ran `today` before replacing them: these are records of the fictional run, so delete `personal_vault/06_active_context/work_state/` once and run `today` again. A card that is not at the path you wrote shows there as `source_path … does not exist in this folder`; `python3 scripts/ros.py --root personal_vault rules --check` reports the same problems and says `0 problems` when everything is in place.
+   If `today` shows a "Commitment list problems" block, each line names the field and the values it accepts, for example `state "active" is not a valid value (mainline, waiting, queued, conditional, closed, paused)`; fix it in the commitment list. If the fictional commitments still appear under "To decide", their blocks are still in the file. If they appear only under "Questions for you", marked `subject_absent`, you ran `today` before replacing them: these are records of the fictional run, so delete `personal_vault/06_active_context/work_state/` once and run `today` again. A card that is not at the path you wrote shows there as `source_path … does not exist in this folder`; `python3 scripts/ros.py --root personal_vault rules --check` reports the same problems and says `0 problems` when everything is in place.
 
 ### Add one judgment and see what a source change does
 
@@ -180,7 +180,7 @@ The first run is done when:
 
 - `python3 scripts/ros.py --root personal_vault today` lists one commitment of your own and none of the fictional ones;
 - its card exists at `source_path` with a source boundary, and `ros rules --check` reports `0 problems`;
-- the portfolio holds one judgment of yours, confirmed in your own terminal; without one, a source change brings nothing back;
+- the commitment list holds one judgment of yours, confirmed in your own terminal; without one, a source change brings nothing back;
 - `git status` shows no change caused by your material. `personal_vault/` is git-ignored, so it does not appear there at all.
 
 ### What stays out of a public clone

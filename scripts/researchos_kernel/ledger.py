@@ -457,6 +457,30 @@ class Ledger:
         return [row for row in field_changes if (row["commitment_id"], row["field"]) not in covered
                 or digest(row["after"]) != expected[(row["commitment_id"], row["field"])]]
 
+    def open_field_confirmations(self, field_changes: list, states: dict, registry: dict, *, rule: dict, summary) -> list:
+        """HJ-12: a judgment-class commitment field written directly leaves a requirement that stays open
+        until the researcher confirms it. Listing the change once is not confirmation — the same rule as a
+        judgment block written without admission (HJ-8); only the object differs. The read set names the
+        object and the value that was written, so a later edit is a new generation and opens it again.
+        ``rule`` holds rule_id, rule_version and purpose_version; ``summary(row)`` is the item's text."""
+        registered = []
+        with self.lock():
+            for row in field_changes:
+                subject = f"field:{row['commitment_id']}#{row['field']}"
+                issue_id = digest([subject, rule["purpose_version"]])
+                read_set = {f"commitment:{row['commitment_id']}": digest(row["after"]), "field": row["field"]}
+                state = states.get(issue_id)
+                if state and state["status"] in OPEN_STATUSES and state["read_digest"] == digest(read_set):
+                    continue  # the same unconfirmed value: one requirement, not one per session
+                bound = binding(issue_id, (state or {}).get("generation", 0) + 1,
+                                purpose_version=rule["purpose_version"], source_version_vector=digest(read_set))
+                self.transition(bound, "open", "opened" if state is None else "refreshed", requirement=None if issue_id in registry else {
+                    **rule, "binding": subject, "commitment_id": row["commitment_id"], "kind": "maintenance",
+                    "executor": "human", "resolver": "human"}, summary=summary(row),
+                    read_set=read_set, cause="src", miss_status="not_applicable")
+                registered.append(issue_id)
+        return registered
+
     def closure_receipts(self, trajectory: list | None = None) -> dict:
         """Episode closure receipts by id -> {"identity", "revoked", "record"}. A rollback of the
         transaction that wrote a closure revokes its receipt; the record stays as history."""

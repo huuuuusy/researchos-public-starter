@@ -2,6 +2,8 @@
 
 These twelve fictional cards tell one story: a researcher in visual tracking learns at a meeting that a benchmark is about to change and decides to postpone a set of experiments; a working-style card records how they write the paper, a boundary card what must not go out, and two indexes what may be said about each output and who did what. Each card can be copied and rewritten as your own; the matching blank skeletons are in [`09_templates/basic/`](../../../09_templates/basic/README.md). The cards are for reference only and are never copied into your `personal_vault/`.
 
+**Not in visual tracking? The cards still fit.** The example field is visual tracking, but the same cards map onto other research. In a survey study, a "paper card" can record one version of a questionnaire, and the example's "benchmark version" is like a new questionnaire wave or a revised set of items. In an archive project, a paper card can record an archive catalogue or a critical edition, and a new benchmark version is like the archive publishing a corrected catalogue. In a lab study, a paper card can record a protocol, and a new benchmark version is like an amended protocol. Project, decision, person and meeting cards keep their names and record your projects, decisions, collaborators and meetings as they are.
+
 | Card | Where it goes | What it records |
 | --- | --- | --- |
 | [Research identity](00_identity/research-identity.md) | `00_identity/` | Who you are, your current mainline, how you work; an assistant reads this page first |
@@ -31,7 +33,7 @@ These three layers are about how deep the assistant goes inside one card. They a
 
 ## Maturity
 
-Each card type carries one field for how far it has grown: `analysis_state` M1 to M3 for papers and talks, `project_maturity` I0 to I3 for projects, `relationship_maturity` R0 to R3 for people, `group_level` G0 to G2 for direction summaries; heuristics use `confidence` and `status` (provisional, stable), and working-style cards only `status` (provisional, confirmed). A card moves up only when its sources, links and confirmations grow, not when it gets longer. The levels are explained once, in the [card maturity rubric](../../../08_exports/public_starter/onboarding-card-maturity-rubric.md).
+Each card type carries one field for how far it has grown: `analysis_state` M1 to M3 for papers and talks, `project_maturity` I0 to I3 for projects, `relationship_maturity` R0 to R3 for people, `group_level` G0 to G2 for direction summaries; heuristics use `confidence` and `status` (provisional, stable), and working-style cards only `status` (provisional, confirmed). A card moves up only when its sources, links and confirmations grow, not when it gets longer. These codes (such as `M1_registered`, `I1_sandbox` or `G2_direction_abstraction`) are optional labels; if you would rather not think about them, leave the skeleton's default: `ros` does not read them, and only the optional Dashboard uses them to show how far a card has grown. The levels are explained once, in the [card maturity rubric](../../../08_exports/public_starter/onboarding-card-maturity-rubric.md).
 
 ## Sensitivity
 

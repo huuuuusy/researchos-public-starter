@@ -2,6 +2,9 @@
 
 VAULT_CHECK_TEXT = {
     "en": {
+        "counts": "Your vault: {records} card(s) read, {assets} shown in the Dashboard.",
+        "dry": "Nothing was written. To refresh the Dashboard's view of your vault, run this again with --write (it writes {output}, which Git ignores).",
+        "wrote": "Wrote {output} (ignored by Git); the Dashboard in personal-vault mode now shows your vault.",
         "found": "Vault check ({n}):",
         "clean": "Vault check: no problems found.",
         "link": "{card}: links to {target}, which does not exist",
@@ -13,6 +16,9 @@ VAULT_CHECK_TEXT = {
         "duplicate": "attention schedule: {key} has more than one entry; only the first counts, so keep one",
     },
     "zh-CN": {
+        "counts": "你的库：读到 {records} 张卡，其中 {assets} 张会在 Dashboard 里显示。",
+        "dry": "没有写入任何文件。想刷新 Dashboard 里你的库，加上 --write 再运行一次（它写 {output}，Git 会忽略这个文件）。",
+        "wrote": "已写入 {output}（Git 会忽略）；个人库模式的 Dashboard 现在显示你的库。",
         "found": "库体检（{n} 处）：",
         "clean": "库体检：没有发现问题。",
         "link": "{card}：链接到 {target}，这个文件不存在",

@@ -35,6 +35,23 @@ Now: allocate attention across several Commitments, one next step per item
   -> validated public-safe output
 ```
 
+### Three ways to run the code
+
+[Section 1 of the User Manual](user-manual.en.md#1-what-this-repository-is) compares the three ways to use the same code in plain words; this table gives the engineering detail of the same comparison.
+
+| Capability | This repository | Personal-vault mode | Prototype in the report |
+| --- | --- | --- | --- |
+| Data | Fictional and public-safe | Real material under the git-ignored `personal_vault/` | Real local research material |
+| Portfolio, task routing and Library cards | Yes | Yes | Yes |
+| Immediate result | Copyable execution brief only; no in-page execution | Inline local answer or artifact from local Codex | Inline local answer or artifact |
+| Review action | Candidate handoff only; no durable execution | Copy or controlled execution | Copy or controlled execution |
+| Local runner and execution settings | No local runner; registered maintenance actions only | Locally installed Codex CLI, writing only under `personal_vault/` | Available with workspace-write controls |
+| Sibling private-system federation | Not included: no discovery, calls or shared runtime state | Not included | Private deployment only, under local authority |
+| Durable write-back | No | Dashboard writes under `personal_vault/` after confirmation; `ros` stays copy-only | Researcher-approved and validated only, including `ros admit` |
+| Public export | Demo-safe content | Separate safe-export review required | Separate safe-export review required |
+
+In personal-vault mode, server-side Review state, selected working copies, runner receipts and the local Codex writable sandbox all use `personal_vault/` as their write root. The agent may read this repository as reference but cannot use personal-vault `workspace-write` to modify tracked demo files. The agent route itself does not depend on Codex: Claude Code, Codex or another file-aware CLI can carry it; only the personal-vault Dashboard's in-page answer calls the local Codex CLI.
+
 ## Primary route and supporting surfaces
 
 | Surface | Role | What to inspect |
@@ -81,6 +98,24 @@ ResearchOS does not use one overloaded status field to mean everything:
 | Sensitivity | `public_safe`, `internal`, `private`, `local_only` | Where the material or derived claim may travel. |
 
 A source path identifies input evidence; it is not a save target. A completed task remains candidate evidence unless a separate evidence decision is recorded. Approval does not become validated write-back without an explicit target and validation result. Workflow, EvidenceState, Authority, Sensitivity and EvidenceKind are defined only by `researchos-primitive-contract-v1.json`; views and app orchestration must not own another state enumeration.
+
+## Resuming after an interruption and changes made outside ResearchOS
+
+This section holds the technical detail behind two short notes in [Section 2 of the User Manual](user-manual.en.md#2-one-loop-in-your-agent-client).
+
+**What a handoff holds.** If useful work has to survive an interruption, keep the result and a short handoff in `personal_vault/`: the question; source references and versions; the last confirmed judgment, or none; the candidate and its unresolved boundary; the next safe action; and the actual decision, mutation and validation evidence. A handoff is not permission to promote the candidate. On return, recheck changed sources before continuing. Reuse an existing valid authorization within its scope rather than asking again because a workflow phase changed.
+
+**Checking receipts and sources.** Receipts can be read and checked without a Dashboard or browser state. `receipt_cli.py validate` and `inspect` check structure only, and their output separates asserted states from checked states: producer trust is unverified, source freshness is not checked and human decisions are not authenticated. A historical receipt stays readable after its source changes, which does not establish that the current source matches. Before continuing from a handoff, run
+
+```bash
+python3 scripts/receipt_cli.py --root . recheck-source --input handoff.json --source result.md
+```
+
+with the exact relative file reference used to create the handoff. It checks identity and the current file hash and rejects missing, changed or mismatched sources; a matching checksum authenticates neither the receipt's producer nor a human decision. Keep the result file, the task plan (including extension version and resume command) and the handoff together. They are artifacts and evidence, not automatically admitted memory.
+
+**Rerouting in another runtime.** Profile-specific task-family IDs cannot be replayed across runtimes as if they were identical. To classify a portable intent again in the destination runtime, use `python3 scripts/plan_context.py --intent-json intent.json --reroute-intent`. It discards old family suggestions, the authority owner and commitment and thread IDs, cannot reuse a prior receipt and grants no mutation or external permission; the destination rechecks sources and may ask for clarification. This is a new routing decision, not seamless continuation and not permission to export private material.
+
+**Changes made outside ResearchOS.** The headless CLI builds plans, checks sources and records candidate handoffs. It does not sign human decisions or perform canonical promotion. The policy and staging kernel can support controlled host actions, but arbitrary agent edits do not pass through it automatically. For an authorized change made by an external agent, keep the proposed diff, the explicit user decision in the host, the exact targets, the revisions before and after, the validation result and the rollback coordinate. Where no trusted binding exists, label the execution evidence as external-host, or unmanaged by the ResearchOS machine gateway. The label does not deny the user's authorization; it prevents a machine grant from being invented after the fact, and a synthesized decision reference must never be called verified. A fully machine-governed external-host mutation chain requires a trusted host integration, which this release does not claim to have.
 
 ## Kernel and extension architecture
 

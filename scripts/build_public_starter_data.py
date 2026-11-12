@@ -991,33 +991,20 @@ def main() -> int:
     if args.check and args.personal_vault:
         parser.error("--check applies to public artifacts, not personal-vault scaffolding")
     if args.personal_vault:
+        config = PERSONAL_VAULT_ROOT / "config" / "ros.json"  # the vault's own language, unless --language says otherwise
+        language = args.language or (json.loads(config.read_text(encoding="utf-8")).get("language", "en") if config.is_file() else "en")
         if args.write:
             ensure_personal_vault_scaffold()
-        data, failures = build_personal_vault_data(
-            root=ROOT,
-            content_language=args.language,
-            vault_root=PERSONAL_VAULT_ROOT,
-        )
-        dashboard_asset_count = sum(1 for record in data["records"] if is_dashboard_asset(record))
-        print(f"Source: {data['source']}")
-        print("Mode: personal-vault")
-        print(f"Content language: {data['case_materials']['content_language']}")
-        print(f"Records: {data['record_count']}")
-        print(f"Dashboard assets: {dashboard_asset_count}")
-        print(f"Output: {PERSONAL_DASHBOARD_OUTPUT.relative_to(ROOT)}")
-        config = PERSONAL_VAULT_ROOT / "config" / "ros.json"
-        language = json.loads(config.read_text(encoding="utf-8")).get("language", "en") if config.is_file() else "en"
+        data, failures = build_personal_vault_data(root=ROOT, content_language=language, vault_root=PERSONAL_VAULT_ROOT)
         problems, say = vault_check(PERSONAL_VAULT_ROOT, language), VAULT_CHECK_TEXT["zh-CN" if language == "zh-CN" else "en"]
+        print(say["counts"].format(records=data["record_count"], assets=sum(1 for record in data["records"] if is_dashboard_asset(record))))
         print(say["found"].format(n=len(problems)) if problems else say["clean"], *(f"- {item}" for item in problems), sep="\n")
         if failures:
-            for failure in failures:
-                print(f"- {failure}")
+            print(*(f"- {failure}" for failure in failures), sep="\n")
             return 1
         if args.write:
             PERSONAL_DASHBOARD_OUTPUT.write_text(json.dumps(build_personal_dashboard_projection(data, root=ROOT), ensure_ascii=False, indent=2), encoding="utf-8")
-            print("Wrote git-ignored personal vault dashboard projection.")
-        else:
-            print("Dry run only. Pass --write to create the local projection.")
+        print(say["wrote" if args.write else "dry"].format(output=PERSONAL_DASHBOARD_OUTPUT.relative_to(ROOT)))
         return 0
     data, failures = build_public_starter_data(force_cases=False if args.disable_cases else None, content_language=args.language)
     data = retain_source_timestamp(data, OUTPUT)

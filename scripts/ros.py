@@ -2,7 +2,7 @@
 """ros: the ResearchOS session scheduler.
 
     ros today [--for <commitment>] [--all]   start of a session: what changed, what needs you
-    ros close [--for <commitment> | --session <id>]   end of a session: which judgment-class changes to keep
+    ros close [--for <commitment> | --session <id>] [--all]   end of a session: which judgment-class changes to keep
     ros propose judgment --file F --target T [--session <id>]
     ros propose episode-close --target <episode.md> --reason R
     ros propose rule --file <revision.json> [--reason R]   a rule revision, admitted only at the terminal
@@ -55,9 +55,9 @@ from researchos_kernel.judgments import parse_judgments  # noqa: E402
 from researchos_kernel.atomic_files import atomic_write_text  # noqa: E402
 from researchos_kernel.ledger import (OPEN_STATUSES, SCOPE_INTENT, binding, digest, landed_or_undone,  # noqa: E402
                                      now_iso, requirement_binding)
-from researchos_kernel.messages import MESSAGES, language, later_line, t, unknowns_line  # noqa: E402
+from researchos_kernel.messages import MESSAGES, language, later_line, name_list, t, unknowns_line  # noqa: E402
 from researchos_data.attention_schedule import (ATTENTION_PATH, AttentionScheduleError, entry_lines, item_key,  # noqa: E402
-                                               next_record, project_items, read_attention_schedule)
+                                               next_record, private_writer, project_items, read_attention_schedule)
 from researchos_kernel.admission_state import initial_admission_state, transition_admission_state  # noqa: E402
 from researchos_kernel.candidate_envelope import normalize_candidate_envelope  # noqa: E402
 from researchos_adapters.filesystem_staging import (FilesystemStagingError, begin_canonical_staging,  # noqa: E402
@@ -256,37 +256,23 @@ def _session_members(ctx: "Context", session_id: str) -> set:
 FIELD_CONFIRMATION = "field_confirmation"
 
 
-def _register_field_confirmations(ctx: "Context", field_changes: list) -> list:
-    """HJ-12: a judgment-class commitment field written directly leaves a requirement that stays open
-    until the researcher confirms it. Listing the change once at close is not confirmation — the same
-    rule as a judgment block written without admission (HJ-8); only the object differs. The record
-    carries the value that was written, so a later edit is a new generation and opens it again."""
-    registered = []
-    states = ctx.boundary().states["issues"]
-    registry = ctx.boundary().requirements
-    with ctx.ledger.lock():
-        for row in field_changes:
-            subject = f"field:{row['commitment_id']}#{row['field']}"
-            issue_id = digest([subject, PURPOSE_VERSION])
-            # The read set names the object this requirement is about and the value that was written,
-            # so a later edit is a new generation and the row says what was confirmed.
-            read_set = {f"commitment:{row['commitment_id']}": digest(row["after"]), "field": row["field"]}
-            state = states.get(issue_id)
-            if state and state["status"] in OPEN_STATUSES and state["read_digest"] == digest(read_set):
-                continue  # the same unconfirmed value: one requirement, not one per session
-            bound = binding(issue_id, (state or {}).get("generation", 0) + 1,
-                            purpose_version=PURPOSE_VERSION, source_version_vector=digest(read_set))
-            ctx.ledger.transition(
-                bound, "open", "opened" if state is None else "refreshed", requirement=None if issue_id in registry else {
-                    "rule_id": FIELD_CONFIRMATION, "rule_version": KERNEL_VERSION, "purpose_version": PURPOSE_VERSION,
-                    "binding": subject, "commitment_id": row["commitment_id"], "kind": "maintenance",
-                    "executor": "human", "resolver": "human"},
-                summary=t(ctx.lang, "field.unconfirmed" if row["before"] else "field.written",
-                          commitment=row["commitment_id"], field=row["field"],
-                          after=str(row["after"])[:80] or t(ctx.lang, "empty")),
-                read_set=read_set, cause="src", miss_status="not_applicable")
-            registered.append(issue_id)
-    return registered
+def _field_changes(ctx: "Context", started: dict, now: dict, session_id: str) -> tuple:
+    """(judgment-class field writes, fact-class field writes) since the session started; the judgment-class
+    ones that no admission covers open a confirmation (HJ-12), from `today` and `close` alike, so both list it."""
+    judged, facts, judgment_fields = [], [], ctx.write_class()["commitment_fields"]
+    for cid, fields in sorted(now["commitments"].items()):
+        before = started["commitments"].get(cid, {})
+        for key in sorted(set(fields) | set(before)):
+            if fields.get(key) != before.get(key):
+                row = {"commitment_id": cid, "field": key, "before": before.get(key, ""), "after": fields.get(key, "")}
+                (judged if key in judgment_fields else facts).append(row)
+    judged = ctx.ledger.unadmitted_field_changes(judged, session_id)
+    registered = ctx.ledger.open_field_confirmations(
+        judged, ctx.boundary().states["issues"], ctx.boundary().requirements,
+        rule={"rule_id": FIELD_CONFIRMATION, "rule_version": KERNEL_VERSION, "purpose_version": PURPOSE_VERSION},
+        summary=lambda row: t(ctx.lang, "field.unconfirmed" if row["before"] else "field.written", commitment=row["commitment_id"],
+                              field=row["field"], after=str(row["after"])[:80] or t(ctx.lang, "empty")))
+    return judged, facts, registered
 
 
 def session_completion(ctx: "Context", result, started: dict, session_id: str) -> dict:
@@ -296,7 +282,7 @@ def session_completion(ctx: "Context", result, started: dict, session_id: str) -
         if started.get("scope_members") is not None and "scope" in started else None
     return completion(result.states["issues"], result.requirements, frozen, today=ctx.today,
                       placements=result.placements, frozen_rules=started.get("rules"),
-                      open_at_start=started.get("open_requirements"),
+                      open_at_start=started.get("open_requirements"), judgments_at_start=started.get("judgments"),
                       coverage_domains=getattr(result, "coverage_domains", {}),
                       open_runs=ctx.ledger.unresolved_runs(session_id),
                       unknowns=getattr(result, "unknowns", {}))
@@ -363,26 +349,25 @@ def _session_for(ctx: Context, target: str, explicit: str = "", *, required: boo
 def _session_to_close(ctx: Context, args) -> str:
     """Only a session opened today is closed by default; an earlier day's must be named, and a session
     ends once. Nothing is closed by guessing."""
-    known = ctx.ledger.sessions()
+    known, L = ctx.ledger.sessions(), ctx.lang
     if args.session:
         if args.for_commitment:
-            raise SystemExit("name the session with --session or --for, not both")
+            raise SystemExit(t(L, "close.both"))
         if args.session not in known:
-            raise SystemExit(f"no session {args.session}")
+            raise SystemExit(t(L, "close.no_such", session=args.session))
         if known[args.session]["ended"]:
-            raise SystemExit(f"session {args.session} has already ended")
+            raise SystemExit(t(L, "close.ended", session=args.session))
         return args.session
     pool = _open_today(ctx, known)
     if args.for_commitment:
         pool = [sid for sid in pool if known[sid]["intent"] == _intent(args.for_commitment)]
     if not pool:
         earlier = [sid for sid, row in known.items() if not row["ended"]]
-        raise SystemExit("no session open today" + (
-            "; sessions from earlier days must be named: " + ", ".join(
-                f"ros close --session {sid}" for sid in earlier[-3:]) if earlier else "; run `ros today` first"))
+        focus = f" --for {args.for_commitment}" if args.for_commitment else ""
+        raise SystemExit(t(L, "close.no_session", today="ros today" + focus, close="ros close" + focus)
+                         + t(L, "close.earlier", commands=", ".join(f"ros close --session {sid}" for sid in earlier[-3:])) * bool(earlier))
     if len(pool) > 1:
-        raise SystemExit("several sessions are open; name one with --session or --for: " + ", ".join(
-            f"{sid} ({known[sid]['intent']})" for sid in pool))
+        raise SystemExit(t(L, "close.several", sessions=", ".join(f"{sid} ({known[sid]['intent']})" for sid in pool)))
     return pool[0]
 
 
@@ -392,6 +377,10 @@ def cmd_today(ctx: Context, args) -> int:
     if not any(known[sid]["intent"] == intent for sid in _open_today(ctx, known)):
         ctx.opening_budget = declared_budget(ctx.config)  # this boundary is the new session's first (CC-10)
     result = ctx.boundary()
+    # A continued session lists the judgment-class field writes since its start, as its close will (HJ-12).
+    if (same := [sid for sid in _open_today(ctx, known) if known[sid]["intent"] == intent]) and (started := _session_start(ctx, same[-1])) \
+            and _field_changes(ctx, started, session_snapshot(result), same[-1])[2]:
+        result = ctx.refresh()
     view = triage(result, ctx.config, ctx.today, only_commitment=args.for_commitment or "",
                   attention=_attention(ctx, result.snapshot))
     view["questions"] = _open_questions(ctx, result, args.for_commitment or "")
@@ -403,7 +392,7 @@ def cmd_today(ctx: Context, args) -> int:
     # frozen scope (H7); a different intent opens its own session and leaves the other untouched.
     if args.for_commitment and args.for_commitment not in result.snapshot.commitments:
         if args.for_commitment in getattr(result.snapshot, "ambiguous_commitments", frozenset()):
-            raise SystemExit(f"commitment {args.for_commitment} is declared more than once in the portfolio; "
+            raise SystemExit(f"commitment {args.for_commitment} is declared more than once in the commitment list; "
                              "make its id unique before focusing a session on it")
         raise SystemExit(f"unknown commitment: {args.for_commitment}")
     # Sc_ε for this session's intent: the frozen scope, or the part of it that belongs to one commitment.
@@ -485,9 +474,12 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
     elif data["spec_changes_pending"]:
         # CC-6: the running episode keeps the spec it froze; a changed spec is the next episode's.
         lines.append("  ! " + t(L, "today.spec_changed", parts=", ".join(data["spec_changes_pending"])))
-    listed = {row["issue_id"] for group in data["today"] + data["decision"] for row in group["items"]}  # the rest are under other commitments
-    lines.append(t(L, "today.completion", unfinished=len(status["unfinished"]), held=len(status["held"]),
-                   waiting=len(status["waiting"]), rest=t(L, "today.completion.rest", n=rest) if (rest := sum(row["issue_id"] not in listed for row in status["unfinished"])) else "",
+    listed = {row["issue_id"] for group in data["today"] + data["decision"] for row in group["items"]}  # the rest are not shown today
+    hidden = [{"commitment_title": t(L, "network"), "items": data["network"]}] + data["needs_review"]
+    rest = [row["issue_id"] for row in status["unfinished"] if row["issue_id"] not in listed]
+    lines.append(t(L, "today.completion", unfinished=len(status["unfinished"]), held=len(status["held"]), waiting=len(status["waiting"]),
+                   rest=t(L, "today.completion.rest", n=len(rest), where=name_list(L, [g["commitment_title"] for g in hidden if any(
+                       r["issue_id"] in rest for r in g["items"])])) if rest else "",
                    outside=t(L, "today.completion.outside", outside=status["out_of_scope_open"], unowned=status["unowned_open"])
                    if show_all or status["out_of_scope_open"] or status["unowned_open"] else ""))
     lines += ["  " + unknowns_line(L, status)] * (show_all or any(status.get("unknown_kinds", {}).values()))
@@ -510,14 +502,15 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
 
     def question(row: dict) -> list:
         why = t(L, f"why.{row['why']}") if f"why.{row['why']}" in MESSAGES[language(L)] else row["why"]
+        options = sorted(row["options"], key=lambda option: option != "cancel") if row["why"] == "subject_absent" else row["options"]
         return [f"  ? [{row['short_id']}] {row['summary']}", "      " + t(L, "question.why", why=why)] + [
             f"      {chr(65 + i)} {t(L, 'answer.' + option)} → ros answer {row['short_id']} {option}"
             + {"cancel": " --reason " + t(L, "ph.reason"), "defer": " --until " + t(L, "ph.date")}.get(option, "")
-            for i, option in enumerate(row["options"])]
+            for i, option in enumerate(options)]  # when its judgment is gone, cancelling is the likely answer: offered first
 
     def section(key: str, render, head: str = "") -> list:
         rows = data[key]
-        return ([t(L, head or f"today.{key}", n=len(rows))] + (["  " + t(L, "none")] if not rows else [])
+        return ([t(L, head or f"today.{key}", n=len(rows), templates=ROOT / "09_templates")] + (["  " + t(L, "none")] if not rows else [])
                 + [line for row in rows for line in render(row)] + [""])
     # Today comes from the attention owner and is never truncated; triage only adds its proposals.
     copy_only = ctx.runtime_scope == "public_starter"  # Soul §5: here ros attend prints the entry to paste
@@ -539,7 +532,7 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
         if data["network"]:
             lines += _render_group(L, {"commitment_title": t(L, "network"), "items": data["network"]}, marker="")
     else:
-        lines += [t(L, "today.elsewhere.count", n=elsewhere)] * bool(elsewhere)
+        lines += [t(L, "today.elsewhere.count", n=elsewhere, where=name_list(L, [g["commitment_title"] for g in hidden if g["items"]]))] * bool(elsewhere)
     if problems:
         lines.append(t(L, "today.problems", n=problems))
     if data["stale_sessions"]:
@@ -694,7 +687,8 @@ def cmd_attend(ctx: Context, args) -> int:
     from datetime import timedelta
     # The public starter stays read-only (Soul §5): read the snapshot without running a boundary.
     copy_only = ctx.runtime_scope == "public_starter"
-    snapshot = build_snapshot(ctx.root, ctx.config, None)[0] if copy_only else ctx.boundary().snapshot
+    writer = None if copy_only else private_writer()  # None in a public install hand-set to private: it stops below, having written nothing
+    snapshot = build_snapshot(ctx.root, ctx.config, None)[0] if copy_only or not writer else ctx.boundary().snapshot
     cid = args.commitment.split(":", 1)[-1]
     commitment = snapshot.commitments.get(cid)
     if not commitment:
@@ -723,6 +717,8 @@ def cmd_attend(ctx: Context, args) -> int:
             plan.update(action="paused", review_date=args.review or "")
         elif args.action == "complete-step":
             plan.update(action="complete_step", next_step=commitment.get("next_step"))
+    if not copy_only and writer is None:  # the arguments were checked first; no boundary ran, so nothing was written
+        raise SystemExit(t(ctx.lang, "attend.no_writer", config=ctx.root / "config" / "ros.json"))
     try:
         if copy_only:
             # Soul §5 copy fallback: the entry the store would write, built by the same code, printed to paste; nothing is written or
@@ -731,13 +727,12 @@ def cmd_attend(ctx: Context, args) -> int:
             current = read_attention_schedule(ctx.root)["items_by_key"].get(key)
             record = None if args.action == "undo" else next_record(current, now=datetime.now().astimezone(), **plan)[1]
             (old, entry), how, L = ("\n".join(entry_lines(key, row)) if row else "" for row in (current, record or current)), "replace" if current else "add", ctx.lang
-            text = (t(L, "attend.copy_fallback", id=cid, action=args.action, path=path) + t(L, "attend.copy_where." + (how if current or path.is_file() else "new"), block=key)
+            text = (t(L, "attend.copy_fallback", id=cid, action=args.action, path=path) + t(L, "attend.copy_where." + (how if current or path.is_file() else "new"), block=key, templates=ROOT / "09_templates")
                     + "\n\n" + (old + "\n" + t(L, "attend.copy_new") + "\n\n") * bool(current) + entry + "\n" + t(L, "attend.copy_next") + t(L, "attend.copy_next." + how)) \
                 if record else t(L, "attend.copy_undo" if current else "attend.copy_undo_none", id=cid, block=key, path=path) + "\n\n" * bool(entry) + entry
             return emit(args, {"promoted": False, "commitment": cid, "action": args.action, "path": str(path), "previous": current,
                                "planned": record, "entry": entry}, text)
-        from researchos_server.attention_schedule_store import AttentionScheduleStore  # private edition only
-        store = AttentionScheduleStore.create(ctx.root)
+        store = writer.create(ctx.root)
         if plan.get("action") == "restore":
             outcome = store.restore(provider_id=PROVIDER, item_id=cid, previous=plan["previous"], expected_current=plan["expected"])
             outcome["previous"] = plan["previous"]
@@ -788,15 +783,8 @@ def cmd_close(ctx: Context, args) -> int:
                                      "admitted": block_hash in admitted.get(jid, set()),
                                      "confirmed_post_hoc": block_hash in confirmed.get(jid, set())})
     judgment_changes += [{"judgment_id": jid, "change": "removed"} for jid in sorted(set(started["judgments"]) - set(now["judgments"]))]
-    field_changes, fact_fields = [], []
-    for cid, fields in sorted(now["commitments"].items()):
-        before = started["commitments"].get(cid, {})
-        for key in sorted(set(fields) | set(before)):
-            if fields.get(key) != before.get(key):
-                row = {"commitment_id": cid, "field": key, "before": before.get(key, ""), "after": fields.get(key, "")}
-                (field_changes if key in write_class["commitment_fields"] else fact_fields).append(row)
-    field_changes = ctx.ledger.unadmitted_field_changes(field_changes, session_id)
-    if _register_field_confirmations(ctx, field_changes):
+    field_changes, fact_fields, registered = _field_changes(ctx, started, now, session_id)
+    if registered:
         result = ctx.refresh()  # the confirmations just registered are this session's own open work
     # Out_ε against the scope frozen when the session started, not a scope recomputed now (H7).
     report = session_completion(ctx, result, started, session_id)
@@ -839,9 +827,7 @@ def cmd_close(ctx: Context, args) -> int:
     scope_detail = started.get("scope", {})
     coverage = {key: value for key, value in result.coverage.items() if key != "uncovered_keys"}
     held = [dict(row, kind="question") for row in report["held"]] + [dict(row, kind="trigger") for row in report["waiting"]]
-    held_note = "" if report["scope_frozen"] else t(ctx.lang, "close.unfrozen")
-    if cache_note:
-        held_note = cache_note
+    held_note = cache_note or ("" if report["scope_frozen"] else t(ctx.lang, "close.unfrozen"))
     with ctx.ledger.lock():
         ctx.ledger.episode(session_id, end=now_iso(), outcome=out, held=held, asked=asked, detail={
             "judgment_changes": len(judgment_changes), "judgment_fields": len(field_changes),
@@ -858,29 +844,37 @@ def cmd_close(ctx: Context, args) -> int:
             "scope": scope_detail, "coverage": coverage, "fact_files": fact_files, "fact_fields": fact_fields,
             "judgment_changes": judgment_changes, "judgment_fields": field_changes, "judgment_paths": judgment_paths,
             "declined_candidates": declined, "pending_candidates": pending, "confirmed_candidates": by_hand}
-    return emit(args, data, _render_close(ctx, data, _budget_line(ctx.lang, session_budget, spent, spent_out)))
+    return emit(args, data, _render_close(ctx, data, _budget_line(ctx.lang, session_budget, spent, spent_out), args.all))
 
 
-def _render_close(ctx: Context, data: dict, budget_line: str) -> str:
+def _render_close(ctx: Context, data: dict, budget_line: str, show_all: bool) -> str:
     """The text of `close`, from the same data its --json prints."""
     L = ctx.lang
     report, scope, coverage, details = data["completion"], data["scope"], data["coverage"], data["change_details"]
+    listed, asked_held = report["unfinished"] + data["held"], {row["trigger"][7:] for row in data["held"] if row["trigger"].startswith("answer:")}
     lines = [t(L, "close.header", session=data["session_id"]), "",
-             t(L, "close.outcome", outcome=data["outcome"], unfinished=len(report["unfinished"]), held=len(data["held"])),
-             t(L, "close.scope", node=scope.get("scope_node", "?"), members=scope.get("scope_member_count", "?"),
-               cross=len(scope.get("cross_scope_keys", [])), uncovered=coverage.get("coverage_unknown_in_scope", 0),
-               unowned=coverage.get("coverage_unknown_unowned", 0), evaluated=coverage.get("evaluated_match_count", 0),
-               domain=coverage.get("in_scope_match_count", 0), outside=report["out_of_scope_open"], undefined=report["unowned_open"]),
-             ] + [unknowns_line(L, report)] * any(report.get("unknown_kinds", {}).values()) + [budget_line] * bool(data.get("budget_exhausted"))
+             t(L, "close.outcome", outcome=data["outcome"], label=t(L, "outcome." + data["outcome"]), unfinished=len(report["unfinished"]),
+               held=len(data["held"]), listed=t(L, "close.outcome.listed") if listed else "")]
+    # The scope line is for checking the report: with --all, or when something in it is not zero; --json always has it.
+    if show_all or scope.get("cross_scope_keys") or coverage.get("coverage_unknown_in_scope") or coverage.get("coverage_unknown_unowned") \
+            or coverage.get("evaluated_match_count") != coverage.get("in_scope_match_count") or report["out_of_scope_open"] or report["unowned_open"]:
+        lines.append(t(L, "close.scope", node=scope.get("scope_node", "?"), members=scope.get("scope_member_count", "?"),
+                       cross=len(scope.get("cross_scope_keys", [])), uncovered=coverage.get("coverage_unknown_in_scope", 0),
+                       unowned=coverage.get("coverage_unknown_unowned", 0), evaluated=coverage.get("evaluated_match_count", 0),
+                       domain=coverage.get("in_scope_match_count", 0), outside=report["out_of_scope_open"], undefined=report["unowned_open"]))
+    lines += [unknowns_line(L, report)] * any(report.get("unknown_kinds", {}).values()) + [budget_line] * bool(data.get("budget_exhausted"))
     if data["note"]:
         lines.append("  ! " + data["note"])
     if report.get("next_episode"):
         lines.append("  » " + t(L, "close.next_episode", n=len(report["next_episode"])))
-    lines += [f"  ⏸ [{row['short_id']}] {row['summary']} — {t(L, 'trigger.date', date=row['trigger'][5:]) if row['trigger'].startswith('date:') else row['trigger']}" for row in data["held"]]
-    lines += [f"  ? [{row['ask_id']}] {row['summary']} — {t(L, 'close.pending_question')}" for row in data["pending_questions"]]
+    lines += [f"  ⏸ [{row['short_id']}] {row['summary']} — " + (t(L, "trigger.date", date=row["trigger"][5:]) if row["trigger"].startswith("date:") else t(
+        L, "close.held_question", id=row["trigger"][7:17]) if row["trigger"].startswith("answer:") else row["trigger"]) for row in data["held"]]
+    lines += [f"  ? [{row['ask_id']}] {row['summary']} — {t(L, 'close.pending_question')}" for row in data["pending_questions"]
+              if row["trigger"][7:] not in asked_held]  # a held question is listed once, above
     # Kernel §2.1: ending the session does not end its runs; each keeps its own tracking.
     lines += ["  ↻ " + t(L, "unknowns.run", run=run_id) for run_id in data["open_runs"]]
     lines += [f"  ○ [{row['short_id']}] {row['summary']}" for row in report["unfinished"][:10]]
+    lines += ["  " + t(L, "close.more", n=len(report["unfinished"]) - 10)] * (len(report["unfinished"]) > 10)
     lines += ["", t(L, "close.changes")]
     if not details["baseline_available"]:
         lines.append("  ! " + data["note"])  # the note is why there is no baseline
@@ -907,7 +901,7 @@ def _render_close(ctx: Context, data: dict, budget_line: str) -> str:
         else:
             hint = f"ros admit --confirm {row['judgment_id']}"
         lines.append("  · " + t(L, "close.block", id=row["judgment_id"], change=t(L, f"change.{row['change']}"),
-                                 conclusion=row.get("conclusion", ""), hint=hint))
+                                 conclusion=row.get("conclusion") and row["conclusion"] + " " or "", hint=hint))
     for row in data["judgment_fields"]:  # HJ-12: its own confirmation, by the id _register_field_confirmations gave it
         lines.append("  · " + t(L, "close.field.confirm", id=row["commitment_id"], field=row["field"],
                                  before=row["before"] or t(L, "empty"), after=row["after"] or t(L, "empty"),
@@ -1548,7 +1542,11 @@ def _admit_judgment_candidate(ctx: Context, args, candidate_id: str, snapshot) -
                 field_change = {"commitment_id": cid, "field": "judgments",
                                 "before_digest": digest(before[cid].get("judgments")),
                                 "after_digest": digest(after[cid].get("judgments"))}
-        fallback = _copy_fallback(ctx, args, "admit_candidate", relative, new_text, judgment.id, field_change.get("commitment_id", ""))
+        # Only a session open now sees the hand-applied judgments: line as a write to confirm (HJ-12); one opened
+        # after it is applied starts from it, so the hint names a confirmation only when one will be listed.
+        tracked = field_change and any(started["commitments"].get(cid, {}).get("judgments") != after[cid].get("judgments")
+                                       for sid in _open_today(ctx) if (started := _session_start(ctx, sid)))
+        fallback = _copy_fallback(ctx, args, "admit_candidate", relative, new_text, judgment.id, cid if tracked else "")
         if fallback is not None:
             return fallback
         decision = _record_decision(ctx, "admit_candidate", judgment.id, channel, candidate_id)
@@ -2029,6 +2027,7 @@ def main(argv=None) -> int:
     p = command("close")
     p.add_argument("--session")
     p.add_argument("--for", dest="for_commitment")
+    p.add_argument("--all", action="store_true", help="also print the scope line when nothing in it needs you")
     p = command("propose")
     p.add_argument("kind", choices=["judgment", "episode-close", "rule"])
     p.add_argument("--file")

@@ -98,9 +98,23 @@ def write_chat_pack(payload: dict[str, object], vault: Path, out: Path, language
         head += ("\n最后附上这类任务的做法说明，请照它的步骤来。\n" if zh else
                  "\nAt the end is how I want this kind of task done; please follow its steps.\n")
     body = "".join(f"\n---\n\n{text}\n" for _, _, text in kept)
-    switch = re.compile(r"<p align=\"right\">.*?</p>\s*", re.S)  # the repository's language links mean nothing in a chat
-    body += "".join(f"\n---\n\n{switch.sub('', (ROOT / path).read_text(encoding='utf-8').split(chr(10) + '---' + chr(10), 1)[-1]).strip()}\n"
-                    for path in workflows)
+    # The commitments these cards belong to, with their questions, next steps and judgments.
+    portfolio = vault / "06_active_context" / "research-portfolio.md"
+    portfolio_text = portfolio.read_text(encoding="utf-8") if portfolio.is_file() else ""
+    portfolio_label = next((line.split(":", 1)[1].strip().lower() for line in portfolio_text.split("\n---\n", 1)[0].splitlines()
+                            if line.startswith("sensitivity:")), "")
+    sources = {f"- source_path: {relative(card)}" for card, _, _ in kept}
+    commitments = [block.strip() for block in portfolio_text.split("\n### ")[1:] if sources & set(block.splitlines())]
+    if commitments and portfolio_label in DELIVERABLE:
+        body += ("\n---\n\n## 我的承诺与当前判断\n\n" if zh else "\n---\n\n## My commitments and current judgments\n\n") + \
+            "\n\n".join(f"### {block}" for block in commitments) + "\n"
+    # Of each workflow, only what a chat can follow: its summary, steps and result (no commands or vault paths).
+    keep = {"Agent Summary", "Steps", "步骤", "What you get", "产出"}
+    for path in workflows:
+        text = (ROOT / path).read_text(encoding="utf-8").split("\n---\n", 1)[-1]
+        title = next((line for line in text.splitlines() if line.startswith("# ")), "")
+        parts = [part for part in text.split("\n## ")[1:] if part.split("\n", 1)[0].strip() in keep]
+        body += f"\n---\n\n{title}\n\n" + "\n\n".join(f"## {part.strip()}" for part in parts) + "\n"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(head + body, encoding="utf-8")
     note = "".join(f"\n- {(vault / relative(card)).resolve()} ({label})" for card, label, _ in left_out)
@@ -309,6 +323,12 @@ def _load_json_argument(value: str) -> dict[str, object]:
     return payload
 
 
+MODE_WORDS = {
+    True: {"agent": "助手", "answer": "回答", "artifact": "成果", "writeback": "写回候选"},
+    False: {"agent": "assistant", "answer": "answer", "artifact": "artifact", "writeback": "writeback candidate"},
+}
+
+
 def as_text(payload: dict[str, object], language: str) -> str:
     zh = language == "zh-CN"
     labels = {
@@ -319,7 +339,7 @@ def as_text(payload: dict[str, object], language: str) -> str:
         "read": "本轮只读" if zh else "Read now only",
         "output": "输出" if zh else "Output",
         "workspace": "工作区" if zh else "Workspace",
-        "result": "结果协议" if zh else "Result protocol",
+        "result": "可以给出" if zh else "Can give",
         "boundary": "确认边界" if zh else "Confirmation boundary",
         "skip": "默认不要读" if zh else "Do not read by default",
         "escalate": "出现明确缺口后才升级" if zh else "Escalate only after a named gap",
@@ -346,8 +366,10 @@ def as_text(payload: dict[str, object], language: str) -> str:
         "",
         f"{labels['escalate']}: {payload['escalate_to']}",
         f"{labels['output']}: {payload['expected_output']}",
-        f"{labels['workspace']}: {payload['workspace']}",
-        f"{labels['result']}: {', '.join(payload['result_modes'])}; default={payload['default_result_mode']}",
+        f"{labels['workspace']}: {MODE_WORDS[zh].get(str(payload['workspace']), payload['workspace'])}",
+        f"{labels['result']}: " + ("、" if zh else ", ").join(MODE_WORDS[zh].get(mode, mode) for mode in payload["result_modes"])
+        + (f"（默认：{MODE_WORDS[zh].get(payload['default_result_mode'])}）" if zh else
+           f" (default: {MODE_WORDS[zh].get(payload['default_result_mode'])})"),
         sensitivity,
         f"{labels['boundary']}: {payload['confirmation_boundary']}",
     ]

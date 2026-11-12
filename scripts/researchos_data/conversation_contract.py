@@ -18,9 +18,9 @@ def authority_contract(language: str) -> dict[str, Any]:
         "requires_human_confirmation": True,
         "writeback_route": "review",
         "summary": (
-            "长期记忆或公开内容写回前必须进入 Review；对话先形成回答、成果或写回候选，公开 Dashboard/导出只是投影，不是 authority。"
+            "写进长期记忆或公开之前，要你先看过并确认；对话先给出回答、成果或写回候选，Dashboard 和导出只是展示，不算定论。"
             if zh
-            else "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+            else "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
         ),
     }
 

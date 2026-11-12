@@ -47,3 +47,4 @@ corpus/**
 
 # Scheduler demo run ledger
 examples/scheduler-demo/06_active_context/work_state/
+examples/scheduler-demo-zh/06_active_context/work_state/

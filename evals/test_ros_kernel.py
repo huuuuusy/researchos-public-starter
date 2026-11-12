@@ -156,8 +156,8 @@ class RosKernelTest(unittest.TestCase):
     def ros(self, *argv: str, today: date = TODAY, answer: str | None = None) -> dict:
         return json.loads(self.run_ros(*argv, today=today, answer=answer)[1])
 
-    def refusal(self, *argv: str, answer: str | None = None) -> str:
-        return self.run_ros(*argv, expect=SystemExit, answer=answer)[0]
+    def refusal(self, *argv: str, answer: str | None = None, lang: str = "") -> str:
+        return self.run_ros(*argv, expect=SystemExit, answer=answer, lang=lang)[0]
 
     def config(self) -> dict:
         return json.loads((self.tmp / "config" / "ros.json").read_text(encoding="utf-8"))
@@ -344,6 +344,11 @@ class RosKernelTest(unittest.TestCase):
             self.run_ros(*argv, json_out=False)
         return output.call_args.args[1:]
 
+    def bindings(self, rows: list) -> list:
+        """The subject each listed requirement is about (its registered binding)."""
+        registry = self.ledger().requirements()
+        return [registry[row["issue_id"]]["binding"] for row in rows]
+
     def today_ids(self, view: dict) -> dict:
         return {g["commitment_id"]: g["attention_state"] for g in view["today"]}
 
@@ -434,7 +439,7 @@ class RosKernelTest(unittest.TestCase):
     # issue_id and read_set are persisted (a change re-opens every requirement as a new generation),
     # and summaries, details, options and check reasons are shown or recorded; this pins them all.
     # 2026-11-10: re-pinned after the v1.1 wording pass (item terms, field and deadline options, no "on track" once due); ids and read sets unchanged.
-    RULE_OUTPUT_DIGEST = "3d3690e213b68b9e8e1f44babd91e12b07962760ede4c9f745ba02104a95f689"
+    RULE_OUTPUT_DIGEST = "4ec20b30e2a80e71c08b1cc3a65589de6aa225801ff1a339afd027fb87166863"
 
     def test_rule_findings_and_checks_stay_byte_for_byte_the_same(self) -> None:
         from researchos_kernel import rules as rule_table
@@ -1691,7 +1696,7 @@ class RosKernelTest(unittest.TestCase):
         draft.write_text(self.RUN_DRAFT.format(id="whole", pin=pin), encoding="utf-8")
         cid = self.ros("propose", "judgment", "--file", str(draft), "--target", "01_knowledge/projects/beta.md")["candidates"][0]
         self.assertEqual(self.ledger().candidates()[cid]["payload"]["session_id"], whole)
-        self.assertIn("several sessions are open", self.refusal("close"))
+        self.assertIn("Several sessions are open", self.refusal("close", lang="en"))
         closed = self.ros("close", "--for", "alpha")
         self.assertEqual(closed["session_id"], focused)
         self.assertEqual(ros._session_state(ros.Context(self.tmp, TODAY, ""), whole), "open", "只结束被点名的会话")
@@ -1710,13 +1715,13 @@ class RosKernelTest(unittest.TestCase):
         self.assertTrue(closed["note"], "如实说明起点缓存不在")
         self.assertEqual(self.ledger().records("episodes")[-1]["detail"]["note"], closed["note"])
         self.assertEqual(ros._session_state(ros.Context(self.tmp, TODAY, ""), session), "ended")
-        self.assertIn("no session open today", self.refusal("close"))
-        self.assertIn("already ended", self.refusal("close", "--session", session))
+        self.assertIn("No session open today", self.refusal("close", lang="en"))
+        self.assertIn("already ended", self.refusal("close", "--session", session, lang="en"))
 
     def test_sessions_from_earlier_days_are_named_never_guessed(self) -> None:
         pin = self.boundary().snapshot.resolve("01_knowledge/projects/alpha.md")[1][:8]
         old = self.ros("today", "--for", "alpha", today=date(2026, 9, 19))["session_id"]
-        self.assertIn("no session open today", self.refusal("close"), "裸 close 不去收前一天的会话")
+        self.assertIn("No session open today", self.refusal("close", lang="en"), "裸 close 不去收前一天的会话")
         view = self.ros("today")
         self.assertEqual(view["stale_sessions"], [old], "今日里列出前几天没收尾的会话")
         draft = self.tmp / "draft.md"
@@ -1724,11 +1729,11 @@ class RosKernelTest(unittest.TestCase):
         focused = self.ros("today", "--for", "alpha")["session_id"]
         got = self.ros("propose", "judgment", "--file", str(draft), "--target", "01_knowledge/projects/alpha.md")
         self.assertEqual(got["session_id"], focused, "承诺的来源卡片按该承诺归属会话")
-        self.assertIn("several sessions are open", self.refusal("close"))
+        self.assertIn("Several sessions are open", self.refusal("close", lang="en"))
         self.ros("close", "--for", "alpha")
         self.ros("close")
         self.assertEqual(self.ros("close", "--session", old)["session_id"], old, "前一天的会话点名才收")
-        self.assertIn("already ended", self.refusal("close", "--session", old), "一个会话只结束一次")
+        self.assertIn("already ended", self.refusal("close", "--session", old, lang="en"), "一个会话只结束一次")
 
     def test_a_lost_cache_still_lists_judgments_awaiting_confirmation(self) -> None:
         session = self.ros("today")["session_id"]
@@ -2808,10 +2813,11 @@ class RosKernelTest(unittest.TestCase):
         """Soul §5: in the public starter `attend` prints the entry the store would write and writes nothing;
         the researcher pastes it, and from then on `today` lists Today from that schedule."""
         self.edit_config(runtime_scope="public_starter")
+        templates = ROOT / "09_templates"  # the template in the repository ros runs from, by its full path: a vault has none
         no_schedule = self.run_ros("today", json_out=False, lang="en")[1]
         self.assertNotIn("Today (from the attention schedule", no_schedule, "没有注意力安排时不显示空的今日")
         self.assertIn("Attention proposals (1; this vault has no attention schedule yet: ros attend <commitment> "
-                      "today prints the entry and how to start the schedule from 09_templates/attention-schedule.md)\n"
+                      f"today prints the entry, and the schedule starts from the template {templates}/attention-schedule.md)\n"
                       "  · Alpha Paper: due in 2 day(s) (2026-09-22) and not scheduled for today → ros attend alpha today\n",
                       no_schedule, "没有注意力安排时也列出提议本身，不只给条数")
         before = self.vault_files()
@@ -2824,11 +2830,12 @@ class RosKernelTest(unittest.TestCase):
         text = self.run_ros("attend", "alpha", "today", json_out=False, lang="en")[1]
         self.assertIn("Nothing was written: this repository only shows the change. ros attend alpha today puts this entry in "
                       f"{self.tmp.resolve() / self.ATTENTION}; the file does not exist yet, so start it from "
-                      "09_templates/attention-schedule.md", text)
+                      f"{templates}/attention-schedule.md and add", text)
         self.assertIn("- attention_date: 2026-09-20\n", text)
         zh = self.run_ros("attend", "alpha", "today", json_out=False, lang="zh-CN")[1]
         self.assertIn("未写入：本仓库只显示改动。", zh)
-        self.assertIn("09_templates/attention-schedule.zh.md", zh)
+        self.assertIn(f"先照 {templates}/attention-schedule.zh.md 建立它", zh)
+        self.assertIn(f"注意力安排从模板 {templates}/attention-schedule.zh.md 建立", self.run_ros("today", json_out=False, lang="zh-CN")[1])
         self.assertFalse((self.tmp / self.ATTENTION).exists())
         # The researcher pastes the entry into a schedule started from the template.
         template = ROOT / "09_templates/attention-schedule.md"
@@ -3107,11 +3114,11 @@ class RosKernelTest(unittest.TestCase):
         self.assertEqual(rows[1]["valid"], ["lead", "support"])
         self.assertTrue({"closed", "paused", *self.config()["active_states"]} <= set(rows[0]["valid"]))
         text = self.run_ros("today", json_out=False, lang="en")[1]
-        self.assertIn("Portfolio problems (5; fix them in 06_active_context/research-portfolio.md)", text)
+        self.assertIn("Commitment list problems (5; fix them in 06_active_context/research-portfolio.md)", text)
         self.assertIn('delta (line ', text)
         self.assertIn('state "active" is not a valid value (', text)
         zh = self.run_ros("today", json_out=False, lang="zh-CN")[1]
-        self.assertIn("任务总表问题（5 条", zh)
+        self.assertIn("承诺清单问题（5 条", zh)
         self.assertIn("responsibility「owner」不是可用值（lead, support）", zh)
         checked = self.run_ros("rules", "--check", json_out=False, lang="en")[1]
         self.assertIn('responsibility "owner" is not a valid value (lead, support)', checked)
@@ -3120,7 +3127,7 @@ class RosKernelTest(unittest.TestCase):
         (self.tmp / "06_active_context" / "research-portfolio.md").unlink()
         text = self.run_ros("today", json_out=False, lang="en")[1]
         self.assertEqual(text.count("06_active_context/research-portfolio.md named in config/ros.json does not exist"), 1)
-        self.assertNotIn("Portfolio problems", text)
+        self.assertNotIn("Commitment list problems", text)
 
     def test_reconfirm_keeps_the_label_language_of_the_block(self) -> None:
         """Re-pinning rewrites only the basis and date: a Chinese block stays Chinese under English output,
@@ -3160,20 +3167,21 @@ class RosKernelTest(unittest.TestCase):
         self.write("01_knowledge/papers/k.md", "---\ntitle: K\n---\n> [!judgment] j-k\n> 结论：y\n"
                    "> 依据：01_knowledge/papers/odd.md\n> 承诺：alpha\n")
         footer = self.run_ros("context", "commitment:alpha", json_out=False, lang="en")[1].split("\n[delivered ", 1)[1]
-        self.assertIn("excluded 01_knowledge/papers/touchy.md: a sensitive card is delivered only through the "
-                      "researcher's own terminal. If the task needs it, run the same command in your own terminal "
-                      "and answer y; the card prints there", footer)
+        self.assertIn("excluded 01_knowledge/papers/touchy.md: a sensitive card is shown only in the researcher's own "
+                      "terminal. If the task needs it, run the same command in your own terminal and answer y when it "
+                      "asks to show the card there", footer)
         self.assertIn("excluded 01_knowledge/papers/secret.md: a private card is never packed", footer)
         self.assertIn("excluded 01_knowledge/papers/odd.md: it has no recognised sensitivity label", footer)
         zh = self.run_ros("context", "commitment:alpha", json_out=False, lang="zh-CN")[1]
-        self.assertIn("已排除 01_knowledge/papers/touchy.md：敏感卡片只经研究者本人的终端交付", zh)
+        self.assertIn("已排除 01_knowledge/papers/touchy.md：敏感卡片只在研究者本人的终端里显示", zh)
         self.assertIn("已排除 01_knowledge/papers/secret.md：私密卡片从不打包", zh)
         data = self.context("commitment:alpha")
         self.assertEqual(set(data), {"delivered", "excluded", "service", "service_claim", "receipt_id",
                                      "withheld_fields", "context_receipt", "pack"}, "the JSON keeps its fields")
         self.assertTrue(all(set(row) == {"ref", "reason"} for row in data["excluded"]))
-        for lang, question in (("en", "Deliver sensitive source 01_knowledge/papers/touchy.md (Touchy) to the session Agent? [y/N] "),
-                               ("zh-CN", "把敏感来源 01_knowledge/papers/touchy.md（Touchy）交给本会话的 Agent？[y/N] ")):
+        # The researcher answers in her own terminal, and that is where the card prints: the question says so.
+        for lang, question in (("en", "Show this sensitive card here (01_knowledge/papers/touchy.md, Touchy)? [y/N] "),
+                               ("zh-CN", "在这里显示这张敏感卡片（01_knowledge/papers/touchy.md，Touchy）？[y/N] ")):
             self.assertEqual(self.run_ros("context", "commitment:alpha", lang=lang, answer="n")[2], question)
 
     def test_close_points_a_removed_block_to_the_researchers_own_backup(self) -> None:
@@ -3194,16 +3202,17 @@ class RosKernelTest(unittest.TestCase):
         rest = sum(row["issue_id"] not in listed for row in unfinished)
         self.assertTrue(rest, "the fixture has work in a commitment that is not listed under To decide")
         line = next(row for row in text.splitlines() if row.startswith("This session: "))
-        self.assertTrue(line.startswith(f"This session: {len(unfinished)} open item(s) to do ({rest} of them in other "
-                                        "commitments; ros today --all lists them), "), line)
+        self.assertTrue(line.startswith(f"This session: {len(unfinished)} open item(s) to do ({rest} of them not shown "
+                                        "today, in Beta Survey; ros today --all lists them), "), line)
         self.assertIn(f"To decide ({len(view['decision'])} commitment(s): ", text, "the heading counts commitments")
         self.assertNotIn("not counted in this session", line, "a clause with nothing to report stays out")
         everything = self.run_ros("today", "--all", json_out=False, lang="en")[1]
-        self.assertIn("; not counted in this session: 0 open outside it (in other commitments, or on cards and "
-                      "judgments added after it started), 0 whose place in the vault is not defined", everything)
+        self.assertIn("; not counted in this session: 0 open outside it (in other commitments, or on cards added "
+                      "after it started; judgments written in this session count in it), 0 whose place in the vault "
+                      "is not defined", everything)
         self.assertIn("Not known yet (counted in open items): 0 that more evidence can settle, ", everything)
         zh = self.run_ros("today", json_out=False, lang="zh-CN")[1]
-        self.assertIn(f"本次会话：待办 {len(unfinished)} 条（其中 {rest} 条在其他承诺里，ros today --all 会列出）", zh)
+        self.assertIn(f"本次会话：待办 {len(unfinished)} 条（其中 {rest} 条今天没有展开，在Beta Survey里；ros today --all 会列出）", zh)
         self.assertIn(f"待判断（{len(view['decision'])} 项承诺：", zh)
 
     def test_replacing_a_judgment_by_hand_names_its_field_confirmation_and_settles_the_candidate(self) -> None:
@@ -3226,10 +3235,15 @@ class RosKernelTest(unittest.TestCase):
         field_id = digest(["field:alpha#judgments", PURPOSE_VERSION])[:10]
         shown = self.run_ros("admit", candidate, json_out=False, lang="en")[1]
         self.assertIn(f"The change also edits the judgments: line of commitment alpha, a judgment-class field that "
-                      f"is confirmed on its own: once close lists it, run ros decide {field_id} confirm", shown)
+                      f"is confirmed on its own: the next today and close of the session open today list it; then run "
+                      f"ros decide {field_id} confirm", shown)
         new_block = f"> [!judgment] j-new\n> 结论：Occlusion results do not transfer yet\n> 依据：01_knowledge/projects/alpha.md@{pin}\n"
         self.write("06_active_context/research-portfolio.md", path.read_text(encoding="utf-8").replace(
             "- judgments: j-old", "- judgments: j-new").replace(old_block, new_block))
+        pasted, listed = self.capture_ros("--lang", "en", "today")
+        self.assertEqual(pasted["completion"]["out_of_scope_open"], 0, "HJ-12: the block pasted in this session is in its scope")
+        self.assertIn("judgment:j-new", self.bindings(pasted["completion"]["unfinished"]))
+        self.assertNotIn("open outside it", listed)
         self.ros("admit", "--confirm", "j-new", answer="y")
         closed, text = self.capture_ros("--lang", "en", "close")
         self.assertEqual(closed["judgment_fields"],
@@ -3247,13 +3261,244 @@ class RosKernelTest(unittest.TestCase):
         self.ros("decide", field_id, "confirm", answer="y")
         self.assertNotIn(field_id, [row["short_id"] for row in self.ros("today")["completion"]["unfinished"]])
 
+    def test_a_judgment_block_written_during_the_session_is_in_its_scope(self) -> None:
+        """HJ-12: the scope is frozen at `today`, but a judgment block written afterwards is this session's own
+        work, so `today` counts it in the session and `close` cannot be complete while it is unconfirmed."""
+        self.cancel_unfinished(self.ros("today"))
+        self.add_alpha_judgment()  # written mid-session, for commitment alpha
+        view, text = self.capture_ros("--lang", "en", "today")
+        self.assertEqual((view["completion"]["out_of_scope_open"], view["completion"]["unowned_open"]), (0, 0))
+        self.assertEqual(self.bindings(view["completion"]["unfinished"]), ["judgment:j-alpha-scope"])
+        self.assertNotIn("open outside it", text)
+        closed, text = self.capture_ros("--lang", "en", "close")
+        self.assertEqual(closed["outcome"], "human_stopped", "an unconfirmed block written in the session is not complete")
+        self.assertEqual(self.bindings(closed["completion"]["unfinished"]), ["judgment:j-alpha-scope"])
+        self.assertIn("Outcome: ended by you with work still open (human_stopped); 1 to do", text)
+        # Confirmed within the next session, nothing is left: that session closes complete.
+        self.ros("today")
+        self.ros("admit", "--confirm", "j-alpha-scope", answer="y")
+        self.assertEqual(self.ros("close")["outcome"], "complete")
+
+    def test_a_block_written_for_another_commitment_stays_outside_a_narrowed_session(self) -> None:
+        """HJ-12 keeps the D0 split: in a session narrowed to alpha, a block written meanwhile for alpha is the
+        session's, one written for beta is open outside it and does not keep the session from complete."""
+        self.cancel_unfinished(self.ros("today", "--for", "alpha"))
+        outside = self.ros("today", "--for", "alpha")["completion"]["out_of_scope_open"]  # beta's own work
+        self.add_alpha_judgment()
+        self.write("01_knowledge/papers/jb.md", "---\ntitle: Beta notes\n---\n# Beta notes\n\n"
+                   "> [!judgment] j-beta-plan\n> 结论：Ask the reviewers first\n> 依据：01_knowledge/projects/beta.md\n> 承诺：beta\n")
+        report = self.ros("today", "--for", "alpha")["completion"]
+        self.assertEqual(self.bindings(report["unfinished"]), ["judgment:j-alpha-scope"])
+        self.assertEqual(report["out_of_scope_open"], outside + 2,
+                         "the beta block's two items (its confirmation, its unpinned basis) are counted outside, not dropped")
+        self.ros("admit", "--confirm", "j-alpha-scope", answer="y")
+        closed = self.ros("close", "--for", "alpha")
+        self.assertEqual(closed["outcome"], "complete")
+        self.assertEqual(closed["completion"]["out_of_scope_open"], outside + 2)
+
+    def test_close_names_its_outcome_in_words_and_keeps_the_enum(self) -> None:
+        """The outcome reads as words in the vault's language, with the enum after it; --json keeps the enum."""
+        from researchos_kernel.boundary import outcome
+        values = {outcome({"done": True, "held": [], "waiting": []}, stopped_by_researcher=True),
+                  outcome({"done": True, "held": [1], "waiting": []}, stopped_by_researcher=True),
+                  outcome({"done": False}, stopped_by_researcher=True),
+                  outcome({"done": False}, stopped_by_researcher=True, exhausted_components=["asks"])}
+        self.assertEqual(values, {"complete", "complete_with_held", "human_stopped", "budget_stopped"})
+        for lang in ("en", "zh-CN"):
+            for value in values:
+                self.assertIn(f"outcome.{value}", ros.MESSAGES[lang], f"{value} has a label in {lang}")
+        self.ros("today")
+        self.assertIn("结果：由你收尾，仍有未关闭的工作（human_stopped）；收尾时待办 ",
+                      self.run_ros("close", json_out=False, lang="zh-CN")[1])
+        self.cancel_unfinished(self.ros("today"))
+        closed, text = self.capture_ros("--lang", "en", "close")
+        self.assertEqual(closed["outcome"], "complete")
+        self.assertIn("Outcome: done (complete); 0 to do and 0 waiting or deferred at close\n", text)
+        self.assertNotIn("all listed below", text, "nothing is listed, so the outcome does not point below")
+        self.cancel_unfinished(self.ros("today"))
+        zh = self.run_ros("close", json_out=False, lang="zh-CN")[1]
+        self.assertIn("结果：完成（complete）；收尾时待办 0，待答或延期 0\n", zh)
+        self.assertNotIn("全部列在下面", zh)
+
+    def test_attend_under_a_hand_set_private_scope_without_the_writer_stops_and_writes_nothing(self) -> None:
+        """A public install whose config/ros.json is edited to runtime_scope "private" has no attention writer:
+        attend stops with a message instead of a ModuleNotFoundError, before reading or writing anything."""
+        from unittest.mock import patch
+        from researchos_data.attention_schedule import private_writer
+        self.ros("today")
+        before = {path: path.read_bytes() for path in self.tmp.rglob("*") if path.is_file()}
+        with patch.dict(sys.modules, {"researchos_server.attention_schedule_store": None}):
+            self.assertIsNone(private_writer())
+            en = self.run_ros("attend", "alpha", "today", lang="en", expect=SystemExit)[0]
+            zh = self.run_ros("attend", "alpha", "today", lang="zh-CN", expect=SystemExit)[0]
+        config = self.tmp.resolve() / "config" / "ros.json"
+        self.assertEqual(en, f'ros attend stopped and wrote nothing: {config} sets runtime_scope to "private", but this '
+                         "installation does not ship the private attention writer (scripts/researchos_server/"
+                         "attention_schedule_store.py). The public starter uses the copy fallback: ros attend prints the "
+                         "entry and you paste it into the attention schedule. Set runtime_scope in "
+                         f'{config} back to "public_starter" and run it again.')
+        self.assertTrue(zh.startswith(f'ros attend 停止，什么也没写：{config} 把 runtime_scope 设成了 "private"'), zh)
+        self.assertIn('改回 "public_starter" 再运行', zh)
+        self.assertEqual({path: path.read_bytes() for path in self.tmp.rglob("*") if path.is_file()}, before,
+                         "nothing written: not the schedule, not the ledger")
+        import types
+        with patch.dict(sys.modules, {"researchos_server.attention_schedule_store": types.ModuleType("broken")}):
+            with self.assertRaises(ImportError, msg="a writer that is there but broken is a fault, not a missing edition"):
+                private_writer()
+
+    def park(self, cid: str) -> None:
+        """The attention schedule entry `ros attend <cid> park` prints, pasted as the researcher would."""
+        self.write(self.ATTENTION, "## Items\n\n" + "\n".join(ros.entry_lines(ros.item_key("research_portfolio", cid), ros.next_record(
+            None, provider_id="research_portfolio", item_id=cid, now=datetime(2026, 9, 20, 9), action="paused")[1])) + "\n")
+
+    def test_a_parked_commitment_whose_basis_changed_is_listed_under_to_decide(self) -> None:
+        """Parking a commitment hides its routine items, never a judgment whose basis changed: the
+        commitment comes back under To decide, marked parked, instead of only in the Not in Today line."""
+        self.add_alpha_judgment()
+        self.ros("admit", "--confirm", "j-alpha-scope", answer="y")
+        self.park("alpha")
+        view = self.ros("today")
+        self.assertNotIn("alpha", self.decision_ids(view), "parked, with nothing about a judgment: it rests")
+        self.assertIn("alpha", [g["commitment_id"] for g in view["later"]])
+        self.write("01_knowledge/projects/alpha.md", "---\ntitle: Alpha\nid: alpha-project\n---\n# Alpha\nEvidence v2\n")
+        view, text = self.capture_ros("--lang", "en", "today")
+        self.assertEqual(self.decision_ids(view), {"alpha": "paused"})
+        group = view["decision"][0]
+        self.assertIn("basis_recheck", [row["rule_id"] for row in group["items"]])
+        self.assertNotIn("alpha", [g["commitment_id"] for g in view["later"]], "listed once, under To decide")
+        self.assertIn("To decide (1 commitment(s): unscheduled, needing a next step, due for review, or with a judgment "
+                      "item waiting on you)\n  ■ Alpha Paper  [parked]\n", text)
+        self.assertIn('The basis of judgment "Do not extend the benchmark" changed', text)
+        zh = self.run_ros("today", json_out=False, lang="zh-CN")[1]
+        self.assertIn("待判断（1 项承诺：未安排、需定下一步、复核到期，或有判断事项等你处理）\n  ■ Alpha Paper  ［搁置］\n", zh)
+        rest = [row for row in view["completion"]["unfinished"] if row["issue_id"] not in {r["issue_id"] for r in group["items"]}]
+        self.assertTrue(rest, "beta (waiting) still has items that today does not expand")
+        self.assertIn(f"({len(rest)} of them not shown today, in Beta Survey; ros today --all lists them)", text,
+                      "the hidden items are named where they are, not as 'other commitments'")
+        self.assertIn(f"（其中 {len(rest)} 条今天没有展开，在Beta Survey里；ros today --all 会列出）", zh)
+
+    def test_closing_an_ended_session_says_to_open_a_new_one_in_both_languages(self) -> None:
+        session = self.ros("today")["session_id"]
+        self.ros("close")
+        for lang, bare, named in (
+                ("en", "No session open today: run ros today to open a new one, then ros close",
+                 f"Session {session} has already ended. To close again for later changes, run ros today to open a new "
+                 "session, then ros close"),
+                ("zh-CN", "今天没有开着的会话：先运行 ros today 开一个新会话，再运行 ros close",
+                 f"会话 {session} 已经收尾了。之后的改动要再收尾一次：先运行 ros today 开一个新会话，再运行 ros close")):
+            self.assertEqual(self.refusal("close", lang=lang), bare)
+            self.assertEqual(self.refusal("close", "--session", session, lang=lang), named)
+        self.assertEqual(self.refusal("close", "--for", "alpha", lang="en"),
+                         "No session open today: run ros today --for alpha to open a new one, then ros close --for alpha")
+        self.assertEqual(self.ros("today")["session_id"] != session, True)
+        self.assertEqual(self.ros("close")["outcome"] in {"complete", "complete_with_held", "human_stopped"}, True,
+                         "what the message says works: a new today, then close")
+
+    def test_today_and_close_of_one_session_list_the_same_field_confirmation(self) -> None:
+        """HJ-12: a judgment-class field written by hand mid-session is listed by the session's next
+        `today` as well as by its `close`, under the same id, and admit names it only when one will be listed."""
+        from researchos_kernel.rules import PURPOSE_VERSION
+        self.ros("today")
+        path = self.tmp / "06_active_context/research-portfolio.md"
+        self.write("06_active_context/research-portfolio.md", path.read_text(encoding="utf-8").replace("- priority: P0", "- priority: P1", 1))
+        field_id = digest(["field:alpha#priority", PURPOSE_VERSION])[:10]
+        view, text = self.capture_ros("--lang", "en", "today")
+        self.assertIn(field_id, [row["short_id"] for row in view["completion"]["unfinished"]], "today lists it before close")
+        self.assertIn(f"ros decide {field_id} confirm", text)
+        again = self.ros("today")
+        self.assertEqual(sum(row["short_id"] == field_id for row in again["completion"]["unfinished"]), 1, "one requirement, not one per today")
+        closed = self.ros("close")
+        self.assertEqual({row["issue_id"] for row in closed["completion"]["unfinished"]},
+                         {row["issue_id"] for row in again["completion"]["unfinished"]}, "today and close list the same work")
+        self.assertIn(field_id, [row["short_id"] for row in self.ros("today")["completion"]["unfinished"]], "and the next today")
+        # The admit hint: shown only while a session is open whose start does not yet have the line.
+        self.ros("decide", field_id, "confirm", answer="y")
+        self.ros("close")
+        self.edit_config(runtime_scope="public_starter")
+        pin = self.boundary().snapshot.resolve("01_knowledge/projects/alpha.md")[1][:8]
+        self.write("draft.md", self.RUN_DRAFT.format(id="hint", pin=pin))
+        candidate = self.run_ros("propose", "judgment", "--file", str(self.tmp / "draft.md"), "--target", "commitment:alpha")[1]
+        candidate = json.loads(candidate)["candidates"][0]
+        quiet = self.run_ros("admit", candidate, json_out=False, lang="en")[1]
+        self.assertNotIn("judgments: line", quiet, "no session is open: the next today starts from the pasted line, nothing to list")
+        self.ros("today")
+        self.assertIn("judgments: line of commitment alpha", self.run_ros("admit", candidate, json_out=False, lang="en")[1])
+
+    def test_close_lists_each_held_item_once_by_a_short_id(self) -> None:
+        """The close header counts what is listed below it: a question waiting on the researcher is one line with
+        its short id (not answer:<64 hex>), the scope line appears only with --all or when something in it is
+        not zero, and --json keeps every field."""
+        pin = self.boundary().snapshot.resolve("01_knowledge/projects/alpha.md")[1][:8]
+        path = self.tmp / "06_active_context/research-portfolio.md"
+        block = f"> [!judgment] j-alpha-scope\n> 结论：Do not extend the benchmark\n> 依据：01_knowledge/projects/alpha.md@{pin}\n"
+        portfolio = path.read_text(encoding="utf-8")
+        self.write("06_active_context/research-portfolio.md", portfolio.replace(
+            "- source_path: 01_knowledge/projects/alpha.md\n", f"- source_path: 01_knowledge/projects/alpha.md\n\n{block}", 1))
+        self.ros("admit", "--confirm", "j-alpha-scope", answer="y")
+        self.write("01_knowledge/projects/alpha.md", "---\ntitle: Alpha\nid: alpha-project\n---\n# Alpha\nEvidence v2\n")
+        self.ros("today")
+        self.write("06_active_context/research-portfolio.md", portfolio)  # the judgment is withdrawn: its recheck asks
+        question = next(q for q in self.ros("today")["questions"])
+        closed, text = self.capture_ros("--lang", "en", "close", "--all")
+        self.assertTrue(closed["held"][0]["trigger"].startswith("answer:") and len(closed["held"][0]["trigger"]) == 71, "JSON keeps the id")
+        self.assertNotRegex(text, r"answer:[0-9a-f]{64}")
+        self.assertIn(f"— waiting on your answer to question {question['short_id']}", text)
+        self.assertEqual(sum(question["summary"] in line for line in text.splitlines()), 1, "the held question is listed once")
+        header = next(line for line in text.splitlines() if line.startswith("Outcome: "))
+        listed = [line for line in text.splitlines() if line.startswith(("  ⏸ ", "  ○ "))]
+        self.assertIn(f"{len(closed['completion']['unfinished'])} to do and {len(closed['held'])} waiting or deferred at close, "
+                      "all listed below", header)
+        self.assertEqual(len(listed), len(closed["completion"]["unfinished"]) + len(closed["held"]))
+        self.assertIn("scope / | ", text, "--all shows the scope line")
+        self.assertIn("judgment j-alpha-scope (Deleted or no longer scanned) → removals need no confirmation", text)
+        self.assertNotIn("snapshot", text)
+        zh = ros.t("zh-CN", "change.removed")
+        self.assertNotIn("（", zh, "no brackets nested inside the bracket it is shown in")
+        # Without --all and with nothing in it that is not zero, the scope line stays in --json only.
+        self.write("06_active_context/research-portfolio.md", portfolio.split("### Gamma Closed")[0])  # gamma has no place in the scope
+        self.cancel_unfinished(self.ros("today"))
+        for row in self.ros("today")["questions"]:
+            self.ros("answer", row["short_id"], "cancel", "--reason", "gone", answer="y")
+        closed, text = self.capture_ros("--lang", "en", "close")
+        coverage = closed["coverage"]
+        quiet = not (closed["scope"].get("cross_scope_keys") or coverage.get("coverage_unknown_in_scope") or coverage.get("coverage_unknown_unowned")
+                     or coverage.get("evaluated_match_count") != coverage.get("in_scope_match_count")
+                     or closed["completion"]["out_of_scope_open"] or closed["completion"]["unowned_open"])
+        self.assertTrue(quiet, closed["coverage"])
+        self.assertNotIn("scope / | ", text)
+        self.assertIn("scope_node", closed["scope"])
+
+    def test_a_recheck_whose_judgment_is_gone_offers_cancel_first(self) -> None:
+        question = self.question_of(self.undecidable())
+        text = self.run_ros("today", json_out=False, lang="en")[1]
+        self.assertIn(f"      A cancel → ros answer {question['short_id']} cancel --reason <reason>\n"
+                      f"      B still does not hold (back to work) → ros answer {question['short_id']} unsatisfied\n", text)
+        zh = self.run_ros("today", json_out=False, lang="zh-CN")[1]
+        self.assertIn(f"      A 取消 → ros answer {question['short_id']} cancel --reason <原因>\n"
+                      f"      B 仍不成立（回到待办） → ros answer {question['short_id']} unsatisfied\n", zh)
+        self.assertEqual(question["options"], self.OPTIONS, "the stored options keep their order; only the listing changes")
+
+    def test_the_sensitive_card_question_says_where_the_card_goes(self) -> None:
+        """`ros context` prints the card in the terminal that answers; `ros run` puts it in a task packet."""
+        from researchos_adapters.context_pack import terminal_confirms
+        saved = sys.stdin, sys.stderr
+        try:
+            for destination, expected in (("", "Show this sensitive card here (c.md, C)? [y/N] "),
+                                          ("copy_packet", "Put sensitive card c.md (C) in the task packet (copy_packet)? [y/N] ")):
+                sys.stdin, sys.stderr = Terminal("n\n"), Terminal()
+                self.assertFalse(terminal_confirms("c.md", "C", destination, "en"))
+                self.assertEqual(sys.stderr.getvalue(), expected)
+        finally:
+            sys.stdin, sys.stderr = saved
+        self.assertNotIn("context.session_agent", ros.MESSAGES["en"])
+
     def test_the_option_that_keeps_a_recheck_open_is_not_called_narrow(self) -> None:
         """Narrow means narrowing a judgment; this option only leaves the item waiting (enum unchanged)."""
         question = self.question_of(self.undecidable())
         text = self.run_ros("today", json_out=False, lang="en")[1]
-        self.assertIn(f"B keep this item open until the next version (deferred) → ros answer {question['short_id']} narrow", text)
+        self.assertIn(f"C keep this item open until the next version (deferred) → ros answer {question['short_id']} narrow", text)
         zh = self.run_ros("today", json_out=False, lang="zh-CN")[1]
-        self.assertIn(f"B 这条事项保持未关闭，留到下一个版本（延期） → ros answer {question['short_id']} narrow", zh)
+        self.assertIn(f"C 这条事项保持未关闭，留到下一个版本（延期） → ros answer {question['short_id']} narrow", zh)
         self.assertNotIn("narrow", ros.t("en", "answer.narrow"))
         self.assertNotIn("收窄", ros.t("zh-CN", "answer.narrow"))
 

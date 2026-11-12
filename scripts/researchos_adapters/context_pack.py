@@ -27,7 +27,8 @@ def terminal_confirms(ref: str, label: str, destination: str, lang: str) -> bool
     the session Agent types is not that; an interactive terminal answer is."""
     if not (sys.stdin.isatty() and sys.stderr.isatty()):
         return False
-    sys.stderr.write(t(lang, "context.ask", ref=ref, label=label, destination=destination or t(lang, "context.session_agent")))
+    # ros context prints the card in this terminal; ros run puts it in the task packet for its executor.
+    sys.stderr.write(t(lang, "context.ask.packet" if destination else "context.ask", ref=ref, label=label, destination=destination))
     sys.stderr.flush()
     return sys.stdin.readline().strip().lower() in {"y", "yes"}
 

@@ -538,10 +538,22 @@ class Attribution:
 EVIDENCE_KINDS = ("evidence_decidable", "evidence_researcher", EVIDENCE_UNCLASSIFIED)
 
 
+def written_into(frozen, place, commitment_id: str) -> bool:
+    """Whether a judgment block written after ``frozen`` was taken would have been one of its members. Only a
+    block that exists now (``place``, its current placement) counts: one removed before the start is not new
+    work. In a session narrowed to one commitment it counts by the commitment it belongs to, as
+    narrow_to_commitment takes judgments; otherwise also by the card that carries it, open and inside the node."""
+    if place is None:
+        return False
+    if commitment_id and f"commitment:{commitment_id}" in frozen.members:
+        return True
+    return not frozen.narrowed_by and bool(place.scope) and not place.closed and scope_axis.contains(frozen.node, place.scope)
+
+
 def completion(states: dict, requirements: dict, frozen, *, today, placements: dict | None = None,
                frozen_rules: dict | None = None, open_at_start: dict | None = None,
                coverage_domains: dict | None = None, open_runs: list | None = None,
-               unknowns: dict | None = None) -> dict:
+               unknowns: dict | None = None, judgments_at_start=None) -> dict:
     """Report D4 over a frozen scope. Done iff every in-scope registered requirement is resolved,
     cancelled, held for an answer, or waiting by a researcher decision with a trigger not yet due.
     Unclosed prior-specification, break-glass and in-scope coverage requirements exclude Done.
@@ -554,7 +566,12 @@ def completion(states: dict, requirements: dict, frozen, *, today, placements: d
     CC-11: the kinds of unknown are reported apart and none substitutes for another. A run this
     episode dispatched whose observation never came is a run-observation unknown: the work may or
     may not have happened, so the episode is not Done — it is neither a question for the researcher
-    nor a coverage unknown, and it is not silently read as "nothing happened"."""
+    nor a coverage unknown, and it is not silently read as "nothing happened".
+
+    HJ-12: a judgment block written during the session (absent from ``judgments_at_start``, the block ids
+    of its start snapshot) is this session's work, with every requirement about it: it is in the scope
+    when it would have been had it existed at the start (`written_into`), so an unconfirmed one keeps
+    the session from Done. One written for another commitment stays outside."""
     placements = placements or {}
     unknowns = unknowns or {}
     unfinished, held, waiting, outside, unowned, next_episode = [], [], [], [], [], []
@@ -589,7 +606,9 @@ def completion(states: dict, requirements: dict, frozen, *, today, placements: d
         coverage_here = binding_key.startswith("coverage:") and (
             not narrowed or (coverage_domains or {}).get(issue_id) is None
             or bool((coverage_domains or {}).get(issue_id, frozenset()) & frozen.members))
-        in_scope = coverage_here or binding_key.startswith("spec:") or (frozen_ok and key in frozen) or unverified
+        written_here = frozen_ok and judgments_at_start is not None and key.startswith("judgment:") \
+            and key[len("judgment:"):] not in judgments_at_start and written_into(frozen, place, registered.get("commitment_id", ""))
+        in_scope = coverage_here or binding_key.startswith("spec:") or (frozen_ok and key in frozen) or unverified or written_here
         if not in_scope:
             (outside if place is not None and place.scope else unowned).append(row)
             continue

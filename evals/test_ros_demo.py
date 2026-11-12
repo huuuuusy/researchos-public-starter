@@ -50,18 +50,29 @@ class RosDemoTest(unittest.TestCase):
         self.assertEqual(before, tree_digest(ros_demo.DEMO))
 
     def test_chinese_demo_matches_the_chinese_readme(self) -> None:
+        before = tree_digest(ros_demo.DEMO_ZH)
         buffer = io.StringIO()
         with redirect_stdout(buffer):
             self.assertEqual(ros_demo.main(["--lang", "zh-CN"]), 0)
         output = buffer.getvalue()
+        self.assertEqual(before, tree_digest(ros_demo.DEMO_ZH))
         self.assertIn("ResearchOS · 2026-09-20 · 会话 20260920T", output)
         self.assertIn("研究者在自己的终端上事后确认", output)
         self.assertIn("━━ 接下来", output)
         self.assertNotIn("Today (from the attention schedule", output)
-        # Step 5 re-pins the English block's basis and keeps its English labels: one changed line.
+        # The Chinese demo reads the Chinese fixture: cards, commitments and the judgment are Chinese throughout.
+        self.assertIn("新判断「先在遮挡条件下比较 A 和 B，暂不扩大数据集。」尚未确认", output)
+        self.assertIn("示例遮挡基准（虚构）", output)
+        self.assertIn("■ 遮挡迁移论文", output)
+        for english in ("Occlusion", "Compare A and B", "Version 1", "Workshop Talk", "fictional"):
+            self.assertNotIn(english, output)
+        first = output.split("━━ 1.")[1].split("━━ 2.")[0]
+        self.assertNotIn("的依据变了", first, "the fixture's basis pins match its cards before the source changes")
+        self.assertIn("依据已变化：示例遮挡基准（虚构）", output.split("━━ 3.")[1].split("━━ 4.")[0])
+        # Step 5 re-pins the block's basis and keeps its labels: one changed line.
         reconfirm = output.split("━━ 5.")[1].split("━━ 6.")[0]
         changed = [line for line in reconfirm.splitlines() if line[:1] in ("+", "-") and line[:3] not in {"+++", "---"}]
-        self.assertEqual([line[:9] for line in changed], ["-> Basis:", "+> Basis:"], changed)
+        self.assertEqual([line[:6] for line in changed], ["-> 依据：", "+> 依据："], changed)
         self.assertIn("事后确认判断 j-occlusion-scope？ [y/N] y", output, "the terminal question is translated")
 
     def test_init_starts_a_vault_without_the_walkthrough_leftovers(self) -> None:
@@ -95,20 +106,39 @@ class RosDemoTest(unittest.TestCase):
             self.assertIn("09_templates/", buffer.getvalue())
             today = ros_demo.run(vault, "today")
             self.assertIn("Questions for you (0;", today)
-            self.assertNotIn("Portfolio problems", today)
+            self.assertNotIn("Commitment list problems", today)
             self.assertIn("My Research Commitments", portfolio)
             self.assertIn('"language": "en"', (vault / "config" / "ros.json").read_text(encoding="utf-8"))
             zh_vault = Path(tmp) / "zh_vault"
-            with redirect_stdout(io.StringIO()):
+            zh_buffer = io.StringIO()
+            with redirect_stdout(zh_buffer):
                 self.assertEqual(ros_demo.main(["--init", str(zh_vault), "--lang", "zh-CN"]), 0)
+            self.assertIn("已从虚构演示库建好", zh_buffer.getvalue())
             self.assertIn('"language": "zh-CN"', (zh_vault / "config" / "ros.json").read_text(encoding="utf-8"))
-            self.assertIn("我的研究承诺", (zh_vault / "06_active_context" / "research-portfolio.md").read_text(encoding="utf-8"))
+            zh_portfolio = (zh_vault / "06_active_context" / "research-portfolio.md").read_text(encoding="utf-8")
+            self.assertIn("我的研究承诺", zh_portfolio)
+            self.assertNotIn("[!judgment]", zh_portfolio)
+            self.assertNotIn("- judgments:", zh_portfolio)
+            self.assertFalse((zh_vault / "sample-answer.md").exists())
+            zh_today = ros_demo.run(zh_vault, "today", lang="zh-CN")
+            for title in ("遮挡鲁棒跟踪（虚构）", "示例遮挡基准（虚构）", "遮挡迁移论文"):
+                self.assertIn(title, zh_today)
+            self.assertNotIn("Occlusion", zh_today)
 
             stderr = io.StringIO()
             with redirect_stderr(stderr):
                 self.assertEqual(ros_demo.main(["--init", str(vault)]), 2)
             self.assertEqual(len(stderr.getvalue().strip().splitlines()), 1)
             self.assertIn("already exists", stderr.getvalue())
+
+    def test_chinese_fixture_has_the_english_fixtures_shape(self) -> None:
+        def shape(path: Path) -> tuple:
+            files = sorted(p.relative_to(path).as_posix() for p in path.rglob("*")
+                           if p.is_file() and "work_state" not in p.parts)
+            text = "\n".join((path / f).read_text(encoding="utf-8") for f in files if f.endswith(".md"))
+            ids = re.findall(r"^- id: (\S+)$|^> \[!judgment\] (\S+)$|^id: (\S+)$", text, re.MULTILINE)
+            return files, sorted(ids)
+        self.assertEqual(shape(ros_demo.DEMO), shape(ros_demo.DEMO_ZH), "same files and ids, so the same commands work")
 
     def test_sample_answer_collects_into_one_candidate_without_changing_the_graph(self) -> None:
         sample = ros_demo.DEMO / "sample-answer.md"

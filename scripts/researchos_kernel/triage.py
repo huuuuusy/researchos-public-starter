@@ -12,7 +12,10 @@ The regions follow the attention projection with the same rules as the Desk (§4
 today    : scheduled for today or carried over, plus a real event — an external deadline
            that is today or already passed;
 decision : invested items with no attention policy, a step that needs its next step, or a
-           review that is due (a long ``unscheduled`` is not a legal resting state).
+           review that is due (a long ``unscheduled`` is not a legal resting state); and any
+           item not closed that holds an open judgment item (a changed basis, an unconfirmed
+           judgment block or judgment-class field), whatever its schedule: parking an item
+           does not hide that its judgment needs the researcher.
 later    : items the schedule moved to a later day, parked or set waiting. They are in neither
            region by design, but must stay discoverable (§4.1), so ``today`` names them in one line.
 Closed projects are in neither. Neither region is truncated; order comes from the owner.
@@ -31,6 +34,8 @@ DECISION_STATES = ("unscheduled", "needs_next_step", "review_due")
 LATER_STATES = ("upcoming", "waiting", "paused")
 LIFECYCLE = {"closed": "completed", "waiting": "waiting", "paused": "paused"}
 STALE_CARRYOVER_DAYS = 7
+# Items about a judgment: they surface under decision even for a parked, later or waiting item.
+JUDGMENT_RULES = ("basis_recheck", "confirm_judgment_change", "field_confirmation")
 
 
 def _visible(state: dict, today: date) -> bool:
@@ -141,7 +146,8 @@ def triage(result, config: dict, today: date | None = None, only_commitment: str
         in_today = (lifecycle == "open" and state in TODAY_STATES) or (days is not None and days <= 0)
         in_decision = not in_today and (
             (commitment.state == INVESTED and lifecycle == "open" and state in DECISION_STATES)
-            or (lifecycle in {"waiting", "paused"} and state == "review_due"))
+            or (lifecycle in {"waiting", "paused"} and state == "review_due")
+            or any(row["rule_id"] in JUDGMENT_RULES for row in items))
         if in_today:
             today_rows.append(group)
         elif in_decision:

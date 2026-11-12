@@ -23,6 +23,19 @@ class AttentionScheduleError(ValueError):
     """Raised when an attention mutation is unsafe or invalid."""
 
 
+def private_writer():
+    """The attention writer of the private edition (researchos_server.attention_schedule_store), or None
+    when this installation does not ship it: the public starter, even with config/ros.json hand-set to
+    runtime_scope "private". A writer that is present but fails to import is a fault and is raised."""
+    try:
+        from researchos_server.attention_schedule_store import AttentionScheduleStore
+    except ModuleNotFoundError as error:
+        if error.name not in {"researchos_server", "researchos_server.attention_schedule_store"}:
+            raise
+        return None
+    return AttentionScheduleStore
+
+
 def date_value(value: object) -> date | None:
     try:
         return datetime.strptime(str(value or "").strip(), "%Y-%m-%d").date()

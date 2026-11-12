@@ -116,6 +116,8 @@ class VaultReadingLevelsTest(unittest.TestCase):
         self.assertNotIn(lin.split("## Agent Summary", 1)[1].strip()[:60], pack)
         self.assertIn("ask me", pack)
         self.assertNotIn('<p align="right">', pack)
+        self.assertNotIn("python3 scripts/", pack)  # a browser chat cannot run commands
+        self.assertIn("## Steps", pack)
         # inline source_files lists are read too
         capsule = self.vault / "01_knowledge" / "capsules" / "occlusion-tracking-capsule.md"
         text_ = capsule.read_text(encoding="utf-8")
@@ -135,6 +137,21 @@ class VaultReadingLevelsTest(unittest.TestCase):
         refused = subprocess.run([*command[:-1], str(ROOT / "docs" / "pack.md")], capture_output=True, text=True)
         self.assertNotEqual(refused.returncode, 0)
         self.assertFalse((ROOT / "docs" / "pack.md").exists())
+
+    def test_chat_pack_carries_the_commitments_its_cards_belong_to(self) -> None:
+        portfolio = self.vault / "06_active_context" / "research-portfolio.md"
+        portfolio.parent.mkdir(parents=True, exist_ok=True)
+        portfolio.write_text("---\ntitle: c\nsensitivity: internal\n---\n\n# c\n\n## Responsibility Items\n\n"
+                             "### Occlusion paper\n\n- id: occ\n- question: Does A still beat B?\n"
+                             "- source_path: 01_knowledge/projects/occlusion-tracking.md\n\n"
+                             "### Other\n\n- id: other\n- source_path: 01_knowledge/projects/elsewhere.md\n", encoding="utf-8")
+        out = Path(self.tmp.name) / "pack.md"
+        subprocess.run([sys.executable, str(ROOT / "scripts" / "plan_context.py"), "paper_writing", "--mode", "standard",
+                        "--vault", str(self.vault), "--pack", str(out)], capture_output=True, text=True, check=True)
+        pack = out.read_text(encoding="utf-8")
+        self.assertIn("### Occlusion paper", pack)
+        self.assertIn("Does A still beat B?", pack)
+        self.assertNotIn("### Other", pack)
 
     def test_an_empty_vault_falls_back_to_the_task_files(self) -> None:
         empty = Path(self.tmp.name) / "empty"

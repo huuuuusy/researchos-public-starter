@@ -564,7 +564,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -641,7 +641,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -716,7 +716,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -789,7 +789,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -867,7 +867,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -942,7 +942,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1017,7 +1017,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1090,7 +1090,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1167,7 +1167,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1238,7 +1238,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1313,7 +1313,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1382,7 +1382,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1453,7 +1453,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1528,7 +1528,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1599,7 +1599,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1678,7 +1678,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1760,7 +1760,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1838,7 +1838,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1913,7 +1913,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -1991,7 +1991,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -2064,7 +2064,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"
@@ -2137,7 +2137,7 @@
         "durable_owner": "user_confirmed_personal_vault",
         "requires_human_confirmation": true,
         "writeback_route": "review",
-        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+        "summary": "Nothing becomes durable memory or public until you have reviewed and confirmed it. A conversation first gives an answer, an artifact or a writeback candidate; the Dashboard and exports only display, they never decide."
       },
       "primary_surface": "conversation",
       "dashboard_role": "projection_and_handoff"

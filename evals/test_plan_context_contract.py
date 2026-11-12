@@ -33,7 +33,7 @@ class PlanContextContractTest(unittest.TestCase):
         self.assertEqual(payload["inactive_language_behavior"], "reference_only_do_not_read_by_agent")
         self.assertEqual(payload["default_result_mode"], "answer")
         self.assertEqual(payload["sensitivity_default"], "local_only")
-        self.assertIn("never authority", payload["confirmation_boundary"])
+        self.assertIn("they never decide", payload["confirmation_boundary"])
 
     def test_chinese_text_route_freezes_english_templates(self) -> None:
         route = route_for("material_intake", "zh-CN")
@@ -42,7 +42,7 @@ class PlanContextContractTest(unittest.TestCase):
         text = as_text(payload, "zh-CN")
         self.assertIn("当前模板语言: zh-CN", text)
         self.assertIn("非当前语言模板: reference_only_do_not_read_by_agent", text)
-        self.assertIn("确认边界: 长期记忆", text)
+        self.assertIn("确认边界: 写进长期记忆", text)
 
     def test_help_names_task_id_and_natural_language_boundary(self) -> None:
         completed = subprocess.run(

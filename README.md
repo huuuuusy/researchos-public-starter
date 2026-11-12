@@ -21,8 +21,8 @@
 
 1. **Your research lives in cards.** Paper, project and collaborator cards are ordinary Markdown files on your computer. Each judgment records what it rests on (which file, which version) and where it applies.
 2. **Start with `today`.** It lists what needs your decision. If a source file has changed, for example because you replaced a paper's card with one for its corrected version, it marks the judgments that depend on it for recheck. It reads the cards, not the PDFs: a changed PDF goes unnoticed until you update its card.
-3. **Let the AI work, but only as candidates.** `context` picks just the material this task needs, `run` writes a task packet you paste into any assistant, and `collect` brings the answer back as a candidate, which never changes your cards by itself.
-4. **You decide.** You keep or refuse each candidate, and `close` ends the session by listing what changed and what is still open.
+3. **Let the AI work, with its output as candidates.** When the assistant works in this folder, it first fetches just the cards this task needs with `context`, then does the work; what you want to keep as a judgment, the assistant registers as a candidate with `propose`. To hand work to another assistant, `run` writes a task packet you can paste there, and `collect` brings its answer back, again as a candidate. These commands print changes; they do not write your cards.
+4. **You decide.** You keep or refuse each candidate: a change worth keeping is pasted into the card by you or the assistant, exactly as printed, and then you confirm it yourself. `close` ends the session by listing what changed and what is still open.
 
 This is the first stage: one person, files on your own computer, decisions made at your own terminal. So far only the author has used it over months, and whether it helps has not yet been compared with simpler practice.
 
@@ -39,12 +39,12 @@ This is the first stage: one person, files on your own computer, decisions made 
 **Try it: one sentence to your AI assistant.** Open the assistant and send:
 
 ```text
-Set up ResearchOS for me from https://github.com/huuuuusy/researchos-public-starter and walk me through the First Run section of its AGENTS.md. I do not code, so tell me in plain words what each step does.
+Set up ResearchOS for me from https://github.com/huuuuusy/researchos-public-starter and walk me through the First Run section of its AGENTS.md, one step at a time. I do not code, so tell me in plain words what each step does.
 ```
 
-The assistant downloads it, shows you in a few sentences what it does on a fictional example, then asks for your publication list (a homepage, Google Scholar, or a pasted list all work), a few of your papers, your collaborators and one current project, and sets up your own vault from them. It takes about thirty minutes to an hour and you do not need to read anything first. It shows you the list of cards before writing them, and writes them only into that git-ignored folder on your computer. If git is not installed, the assistant can download the ZIP from the same page instead.
+The assistant downloads it, shows you in a few sentences what it does on a fictional example, then asks for your publication list (a homepage, Google Scholar, or a pasted list all work), a few of your papers, your collaborators and one current project, and sets up your own vault from them: the folder that holds your own cards. It takes about thirty minutes to an hour and you do not need to read anything first. It shows you the list of cards before writing them, and writes them only into that git-ignored folder on your computer. If git is not installed, the assistant can download the ZIP from the same page instead.
 
-Already downloaded it? Open the folder in Codex or Claude Code and say one sentence: “Read AGENTS.md and walk me through its First Run.”
+Already downloaded it? Open the folder in Codex or Claude Code and say one sentence: “Walk me through the First Run in AGENTS.md.”
 
 Only have ChatGPT or Claude in a browser, with no terminal? [Without a terminal](docs/user-manual.en.md#without-a-terminal-a-browser-chat) in Section 2 of the User Manual says what still works.
 
@@ -56,17 +56,21 @@ Only have ChatGPT or Claude in a browser, with no terminal? [Without a terminal]
 
 The [first-run guide](08_exports/public_starter/onboarding-step-by-step.md) takes you through all three and says what you should see at each step.
 
-![When a source changes, the system hands the judgment back and the researcher decides what to keep, narrow or withdraw: a fictional example.](docs/figures/readme/keep-update-hold-en.gif)
+![When a source changes, the system hands the judgment back and the researcher decides what to keep, narrow or leave open: a fictional example.](docs/figures/readme/keep-update-hold-en.gif)
 
 ## What the first stage includes and does not include
 
-In the documentation's terms, ResearchOS is a local-primary system for continuously maintaining research state (see [Words you will meet](docs/user-manual.en.md#words-you-will-meet)). The first stage includes the six session commands, `today`, `context`, `run`, `collect`, `admit` and `close`, working on one researcher's Markdown cards: a judgment remembers which source files and versions it rests on, and when one of them changes, the next command hands it back for recheck. Within that scope you can go step by step from writing a judgment down, to having it come back for recheck when its source changes, to closing the session. The commands in this repository stop at candidates and never change your cards themselves: a change worth keeping is pasted in by you or your assistant from what they print, and then you confirm it; the prototype described in the [technical report](docs/technical-report.en.md) adds a step in which the researcher confirms at the terminal and the system writes. The shipped `config/ros.json` sets `runtime_scope: public_starter`. [Section 3 of the User Manual](docs/user-manual.en.md#3-the-session-scheduler-and-command-line-checks) sets out what `ros` writes, what `admit` does, which `runtime_scope` value turns admission and dispatch on, and how personal-vault mode differs.
+ResearchOS is a local-primary system for continuously maintaining research state: it lives on your own computer and keeps track of where your research stands (see [Words you will meet](docs/user-manual.en.md#words-you-will-meet) for what research state means). The first stage covers one researcher's own Markdown cards: each judgment remembers which source files and versions it rests on, and when one of them changes, the next command hands it back for you to recheck. You can go step by step from writing a judgment down, to having it come back for recheck when its source changes, to closing the session.
 
-It is a small, file-based tool, not a hosted service, an autonomous scientist, a complete personal knowledge base, a question-answering tool detached from evidence, or a polished all-in-one product. This repository is copy-only, and its data is fictional. It never admits anything: where the prototype in the report would write an accepted change, it shows the planned change for you to copy, which the documentation calls copy fallback. The optional Dashboard and the plugin system are frozen. Working in a team, dependencies as fine as a single argument, and noticing a change while no command is running are not part of the first stage; [Supplementary Note 6](docs/technical-report-supplement.en.md) of the technical report lists the full set, item by item.
+These are the commands you use day to day. Start with `today`. When the assistant works in this folder, it fetches the cards it needs with `context` and then does the work; what you want to keep as a judgment is registered as a candidate with `propose`, and `admit` prints the change that would write a candidate into a card. `rules --check` checks the commitment list for fields filled in wrongly; the commitment list is the file `06_active_context/research-portfolio.md`, which holds each project's one current next step. End with `close`. When you hand work to another assistant, `run` writes a task packet and `collect` brings the answer back as a candidate. `ros` has 13 subcommands in all; [Section 3 of the User Manual](docs/user-manual.en.md#3-the-session-scheduler-and-command-line-checks) lists what each one does in this repository.
+
+In this repository `ros` prints the change for you to paste and never writes your cards itself: a change worth keeping is pasted into the card by you or your assistant, exactly as printed, and then you confirm it at your own terminal. The documentation calls this copy fallback. The optional Dashboard is a page in your browser for looking over your cards and schedule; in personal-vault mode (when you use your own material), it can write into `personal_vault/` after you confirm. The prototype described in the [technical report](docs/technical-report.en.md) adds a step this repository does not have: after you confirm at the terminal, the system writes the change into the card itself. (Technical detail: the prototype turns that step on with `runtime_scope: private` in `config/ros.json`; this repository ships with `public_starter` and does not support `private`; [Supplementary Note 2](docs/technical-report-supplement.en.md#supplementary-note-2-session-operations-and-implementation-mappings) of the technical report describes how the prototype's commands write.) [Section 3 of the User Manual](docs/user-manual.en.md#3-the-session-scheduler-and-command-line-checks) sets out which files `ros` writes, what `admit` does and how personal-vault mode differs.
+
+The first stage is a set of files and a few commands on your computer, not a hosted service; it keeps track of judgments and what they rest on, does not do research for you, and is not a complete personal knowledge base, a question-answering tool detached from evidence or a polished all-in-one product. This repository is copy-only, and its data is fictional. It never takes a candidate into your research record by itself (the documentation calls that admission): where the prototype in the report would write an accepted change, it shows you the planned change. The first stage does not include working in a team, dependencies as fine as a single argument, or noticing a change while no command is running; the optional Dashboard and the plugin system work but are frozen, so no features are added to them in this stage. [Supplementary Note 6](docs/technical-report-supplement.en.md) of the technical report has the full list.
 
 ## Run the demo
 
-Besides Python, nothing needs installing: no package, API key, database or server. It runs on macOS and Linux; on Windows, use WSL (Windows Subsystem for Linux), because the file locks it relies on are not available in native Windows Python. From the repository folder, run the demo. It works on a temporary copy of a fictional research graph:
+Besides Python 3.10 or newer, you install nothing else: no package, API key, database or server. It runs on macOS and Linux; on Windows, use WSL (Windows Subsystem for Linux), because the file locks it relies on are not available in native Windows Python. From the repository folder, run the demo. It works on a temporary copy of the fictional demo vault and changes nothing:
 
 ```bash
 python3 scripts/ros_demo.py
@@ -74,26 +78,26 @@ python3 scripts/ros_demo.py
 
 ![One scheduler session on the fictional demo, condensed from what python3 scripts/ros_demo.py prints.](docs/figures/readme/session-en.gif)
 
-A source card changes, and the judgment that depends on it is flagged for recheck. The researcher reconfirms it, and the output shows that as a planned change without admitting it. At close the recheck is still pending. The output uses a few words in a narrow sense, such as candidate, admission, item and waiting on your answer; [Words you will meet](docs/user-manual.en.md#words-you-will-meet) explains each in one line. Where the output says `ros …`, it means `python3 scripts/ros.py --root <folder> …`, with the folder that holds the research graph.
+A source card changes, and the judgment that depends on it is flagged for recheck. The researcher reconfirms it, and the output shows that as a planned change without admitting it. At close the recheck is still pending. The output uses a few words in a narrow sense, such as candidate, admission, item and waiting on your answer; [Words you will meet](docs/user-manual.en.md#words-you-will-meet) explains each in one line. Where the output says `ros …`, it means `python3 scripts/ros.py --root <folder> …`, with the vault folder that holds the cards, such as your own `personal_vault`.
 
-You can also skip the scheduler and open the folder in Claude Code, Codex or another file-aware agent with one goal and one source; [Section 2 of the User Manual](docs/user-manual.en.md#2-one-loop-in-your-agent-client) gives the prompt.
+You can also skip the scheduler (the `ros` commands) and open the folder in Claude Code, Codex or another file-aware agent with one goal and one source; [Section 2 of the User Manual](docs/user-manual.en.md#2-one-loop-in-your-agent-client) gives the prompt.
 
 ## Start your own
 
-Your own material goes in `personal_vault/`, a folder inside your clone that Git ignores. This command starts it from a copy of the demo graph, without the demo's records or its fictional judgment:
+Your own material goes in `personal_vault/`, a folder inside your clone that Git ignores. This command starts it from a copy of the demo vault, without the demo's records or its fictional judgment:
 
 ```bash
 python3 scripts/ros_demo.py --init personal_vault
 ```
 
-You then replace the fictional commitments and cards with one of your own and run `python3 scripts/ros.py --root personal_vault today`. The [first-run guide](08_exports/public_starter/onboarding-step-by-step.md) gives each step and what you should see; [Section 5 of the User Manual](docs/user-manual.en.md#5-your-own-material) is the reference for the fields. [Example cards](examples/starter-cards/en/README.md) show each kind of card filled in, from a research identity page and a direction summary to project, paper, decision, heuristic, person and meeting cards, and [`09_templates/basic/`](09_templates/basic/README.md) has the blank skeletons. An optional Dashboard reads the same folder. Never push a clone that contains real material to a public remote.
+You then replace the fictional commitments and cards with one of your own and run `python3 scripts/ros.py --root personal_vault today`. The [first-run guide](08_exports/public_starter/onboarding-step-by-step.md) gives each step and what you should see; [Section 5 of the User Manual](docs/user-manual.en.md#5-your-own-material) is the reference for the fields. [Example cards](examples/starter-cards/en/README.md) show each kind of card filled in, from a research identity page and a direction summary to project, paper, decision, heuristic, person and meeting cards, and [`09_templates/basic/`](09_templates/basic/README.md) has the blank skeletons. An optional Dashboard reads the same folder. Never push a copy of the repository (a clone) that contains real material to a public remote repository.
 
 ## What is in the folder
 
-- `examples/scheduler-demo/` and `08_exports/public_starter/` hold the fictional demos: the scheduler's research graph, and the Dashboard's demo agenda with its onboarding examples.
+- `examples/scheduler-demo/` and `08_exports/public_starter/` hold the fictional demos: the scheduler's demo vault, and the Dashboard's demo agenda with its onboarding examples.
 - `personal_vault/` holds your own material once you create it; Git ignores it.
-- `00_identity/` to `06_active_context/` are the layers of a vault (identity, knowledge, decisions, cognition, people, workflows, current state). Here they hold layer notes and public-safe method notes; `personal_vault/` uses the same layout.
-- `07_archive/` keeps public-safe history, `09_templates/` the card templates and data contracts, `corpus/` stays empty because raw material is never committed, and `distilled/` holds short public-safe method summaries.
+- `00_identity/` to `06_active_context/` are the layers of a vault (identity, knowledge, decisions, cognition, people, workflows, current state). Here they hold layer notes and method notes that are safe to publish; `personal_vault/` uses the same layout.
+- `07_archive/` keeps history that is safe to publish, `09_templates/` the card templates and data format conventions, `corpus/` stays empty because raw material is never committed, and `distilled/` holds short method summaries that are safe to publish.
 - `scripts/`, `config/`, `dashboard/` and `evals/` are the command-line tools, runtime configuration, optional Dashboard and tests.
 
 ## Where to read next
