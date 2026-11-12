@@ -124,10 +124,10 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
    ```text
    待判断（1 项承诺：未安排、需定下一步或复核到期）
      ■ 论文第二章  ［未安排］
-       （没有要复核的事项；按下一步推进）
+       （没有要复核的事项）下一步：在新划分上重跑基线；排到今天：ros attend thesis-ch2 today
    ```
 
-   显示「未安排」是正常的，因为本仓库不带注意力安排。用 `python3 scripts/ros.py --root personal_vault close` 结束会话；新建的库会报告 `结果：complete（收尾时待办 0，…）`。如果在 `today` 读过之后又改了 `state`、`priority`、`question` 或 `responsibility`（比如为了改正任务总表问题），`close` 会把这次写入列为待确认的判断类字段，之后每次 `today` 也会列出；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault decide <编号> confirm` 并回答 `y` 即可（由助手转述的调用只记为代理转述）。
+   显示「未安排」是正常的：还没有排期。你决定什么时候做之后，`ros attend <id> today` 会给出要放进注意力安排的条目，贴进去之后 `today` 会在「今日」下列出这项承诺；排到以后或搁置的，列在「不在今日」那一行。用 `python3 scripts/ros.py --root personal_vault close` 结束会话；新建的库会报告 `结果：complete（收尾时待办 0，…）`。如果在 `today` 读过之后又改了 `state`、`priority`、`question` 或 `responsibility`（比如为了改正任务总表问题），`close` 会把这次写入列为待确认的判断类字段，之后每次 `today` 也会列出；在你自己的终端运行 `python3 scripts/ros.py --root personal_vault decide <编号> confirm` 并回答 `y` 即可（由助手转述的调用只记为代理转述）。
 
    `today` 出现「任务总表问题」时，每一行都写明是哪个字段、可以取哪些值，例如 `state「active」不是可用值（mainline, waiting, queued, conditional, closed, paused）`，照着改任务总表即可。虚构承诺还出现在「待判断」下，说明它们的块还留在文件里；如果只出现在「待你回答的问题」下并标着 `subject_absent`，说明你在替换之前运行过 `today`，那是虚构演示留下的记录：删掉 `personal_vault/06_active_context/work_state/`，再运行一次 `today`。卡片不在你写的路径上时，这里会显示 `source_path … 在这个文件夹里不存在`；`python3 scripts/ros.py --root personal_vault rules --check` 报告同样的问题，一切就位时报告 `问题 0 条`。用 `--init personal_vault --lang zh-CN` 建的库，`config/ros.json` 已设为中文输出。
 

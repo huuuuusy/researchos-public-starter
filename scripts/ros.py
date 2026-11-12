@@ -55,7 +55,9 @@ from researchos_kernel.judgments import parse_judgments  # noqa: E402
 from researchos_kernel.atomic_files import atomic_write_text  # noqa: E402
 from researchos_kernel.ledger import (OPEN_STATUSES, SCOPE_INTENT, binding, digest, landed_or_undone,  # noqa: E402
                                      now_iso, requirement_binding)
-from researchos_kernel.messages import MESSAGES, language, t, unknowns_line  # noqa: E402
+from researchos_kernel.messages import MESSAGES, language, later_line, t, unknowns_line  # noqa: E402
+from researchos_data.attention_schedule import (ATTENTION_PATH, AttentionScheduleError, entry_lines, item_key,  # noqa: E402
+                                               next_record, project_items, read_attention_schedule)
 from researchos_kernel.admission_state import initial_admission_state, transition_admission_state  # noqa: E402
 from researchos_kernel.candidate_envelope import normalize_candidate_envelope  # noqa: E402
 from researchos_adapters.filesystem_staging import (FilesystemStagingError, begin_canonical_staging,  # noqa: E402
@@ -301,19 +303,13 @@ def session_completion(ctx: "Context", result, started: dict, session_id: str) -
 
 
 PROVIDER = "research_portfolio"
-ATTENTION_OWNER = ROOT / "scripts" / "researchos_server" / "attention_schedule_store.py"
 
 
 def _attention(ctx: Context, snapshot) -> dict:
-    """commitment id -> its attention projection, read from the attention owner (Attention Kernel §6).
-
-    The public starter ships no attention owner (the schedule never enters the public package), so
-    there every commitment reads as unscheduled — invested ones still surface as today judgments."""
-    if ctx.runtime_scope == "public_starter" or not ATTENTION_OWNER.is_file():
-        return {}  # this installation ships no attention owner; a broken one below still fails loudly
-    from researchos_server.attention_schedule_store import project_items
+    """commitment id -> its attention projection, read from the vault's attention schedule (Attention Kernel §6).
+    Without a schedule file every commitment reads as unscheduled; invested ones still surface as today judgments."""
     return project_items(ctx.root, PROVIDER, {cid: dict(c.fields) for cid, c in snapshot.commitments.items()},
-                         today=ctx.today)
+                         today=ctx.today) if (ctx.root / ATTENTION_PATH).is_file() else {}
 
 
 def _intent(for_commitment: str | None) -> str:
@@ -519,19 +515,22 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
             + {"cancel": " --reason " + t(L, "ph.reason"), "defer": " --until " + t(L, "ph.date")}.get(option, "")
             for i, option in enumerate(row["options"])]
 
-    def section(key: str, render) -> list:
+    def section(key: str, render, head: str = "") -> list:
         rows = data[key]
-        return ([t(L, f"today.{key}", n=len(rows))] + (["  " + t(L, "none")] if not rows else [])
+        return ([t(L, head or f"today.{key}", n=len(rows))] + (["  " + t(L, "none")] if not rows else [])
                 + [line for row in rows for line in render(row)] + [""])
     # Today comes from the attention owner and is never truncated; triage only adds its proposals.
-    no_schedule = ctx.runtime_scope == "public_starter" and not show_all  # no attention owner ships here
-    lines += ([] if no_schedule and not data["today"] else section("today", group)) + section("decision", group) + section("questions", question)
+    copy_only = ctx.runtime_scope == "public_starter"  # Soul §5: here ros attend prints the entry to paste
+    no_schedule = copy_only and not show_all and not (ctx.root / ATTENTION_PATH).is_file()  # none started yet
+    lines += ([] if no_schedule and not data["today"] else section("today", group)) + section("decision", group)
+    lines += [later_line(L, data["later"]), ""] * bool(data["later"]) + section("questions", question)  # later and parked stay named
     if data["waiting_on_trigger"]:
         lines.append(t(L, "today.waiting", n=len(data["waiting_on_trigger"])))
         lines += [f"  … [{row['short_id']}] {row['summary']} — {t(L, 'trigger.date', date=row['trigger'][5:]) if row['trigger'].startswith('date:') else row['trigger']}" for row in data["waiting_on_trigger"]]
         lines.append("")
     colon = ": " if L == "en" else "："
-    lines += [] if no_schedule else section("proposals", lambda row: [f"  · {row['commitment_title']}{colon}{row['reason']} → {row['command']}"])
+    lines += [] if no_schedule and not data["proposals"] else section("proposals", lambda row: [
+        f"  · {row['commitment_title']}{colon}{row['reason']} → {row['command']}"], ("today.proposals." + ("start" if no_schedule else "copy")) * copy_only)
     elsewhere = sum(len(row["items"]) for row in data["needs_review"]) + len(data["network"])
     if show_all:
         lines.append(t(L, "today.elsewhere.title", n=elsewhere))
@@ -558,8 +557,9 @@ def _fill(lang: str, action: str, row: dict) -> str:
 def _render_group(lang: str, group: dict, *, marker: str) -> list:
     bracket = "[{}]" if lang == "en" else "［{}］"
     lines = [f"  ■ {group['commitment_title']}" + ("  " + bracket.format(marker) if marker else "")]
-    if not group["items"]:
-        lines.append("    " + t(lang, "today.no_items"))
+    if not group["items"]:  # say what moves it on: its next step, and for an unscheduled one how to schedule it
+        lines.append("    " + (t(lang, "today.next_step", step=group["next_step"]) if group.get("next_step") else t(lang, "today.no_items"))
+                     + t(lang, "today.schedule_hint", id=group.get("commitment_id")) * (group.get("attention_state") == "unscheduled"))
     for row in group["items"]:
         lines.append(f"    · [{row['short_id']}] {row['summary']}")
         lines += [f"        {detail}" for detail in row["details"][:3]]
@@ -693,15 +693,15 @@ def cmd_attend(ctx: Context, args) -> int:
     attention schedule, never the portfolio, and every action can be undone."""
     from datetime import timedelta
     # The public starter stays read-only (Soul §5): read the snapshot without running a boundary.
-    snapshot = build_snapshot(ctx.root, ctx.config, None)[0] if ctx.runtime_scope == "public_starter" \
-        else ctx.boundary().snapshot
+    copy_only = ctx.runtime_scope == "public_starter"
+    snapshot = build_snapshot(ctx.root, ctx.config, None)[0] if copy_only else ctx.boundary().snapshot
     cid = args.commitment.split(":", 1)[-1]
     commitment = snapshot.commitments.get(cid)
     if not commitment:
         raise SystemExit(f"unknown commitment: {args.commitment}")
     if commitment.state == "closed" and args.action != "undo":
         raise SystemExit(f"{cid} is closed; reopen the project before scheduling it")
-    if args.action == "undo":
+    if args.action == "undo" and not copy_only:
         trajectory = ctx.ledger.trajectory()
         undone = {row["payload"].get("detail", {}).get("undoes") for row in trajectory if row.get("kind") == "effect"
                   and any(c.get("change") == "attention_undone" for c in row["payload"].get("changes", []))}
@@ -712,34 +712,34 @@ def cmd_attend(ctx: Context, args) -> int:
             raise SystemExit(f"no attention action to undo for {cid}")
         plan = {"action": "restore", "previous": last["payload"]["detail"]["previous"],
                 "expected": last["payload"]["detail"]["record"]}
-    else:
-        kwargs = {"provider_id": PROVIDER, "item_id": cid}
+    elif args.action != "undo":
+        plan = {"provider_id": PROVIDER, "item_id": cid}
         if args.action in {"today", "tomorrow", "date"}:
-            day = ctx.today if args.action == "today" else ctx.today + timedelta(days=1) if args.action == "tomorrow" \
-                else None
-            if args.action == "date":
-                day = _date_arg(args.value, "attend <commitment> date", today=ctx.today, after_today=False)
-            kwargs.update(action="schedule", attention_date=day.isoformat(), today_order=args.order or 0)
+            day = {"today": ctx.today, "tomorrow": ctx.today + timedelta(days=1)}.get(args.action) \
+                or _date_arg(args.value, "attend <commitment> date", today=ctx.today, after_today=False)
+            plan.update(action="schedule", attention_date=day.isoformat(), today_order=args.order or 0)
         elif args.action == "park":
-            if args.review:
-                _date_arg(args.review, "--review", today=ctx.today, after_today=False)
-            kwargs.update(action="paused", review_date=args.review or "")
+            _date_arg(args.review, "--review", today=ctx.today, after_today=False) if args.review else None
+            plan.update(action="paused", review_date=args.review or "")
         elif args.action == "complete-step":
-            kwargs.update(action="complete_step", next_step=commitment.get("next_step"))
-        plan = kwargs
-    if ctx.runtime_scope == "public_starter":
-        # Soul §5: the public starter stays read-only on this machine; show the action instead.
-        return emit(args, {"promoted": False, "commitment": cid, "planned": plan},
-                    t(ctx.lang, "attend.copy_fallback", id=cid, plan=json.dumps(plan, ensure_ascii=False)))
-    if not ATTENTION_OWNER.is_file():
-        raise SystemExit("ros attend needs the attention schedule owner, which this installation does not ship; "
-                         "nothing was scheduled")
-    from researchos_server.attention_schedule_store import AttentionScheduleError, AttentionScheduleStore
-    store = AttentionScheduleStore.create(ctx.root)
+            plan.update(action="complete_step", next_step=commitment.get("next_step"))
     try:
+        if copy_only:
+            # Soul §5 copy fallback: the entry the store would write, built by the same code, printed to paste; nothing is written or
+            # recorded. The file keeps no history, so a replacement first prints the block it replaces: that copy is the way back.
+            path, key = ctx.root / ATTENTION_PATH, item_key(PROVIDER, cid)
+            current = read_attention_schedule(ctx.root)["items_by_key"].get(key)
+            record = None if args.action == "undo" else next_record(current, now=datetime.now().astimezone(), **plan)[1]
+            (old, entry), how, L = ("\n".join(entry_lines(key, row)) if row else "" for row in (current, record or current)), "replace" if current else "add", ctx.lang
+            text = (t(L, "attend.copy_fallback", id=cid, action=args.action, path=path) + t(L, "attend.copy_where." + (how if current or path.is_file() else "new"), block=key)
+                    + "\n\n" + (old + "\n" + t(L, "attend.copy_new") + "\n\n") * bool(current) + entry + "\n" + t(L, "attend.copy_next") + t(L, "attend.copy_next." + how)) \
+                if record else t(L, "attend.copy_undo" if current else "attend.copy_undo_none", id=cid, block=key, path=path) + "\n\n" * bool(entry) + entry
+            return emit(args, {"promoted": False, "commitment": cid, "action": args.action, "path": str(path), "previous": current,
+                               "planned": record, "entry": entry}, text)
+        from researchos_server.attention_schedule_store import AttentionScheduleStore  # private edition only
+        store = AttentionScheduleStore.create(ctx.root)
         if plan.get("action") == "restore":
-            outcome = store.restore(provider_id=PROVIDER, item_id=cid, previous=plan["previous"],
-                                    expected_current=plan["expected"])
+            outcome = store.restore(provider_id=PROVIDER, item_id=cid, previous=plan["previous"], expected_current=plan["expected"])
             outcome["previous"] = plan["previous"]
         else:
             outcome = store.apply(**plan)

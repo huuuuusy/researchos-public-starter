@@ -105,6 +105,8 @@ ResearchOS Public Starter 是一个面向个人科研人员的小型文件化工
 
 如果你在浏览器里用 ChatGPT 或 Claude，没法运行命令，`ros` 就跑不起来，来源变了把判断交回来复核的这一圈也就用不上。这是第一阶段的限制。三层读法仍然有用。打开仓库的 GitHub 页面 <https://github.com/huuuuusy/researchos-public-starter>，点 **Code**，再点 **Download ZIP**，下载后解压。要用的骨架是 `09_templates/basic/research-identity.zh.md` 和 `09_templates/basic/capsule.zh.md`，填好的样子在 `examples/starter-cards/zh-CN/`。把骨架和你的发表清单一起贴进聊天，请 AI 帮你起草；方向摘要里「做什么任务读哪张卡」那张表，只列你会上传的卡。把这两页贴进聊天里项目的说明（project instructions），这是第一层；做某项任务时，只上传它需要的一两张卡，这是第二层；PDF、数据、原始笔记这类原件默认不放进聊天，这是第三层，只有要核对某个具体数字或引文时才上传一份。你贴进去和上传的内容都会发给服务商，所以 README 里「哪些不要交给助手」清单上的东西一律不要上传。
 
+如果你自己或帮你的人偶尔能运行一条命令，`python3 scripts/plan_context.py <路线> --vault personal_vault --mode quick --pack <文件>` 会把这一档要读的卡拼成一份可以直接粘贴的文本，例如 `~/Desktop/chat-pack.md`；换成 `standard` 会再加上方向摘要点名的卡。卡片包开头有一段写给聊天里 AI 的话（这些卡是你写的，里面的路径在你电脑上，需要别的就问你），用 `standard` 时末尾还附上这类任务的做法说明。只有标为 public 或 internal 的卡会放进去；sensitive 和 private 的卡不放进来，命令会告诉你它们在哪里。它不会写进本仓库，除非写在 `personal_vault/` 下。
+
 ### 报告里的例子：来源被纠正后保住什么
 
 下面的虚构比较沿用[报告第 4.1 节的贯穿会话](technical-report.zh.md)，展示来源更正前后的状态。受影响部分由候选说明、研究者决定；原型不会自动计算局部语义影响。
@@ -205,7 +207,7 @@ python3 scripts/ros.py --root examples/scheduler-demo close
 
 | 命令 | 本仓库里的行为 |
 | --- | --- |
-| `today` | 只复制：列出变化与待处理要求并开启会话，但不随附注意力安排，所有承诺都读作未排期 |
+| `today` | 只复制：列出变化与待处理要求并开启会话；库里有注意力安排（`06_active_context/work_state/attention-schedule.md`）时，「今日」列出排在今天的承诺，没有时所有承诺都读作未安排；排到以后或搁置的承诺列在「不在今日」一行 |
 | `close` | 与报告中的原型同语义；列出的候选始终尚未决定，你手工应用并确认过的除外 |
 | `propose judgment`、`episode-close`、`rule` | 同语义：登记候选 |
 | `admit` | 只显示拟议改动：`<candidate>` 与 `--reconfirm` 显示拟议差异；`--confirm` 只记确认、不写入，且只有你在自己的终端回答时才生效；`--rollback` 被拒绝，因为这里不写来源，也就不回滚来源 |
@@ -214,7 +216,7 @@ python3 scripts/ros.py --root examples/scheduler-demo close
 | `state`、`context`、`rules`、`receipt` | 同语义，只读 |
 | `run` | 只复制：只接受 `--executor copy_packet`，拒绝所有 provider |
 | `collect` | 同语义，只是不记 run-state 账 |
-| `attend` | 只显示拟议改动：拟议的注意力动作，不写入 |
+| `attend` | 给出要写进注意力安排的条目（今天、明天、某天、搁置、这一步做完）和放在哪里，不写入；你自己贴，或你同意后让助手贴，`today` 就会列出；文件从 `09_templates/attention-schedule.zh.md` 建立。条目要替换原有的一段时，先打印被替换的那一段，留着它就能撤销；`undo` 说明怎样手工改回 |
 
 工程检查运行 `python3 scripts/validate_headless.py`。它验证完整的无 Dashboard profile，这个 profile 必须在 `dashboard/` 目录不存在时通过：routing、receipts、runtime 与 provider 边界、task extensions、public safety、links 和 focused zero-dashboard 行为，且不为通过而放宽 authority 检查。它不是用 Agent 客户端读一份来源的前提。CLI 路线准备同一个“目标、来源、结果、边界”的闭环，不启动服务器或 Dashboard；第二条命令给出第一次上手要读的那一个文件，即[首次上手说明](../08_exports/public_starter/onboarding-step-by-step.zh.md)：
 

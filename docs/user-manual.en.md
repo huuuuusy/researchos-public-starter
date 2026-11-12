@@ -105,6 +105,8 @@ In your own vault, add `--vault personal_vault` to `python3 scripts/plan_context
 
 If you use ChatGPT or Claude in a browser and cannot run commands, `ros` does not run, so the loop that brings a judgment back when its source changes is not available to you. That is a limit of this first stage. The three layers in a card still help. On the repository's GitHub page, <https://github.com/huuuuusy/researchos-public-starter>, choose **Code**, then **Download ZIP**, and unzip it. The skeletons are `09_templates/basic/research-identity.md` and `09_templates/basic/capsule.md`, and `examples/starter-cards/en/` shows both filled in. Paste a skeleton and your publication list into the chat and ask the AI to draft the page; in the direction summary's table of which card to read for which task, list the cards you will upload. Paste the two pages into the project instructions of your chat: that is layer 1. For a task, upload only the one or two cards it needs: layer 2. Originals such as PDFs, data and raw notes stay out of the chat by default: layer 3. Upload one only to check a specific number or quotation. What you paste or upload is sent to the provider, so never upload anything on the README's "What to keep away from the assistant" list.
 
+If you, or someone helping you, can run one command now and then, `python3 scripts/plan_context.py <route> --vault personal_vault --mode quick --pack <file>` writes a paste-ready pack of the cards that level reads, for example `~/Desktop/chat-pack.md`; use `standard` to add the cards your direction summary names. The pack opens with a short note to the chat (the cards are yours, paths in them are on your computer, ask you for anything else), and with `standard` it ends with the workflow for that task. Only cards labelled public or internal go in; the command prints where the sensitive and private ones it left out are. It refuses to write inside this repository except under `personal_vault/`.
+
 ### Example from the report: what survives a source correction
 
 This fictional comparison reuses the [worked session in Section 4.1 of the report](technical-report.en.md) to show the state before and after a source correction. The candidate states which part is affected and the researcher decides; the prototype does not compute the partial semantic impact on its own.
@@ -205,7 +207,7 @@ All 13 subcommands exist in this repository. Most commands first run one boundar
 
 | Command | In this repository |
 | --- | --- |
-| `today` | Copy only: lists changes and open requests and opens a session, but no attention schedule ships, so every commitment reads as unscheduled |
+| `today` | Copy only: lists changes and open requests and opens a session; Today lists the commitments in your attention schedule once the vault has one (`06_active_context/work_state/attention-schedule.md`), otherwise every commitment reads as unscheduled; commitments moved to a later day or parked are named on one `Not in Today` line |
 | `close` | Same as the prototype in the report; the listed candidates stay undecided, except one you applied by hand and confirmed |
 | `propose judgment`, `episode-close`, `rule` | Same: registers a candidate |
 | `admit` | Shows the planned change only: `<candidate>` and `--reconfirm` show the planned difference; `--confirm` records a confirmation without writing, and applies only when you answer at your own terminal; `--rollback` is refused, because this repository writes no source and rolls none back |
@@ -214,7 +216,7 @@ All 13 subcommands exist in this repository. Most commands first run one boundar
 | `state`, `context`, `rules`, `receipt` | Same; they only read |
 | `run` | Copy only: `--executor copy_packet` only; every provider is refused |
 | `collect` | Same, except that no run-state ledger is kept |
-| `attend` | Shows the planned change only: the attention action, and writes nothing |
+| `attend` | Prints the entry for your attention schedule (today, tomorrow, a date, park, step done) and where it goes; writes nothing. Paste it, or let the assistant paste it once you agree, and `today` lists it; start the file from `09_templates/attention-schedule.md`. When the entry replaces a block, the block it replaces is printed first, so you can keep it to undo; `undo` says how to revert by hand |
 
 For an engineering check, run `python3 scripts/validate_headless.py`. It verifies the complete no-dashboard profile, which must pass with the `dashboard/` directory absent: routing, receipts, runtime and provider boundaries, task extensions, public safety, links and focused zero-dashboard behavior, without weakening authority checks. It is not a prerequisite for reading a source in your agent client. The CLI route prepares the same loop of goal, source, result and boundary without starting a server or Dashboard; the second command names the one file to read for a first run, the [first-run guide](../08_exports/public_starter/onboarding-step-by-step.md):
 

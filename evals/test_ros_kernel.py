@@ -2720,7 +2720,7 @@ class RosKernelTest(unittest.TestCase):
         self.assertEqual(set(view) - {"session_id", "kernel_version", "changed", "transitions", "stale_sessions",
                                       "spec", "spec_proposed", "spec_changes_pending", "budget", "change_details",
                                   "portfolio_problems"},
-                         {"today", "decision", "questions", "waiting_on_trigger", "proposals", "needs_review", "network",
+                         {"today", "decision", "later", "questions", "waiting_on_trigger", "proposals", "needs_review", "network",
                           "total_open", "completion"},
                          "分流不再自持今日、本周、积压")
         self.assertFalse((self.tmp / self.ATTENTION).exists(), "分流只读，不写注意力")
@@ -2735,6 +2735,8 @@ class RosKernelTest(unittest.TestCase):
         self.ros("attend", "alpha", "tomorrow")
         view = self.ros("today")
         self.assertNotIn("alpha", {**self.today_ids(view), **self.decision_ids(view)})
+        self.assertEqual([(g["commitment_id"], g["attention_state"], g["attention_date"]) for g in view["later"]],
+                         [("alpha", "upcoming", "2026-09-21")], "排到以后的不进今日，但仍列出")
         self.assertEqual([p["command"] for p in view["proposals"]], ["ros attend alpha today"])
         self.ros("attend", "alpha", "today")
         view = self.ros("today")
@@ -2796,11 +2798,110 @@ class RosKernelTest(unittest.TestCase):
         self.assertIn("- attention_date: 2026-09-28", (self.tmp / self.ATTENTION).read_text(encoding="utf-8"),
                       "Desk 的改动保留")
 
+    def vault_files(self) -> dict:
+        """Every vault file outside ros's own runtime records, with its bytes."""
+        runtime = self.tmp / self.config()["runtime_dir"]
+        return {path: path.read_bytes() for path in self.tmp.rglob("*")
+                if path.is_file() and runtime not in path.parents}
+
     def test_the_public_starter_shows_attention_actions_instead_of_writing(self) -> None:
+        """Soul §5: in the public starter `attend` prints the entry the store would write and writes nothing;
+        the researcher pastes it, and from then on `today` lists Today from that schedule."""
         self.edit_config(runtime_scope="public_starter")
+        no_schedule = self.run_ros("today", json_out=False, lang="en")[1]
+        self.assertNotIn("Today (from the attention schedule", no_schedule, "没有注意力安排时不显示空的今日")
+        self.assertIn("Attention proposals (1; this vault has no attention schedule yet: ros attend <commitment> "
+                      "today prints the entry and how to start the schedule from 09_templates/attention-schedule.md)\n"
+                      "  · Alpha Paper: due in 2 day(s) (2026-09-22) and not scheduled for today → ros attend alpha today\n",
+                      no_schedule, "没有注意力安排时也列出提议本身，不只给条数")
+        before = self.vault_files()
         shown = self.ros("attend", "alpha", "today")
-        self.assertEqual(shown["promoted"], False)
-        self.assertFalse((self.tmp / self.ATTENTION).exists(), "公开 starter 只走复制回退，不写注意力安排")
+        self.assertEqual(self.vault_files(), before, "公开 starter 只走复制回退，不写注意力安排")
+        self.assertEqual((shown["promoted"], shown["previous"]), (False, None))
+        self.assertEqual({key: shown["planned"][key] for key in ("attention_date", "status", "last_action")},
+                         {"attention_date": TODAY.isoformat(), "status": "scheduled", "last_action": "schedule"})
+        self.assertTrue(shown["entry"].startswith("### research_portfolio:alpha\n\n- provider_id: research_portfolio\n"))
+        text = self.run_ros("attend", "alpha", "today", json_out=False, lang="en")[1]
+        self.assertIn("Nothing was written: this repository only shows the change. ros attend alpha today puts this entry in "
+                      f"{self.tmp.resolve() / self.ATTENTION}; the file does not exist yet, so start it from "
+                      "09_templates/attention-schedule.md", text)
+        self.assertIn("- attention_date: 2026-09-20\n", text)
+        zh = self.run_ros("attend", "alpha", "today", json_out=False, lang="zh-CN")[1]
+        self.assertIn("未写入：本仓库只显示改动。", zh)
+        self.assertIn("09_templates/attention-schedule.zh.md", zh)
+        self.assertFalse((self.tmp / self.ATTENTION).exists())
+        # The researcher pastes the entry into a schedule started from the template.
+        template = ROOT / "09_templates/attention-schedule.md"
+        start = template.read_text(encoding="utf-8") if template.is_file() else "## Items\n\n"
+        self.write(self.ATTENTION, start.rstrip("\n") + "\n\n" + shown["entry"])
+        view = self.ros("today")
+        self.assertEqual(self.today_ids(view), {"alpha": "today"}, "贴入的条目让 today 列出今日")
+        self.assertEqual(view["proposals"], [])
+        listed = self.run_ros("today", json_out=False, lang="en")[1]
+        self.assertIn("Today (from the attention schedule, 1 commitment(s))", listed)
+        self.assertIn("Attention proposals (0; ros attend prints the schedule entry, and you settle one by pasting it)", listed)
+        # A second action replaces the pasted block; undo says how to revert by hand, and nothing is written.
+        before = self.vault_files()
+        parked = self.run_ros("attend", "alpha", "park", json_out=False, lang="en")[1]
+        self.assertIn(", in place of the block that starts with ### research_portfolio:alpha. That block now reads as below", parked)
+        old, new = parked.split("Replace it with:", 1)
+        self.assertIn("- status: scheduled\n", old, "替换前先打印被替换的那一段，留作撤销")
+        self.assertIn("- status: paused\n", new)
+        self.assertIn("put back the old block printed above", new)
+        self.assertNotIn("put back", text, "追加时没有被替换的段，不说放回")
+        undo = self.run_ros("attend", "alpha", "undo", json_out=False, lang="en")[1]
+        self.assertIn("Nothing was written. This repository keeps no record of attention changes", undo)
+        self.assertIn("put back the old block that ros attend printed when it replaced it", undo)
+        self.assertNotIn("Git", undo, "personal_vault 不在 Git 里")
+        self.assertNotIn("Git", self.run_ros("attend", "alpha", "undo", json_out=False, lang="zh-CN")[1])
+        self.assertIn("- attention_date: 2026-09-20", undo, "撤销时给出当前这一段")
+        self.assertIn("Nothing to undo", self.run_ros("attend", "beta", "undo", json_out=False, lang="en")[1])
+        self.assertEqual(self.vault_files(), before)
+        self.assertEqual([r for r in self.ledger().trajectory() if r.get("kind") == "effect"
+                          and any("attention" in c.get("change", "") for c in r["payload"].get("changes", []))], [])
+        if HAS_ATTENTION_OWNER:  # the printed entry is the block the store writes for the same action
+            self.edit_config(runtime_scope="private")
+            (self.tmp / self.ATTENTION).unlink()
+            self.ros("attend", "alpha", "today")
+            written = (self.tmp / self.ATTENTION).read_text(encoding="utf-8").split("## Items\n\n", 1)[1]
+            stamp = re.compile(r"(?m)^- updated_at: .*$")
+            self.assertEqual(stamp.sub("", written), stamp.sub("", shown["entry"]))
+
+    def test_today_names_what_the_schedule_moved_off_today(self) -> None:
+        """Attention Kernel §4.1: a commitment moved to a later day or parked is in neither Today nor To decide,
+        but stays discoverable: `today` names it in one line, by default and with --all, in both editions."""
+        self.add_commitment("### Delta\n\n- id: delta\n- responsibility: lead\n- state: mainline\n- next_step: Draft the intro\n")
+        self.write(self.ATTENTION, "## Items\n\n" + "".join(
+            "\n".join(ros.entry_lines(ros.item_key("research_portfolio", cid), ros.next_record(
+                None, provider_id="research_portfolio", item_id=cid, now=datetime(2026, 9, 20, 9), **plan)[1])) + "\n"
+            for cid, plan in (("alpha", {"action": "schedule", "attention_date": "2026-09-21"}),
+                              ("delta", {"action": "paused", "review_date": "2026-09-30"}))))
+        view = self.ros("today")
+        self.assertNotIn("delta", {**self.today_ids(view), **self.decision_ids(view)})
+        self.assertEqual([(g["commitment_id"], g["attention_state"]) for g in view["later"]],
+                         [("alpha", "upcoming"), ("delta", "paused")])
+        for scope in ("private", "public_starter"):
+            self.edit_config(runtime_scope=scope)
+            for flags in ((), ("--all",)):
+                en = self.run_ros("today", *flags, json_out=False, lang="en")[1]
+                self.assertIn("Not in Today (2; ros attend <commitment> today brings one back): "
+                              "later: Alpha Paper (2026-09-21); parked: Delta (review 2026-09-30)\n", en)
+            zh = self.run_ros("today", json_out=False, lang="zh-CN")[1]
+            self.assertIn("不在今日（2 项；ros attend <承诺> today 可排回今天）：以后：Alpha Paper（2026-09-21）；搁置：Delta（复看 2026-09-30）", zh)
+        (self.tmp / self.ATTENTION).unlink()
+        self.assertEqual(self.ros("today")["later"], [])
+        self.assertNotIn("Not in Today", self.run_ros("today", json_out=False, lang="en")[1], "没有可列的就不占一行")
+
+    def test_an_unscheduled_commitment_shows_its_next_step_and_how_to_schedule_it(self) -> None:
+        self.add_commitment("### Delta\n\n- id: delta\n- responsibility: lead\n- state: mainline\n- next_step: Draft the intro\n"
+                            "- question: Is the intro framing right?\n- last_verified: 2026-09-20\n- stale_after_days: 30\n")
+        group = next(g for g in self.ros("today")["decision"] if g["commitment_id"] == "delta")
+        self.assertEqual((group["attention_state"], group["items"], group["next_step"]), ("unscheduled", [], "Draft the intro"))
+        en = self.run_ros("today", json_out=False, lang="en")[1]
+        self.assertIn("  ■ Delta  [unscheduled]\n    (nothing to review) next step: Draft the intro; "
+                      "to schedule it for today: ros attend delta today\n", en)
+        zh = self.run_ros("today", json_out=False, lang="zh-CN")[1]
+        self.assertIn("（没有要复核的事项）下一步：Draft the intro；排到今天：ros attend delta today", zh)
 
     def test_context_excludes_private_nodes_and_records_delivery(self) -> None:
         self.label_internal("01_knowledge/projects/alpha.md", "06_active_context/research-portfolio.md")

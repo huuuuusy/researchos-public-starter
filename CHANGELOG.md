@@ -8,7 +8,7 @@ The 1.x series is the first stage of ResearchOS: one researcher, local files, de
 
 ## [Unreleased]
 
-Release candidate `v1.2.0-rc.1`. The rules for judgments and admission are unchanged; `ros` output changes are listed below. See the [V1.2 release notes](docs/releases/v1.2.0.md).
+Release candidate `v1.2.0-rc.1`. The rules for judgments and admission are unchanged; `ros` gains the attention schedule, and its output changes are listed below. See the [V1.2 release notes](docs/releases/v1.2.0.md).
 
 ### Added
 
@@ -18,6 +18,8 @@ Release candidate `v1.2.0-rc.1`. The rules for judgments and admission are uncha
 - A boundary card (`00_identity/boundaries.md`) read first by outward tasks, and two evidence-level indexes: outputs and use boundary, author roles.
 - Nine research workflows in `05_workflows/research_work/`, including a retrospective, and three routes: `peer_review`, `meeting_follow_up`, `mentee_feedback`.
 - A read-only vault check in the dry run of `build_public_starter_data.py --personal-vault`.
+- `ros attend` prints the attention-schedule entry to paste, and `ros today` lists Today from `06_active_context/work_state/attention-schedule.md` when the vault has one; template in `09_templates/attention-schedule.md`.
+- `plan_context.py --vault ... --pack <file>`: a paste-ready card pack for a browser chat, public and internal cards only.
 
 ### Changed
 

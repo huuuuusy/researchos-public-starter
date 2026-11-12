@@ -10,6 +10,7 @@ VAULT_CHECK_TEXT = {
         "comment": "{card}: line {line!r} ends with a # comment, which is read as part of the value",
         "stale": "{card}: last checked {checked}, but {source} changed on {updated}; check the summary again",
         "original": "{card}: the original at {path} was not found on this computer (a reminder only)",
+        "duplicate": "attention schedule: {key} has more than one entry; only the first counts, so keep one",
     },
     "zh-CN": {
         "found": "库体检（{n} 处）：",
@@ -20,5 +21,6 @@ VAULT_CHECK_TEXT = {
         "comment": "{card}：{line!r} 行尾有 # 注释，会被当成值的一部分",
         "stale": "{card}：上次核对是 {checked}，但 {source} 在 {updated} 改过；请重新核对这份摘要",
         "original": "{card}：本机找不到原件 {path}（只是提醒）",
+        "duplicate": "注意力安排：{key} 有不止一段条目，只有第一段算数，请只留一段",
     },
 }

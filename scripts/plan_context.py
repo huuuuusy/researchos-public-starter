@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -59,6 +60,56 @@ def route_for(task_id: str, language: str) -> dict[str, object] | None:
 LEVELS = ("quick", "standard", "evidence")
 
 
+def write_chat_pack(payload: dict[str, object], vault: Path, out: Path, language: str) -> str:
+    """One paste-ready file of the vault cards this level reads, for a chat in the browser.
+
+    Only cards `ros context` would hand over without a terminal confirmation (public, internal) go in,
+    with the task's workflow; sensitive, private and unlabeled cards are named as left out. The file
+    goes outside the repository or under the git-ignored vault, never into tracked files."""
+    from researchos_adapters.context_pack import DELIVERABLE
+    zh = language == "zh-CN"
+    target = out.resolve()
+    if target.is_relative_to(ROOT) and not target.is_relative_to((ROOT / "personal_vault").resolve()):
+        raise SystemExit("--pack 只能写到本仓库之外，或写在 personal_vault/ 下（Git 忽略）" if zh else
+                         "--pack must write outside this repository or under personal_vault/ (git-ignored)")
+    entry = payload["vault_entry"]
+    cards = [path for path in [*payload["read_now"], *entry.get("named_cards", [])]
+             if Path(path).resolve().is_relative_to(vault.resolve()) and Path(path).is_file()]
+    workflows = [path for path in payload["read_now"] if str(path).startswith("05_workflows/") and (ROOT / path).is_file()]
+    labels = {"sensitive": "敏感", "private": "私密", "unlabeled": "没有标签"} if zh else {}
+    kept, left_out = [], []
+    for card in dict.fromkeys(cards):
+        text = Path(card).read_text(encoding="utf-8")
+        label = next((line.split(":", 1)[1].strip().lower() for line in text.split("\n---\n", 1)[0].splitlines()
+                      if line.startswith("sensitivity:")), "") or "unlabeled"
+        body = text.split("\n---\n", 1)[1] if text.startswith("---\n") and "\n---\n" in text else text
+        (kept if label in DELIVERABLE else left_out).append((card, labels.get(label, label), body.strip()))
+    relative = lambda card: Path(card).resolve().relative_to(vault.resolve()).as_posix()
+    head = (f"# 我的研究卡片：{payload['name']}\n\n"
+            "下面是我自己写的几张研究卡片，请先读一遍，之后回答我时以它们为准。"
+            "卡片里提到的文件路径在我的电脑上，你看不到；需要哪一份，请直接问我，我再上传或粘贴。"
+            "卡片分成事实、我的看法和待核几部分，请不要把我的看法或待核的内容当成已确认的事实。\n" if zh else
+            f"# My research cards: {payload['name']}\n\n"
+            "Below are research cards I wrote myself. Please read them first and rely on them when you answer me. "
+            "File paths in the cards are on my computer and you cannot see them; if you need one, ask me and I will "
+            "upload or paste it. The cards keep facts, my view and things to verify apart; do not treat my view or "
+            "the things to verify as confirmed facts.\n")
+    if workflows:
+        head += ("\n最后附上这类任务的做法说明，请照它的步骤来。\n" if zh else
+                 "\nAt the end is how I want this kind of task done; please follow its steps.\n")
+    body = "".join(f"\n---\n\n{text}\n" for _, _, text in kept)
+    switch = re.compile(r"<p align=\"right\">.*?</p>\s*", re.S)  # the repository's language links mean nothing in a chat
+    body += "".join(f"\n---\n\n{switch.sub('', (ROOT / path).read_text(encoding='utf-8').split(chr(10) + '---' + chr(10), 1)[-1]).strip()}\n"
+                    for path in workflows)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(head + body, encoding="utf-8")
+    note = "".join(f"\n- {(vault / relative(card)).resolve()} ({label})" for card, label, _ in left_out)
+    return ((f"已写入 {out}：{len(kept)} 张卡" + (f"、{len(workflows)} 份做法说明" if workflows else "") +
+             (f"。这些卡没有放进来（要用就自己挑出需要的几句粘贴）：{note}" if left_out else "。")) if zh else
+            (f"Wrote {out}: {len(kept)} card(s)" + (f" and {len(workflows)} workflow(s)" if workflows else "") +
+             (f". Left out (paste only the lines you choose from them yourself):{note}" if left_out else ".")))
+
+
 def vault_reads(task: dict[str, object], vault: Path, mode: str, generic: list[str], file_limit: int,
                 language: str) -> dict[str, object]:
     """Resolve a route's reading levels against the user's own vault (the user's cards come first).
@@ -109,12 +160,15 @@ def vault_reads(task: dict[str, object], vault: Path, mode: str, generic: list[s
 
 
 def parse_list_field(card: Path, key: str) -> list[str]:
-    """One YAML list field of a card's frontmatter (`key:` followed by `- item` lines)."""
+    """One YAML list field of a card's frontmatter: `key: [a, b]`, or `key:` followed by `- item` lines."""
     lines = card.read_text(encoding="utf-8").split("\n---\n", 1)[0].splitlines()
     items: list[str] = []
     inside = False
     for line in lines:
         if line.startswith(f"{key}:"):
+            inline = line.split(":", 1)[1].strip()
+            if inline.startswith("[") and inline.endswith("]"):
+                return [item.strip().strip("'\"") for item in inline[1:-1].split(",") if item.strip()]
             inside = True
         elif inside and line.strip().startswith("- "):
             items.append(line.strip()[2:].strip())
@@ -350,6 +404,7 @@ def main() -> int:
     parser.add_argument("--expected-extension-version", help="Fail closed when resuming a missing or changed task extension.")
     parser.add_argument("--list", action="store_true")
     parser.add_argument("--vault", metavar="FOLDER", help="Read the user's own cards in this vault first: the working-style card or research identity page at quick, plus the direction summary and named cards at standard.")
+    parser.add_argument("--pack", metavar="FILE", help="With --vault: write the vault cards this level reads (public and internal only) into one paste-ready file for a browser chat.")
     parser.add_argument("--reroute-intent", action="store_true", help="Explicitly reclassify an intent in this runtime; discard prior profile classification and identity, never grant effects.")
     args = parser.parse_args()
     if args.lang is None:
@@ -397,6 +452,11 @@ def main() -> int:
         entry = vault_reads(task, vault, str(payload["mode"]), list(payload["read_now"]), int(payload["file_limit"]), args.lang)
         payload["read_now"] = entry.pop("read_now")
         payload["vault_entry"] = entry
+    if args.pack:
+        if not args.vault:
+            parser.error("--pack needs --vault")
+        print(write_chat_pack(payload, Path(args.vault), Path(args.pack), args.lang))
+        return 0
     print(json.dumps(payload, ensure_ascii=False, indent=2) if args.json or args.headless_json else as_text(payload, args.lang))
     return 0
 

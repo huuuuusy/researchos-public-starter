@@ -70,6 +70,10 @@ MESSAGES = {
         "answer.done": "已回答问题 {id}：{option}",
         "today.waiting": "延期中，等已登记的触发（{n} 条；事件触发请在事件发生后用 ros decide <编号> reopen 重开）",
         "today.proposals": "注意力提议（{n} 条，由你用 ros attend 落定）",
+        "today.proposals.copy": "注意力提议（{n} 条；ros attend 给出要贴进注意力安排的条目，由你贴入落定）",
+        "today.proposals.start": "注意力提议（{n} 条；这个仓库还没有注意力安排：ros attend <承诺> today 会给出条目，并说明怎样照 09_templates/attention-schedule.zh.md 建立它）",
+        "today.later": "不在今日（{n} 项；ros attend <承诺> today 可排回今天）：{items}", "today.later.review": "复看 {date}",
+        "today.next_step": "（没有要复核的事项）下一步：{step}", "today.schedule_hint": "；排到今天：ros attend {id} today",
         "today.elsewhere.title": "其他承诺内的未关闭事项（{n} 条）",
         "today.elsewhere.count": "其他承诺内还有 {n} 条未关闭事项（ros today --all 查看）",
         "proposal.deadline": "截止还有 {days} 天（{date}），尚未排到今天",
@@ -79,7 +83,16 @@ MESSAGES = {
         "attention.upcoming": "以后", "attention.unscheduled": "未安排", "attention.waiting": "等待",
         "attention.paused": "搁置", "attention.completed": "已关闭",
         "attend.done": "已更新 {id} 的注意力安排：{action}（ros attend {id} undo 可撤销）",
-        "attend.copy_fallback": "本仓库没有注意力安排，{id} 没有排期（没有写入任何文件）",
+        "attend.copy_fallback": "未写入：本仓库只显示改动。ros attend {id} {action} 会把下面这段条目放进 {path}",
+        "attend.copy_where.replace": "，替换以 ### {block} 开头的那一段。那一段现在是下面这样，要能撤销就先留一份：",
+        "attend.copy_new": "换成这一段：",
+        "attend.copy_where.add": "，加在文件末尾（## Items 之下）：",
+        "attend.copy_where.new": "；这个文件还不存在，先照 09_templates/attention-schedule.zh.md 建立它，再把条目加在末尾（## Items 之下）：",
+        "attend.copy_next": "要留下它，就把这段贴进去：你自己贴，或你同意后由助手贴。之后 ros today 就按这份安排列出今日。",
+        "attend.copy_next.replace": "以后要撤销，把上面原来的那一段放回；或删掉这一段，承诺就回到未安排。",
+        "attend.copy_next.add": "以后要撤销，删掉这一段，承诺就回到未安排。",
+        "attend.copy_undo": "未写入。本仓库不记录注意力改动，ros 不知道 {block} 之前是什么样。手工撤销：编辑 {path}，把替换时 ros attend 打印出的原来那一段放回；或删掉从 ### {block} 起、到下一个 ### 或文件末尾为止的整段，{id} 就回到未安排。这一段现在是：",
+        "attend.copy_undo_none": "没有可撤销的：{path} 里没有 {id} 的条目。",
         "today.problems": "解析提示：{n} 条（ros rules --check）",
         "none": "无",
         "root.missing": "ros：{root} 不是 ResearchOS 调度根目录（缺少 config/ros.json）",
@@ -259,6 +272,10 @@ MESSAGES = {
         "answer.done": "Answered question {id}: {option}",
         "today.waiting": "Deferred until a registered trigger ({n}; for an event trigger, reopen with ros decide <id> reopen once it happens)",
         "today.proposals": "Attention proposals ({n}; you settle them with ros attend)",
+        "today.proposals.copy": "Attention proposals ({n}; ros attend prints the schedule entry, and you settle one by pasting it)",
+        "today.proposals.start": "Attention proposals ({n}; this vault has no attention schedule yet: ros attend <commitment> today prints the entry and how to start the schedule from 09_templates/attention-schedule.md)",
+        "today.later": "Not in Today ({n}; ros attend <commitment> today brings one back): {items}", "today.later.review": "review {date}",
+        "today.next_step": "(nothing to review) next step: {step}", "today.schedule_hint": "; to schedule it for today: ros attend {id} today",
         "today.elsewhere.title": "Open items in other commitments ({n})",
         "today.elsewhere.count": "{n} more open item(s) in other commitments (ros today --all)",
         "proposal.deadline": "due in {days} day(s) ({date}) and not scheduled for today",
@@ -268,7 +285,16 @@ MESSAGES = {
         "attention.upcoming": "later", "attention.unscheduled": "unscheduled", "attention.waiting": "waiting",
         "attention.paused": "parked", "attention.completed": "closed",
         "attend.done": "Attention for {id} updated: {action} (undo with ros attend {id} undo)",
-        "attend.copy_fallback": "This repository keeps no attention schedule, so nothing was scheduled for {id} (no file was written)",
+        "attend.copy_fallback": "Nothing was written: this repository only shows the change. ros attend {id} {action} puts this entry in {path}",
+        "attend.copy_where.replace": ", in place of the block that starts with ### {block}. That block now reads as below; keep a copy if you may want to undo:",
+        "attend.copy_new": "Replace it with:",
+        "attend.copy_where.add": ", at the end of the file (under ## Items):",
+        "attend.copy_where.new": "; the file does not exist yet, so start it from 09_templates/attention-schedule.md and add the entry at the end (under ## Items):",
+        "attend.copy_next": "To keep it, paste the entry there: you can, or the assistant can once you say so. ros today then lists Today from the schedule.",
+        "attend.copy_next.replace": " To undo it later, put back the old block printed above, or delete this one to leave the commitment unscheduled.",
+        "attend.copy_next.add": " To undo it later, delete the block; the commitment is then unscheduled.",
+        "attend.copy_undo": "Nothing was written. This repository keeps no record of attention changes, so ros cannot tell what {block} said before. To undo by hand, edit {path}: put back the old block that ros attend printed when it replaced it, or delete the block from its ### {block} line up to the next ### line or the end of the file, which leaves {id} unscheduled. The block now reads:",
+        "attend.copy_undo_none": "Nothing to undo: {path} has no entry for {id}.",
         "today.problems": "Parse notes: {n} (ros rules --check)",
         "none": "none",
         "root.missing": "ros: {root} is not a ResearchOS scheduler root (config/ros.json is missing)",
@@ -396,6 +422,17 @@ def unknowns_line(lang: str, report: dict) -> str:
              unclassified=kinds.get("evidence_unclassified", 0), run=kinds.get("run_observation", 0),
              uneval=kinds.get("coverage_unevaluated", 0), unowned=kinds.get("own_undefined", 0),
              outside=kinds.get("out_of_scope", 0))
+
+
+def later_line(lang: str, rows: list) -> str:
+    """Commitments the schedule moved to a later day, parked or set waiting, by label in one line (Attention Kernel §4.1)."""
+    en, groups = language(lang) == "en", {}
+    for row in rows:
+        when = row["attention_date"] if row["attention_state"] == "upcoming" else row["review_date"] and t(lang, "today.later.review", date=row["review_date"])
+        groups.setdefault(t(lang, "attention." + row["attention_state"]), []).append(
+            row["commitment_title"] + ((f" ({when})" if en else f"（{when}）") if when else ""))
+    return t(lang, "today.later", n=len(rows), items=("; " if en else "；").join(
+        label + (": " if en else "：") + (", " if en else "、").join(titles) for label, titles in groups.items()))
 
 
 def language(value: str) -> str:

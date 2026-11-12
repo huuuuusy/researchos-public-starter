@@ -378,10 +378,7 @@ def vault_check(vault: Path, language: str = "en") -> list[str]:
     updated: dict[str, str] = {}
     cards: list[tuple[Path, str, dict[str, Any], str]] = []
     for path in personal_files(vault):
-        try:
-            text = path.read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError):
-            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
         if not has_frontmatter(text):
             continue
         relative = path.relative_to(vault).as_posix()
@@ -399,10 +396,10 @@ def vault_check(vault: Path, language: str = "en") -> list[str]:
             problems.append(say["sensitivity"].format(card=relative, value=sensitivity))
         if not agent_summary(text):
             problems.append(say["summary"].format(card=relative))
-        targets = []
-        for key in VAULT_LIST_KEYS:
-            value = meta.get(key)
-            targets.extend(value if isinstance(value, list) else [value] if value else [])
+        for key in VAULT_LIST_KEYS:  # `[a, b]` on one line is the same list as `- a` / `- b` lines
+            raw = str(meta.get(key, "")).strip()
+            meta[key] = [item.strip(" '\"") for item in raw[1:-1].split(",") if item.strip()] if raw.startswith("[") else meta.get(key)
+        targets = [item for key in VAULT_LIST_KEYS for item in (meta[key] if isinstance(meta[key], list) else [meta[key]] if meta[key] else [])]
         for target in targets:
             target = str(target).strip()
             if target.endswith(".md") and not (vault / target).is_file():
@@ -412,13 +409,16 @@ def vault_check(vault: Path, language: str = "en") -> list[str]:
                 problems.append(say["link"].format(card=relative, target=target))
         checked = str(meta.get("last_verified", "")).strip()
         if str(meta.get("type", "")).strip() == "capsule" and checked:
-            for source in meta.get("source_files", []) if isinstance(meta.get("source_files"), list) else []:
+            for source in meta["source_files"] if isinstance(meta["source_files"], list) else []:
                 changed = updated.get(str(source).strip(), "")
                 if changed and changed > checked:
                     problems.append(say["stale"].format(card=relative, checked=checked, source=source, updated=changed))
         original = re.split(r"[\s（(]", str(meta.get("source", "")).strip(), maxsplit=1)[0]
         if original.startswith(("~/", "/")) and not Path(original).expanduser().exists():
             problems.append(say["original"].format(card=relative, path=original))
+    schedule = vault / "06_active_context" / "work_state" / "attention-schedule.md"
+    keys = re.findall(r"^### (\S+)", schedule.read_text(encoding="utf-8"), flags=re.M) if schedule.is_file() else []
+    problems.extend(say["duplicate"].format(key=key) for key in sorted({key for key in keys if keys.count(key) > 1}))
     return problems
 
 

@@ -41,6 +41,8 @@
 
 请求涉及用户的项目、承诺或卡片时，会话的开头和结尾都用 `ros`；只是改几句话或问代码问题，就都不用。开始时运行 `python3 scripts/ros.py --root personal_vault today`，这次只谈某一项承诺时加 `--for <承诺 id>`，再用一两句话告诉用户有哪些事等用户来定。哪件事什么时候做，由用户决定，不由你排。
 
+用户决定某项承诺什么时候做时，运行 `python3 scripts/ros.py --root personal_vault attend <id> today`（或 `tomorrow`、`date <YYYY-MM-DD>`、`park`、`complete-step`）。它不写入，只给出要放进 `personal_vault/06_active_context/work_state/attention-schedule.md` 的条目；用户同意后由你贴进去（文件不存在就从 `09_templates/attention-schedule.zh.md` 建立），之后 `today` 会在「今日」下列出这项承诺。哪件事什么时候做，始终由用户定。
+
 动手之前运行 `python3 scripts/plan_context.py <路线> --vault personal_vault --mode quick`（路线 id 见下文路线表），按它列出的顺序读；它跟着库的语言走，不用加 `--lang`。说得出 quick 读完还缺什么，才换 `--mode standard`；有一个说得出的核对问题，才换 `--mode evidence`。读取档 quick 列出这项任务的风格卡，没有时列研究身份摘要。standard 列出研究身份摘要、风格卡、方向摘要和这项任务的工作流程，再单独列出方向摘要点名的卡；打包方向摘要只交出这一页，所以任务要用的卡还得一张张取。evidence 只多一句提示：只打开这些卡「证据边界」里写明的原件，而且要有一个说得出的核对问题。还没写的卡会列出名字和对应的骨架。
 
 取卡片用 `python3 scripts/ros.py --root personal_vault context <卡片路径>`，它会按卡片的敏感性标签处理。它报告某张卡被排除时，把它为这张卡打印的原因告诉用户；sensitive 的卡，比如人物卡或会议卡，因为记的是别人，所以不交给你。不要改为直接打开文件。任务确实需要一张 sensitive 的卡时，请用户在自己的终端运行 `python3 scripts/ros.py --root personal_vault context <卡片路径>`，回答 `y`，再只把任务需要的部分复制给你。

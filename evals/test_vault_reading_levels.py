@@ -102,6 +102,40 @@ class VaultReadingLevelsTest(unittest.TestCase):
                       text("paper_writing", "evidence", self.vault))
         self.assertNotIn("author-roles", text("paper_writing", "standard", self.vault))
 
+    def test_chat_pack_holds_only_deliverable_cards(self) -> None:
+        out = Path(self.tmp.name) / "pack.md"
+        command = [sys.executable, str(ROOT / "scripts" / "plan_context.py"), "paper_writing", "--mode", "standard",
+                   "--vault", str(self.vault), "--pack", str(out)]
+        printed = subprocess.run(command, capture_output=True, text=True, check=True).stdout
+        self.assertIn("lin-ke.md (sensitive)", printed)
+        pack = out.read_text(encoding="utf-8")
+        identity = (self.vault / "00_identity" / "research-identity.md").read_text(encoding="utf-8")
+        self.assertIn(identity.split("\n---\n", 1)[1].strip()[:80], pack)
+        self.assertNotIn("\nsensitivity:", pack)  # frontmatter is dropped
+        lin = (self.vault / "04_people" / "collaborators" / "lin-ke.md").read_text(encoding="utf-8")
+        self.assertNotIn(lin.split("## Agent Summary", 1)[1].strip()[:60], pack)
+        self.assertIn("ask me", pack)
+        self.assertNotIn('<p align="right">', pack)
+        # inline source_files lists are read too
+        capsule = self.vault / "01_knowledge" / "capsules" / "occlusion-tracking-capsule.md"
+        text_ = capsule.read_text(encoding="utf-8")
+        head, rest = text_.split("\n---\n", 1)
+        lines, items, skipping = [], [], False
+        for line in head.splitlines():
+            if line.startswith("source_files:"):
+                skipping = True
+                continue
+            if skipping and line.startswith("  - "):
+                items.append(line[4:])
+                continue
+            skipping = False
+            lines.append(line)
+        capsule.write_text("\n".join(lines) + "\nsource_files: [" + ", ".join(items) + "]\n---\n" + rest, encoding="utf-8")
+        self.assertTrue(route("paper_writing", "standard", self.vault)["vault_entry"]["named_cards"])
+        refused = subprocess.run([*command[:-1], str(ROOT / "docs" / "pack.md")], capture_output=True, text=True)
+        self.assertNotEqual(refused.returncode, 0)
+        self.assertFalse((ROOT / "docs" / "pack.md").exists())
+
     def test_an_empty_vault_falls_back_to_the_task_files(self) -> None:
         empty = Path(self.tmp.name) / "empty"
         empty.mkdir()
@@ -129,6 +163,10 @@ class VaultReadingLevelsTest(unittest.TestCase):
         self.assertIn("sensitivity is 'Internal'", problems)
         self.assertIn("ends with a # comment", problems)
         self.assertIn("check the summary again", problems)
+        schedule = self.vault / "06_active_context" / "work_state" / "attention-schedule.md"
+        schedule.parent.mkdir(parents=True, exist_ok=True)
+        schedule.write_text("### research_portfolio:x\n\n- item_id: x\n\n### research_portfolio:x\n\n- item_id: x\n", encoding="utf-8")
+        self.assertIn("research_portfolio:x has more than one entry", "\n".join(build_public_starter_data.vault_check(self.vault)))
 
 
 class AgendaQueryTest(unittest.TestCase):

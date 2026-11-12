@@ -13,6 +13,8 @@ today    : scheduled for today or carried over, plus a real event — an externa
            that is today or already passed;
 decision : invested items with no attention policy, a step that needs its next step, or a
            review that is due (a long ``unscheduled`` is not a legal resting state).
+later    : items the schedule moved to a later day, parked or set waiting. They are in neither
+           region by design, but must stay discoverable (§4.1), so ``today`` names them in one line.
 Closed projects are in neither. Neither region is truncated; order comes from the owner.
 Only the ``deadline`` field is an external date (§3.4); ``target_date`` is not an event.
 """
@@ -26,6 +28,7 @@ from .messages import t
 INVESTED = "mainline"
 TODAY_STATES = ("today", "carryover")
 DECISION_STATES = ("unscheduled", "needs_next_step", "review_due")
+LATER_STATES = ("upcoming", "waiting", "paused")
 LIFECYCLE = {"closed": "completed", "waiting": "waiting", "paused": "paused"}
 STALE_CARRYOVER_DAYS = 7
 
@@ -114,7 +117,7 @@ def triage(result, config: dict, today: date | None = None, only_commitment: str
     snapshot = result.snapshot
     grouped = _items(result, config, today, only_commitment)
 
-    today_rows, decision_rows, proposals, elsewhere = [], [], [], []
+    today_rows, decision_rows, later_rows, proposals, elsewhere = [], [], [], [], []
     for cid, commitment in sorted(snapshot.commitments.items()):
         if only_commitment and cid != only_commitment:
             continue
@@ -131,6 +134,7 @@ def triage(result, config: dict, today: date | None = None, only_commitment: str
         days = (deadline - today).days if deadline else None
         group = {"commitment_id": cid, "commitment_title": commitment.title, "attention_state": state,
                  "lifecycle_state": lifecycle, "attention_date": projected.get("attention_date", ""),
+                 "review_date": projected.get("review_date", ""), "next_step": commitment.get("next_step") or "",
                  "deadline": deadline.isoformat() if deadline else "",
                  "today_order": int(projected.get("today_order", 0) or 0),
                  "carryover_days": int(projected.get("carryover_days", 0) or 0), "items": items}
@@ -144,6 +148,9 @@ def triage(result, config: dict, today: date | None = None, only_commitment: str
             decision_rows.append(group)
         elif items:
             elsewhere.append(group)
+        if not (in_today or in_decision) and state in LATER_STATES:
+            later_rows.append({key: group[key] for key in ("commitment_id", "commitment_title", "attention_state",
+                                                           "attention_date", "review_date")})
         if not in_today:
             due_items = [row for row in items if row["due_days"] is not None and row["due_days"] <= immediate_days]
             if days is not None and days <= immediate_days:
@@ -162,5 +169,7 @@ def triage(result, config: dict, today: date | None = None, only_commitment: str
     order = lambda g: (g["today_order"] or 10**4, g["deadline"] or "9999", g["commitment_id"])
     today_rows.sort(key=order)
     decision_rows.sort(key=order)
-    return {"today": today_rows, "decision": decision_rows, "proposals": proposals, "needs_review": elsewhere,
+    later_rows.sort(key=lambda g: (LATER_STATES.index(g["attention_state"]), g["attention_date"] or g["review_date"] or "9999",
+                                   g["commitment_id"]))
+    return {"today": today_rows, "decision": decision_rows, "later": later_rows, "proposals": proposals, "needs_review": elsewhere,
             "network": grouped.get("", []), "total_open": sum(len(rows) for rows in grouped.values())}
