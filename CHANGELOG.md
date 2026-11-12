@@ -6,9 +6,9 @@ The format follows the spirit of [Keep a Changelog](https://keepachangelog.com/e
 
 The 1.x series is the first stage of ResearchOS: one researcher, local files, decisions at the terminal. Versions 1.0.1 to 1.0.3 revised the technical report and the documentation; as their entries say, the software behaviour was unchanged.
 
-## [Unreleased]
+## [1.2.1] - 2026-11-12
 
-Release candidate `v1.2.1-rc.1`. The rules for judgments and admission are unchanged. See the [V1.2.1 release notes](docs/releases/v1.2.1.md).
+Tagged `v1.2.1`. The rules for judgments and admission are unchanged. See the [V1.2.1 release notes](docs/releases/v1.2.1.md).
 
 ### Changed
 

@@ -108,7 +108,7 @@ The technical report ([English source](docs/technical-report.en.md) · [English 
 
 ## Status
 
-This is V1.2.1, release candidate `v1.2.1-rc.1` (see the [V1.2.1 release notes](docs/releases/v1.2.1.md) and the [changelog](CHANGELOG.md)); the last release is `v1.2.0`, 2026-11-12. The 1.x series is the first stage of ResearchOS: one researcher, local files, decisions at the terminal.
+This is V1.2.1, released as `v1.2.1` on 2026-11-12 (see the [V1.2.1 release notes](docs/releases/v1.2.1.md) and the [changelog](CHANGELOG.md)). The 1.x series is the first stage of ResearchOS: one researcher, local files, decisions at the terminal.
 
 ## How to cite
 

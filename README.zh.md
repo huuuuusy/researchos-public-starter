@@ -108,7 +108,7 @@ python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 
 ## 状态
 
-本仓库是 V1.2.1 的候选版 `v1.2.1-rc.1`（见 [V1.2.1 发布说明](docs/releases/v1.2.1.zh.md)与[更新记录](CHANGELOG.md)）；上一个正式版是 2026-11-12 的 `v1.2.0`。1.x 系列是 ResearchOS 的第一阶段：一位研究者、本机文件、终端上的决定。
+本仓库是 V1.2.1，已于 2026-11-12 以 `v1.2.1` 发布（见 [V1.2.1 发布说明](docs/releases/v1.2.1.zh.md)与[更新记录](CHANGELOG.md)）。1.x 系列是 ResearchOS 的第一阶段：一位研究者、本机文件、终端上的决定。
 
 ## 如何引用
 
