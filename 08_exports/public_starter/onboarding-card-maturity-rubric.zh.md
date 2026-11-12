@@ -23,6 +23,19 @@ exportable_to:
 
 下面的三级结构是首次教学模式，不是一套适用于所有卡片的运行时代码。资料页按卡片类型显示主轴：材料使用 `M1–M3`，项目使用 `I0–I3`，关系资料使用 `R0–R3`，组合使用 `G0–G2 / 研究主线`；项目 `P0–P3` 是优先级而不是成熟度。显示、增强和兼容规则见[卡片成熟度与增强](../../docs/reference/CARD_MATURITY_AND_ENHANCEMENT.zh.md)。
 
+## 卡片在哪里写等级
+
+三个等级只在这份量表里解释，其他说明只写字段名并链接到这里。卡片把等级写在它这一类所用的字段里：
+
+| 卡片类型 | 字段 | 一级 | 二级 | 三级 |
+| --- | --- | --- | --- | --- |
+| 论文、报告或其他来源 | `analysis_state` | `M1_registered` | `M2_refined_read` | `M3_cross_project_deepening` |
+| 人物或合作者 | `relationship_maturity` | `R1_registered` | `R2_evidence_linked` | `R3_cross_project` |
+| 计划或项目 | `project_maturity` | `I1_sandbox` | `I2_active_mount` | `I3_independent_project` |
+| 方向摘要 | `group_level` | `G0_atom` | `G1_basic_group` | `G2_direction_abstraction` |
+
+启发式卡和风格卡不分等级。启发式卡用 `confidence`（low、medium、high）和 `status`（provisional、stable）；风格卡只用 `status`（provisional、confirmed）。
+
 ## 一级：种子卡片
 
 一级卡片是第一次捕捉。

@@ -25,7 +25,7 @@ exportable_to:
 
 ```yaml
 card_type: talk
-maturity: 1
+analysis_state: M1_registered
 title: From Notes to Confirmed Research Memory
 status: candidate
 source_materials:
@@ -44,7 +44,7 @@ next_action: 验证报告日期、听众和公开来源。
 
 ```yaml
 card_type: talk
-maturity: 2
+analysis_state: M2_refined_read
 title: From Notes to Confirmed Research Memory
 status: sourced
 date: 2026-04-18
@@ -64,7 +64,7 @@ next_action: 询问这个报告是否可以作为工作流的第一份公开解�
 
 ```yaml
 card_type: talk
-maturity: 3
+analysis_state: M3_cross_project_deepening
 title: From Notes to Confirmed Research Memory
 status: operational
 public_source: https://example.org/talks/confirmed-research-memory

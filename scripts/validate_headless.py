@@ -33,6 +33,9 @@ EXPECTED_PUBLIC_ROUTES = {
     "proposal",
     "presentation",
     "figure_design",
+    "peer_review",
+    "meeting_follow_up",
+    "mentee_feedback",
 }
 
 

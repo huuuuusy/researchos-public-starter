@@ -548,6 +548,7 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {},
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -601,8 +602,8 @@
             "05_workflows/research_management/material-intake-workflow.md",
             "docs/reference/WHERE_TO_PUT_NEW_MATERIALS.md",
             "08_exports/public_starter/onboarding-intake-note-example.md",
-            "09_templates/paper-template.md",
-            "09_templates/project-template.md"
+            "09_templates/basic/paper.md",
+            "09_templates/basic/project.md"
           ],
           "file_limit": 5,
           "token_ceiling": 35000,
@@ -616,14 +617,15 @@
             "05_workflows/research_management/material-intake-workflow.md",
             "docs/reference/WHERE_TO_PUT_NEW_MATERIALS.md",
             "08_exports/public_starter/onboarding-intake-note-example.md",
-            "09_templates/paper-template.md",
-            "09_templates/project-template.md"
+            "09_templates/basic/paper.md",
+            "09_templates/basic/project.md"
           ],
           "file_limit": 8,
           "token_ceiling": 60000,
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {},
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -698,6 +700,7 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {},
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -770,6 +773,7 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {},
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -843,6 +847,11 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {
+        "quick": [
+          "00_identity/boundaries.md"
+        ]
+      },
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -895,8 +904,8 @@
           "read": [
             "05_workflows/research_management/relationship-opportunity-workflow.md",
             "docs/reference/AGENT_PROTOCOL.md",
-            "09_templates/person-template.md",
-            "09_templates/project-template.md"
+            "09_templates/basic/person.md",
+            "09_templates/basic/project.md"
           ],
           "file_limit": 5,
           "token_ceiling": 35000,
@@ -909,14 +918,15 @@
           "read": [
             "05_workflows/research_management/relationship-opportunity-workflow.md",
             "docs/reference/AGENT_PROTOCOL.md",
-            "09_templates/person-template.md",
-            "09_templates/project-template.md"
+            "09_templates/basic/person.md",
+            "09_templates/basic/project.md"
           ],
           "file_limit": 8,
           "token_ceiling": 60000,
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {},
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -991,6 +1001,7 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {},
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -1022,7 +1033,7 @@
         "Source receipt + core phenomenon + facts/inferences/unknowns + next step"
       ],
       "read_first": [
-        "docs/reference/AGENT_PROTOCOL.md"
+        "05_workflows/research_work/paper-reading.md"
       ],
       "read_tiers": [
         {
@@ -1030,7 +1041,7 @@
           "label": "Minimal read",
           "description": "Read one primary task file; use an exact target directly when supplied.",
           "read": [
-            "docs/reference/AGENT_PROTOCOL.md"
+            "05_workflows/research_work/paper-reading.md"
           ],
           "file_limit": 1,
           "token_ceiling": 10000,
@@ -1041,6 +1052,7 @@
           "label": "Balanced read",
           "description": "Add workflows or templates only for a named gap; first pass is capped at five files.",
           "read": [
+            "05_workflows/research_work/paper-reading.md",
             "docs/reference/AGENT_PROTOCOL.md",
             "05_workflows/research_management/material-analysis-lifecycle-standard.md"
           ],
@@ -1053,6 +1065,7 @@
           "label": "Full check",
           "description": "Add evidence or checklists only for a named verification question; first pass is capped at eight files.",
           "read": [
+            "05_workflows/research_work/paper-reading.md",
             "docs/reference/AGENT_PROTOCOL.md",
             "05_workflows/research_management/material-analysis-lifecycle-standard.md"
           ],
@@ -1061,6 +1074,7 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {},
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -1092,7 +1106,7 @@
         "Problem mechanism + competing baseline + falsifiable judgment + smallest experiment + stop rule"
       ],
       "read_first": [
-        "09_templates/standard-agent-prompts.en.md"
+        "05_workflows/research_work/topic-change.md"
       ],
       "read_tiers": [
         {
@@ -1100,7 +1114,7 @@
           "label": "Minimal read",
           "description": "Read one primary task file; use an exact target directly when supplied.",
           "read": [
-            "09_templates/standard-agent-prompts.en.md"
+            "05_workflows/research_work/topic-change.md"
           ],
           "file_limit": 1,
           "token_ceiling": 10000,
@@ -1111,6 +1125,7 @@
           "label": "Balanced read",
           "description": "Add workflows or templates only for a named gap; first pass is capped at five files.",
           "read": [
+            "05_workflows/research_work/topic-change.md",
             "09_templates/standard-agent-prompts.en.md",
             "docs/reference/AGENT_PROTOCOL.md"
           ],
@@ -1123,6 +1138,7 @@
           "label": "Full check",
           "description": "Add evidence or checklists only for a named verification question; first pass is capped at eight files.",
           "read": [
+            "05_workflows/research_work/topic-change.md",
             "09_templates/standard-agent-prompts.en.md",
             "docs/reference/AGENT_PROTOCOL.md"
           ],
@@ -1131,6 +1147,11 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {
+        "standard": [
+          "03_cognition/heuristics/"
+        ]
+      },
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -1162,7 +1183,7 @@
         "Project candidate + responsibility boundary + evidence gaps + first verifiable milestone"
       ],
       "read_first": [
-        "09_templates/project-template.md"
+        "09_templates/basic/project.md"
       ],
       "read_tiers": [
         {
@@ -1170,7 +1191,7 @@
           "label": "Minimal read",
           "description": "Read one primary task file; use an exact target directly when supplied.",
           "read": [
-            "09_templates/project-template.md"
+            "09_templates/basic/project.md"
           ],
           "file_limit": 1,
           "token_ceiling": 10000,
@@ -1181,7 +1202,7 @@
           "label": "Balanced read",
           "description": "Add workflows or templates only for a named gap; first pass is capped at five files.",
           "read": [
-            "09_templates/project-template.md",
+            "09_templates/basic/project.md",
             "docs/reference/AGENT_PROTOCOL.md"
           ],
           "file_limit": 5,
@@ -1193,7 +1214,7 @@
           "label": "Full check",
           "description": "Add evidence or checklists only for a named verification question; first pass is capped at eight files.",
           "read": [
-            "09_templates/project-template.md",
+            "09_templates/basic/project.md",
             "docs/reference/AGENT_PROTOCOL.md"
           ],
           "file_limit": 8,
@@ -1201,6 +1222,7 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {},
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -1271,6 +1293,11 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {
+        "quick": [
+          "00_identity/boundaries.md"
+        ]
+      },
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -1339,6 +1366,7 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {},
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -1409,6 +1437,7 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {},
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -1440,7 +1469,7 @@
         "Cause not chronology + counterexample + candidate rule + executable gate + absorption owner"
       ],
       "read_first": [
-        "docs/system-reference.en.md"
+        "05_workflows/research_work/retrospective.md"
       ],
       "read_tiers": [
         {
@@ -1448,7 +1477,7 @@
           "label": "Minimal read",
           "description": "Read one primary task file; use an exact target directly when supplied.",
           "read": [
-            "docs/system-reference.en.md"
+            "05_workflows/research_work/retrospective.md"
           ],
           "file_limit": 1,
           "token_ceiling": 10000,
@@ -1459,6 +1488,7 @@
           "label": "Balanced read",
           "description": "Add workflows or templates only for a named gap; first pass is capped at five files.",
           "read": [
+            "05_workflows/research_work/retrospective.md",
             "docs/system-reference.en.md"
           ],
           "file_limit": 5,
@@ -1470,6 +1500,7 @@
           "label": "Full check",
           "description": "Add evidence or checklists only for a named verification question; first pass is capped at eight files.",
           "read": [
+            "05_workflows/research_work/retrospective.md",
             "docs/system-reference.en.md"
           ],
           "file_limit": 8,
@@ -1477,6 +1508,11 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {
+        "standard": [
+          "03_cognition/heuristics/"
+        ]
+      },
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -1547,6 +1583,7 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {},
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -1578,7 +1615,7 @@
         "Revision judgment + candidate text + claim-evidence/citation check + author confirmation"
       ],
       "read_first": [
-        "09_templates/standard-agent-prompts.en.md"
+        "05_workflows/research_work/paper-writing.md"
       ],
       "read_tiers": [
         {
@@ -1586,7 +1623,7 @@
           "label": "Minimal read",
           "description": "Read one primary task file; use an exact target directly when supplied.",
           "read": [
-            "09_templates/standard-agent-prompts.en.md"
+            "05_workflows/research_work/paper-writing.md"
           ],
           "file_limit": 1,
           "token_ceiling": 10000,
@@ -1597,6 +1634,7 @@
           "label": "Balanced read",
           "description": "Add workflows or templates only for a named gap; first pass is capped at five files.",
           "read": [
+            "05_workflows/research_work/paper-writing.md",
             "09_templates/standard-agent-prompts.en.md",
             "docs/reference/AGENT_PROTOCOL.md"
           ],
@@ -1609,6 +1647,7 @@
           "label": "Full check",
           "description": "Add evidence or checklists only for a named verification question; first pass is capped at eight files.",
           "read": [
+            "05_workflows/research_work/paper-writing.md",
             "09_templates/standard-agent-prompts.en.md",
             "docs/reference/AGENT_PROTOCOL.md"
           ],
@@ -1617,6 +1656,13 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {
+        "style": "writing",
+        "evidence": [
+          "01_knowledge/papers/outputs-index.md",
+          "01_knowledge/papers/author-roles.md"
+        ]
+      },
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -1648,7 +1694,7 @@
         "Fit judgment + contribution + feasible path + evaluation + unknowns + candidate narrative"
       ],
       "read_first": [
-        "09_templates/standard-agent-prompts.en.md"
+        "05_workflows/research_work/grant-proposal.md"
       ],
       "read_tiers": [
         {
@@ -1656,7 +1702,7 @@
           "label": "Minimal read",
           "description": "Read one primary task file; use an exact target directly when supplied.",
           "read": [
-            "09_templates/standard-agent-prompts.en.md"
+            "05_workflows/research_work/grant-proposal.md"
           ],
           "file_limit": 1,
           "token_ceiling": 10000,
@@ -1667,6 +1713,7 @@
           "label": "Balanced read",
           "description": "Add workflows or templates only for a named gap; first pass is capped at five files.",
           "read": [
+            "05_workflows/research_work/grant-proposal.md",
             "09_templates/standard-agent-prompts.en.md",
             "docs/reference/AGENT_PROTOCOL.md"
           ],
@@ -1679,6 +1726,7 @@
           "label": "Full check",
           "description": "Add evidence or checklists only for a named verification question; first pass is capped at eight files.",
           "read": [
+            "05_workflows/research_work/grant-proposal.md",
             "09_templates/standard-agent-prompts.en.md",
             "docs/reference/AGENT_PROTOCOL.md"
           ],
@@ -1687,6 +1735,16 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {
+        "style": "proposal",
+        "standard": [
+          "00_identity/boundaries.md"
+        ],
+        "evidence": [
+          "01_knowledge/papers/outputs-index.md",
+          "01_knowledge/papers/author-roles.md"
+        ]
+      },
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -1718,7 +1776,7 @@
         "Narrative arc + slide roles + claim-evidence map + visual QA plan"
       ],
       "read_first": [
-        "09_templates/standard-agent-prompts.en.md"
+        "05_workflows/research_work/talks-and-figures.md"
       ],
       "read_tiers": [
         {
@@ -1726,7 +1784,7 @@
           "label": "Minimal read",
           "description": "Read one primary task file; use an exact target directly when supplied.",
           "read": [
-            "09_templates/standard-agent-prompts.en.md"
+            "05_workflows/research_work/talks-and-figures.md"
           ],
           "file_limit": 1,
           "token_ceiling": 10000,
@@ -1737,6 +1795,7 @@
           "label": "Balanced read",
           "description": "Add workflows or templates only for a named gap; first pass is capped at five files.",
           "read": [
+            "05_workflows/research_work/talks-and-figures.md",
             "09_templates/standard-agent-prompts.en.md",
             "docs/reference/AGENT_PROTOCOL.md"
           ],
@@ -1749,6 +1808,7 @@
           "label": "Full check",
           "description": "Add evidence or checklists only for a named verification question; first pass is capped at eight files.",
           "read": [
+            "05_workflows/research_work/talks-and-figures.md",
             "09_templates/standard-agent-prompts.en.md",
             "docs/reference/AGENT_PROTOCOL.md"
           ],
@@ -1757,6 +1817,12 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {
+        "style": "figures-talks",
+        "standard": [
+          "00_identity/boundaries.md"
+        ]
+      },
       "workspace": "agent",
       "result_modes": [
         "answer",
@@ -1788,7 +1854,7 @@
         "Figure grammar + element mapping + caption candidate + misreading check"
       ],
       "read_first": [
-        "09_templates/standard-agent-prompts.en.md"
+        "05_workflows/research_work/talks-and-figures.md"
       ],
       "read_tiers": [
         {
@@ -1796,7 +1862,7 @@
           "label": "Minimal read",
           "description": "Read one primary task file; use an exact target directly when supplied.",
           "read": [
-            "09_templates/standard-agent-prompts.en.md"
+            "05_workflows/research_work/talks-and-figures.md"
           ],
           "file_limit": 1,
           "token_ceiling": 10000,
@@ -1807,6 +1873,7 @@
           "label": "Balanced read",
           "description": "Add workflows or templates only for a named gap; first pass is capped at five files.",
           "read": [
+            "05_workflows/research_work/talks-and-figures.md",
             "09_templates/standard-agent-prompts.en.md",
             "docs/reference/AGENT_PROTOCOL.md"
           ],
@@ -1819,6 +1886,7 @@
           "label": "Full check",
           "description": "Add evidence or checklists only for a named verification question; first pass is capped at eight files.",
           "read": [
+            "05_workflows/research_work/talks-and-figures.md",
             "09_templates/standard-agent-prompts.en.md",
             "docs/reference/AGENT_PROTOCOL.md"
           ],
@@ -1827,6 +1895,233 @@
           "requires_gap_reason": true
         }
       ],
+      "vault_reads": {
+        "style": "figures-talks"
+      },
+      "workspace": "agent",
+      "result_modes": [
+        "answer",
+        "artifact",
+        "writeback"
+      ],
+      "default_result_mode": "answer",
+      "sensitivity_default": "local_only",
+      "authority": {
+        "source_owner": "public_safe_markdown_or_explicit_user_source",
+        "candidate_owner": "agent_working_result",
+        "projection_owner": "generated_dashboard_or_export",
+        "durable_owner": "user_confirmed_personal_vault",
+        "requires_human_confirmation": true,
+        "writeback_route": "review",
+        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+      },
+      "primary_surface": "conversation",
+      "dashboard_role": "projection_and_handoff"
+    },
+    {
+      "id": "peer_review",
+      "name": "Peer review",
+      "budget": "quick/standard",
+      "goal": "Write fair, specific comments that the authors of a manuscript you review can act on.",
+      "user_input_hint": "Give the venue's review criteria, your overall view and the two or three points that matter most; keep the manuscript itself where it is, never in the vault.",
+      "output": "Overall assessment + major issues with grounds + minor issues + note to the editor",
+      "next_steps": [
+        "Overall assessment + major issues with grounds + minor issues + note to the editor"
+      ],
+      "read_first": [
+        "05_workflows/research_work/peer-review.md"
+      ],
+      "read_tiers": [
+        {
+          "id": "quick",
+          "label": "Minimal read",
+          "description": "Read one primary task file; use an exact target directly when supplied.",
+          "read": [
+            "05_workflows/research_work/peer-review.md"
+          ],
+          "file_limit": 1,
+          "token_ceiling": 10000,
+          "requires_gap_reason": false
+        },
+        {
+          "id": "standard",
+          "label": "Balanced read",
+          "description": "Add workflows or templates only for a named gap; first pass is capped at five files.",
+          "read": [
+            "05_workflows/research_work/peer-review.md",
+            "09_templates/standard-agent-prompts.en.md",
+            "09_templates/basic/review.md"
+          ],
+          "file_limit": 5,
+          "token_ceiling": 35000,
+          "requires_gap_reason": true
+        },
+        {
+          "id": "evidence",
+          "label": "Full check",
+          "description": "Add evidence or checklists only for a named verification question; first pass is capped at eight files.",
+          "read": [
+            "05_workflows/research_work/peer-review.md",
+            "09_templates/standard-agent-prompts.en.md",
+            "09_templates/basic/review.md"
+          ],
+          "file_limit": 8,
+          "token_ceiling": 60000,
+          "requires_gap_reason": true
+        }
+      ],
+      "vault_reads": {
+        "style": "review",
+        "standard": [
+          "00_identity/boundaries.md"
+        ]
+      },
+      "workspace": "agent",
+      "result_modes": [
+        "answer",
+        "artifact",
+        "writeback"
+      ],
+      "default_result_mode": "answer",
+      "sensitivity_default": "local_only",
+      "authority": {
+        "source_owner": "public_safe_markdown_or_explicit_user_source",
+        "candidate_owner": "agent_working_result",
+        "projection_owner": "generated_dashboard_or_export",
+        "durable_owner": "user_confirmed_personal_vault",
+        "requires_human_confirmation": true,
+        "writeback_route": "review",
+        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+      },
+      "primary_surface": "conversation",
+      "dashboard_role": "projection_and_handoff"
+    },
+    {
+      "id": "meeting_follow_up",
+      "name": "Meeting follow-up",
+      "budget": "quick/standard",
+      "goal": "Turn one meeting into decisions, open questions, action items and the facts to write back to cards.",
+      "user_input_hint": "Paste the notes or key points and name the project; record other people's words only where needed.",
+      "output": "Decisions + open questions + action items (who, what, when) + card writeback candidates",
+      "next_steps": [
+        "Decisions + open questions + action items (who, what, when) + card writeback candidates"
+      ],
+      "read_first": [
+        "05_workflows/research_work/meeting-follow-up.md"
+      ],
+      "read_tiers": [
+        {
+          "id": "quick",
+          "label": "Minimal read",
+          "description": "Read one primary task file; use an exact target directly when supplied.",
+          "read": [
+            "05_workflows/research_work/meeting-follow-up.md"
+          ],
+          "file_limit": 1,
+          "token_ceiling": 10000,
+          "requires_gap_reason": false
+        },
+        {
+          "id": "standard",
+          "label": "Balanced read",
+          "description": "Add workflows or templates only for a named gap; first pass is capped at five files.",
+          "read": [
+            "05_workflows/research_work/meeting-follow-up.md",
+            "09_templates/basic/meeting.md",
+            "09_templates/basic/decision.md"
+          ],
+          "file_limit": 5,
+          "token_ceiling": 35000,
+          "requires_gap_reason": true
+        },
+        {
+          "id": "evidence",
+          "label": "Full check",
+          "description": "Add evidence or checklists only for a named verification question; first pass is capped at eight files.",
+          "read": [
+            "05_workflows/research_work/meeting-follow-up.md",
+            "09_templates/basic/meeting.md",
+            "09_templates/basic/decision.md"
+          ],
+          "file_limit": 8,
+          "token_ceiling": 60000,
+          "requires_gap_reason": true
+        }
+      ],
+      "vault_reads": {},
+      "workspace": "agent",
+      "result_modes": [
+        "answer",
+        "artifact",
+        "writeback"
+      ],
+      "default_result_mode": "answer",
+      "sensitivity_default": "local_only",
+      "authority": {
+        "source_owner": "public_safe_markdown_or_explicit_user_source",
+        "candidate_owner": "agent_working_result",
+        "projection_owner": "generated_dashboard_or_export",
+        "durable_owner": "user_confirmed_personal_vault",
+        "requires_human_confirmation": true,
+        "writeback_route": "review",
+        "summary": "Use Review before durable writeback. Conversation produces an answer, artifact, or writeback candidate first; the public Dashboard/export is a projection, never authority, and durable writeback enters the user's vault only after confirmation."
+      },
+      "primary_surface": "conversation",
+      "dashboard_role": "projection_and_handoff"
+    },
+    {
+      "id": "mentee_feedback",
+      "name": "Mentee feedback",
+      "budget": "quick/standard",
+      "goal": "From what a student or mentee has shown, name the one main issue and a checkable next step.",
+      "user_input_hint": "Provide their material or progress, your observations and the purpose of this feedback.",
+      "output": "What works + one main issue + next step + how it will be checked",
+      "next_steps": [
+        "What works + one main issue + next step + how it will be checked"
+      ],
+      "read_first": [
+        "05_workflows/research_work/mentee-feedback.md"
+      ],
+      "read_tiers": [
+        {
+          "id": "quick",
+          "label": "Minimal read",
+          "description": "Read one primary task file; use an exact target directly when supplied.",
+          "read": [
+            "05_workflows/research_work/mentee-feedback.md"
+          ],
+          "file_limit": 1,
+          "token_ceiling": 10000,
+          "requires_gap_reason": false
+        },
+        {
+          "id": "standard",
+          "label": "Balanced read",
+          "description": "Add workflows or templates only for a named gap; first pass is capped at five files.",
+          "read": [
+            "05_workflows/research_work/mentee-feedback.md",
+            "09_templates/basic/feedback.md"
+          ],
+          "file_limit": 5,
+          "token_ceiling": 35000,
+          "requires_gap_reason": true
+        },
+        {
+          "id": "evidence",
+          "label": "Full check",
+          "description": "Add evidence or checklists only for a named verification question; first pass is capped at eight files.",
+          "read": [
+            "05_workflows/research_work/mentee-feedback.md",
+            "09_templates/basic/feedback.md"
+          ],
+          "file_limit": 8,
+          "token_ceiling": 60000,
+          "requires_gap_reason": true
+        }
+      ],
+      "vault_reads": {
+        "style": "mentoring"
+      },
       "workspace": "agent",
       "result_modes": [
         "answer",

@@ -80,7 +80,7 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
 
    后面跟着下面这三步。如果提示 `research-portfolio.md 已经存在；--init 只用于还没有任务总表的文件夹`，说明你以前建过库：直接改那一份，或者把它挪开再重建。`personal_vault/` 已经存在但还没有任务总表也没关系，比如你先打开过 personal-vault Dashboard。
 
-2. 打开 `personal_vault/06_active_context/research-portfolio.md`。保留开头的 frontmatter 和标题，把两项虚构承诺，即 `### Occlusion Transfer Paper` 和 `### Workshop Talk` 连同各自的字段列表，换成你自己的一项。下面是最小的完整承诺，把值改成你自己的，`last_verified` 写今天的日期：
+2. 打开 `personal_vault/06_active_context/research-portfolio.md`。保留开头的 frontmatter 和标题，把两项虚构承诺，即 `### 遮挡迁移论文（虚构）` 和 `### 研讨会报告（虚构）` 连同各自的字段列表，换成你自己的一项。下面是最小的完整承诺，把值改成你自己的，`last_verified` 写今天的日期：
 
    ```markdown
    ### 论文第二章
@@ -104,14 +104,16 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
 3. 删掉两张虚构卡片 `personal_vault/01_knowledge/projects/occlusion-tracking.md` 和 `personal_vault/01_knowledge/papers/example-benchmark.md`，在你写的 `source_path` 上从模板建一张自己的卡片：
 
    ```bash
-   cp 09_templates/project-template.md personal_vault/01_knowledge/projects/thesis-ch2.md
+   cp 09_templates/basic/project.zh.md personal_vault/01_knowledge/projects/thesis-ch2.md
    ```
 
-   填好 `project_name`，把 `# Project Name` 标题换成同一个名字；`ros` 用这个标题显示卡片。再写明来源边界、证据状态和一个缺失的事实。论文卡片改用 `09_templates/paper-template.md`。想先从一份简短的个人简介开始，可以请助手先起草一份[材料接入笔记示例](onboarding-intake-note-example.zh.md)那样的接入笔记。
+   填好 `title`，把 `# 项目名` 标题换成同一个名字；`ros` 用这个标题显示卡片。`Agent Summary` 要能单独读懂；已有结果写明出处，写一件待核的事，在「证据边界」里写明原件在哪里；最后删掉「填写说明」。论文卡片改用 `09_templates/basic/paper.zh.md`。每类卡填好的样子见 `examples/starter-cards/zh-CN/`。想先从一份简短的个人简介开始，可以请助手先起草一份[材料接入笔记示例](onboarding-intake-note-example.zh.md)那样的接入笔记。
 
-   在项目之外，再建几张卡片，库里就有了你自己的背景：用 `09_templates/person-template.md` 在 `personal_vault/00_identity/profile.md` 建一张个人档案卡，`relationship_type: self`（姓名、单位、研究方向、代表作，取自你的主页、Google Scholar、ORCID 或 DBLP 页面，或简历里的科研部分）；用 `09_templates/paper-template.md` 在 `personal_vault/01_knowledge/papers/` 下建三到五张论文卡；这些论文里出现两次及以上的合作者，各在库的人物文件夹中的 `collaborators/` 下建一张卡，`relationship_type: candidate`，只写一起发表过的论文。项目卡片的 `related_papers` 指向它所依据的论文。助手按 `AGENTS.md` 的「First Run」一节走的就是这条路；这些卡片的 `sensitivity` 默认设为 private，除非你另有决定。
+   在项目之外，再建几张卡片，库里就有了你自己的背景：用 `09_templates/basic/person.zh.md` 在 `personal_vault/00_identity/profile.md` 建一张个人档案卡，`relationship_type: self`（姓名、单位、研究方向、代表作，取自你的主页、Google Scholar、ORCID 或 DBLP 页面，或简历里的科研部分）；用 `09_templates/basic/paper.zh.md` 在 `personal_vault/01_knowledge/papers/` 下建三到五张论文卡；这些论文里出现两次及以上的合作者，各在库的人物文件夹中的 `collaborators/` 下建一张卡，`relationship_type: candidate`，只写一起发表过的论文。项目卡片的 `related_papers` 指向它所依据的论文。
 
-4. 检查这个库：
+4. 建以后每次会话助手最先读的两张入口页：用 `09_templates/basic/research-identity.zh.md` 在 `personal_vault/00_identity/research-identity.md` 写研究身份摘要，用 `09_templates/basic/capsule.zh.md` 在 `personal_vault/01_knowledge/capsules/` 下写一份方向摘要，说明做什么任务读哪张卡。助手按 `AGENTS.md`「First Run」一节第 2 到 6 步走的就是这条路。论文、项目和摘要卡把 `sensitivity` 设为 `internal`，个人档案和合作者卡设为 `sensitive`：`ros context` 会把 internal 的卡交给助手；sensitive 的卡助手取不到，要你在自己的终端运行并确认，内容印在你的终端里，你再把任务需要的部分复制给助手；private 的卡从不打包。
+
+5. 检查这个库：
 
    ```bash
    python3 scripts/ros.py --root personal_vault today
@@ -120,7 +122,7 @@ python3 scripts/ros.py --root examples/scheduler-demo --lang zh-CN today
    应该在「待判断」下看到你的承诺，而且只有你的：
 
    ```text
-   待判断（1 项：未安排、需定下一步或复核到期）
+   待判断（1 项承诺：未安排、需定下一步或复核到期）
      ■ 论文第二章  ［未安排］
        （没有要复核的事项；按下一步推进）
    ```

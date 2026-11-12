@@ -6,6 +6,31 @@ The format follows the spirit of [Keep a Changelog](https://keepachangelog.com/e
 
 The 1.x series is the first stage of ResearchOS: one researcher, local files, decisions at the terminal. Versions 1.0.1 to 1.0.3 revised the technical report and the documentation; as their entries say, the software behaviour was unchanged.
 
+## [Unreleased]
+
+Release candidate `v1.2.0-rc.1`. The rules for judgments and admission are unchanged; `ros` output changes are listed below. See the [V1.2 release notes](docs/releases/v1.2.0.md).
+
+### Added
+
+- `plan_context.py <task> --vault personal_vault --mode quick|standard|evidence` reads the user's own cards level by level: the working-style card or research identity page at quick; the identity page, the task's workflow, the direction summary and its cards at standard; only originals named in evidence boundaries at evidence. Missing cards are named with their skeleton; each level says what is not read by default and when to go up.
+- Twelve fictional example cards in `examples/starter-cards/en/` and `zh-CN/` telling one story, and blank skeletons in `09_templates/basic/` for them plus review comments, grant, academic message, mentee feedback and mental model.
+- Working-style cards under `03_cognition/style/`, one per kind of task, whose points (rule, why, how to apply, source) grow from the user's corrections.
+- A boundary card (`00_identity/boundaries.md`) read first by outward tasks, and two evidence-level indexes: outputs and use boundary, author roles.
+- Nine research workflows in `05_workflows/research_work/`, including a retrospective, and three routes: `peer_review`, `meeting_follow_up`, `mentee_feedback`.
+- A read-only vault check in the dry run of `build_public_starter_data.py --personal-vault`.
+
+### Changed
+
+- The First Run writes paper, project and summary cards as `internal` and profile and collaborator cards as `sensitive`; it used to write every card as `private`, which `ros context` never packs.
+- The First Run adds a step for the research identity page and one direction summary; `AGENTS.md` has a section for every session after the First Run.
+- `ros_demo.py --init` adds `02_decisions` and `03_cognition` to the vault's `graph_roots`; a Chinese vault's fictional commitments are in Chinese.
+- `query_research_agenda.py` reads `personal_vault/` by default when it exists and prints Chinese for a Chinese vault.
+- The full card templates are the basic skeletons with later sections; card maturity is explained once, in the rubric, and the level examples use the cards' own fields.
+- The manual says which cards the Dashboard shows in personal-vault mode and adds a section for browser-only readers.
+- `ros context` asks in the vault's language before handing over a sensitive card and says why each excluded card was left out; the hint after a judgment block is removed points to your own backup, not Git; the counts in `today` and `close` are in plain words; after a judgment is replaced, `close` explains the remaining field confirmation and prints `ros decide <id> confirm` with the real id, and no longer lists a confirmed candidate as undecided; the recheck option formerly labelled "narrow" reads "keep this item open until the next version (deferred)".
+- Dashboard: in personal-vault mode the fictional demo's card-creation panel is not drawn; the material pipeline plugin's default card sensitivity matches the First Run.
+- The README gives about thirty minutes to an hour for the First Run.
+
 ## [1.1.0] - 2026-11-11
 
 Tagged `v1.1.0`. This release adds no features. See the [V1.1 release notes](docs/releases/v1.1.0.md).

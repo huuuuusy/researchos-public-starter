@@ -70,7 +70,8 @@ NARRATION = {
             "  1. In {folder}/06_active_context/research-portfolio.md, replace the two fictional commitments "
             "with one of your own (fields: docs/user-manual.en.md §5).",
             "  2. Replace the two fictional cards under {folder}/01_knowledge/ with one card of your own at the "
-            "path its source_path names, starting from a template in 09_templates/ such as project-template.md.",
+            "path its source_path names, starting from 09_templates/basic/project.md; examples/starter-cards/en/ "
+            "shows every kind of card filled in.",
             "  3. Run: python3 scripts/ros.py --root {folder} today",
         ],
     },
@@ -92,12 +93,23 @@ NARRATION = {
         ],
         "init.exists": "ros_demo：{portfolio} 已经存在；--init 只用于还没有任务总表的文件夹",
         "init.title": "我的研究承诺",
+        # The fictional commitments read in the vault's language until the user replaces them.
+        "init.replace": [
+            ("### Occlusion Transfer Paper", "### 遮挡迁移论文（虚构）"),
+            ("- accountable_owner: You", "- accountable_owner: 你"),
+            ("- role_summary: First author; owns the comparison and the paper's claim", "- role_summary: 第一作者，负责方法比较和论文主张"),
+            ("- question: Does method A still beat method B under heavy occlusion?", "- question: 方法 A 在重度遮挡下还好于方法 B 吗？"),
+            ("- next_step: Run the occlusion comparison on the example benchmark", "- next_step: 在示例基准上跑遮挡条件下的比较"),
+            ("### Workshop Talk", "### 研讨会报告（虚构）"),
+            ("- role_summary: Speaker; owns the talk outline", "- role_summary: 报告人，负责报告提纲"),
+            ("- next_step: Draft the outline after the comparison", "- next_step: 比较做完后写报告提纲"),
+        ],
         "init.done": [
             "已从虚构演示图建好 {folder}/，演示的 ros 记录、示例回答和判断没有带过来。接下来：",
             "  1. 在 {folder}/06_active_context/research-portfolio.md 里，把两项虚构承诺换成你自己的一项"
             "（字段见 docs/user-manual.zh.md 第 5 节）。",
             "  2. 把 {folder}/01_knowledge/ 下的两张虚构卡片换成你自己的一张，放在 source_path 指向的位置，"
-            "可以从 09_templates/ 里的模板（如 project-template.md）开始。",
+            "可以从 09_templates/basic/project.zh.md 开始；每类卡填好的样子见 examples/starter-cards/zh-CN/。",
             "  3. 运行：python3 scripts/ros.py --root {folder} today",
         ],
     },
@@ -141,11 +153,14 @@ def init(folder: str, say: dict, lang: str = "en") -> int:
     text = re.sub(r"^- judgments:.*\n", "", text, flags=re.MULTILINE)
     text = re.sub(r"\n> \[!judgment\][^\n]*\n(?:>[^\n]*\n)*", "", text)
     text = text.replace("Demo Commitments (fictional)", say["init.title"])
+    for english, translated in say.get("init.replace", []):
+        text = text.replace(english, translated)
     config = target / "config" / "ros.json"
     settings = json.loads(config.read_text(encoding="utf-8"))
     settings["language"] = lang
-    # The first run adds a profile card and collaborator cards, which sit outside the demo's two roots.
-    settings["graph_roots"] = ["00_identity", "01_knowledge", "04_people", "06_active_context"]
+    # The first run adds profile, collaborator, decision and heuristic cards, outside the demo's two roots.
+    settings["graph_roots"] = ["00_identity", "01_knowledge", "02_decisions", "03_cognition", "04_people",
+                               "06_active_context"]
     config.write_text(json.dumps(settings, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     portfolio.write_text(text, encoding="utf-8")
     shown = target.as_posix().rstrip("/")

@@ -25,7 +25,7 @@ exportable_to:
 
 ```yaml
 card_type: paper
-maturity: 1
+analysis_state: M1_registered
 title: Calibrated Memory Workflows for Human-AI Research Notes
 status: candidate
 source_materials:
@@ -52,7 +52,7 @@ next_action: 验证公开元数据并阅读摘要。
 
 ```yaml
 card_type: paper
-maturity: 2
+analysis_state: M2_refined_read
 title: Calibrated Memory Workflows for Human-AI Research Notes
 status: sourced
 public_source: https://example.org/papers/calibrated-memory-workflows
@@ -69,10 +69,10 @@ contribution_candidates:
 collaborator_candidates:
   - name: 合作者 A
     evidence: 这篇虚构论文的共同作者
-    maturity: 1
+    relationship_maturity: R1_registered
   - name: 合作者 B
     evidence: 这篇虚构论文的共同作者
-    maturity: 1
+    relationship_maturity: R1_registered
 evidence_boundary: 只基于元数据和摘要；尚未做全文主张审计。
 next_action: 询问用户哪些主张可以安全复用到个人卡片和报告卡片。
 ```
@@ -81,7 +81,7 @@ next_action: 询问用户哪些主张可以安全复用到个人卡片和报告�
 
 ```yaml
 card_type: paper
-maturity: 3
+analysis_state: M3_cross_project_deepening
 title: Calibrated Memory Workflows for Human-AI Research Notes
 status: operational
 public_source: https://example.org/papers/calibrated-memory-workflows

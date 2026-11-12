@@ -1,65 +1,74 @@
 ---
 type: person
-name: ""
-role: ""
-affiliation: ""
+title: Name
+name: Name
+role: Their position or role
+affiliation: Institution
 relationship_type: candidate
-status: active
 related_projects: []
 related_papers: []
-tags: []
-sensitivity: private
-template_default_sensitivity: sensitive
-template_default_public_boundary: local_only
-created:
-updated:
+relationship_maturity: R1
+sensitivity: sensitive
+public_boundary: local_only
+updated: YYYY-MM-DD
 ---
 
-# Person Name
+<!-- How to fill in (delete when done)
+Goes in personal_vault/04_people/collaborators/. For your own profile use personal_vault/00_identity/profile.md with relationship_type: self. This is the same card as basic/person.md; the sections under "Later sections" are optional and are added once the card is used across projects.
+relationship_type: collaborator / candidate / public_role_only
+relationship_maturity: R0 to check / R1 registered / R2 collaboration record usable / R3 cross-project context
+sensitivity: use sensitive for a real person, so ros context asks you before packing it; private is never packed
+public_boundary: keep local_only until you confirm which facts are public-safe
+-->
+
+# Name
 
 ## Agent Summary
 
-This file records a person or collaborator card. Core points: what is known, what evidence supports it, which relationship claims are only candidates, and what must stay local-only.
+One or two sentences that stand on their own: who this is and where things stand; when to read this card and what not to use it for.
 
-## When to Read
+## Background (fact)
 
-- Use this file when a task needs public-safe person context, collaborator candidates, or confirmation questions.
+- Public facts with a source after each one.
 
-## Do Not Use For
+## Relationship with me (fact)
 
-- Do not infer private closeness, advising, student status, lab membership, contribution hierarchy, or future commitments without explicit evidence.
+- Only what is evidenced: what you did together and who did what. Anything inferred goes under "To verify".
 
-## Public / Local Boundary
+## Interactions
 
-- Template note: this template file is public. A filled card about a real person should normally start as `sensitive` and `local_only` until the user confirms which facts are public-safe.
+- Date: what happened, linked to the meeting card.
+
+## To verify
+
+- Facts not yet confirmed, questions not yet asked.
+
+## Evidence boundary
+
+- This card summarises:
+- Not checked:
+- Check before formal use (not read by default): where the originals, notes or logs are.
+
+## Later sections (add when the card is used across projects)
+
+### Do not infer
+
+- Without explicit evidence, do not infer closeness, advising or student status, group membership, contribution order or future commitments.
+
+### Public / local boundary
+
 - Public-safe facts:
 - Local-only facts:
 - Not exportable:
 
-## Evidence Used
+### Suitable tasks
 
--
+- Tasks this card can support (e.g. writing to them about a shared project), and tasks it should not be used for.
 
-## Relationship Type
+### Confirmation questions
 
-- confirmed | candidate | public_role_only | excluded_from_export
+- Questions to ask the person or yourself before relying on a fact.
 
-## Collaboration or Context Summary
+### Related files
 
-## Strengths / Useful Context
-
-## Risks / Missing Evidence
-
-## Suitable Tasks
-
-## Less Suitable Tasks
-
-## Confirmation Questions
-
-## Evidence Boundary
-
-- This file summarizes:
-- This file does not verify:
-- For formal or public output, check:
-
-## Related Files
+- Other cards that mention this person.

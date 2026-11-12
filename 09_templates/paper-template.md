@@ -1,66 +1,75 @@
 ---
 type: paper
-title: ""
-authors: []
-venue: ""
-year:
-status: draft
-stage: unknown
-public_boundary: unknown_boundary
-related_projects: []
+title: Paper title
+authors: Authors
+venue: Venue and year
+version: The version you read (e.g. arXiv v2, published version, protocol version 1)
 related_people: []
-tags: []
+related_projects: []
+source: Where the PDF is (it stays there)
+analysis_state: M1_registered
 sensitivity: internal
-created:
-updated:
+updated: YYYY-MM-DD
+public_boundary: unknown_boundary
 ---
 
-# Paper Title
+<!-- How to fill in (delete when done)
+Goes in personal_vault/01_knowledge/papers/. This is the same card as basic/paper.md; the sections under "Later sections" are optional and are added once the card is used across projects.
+When the paper is corrected or revised, update its version on this card first; the judgments that rest on it then come back for review.
+analysis_state: M1 registered / M2 close-read usable / M3 cross-project deepening
+public_boundary: public_safe / preprint_public / submitted_local_only / unpublished_local_only / confidential_not_exportable / unknown_boundary
+-->
+
+# Paper title
 
 ## Agent Summary
 
-This file records a paper card. Core points: what the paper is, what it contributes, what evidence supports the card, when to read it, and what should not be inferred from it.
+One or two sentences that stand on their own: what this is and where it stands; when to read this card and what not to use it for.
 
-## When to Read
+## Basic information (fact)
 
-- Use this file when a task needs the paper's contribution, status, evidence boundary, or relation to other cards.
+- Authors, venue, version, where the original is.
 
-## Do Not Use For
+## What the paper says (fact)
 
-- Do not use this file as a substitute for the original paper when formal claims require source checking.
-- Do not infer private relationships, contribution level, or future commitments from authorship alone.
+- The paper's own claims and the limits it admits, each with its section.
 
-## Basic Information
+## My view
 
-- Title:
-- Authors:
-- Year:
-- Venue/status:
-- Public link or local source:
-- Boundary: public_safe | preprint_public | submitted_local_only | unpublished_local_only | confidential_not_exportable | unknown_boundary
+- What it is suited to answer, what it is not, and the limits you see.
 
-## Research Question
+## Relation to my project
 
-## Core Contribution
+- Which project and which result it is used for.
 
-## Method / Framework
+## To verify
 
-## Key Findings
+- Parts not yet read or checked.
 
-## Why This Paper Matters
+## Evidence boundary
 
-## Relationship to the User's Research
+- This card summarises:
+- Not checked:
+- Check before formal use (not read by default): where the originals, notes or logs are.
 
-## Related People and Candidate Relations
+## Later sections (add when the card is used across projects)
 
-## What This Paper Does Not Prove
+### What this paper does not prove
 
-## Evidence Boundary
+- Claims a reader might draw from it that its evidence does not support. Do not infer private relationships, contribution level or future plans from authorship alone.
 
-- This file summarizes:
-- This file does not verify:
-- For formal or public output, check:
+### Related people and candidate relations
 
-## Next Upgrade Action
+- People linked to the paper, and which relations are evidenced and which are only candidates.
 
-## Related Files
+### Public boundary
+
+- Which parts may be used in public text, given `public_boundary`; anything submitted, unpublished or confidential stays local.
+
+### Next upgrade action
+
+- What would move `analysis_state` up one level: a close read of a section, a link to another project, a confirmation.
+
+### Related files
+
+- Other cards and files that use this paper.

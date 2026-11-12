@@ -1,66 +1,81 @@
 ---
 type: project
-project_name: ""
-status: candidate
-start_date:
-end_date:
-role: ""
+title: Project name
+status: active
+role: Your role in the project
 related_people: []
 related_papers: []
-related_talks: []
-tags: []
+project_maturity: I1_sandbox
 sensitivity: internal
+updated: YYYY-MM-DD
 public_boundary: unknown_boundary
-created:
-updated:
 ---
 
-# Project Name
+<!-- How to fill in (delete when done)
+Goes in personal_vault/01_knowledge/projects/, at the path the commitment's source_path names. This is the same card as basic/project.md; the sections under "Later sections" are optional and are added once the card is used across projects.
+status: active / paused / closed
+project_maturity: I0 to decide / I1 project sandbox / I2 incubating / I3 independent project
+public_boundary: public_safe / local_only / unknown_boundary
+-->
+
+# Project name
 
 ## Agent Summary
 
-This file records a project or project-family card. Core points: the problem, evidence-backed relation among cards, current status, risk, next action, and export boundary.
+One or two sentences that stand on their own: what this is and where it stands; when to read this card and what not to use it for.
 
-## When to Read
+## Core question
 
-- Use this file when a task needs project state, project-family relation, or a next research action.
+The research question in one sentence.
 
-## Do Not Use For
+## Current state (YYYY-MM-DD)
 
-- Do not treat a candidate relation as a confirmed project.
-- Do not generate public-facing project claims from local-only sources.
+- What is done and where it is stuck. For anything on hold, give the reason and link the decision card.
 
-## Project Overview
+## Results so far (fact)
 
-## Core Problem
+- Every number names its source (experiment log, table, file path). Write "not measured yet" for what has not been run.
 
-## Cards Used
+## People and materials
 
-- Person cards:
-- Paper cards:
-- Talk cards:
-- Relation cards:
+- Links to person cards, paper cards and the direction summary. Where code and data live goes under "Evidence boundary".
 
-## Evidence-Backed Links
+## To verify
 
-## Candidate Links
+- Questions the current results cannot settle.
 
-## Current Status
+## Evidence boundary
 
-## Key Contributions or Direction
+- This card summarises:
+- Not checked:
+- Check before formal use (not read by default): where the originals, notes or logs are.
 
-## Risks and Weaknesses
+## Later sections (add when the card is used across projects)
 
-## People and Roles
+### Cards used
 
-## Next Action
+- Person, paper, talk and decision cards this project draws on.
 
-## Validation Check
+### Evidence-backed and candidate links
 
-## Evidence Boundary
+- Links to other projects or cards that are evidenced, kept apart from links that are only candidates. Do not treat a candidate link as a confirmed project.
 
-- This file summarizes:
-- This file does not verify:
-- For formal or public output, check:
+### Risks and weaknesses
 
-## Related Files
+- What could make the main claim fail, and what is still thin.
+
+### Next action
+
+- The next research step, with a date.
+
+### Validation check
+
+- How you will know the next step worked.
+
+### Public boundary
+
+- Which parts may appear in public text, given `public_boundary`; do not write public claims from local-only sources.
+
+### Related files
+
+- Other cards and files that use this project.

@@ -23,6 +23,19 @@ Every ResearchOS card should make its maturity visible. A weak card is allowed, 
 
 The three levels below are an onboarding pattern, not one universal runtime code. The Library uses a type-specific primary axis: materials use `M1–M3`, projects use `I0–I3`, relationship records use `R0–R3`, and groups use `G0–G2 / Research mainline`. Project `P0–P3` is priority rather than maturity. See [Card Maturity And Enhancement](../../docs/reference/CARD_MATURITY_AND_ENHANCEMENT.md) for display, enhancement, and compatibility rules.
 
+## Where a card records its level
+
+This rubric is the one place the three levels are explained; other guides name the field and link here. A card records its level in the field its type uses:
+
+| Card type | Field | Level 1 | Level 2 | Level 3 |
+| --- | --- | --- | --- | --- |
+| Paper, talk or other source | `analysis_state` | `M1_registered` | `M2_refined_read` | `M3_cross_project_deepening` |
+| Person or collaborator | `relationship_maturity` | `R1_registered` | `R2_evidence_linked` | `R3_cross_project` |
+| Plan or project | `project_maturity` | `I1_sandbox` | `I2_active_mount` | `I3_independent_project` |
+| Direction summary | `group_level` | `G0_atom` | `G1_basic_group` | `G2_direction_abstraction` |
+
+Heuristic and working-style cards have no level. Heuristics use `confidence` (low, medium, high) and `status` (provisional, stable); working-style cards use only `status` (provisional, confirmed).
+
 ## Level 1: Seed Card
 
 A Level 1 card is a first capture.

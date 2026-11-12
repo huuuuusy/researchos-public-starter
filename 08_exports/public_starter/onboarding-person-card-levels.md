@@ -26,7 +26,7 @@ This example shows how a fictional user profile card can grow from an intake see
 
 ```yaml
 card_type: person
-maturity: 1
+relationship_maturity: R1_registered
 name: Dr. Sue
 status: candidate
 source_materials:
@@ -47,7 +47,7 @@ next_confirmation_question: Which public CV or resume summary should be treated 
 
 ```yaml
 card_type: person
-maturity: 2
+relationship_maturity: R2_evidence_linked
 name: Dr. Sue
 status: sourced
 public_anchors:
@@ -69,7 +69,7 @@ next_action: Read the first representative paper and connect it to the profile.
 
 ```yaml
 card_type: person
-maturity: 3
+relationship_maturity: R3_cross_project
 name: Dr. Sue
 status: operational
 public_positioning: Fictional researcher building human-confirmed AI research workflows with explicit evidence boundaries.

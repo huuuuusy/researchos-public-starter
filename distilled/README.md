@@ -4,4 +4,4 @@
 
 # Distilled Notes
 
-Stores public-safe distilled method notes or demo summaries, not non-public long-term memory.
+In the prototype this folder held confirmed working style. In this repository confirmed working style lives in `03_cognition/style/` with `status: confirmed` (see the [cognition layer](../03_cognition/README.md)), so `distilled/` stays empty.

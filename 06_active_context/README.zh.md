@@ -21,3 +21,5 @@
 一次具体 PPT、会议、申请、分析或 revision 产生的工作稿，只有在用户自己的私人/本地 vault 中仍有明确消费者、下一步或具体等待事件时，才可以留在这里。关闭时按[阶段性派生工作产物生命周期](../05_workflows/research_management/derived-work-artifact-lifecycle.zh.md)处理：先提炼长期内容，再把确有独立历史价值的完整稿归入 `07_archive/task_artifacts/`。
 
 公开仓库不再跟踪空的 Dashboard 收件箱。personal-vault 操作会按需创建本地 `ui-*` 运行态文件；`.gitignore` 会阻止它们进入仓库。
+
+在你自己的库里，`personal_vault/06_active_context/` 放承诺总表（`research-portfolio.md`）和 `meetings/` 下的会议记录这类短期记录。骨架：[`09_templates/basic/meeting.zh.md`](../09_templates/basic/meeting.zh.md)；示例：[会议卡](../examples/starter-cards/zh-CN/06_active_context/meetings/2026-09-22-benchmark-sync.md)。

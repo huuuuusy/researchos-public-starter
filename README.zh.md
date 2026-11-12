@@ -34,7 +34,7 @@
 
 **你的材料会去哪里。** 卡片是你电脑上的普通文件，放在下载下来的仓库文件夹里的 `personal_vault/` 中。Git 忽略这个文件夹，所以它不会被提交或推送到 GitHub；但如果仓库放在 iCloud「桌面与文稿」、OneDrive 或 Dropbox 这类同步文件夹里，同步软件照样会把它上传。它也不会自动备份，删掉仓库文件夹就一起没了，请把它纳入你平时的备份。ResearchOS 的命令行工具本身不联网，但助手读到的文件和你在对话里说的话，都会发给助手的服务商（Anthropic 或 OpenAI）处理。卡片上的 `private` 等标签只决定 `ros context` 打包哪些材料，挡不住助手直接打开文件。
 
-**哪些不要交给助手。** 下面这些不要放进这个文件夹，也不要发给助手：被试或来访者的原始数据、能认出具体个人的个案记录、访谈录音和逐字稿、含个人信息的伦理申请材料与知情同意书、你正在审的稿件和别人尚未公开的手稿或数据，以及你不愿交给服务商的未公开基金构想。需要提到这类材料时，卡片里只写它在哪里、是什么（例如「伦理批件，存在学校网盘」），不写内容。所在机构或伦理委员会对使用 AI 工具另有规定的，以规定为准。
+**哪些不要交给助手。** 下面这些不要放进这个文件夹，也不要发给助手：被试或来访者的原始数据、能认出具体个人的个案记录、访谈录音和逐字稿、含个人信息的伦理申请材料与知情同意书、你正在审的稿件和别人尚未公开的手稿或数据，以及你不愿交给服务商的未公开基金构想。需要提到这类材料时，卡片里只写它在哪里、是什么（例如「伦理批件，存在学校网盘」），不写内容。所在机构或伦理委员会对使用 AI 工具另有规定的，以规定为准。[审稿工作流](05_workflows/research_work/peer-review.zh.md)照同样的规矩办：助手依据你自己的笔记工作，不看稿件本身。
 
 **一句话上手。** 打开你的 AI 助手，发送：
 
@@ -42,9 +42,11 @@
 帮我装好 ResearchOS（https://github.com/huuuuusy/researchos-public-starter），按它 AGENTS.md 里的 First Run 一步步带我设置，用中文和我交流。我不会编程，请每一步都用通俗的话告诉我在做什么。
 ```
 
-助手会把它下载下来，先在虚构的例子上用几句话讲清它做什么，再问你的发表清单（个人主页、Google Scholar、知网或直接粘贴都可以）、几篇论文、合作者和一个正在做的项目，据此建好你自己的库。大约十五到三十分钟，事先什么都不用读。写入前它会先把卡片清单给你看，卡片只写进你电脑上那个 Git 忽略的文件夹。没有装 git 的话，助手也可以从同一个页面下载 ZIP。
+助手会把它下载下来，先在虚构的例子上用几句话讲清它做什么，再问你的发表清单（个人主页、Google Scholar、知网或直接粘贴都可以）、几篇论文、合作者和一个正在做的项目，据此建好你自己的库。大约半小时到一小时，事先什么都不用读。写入前它会先把卡片清单给你看，卡片只写进你电脑上那个 Git 忽略的文件夹。没有装 git 的话，助手也可以从同一个页面下载 ZIP。
 
 已经下载好了？在 Codex 或 Claude Code 里打开这个文件夹，说一句：「读一下 AGENTS.md，按 First Run 带我上手。」
+
+只在浏览器里用 ChatGPT 或 Claude、没有终端？用户手册第 2 节的[没有终端](docs/user-manual.zh.md#没有终端只在浏览器里聊天)写了这时还能怎么用。
 
 **或者自己动手，10 分钟**
 
@@ -84,7 +86,7 @@ python3 scripts/ros_demo.py --lang zh-CN
 python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 ```
 
-接着把虚构的承诺和卡片换成你自己的一项和一张，再运行 `python3 scripts/ros.py --root personal_vault today`。每一步怎么做、应该看到什么，见[首次上手说明](08_exports/public_starter/onboarding-step-by-step.zh.md)；字段说明见[用户手册第 5 节](docs/user-manual.zh.md#5-用自己的材料)。可选的 Dashboard 读取同一个文件夹。含有真实材料的 clone 不要推送到公开远程仓库。
+接着把虚构的承诺和卡片换成你自己的一项和一张，再运行 `python3 scripts/ros.py --root personal_vault today`。每一步怎么做、应该看到什么，见[首次上手说明](08_exports/public_starter/onboarding-step-by-step.zh.md)；字段说明见[用户手册第 5 节](docs/user-manual.zh.md#5-用自己的材料)。[示例卡片](examples/starter-cards/zh-CN/README.md)给出每类卡填好的样子，从研究身份摘要、方向摘要到项目、论文、决策、启发式、人物和会议卡；空白骨架在 [`09_templates/basic/`](09_templates/basic/README.zh.md)。可选的 Dashboard 读取同一个文件夹。含有真实材料的 clone 不要推送到公开远程仓库。
 
 ## 文件夹里有什么
 
@@ -102,7 +104,7 @@ python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 
 ## 状态
 
-本仓库是 V1.1，已于 2026-11-11 以 `v1.1.0` 发布（见 [V1.1 发布说明](docs/releases/v1.1.0.zh.md)与[更新记录](CHANGELOG.md)）。1.x 系列是 ResearchOS 的第一阶段：一位研究者、本机文件、终端上的决定。
+本仓库是 V1.2 的候选版 `v1.2.0-rc.1`（见 [V1.2 发布说明](docs/releases/v1.2.0.zh.md)与[更新记录](CHANGELOG.md)）；上一个正式版是 2026-11-11 的 `v1.1.0`。1.x 系列是 ResearchOS 的第一阶段：一位研究者、本机文件、终端上的决定。
 
 ## 如何引用
 

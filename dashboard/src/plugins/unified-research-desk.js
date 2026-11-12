@@ -1084,7 +1084,7 @@
     if (!root) return;
     const renderer = global.ResearchOSAssetOverviewView.renderAssetCardBoxWorkbench;
     if (typeof renderer !== "function") return text(root, deskText("deskTheCardLibraryView"));
-    root.innerHTML = renderer({ boxes: safeArray(state.assetModel?.cardBoxes), publicMode: profile.publicStarter }, {
+    root.innerHTML = renderer({ boxes: safeArray(state.assetModel?.cardBoxes), publicMode: profile.publicStarter, hideCreatePanel: state.data?.runtime_mode === "personal_vault" }, {
       escapeHtml: global.ResearchOSUiCore.escapeHtml,
       shortText,
       translate: uiText,

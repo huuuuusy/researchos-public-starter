@@ -36,8 +36,13 @@ exportable_to:
 | --- | --- | --- |
 | 原始 PDF、slides、文档、网页导出 | 仓库之外的本地来源目录；卡片记下路径 | 不当作已确认记忆。 |
 | 论文笔记、材料摘要、项目事实 | `01_knowledge/` | 保留来源链接。 |
+| 研究身份摘要；方向摘要 | `00_identity/research-identity.md`；`01_knowledge/capsules/` | 助手最先读的第一层入口页；只链到卡片，不写卡片里没有的内容。 |
 | 取舍、确认、被拒方案 | `02_decisions/` | 涉及人物或策略时默认敏感。 |
-| mental model、heuristic、写作原则 | `03_cognition/` | 只有反复有用或已确认后才沉淀。 |
+| mental model、heuristic、写作原则 | `03_cognition/`；思维模型放 `03_cognition/mental_models/` | 只有反复有用或已确认后才沉淀。 |
+| 风格卡：你怎么写作、审稿、写申请、做图和报告、带学生 | `03_cognition/style/<任务>.md`，每类任务一张 | 助手先读对应的那一张；它写的是你怎么做研究，所以由助手起草，你同意后才写。 |
+| 审稿意见、基金申请、学术邮件、给学生的反馈 | `06_active_context/reviews/`、`grants/` 或 `messages/`；反馈放 `04_people/feedback/` | 从 `09_templates/basic/` 里的 `review.zh.md`、`grant.zh.md`、`message.zh.md` 或 `feedback.zh.md` 开始；那里还有 `style.zh.md` 和 `mental-model.zh.md`。 |
+| 你的边界：从不交给助手的材料、对外不说的事、对 AI 工具的规定、谁来点头 | `00_identity/boundaries.md` | 从 `09_templates/basic/boundaries.zh.md` 开始；对外的任务先读它。 |
+| 哪些成果能对外引用，每项成果里谁做了什么 | `01_knowledge/papers/outputs-index.md`；`01_knowledge/papers/author-roles.md` | 从 `outputs-index.zh.md` 和 `author-roles.zh.md` 开始；写论文和申请到 evidence 档时读。 |
 | 人物或合作者卡片 | `04_people/` | 受跟踪的 starter 文件只放虚构或公开安全示例。 |
 | 可复用工作流或 SOP | `05_workflows/` | 保持通用，不写单个私人项目全历史。 |
 | 当前任务、待确认问题、交接 | `06_active_context/` | 短期操作状态，不是完整历史。 |

@@ -420,6 +420,7 @@
       cardBoxes: payload.viewModel.cardBoxes,
       focusCard: payload.viewModel.focusCard,
       publicMode: payload.publicStarter,
+      hideCreatePanel: String(context.runtimeMode?.() || "").trim() === "personal_vault",
       publicDemoToggleHtml: payload.publicDemo
         ? AssetView.renderPublicDemoToggle({ visible: payload.publicDemoVisible }, {
             escapeHtml: context.escapeHtml,

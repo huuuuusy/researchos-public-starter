@@ -20,6 +20,7 @@ from typing import Any
 from researchos_data.plugins import load_plugin_registry
 from researchos_data.public_conversation_catalog import public_tasks_for_language
 from researchos_data.repository_layout import PERSONAL_VAULT_LAYER_DIRS
+from researchos_data.vault_check_text import VAULT_CHECK_TEXT
 
 from research_agenda_projection import personal_research_agenda, public_research_agenda
 
@@ -360,6 +361,65 @@ def read_vault_text(path: Path, relative: str, failures: list[str]) -> str | Non
     except UnicodeDecodeError:
         failures.append(f"{relative}: not UTF-8 text; save it as UTF-8 to include it")
         return None
+
+
+VAULT_SENSITIVITY = {"public", "internal", "sensitive", "private"}
+VAULT_LINK = re.compile(r"\]\(([^)#\s]+\.md)\)")
+VAULT_LIST_KEYS = ("related_people", "related_papers", "related_projects", "source_files", "capsule_of", "source_path")
+
+
+
+def vault_check(vault: Path, language: str = "en") -> list[str]:
+    """Problems a hand-written vault commonly has: broken links, unknown sensitivity labels, empty Agent
+    Summaries, trailing comments in frontmatter, direction summaries older than their cards, missing originals.
+    It reads only the vault and changes nothing."""
+    say = VAULT_CHECK_TEXT["zh-CN" if language == "zh-CN" else "en"]
+    problems: list[str] = []
+    updated: dict[str, str] = {}
+    cards: list[tuple[Path, str, dict[str, Any], str]] = []
+    for path in personal_files(vault):
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        if not has_frontmatter(text):
+            continue
+        relative = path.relative_to(vault).as_posix()
+        meta = parse_frontmatter(text)
+        cards.append((path, relative, meta, text))
+        updated[relative] = str(meta.get("updated", "")).strip()
+    for path, relative, meta, text in cards:
+        if relative == "06_active_context/research-portfolio.md":
+            continue  # the commitment list is checked by ros itself
+        for line in text.split("\n---\n", 1)[0].splitlines()[1:]:
+            if re.search(r":\s*\S.*\s#\s", line):
+                problems.append(say["comment"].format(card=relative, line=line.strip()))
+        sensitivity = str(meta.get("sensitivity", "")).strip()
+        if sensitivity not in VAULT_SENSITIVITY:
+            problems.append(say["sensitivity"].format(card=relative, value=sensitivity))
+        if not agent_summary(text):
+            problems.append(say["summary"].format(card=relative))
+        targets = []
+        for key in VAULT_LIST_KEYS:
+            value = meta.get(key)
+            targets.extend(value if isinstance(value, list) else [value] if value else [])
+        for target in targets:
+            target = str(target).strip()
+            if target.endswith(".md") and not (vault / target).is_file():
+                problems.append(say["link"].format(card=relative, target=target))
+        for target in VAULT_LINK.findall(text):
+            if "://" not in target and not (path.parent / target).resolve().is_file() and not (ROOT / target).is_file():
+                problems.append(say["link"].format(card=relative, target=target))
+        checked = str(meta.get("last_verified", "")).strip()
+        if str(meta.get("type", "")).strip() == "capsule" and checked:
+            for source in meta.get("source_files", []) if isinstance(meta.get("source_files"), list) else []:
+                changed = updated.get(str(source).strip(), "")
+                if changed and changed > checked:
+                    problems.append(say["stale"].format(card=relative, checked=checked, source=source, updated=changed))
+        original = re.split(r"[\s（(]", str(meta.get("source", "")).strip(), maxsplit=1)[0]
+        if original.startswith(("~/", "/")) and not Path(original).expanduser().exists():
+            problems.append(say["original"].format(card=relative, path=original))
+    return problems
 
 
 def validate_personal_onboarding_outputs(source_root: Path) -> list[str]:
@@ -945,6 +1005,10 @@ def main() -> int:
         print(f"Records: {data['record_count']}")
         print(f"Dashboard assets: {dashboard_asset_count}")
         print(f"Output: {PERSONAL_DASHBOARD_OUTPUT.relative_to(ROOT)}")
+        config = PERSONAL_VAULT_ROOT / "config" / "ros.json"
+        language = json.loads(config.read_text(encoding="utf-8")).get("language", "en") if config.is_file() else "en"
+        problems, say = vault_check(PERSONAL_VAULT_ROOT, language), VAULT_CHECK_TEXT["zh-CN" if language == "zh-CN" else "en"]
+        print(say["found"].format(n=len(problems)) if problems else say["clean"], *(f"- {item}" for item in problems), sep="\n")
         if failures:
             for failure in failures:
                 print(f"- {failure}")

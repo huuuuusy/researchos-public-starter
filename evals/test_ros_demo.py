@@ -42,7 +42,7 @@ class RosDemoTest(unittest.TestCase):
         self.assertIn("at the researcher's own terminal", output)
         self.assertNotIn("her terminal", output)
         self.assertIn("session 20260920T", output, "the session id carries the pinned demo day")
-        self.assertNotIn("Unknowns, kept apart", output, "bookkeeping lines with nothing to report stay out of the default view")
+        self.assertNotIn("Not known yet (counted in open items)", output, "bookkeeping lines with nothing to report stay out of the default view")
         after = output.split("━━ What next")[1]
         self.assertIn("python3 scripts/ros_demo.py --init personal_vault", after)
         self.assertNotIn("cp -R", output)

@@ -25,7 +25,7 @@ This example starts after the user registers one representative paper source, lo
 
 ```yaml
 card_type: paper
-maturity: 1
+analysis_state: M1_registered
 title: Calibrated Memory Workflows for Human-AI Research Notes
 status: candidate
 source_materials:
@@ -52,7 +52,7 @@ next_action: Verify public metadata and read the abstract.
 
 ```yaml
 card_type: paper
-maturity: 2
+analysis_state: M2_refined_read
 title: Calibrated Memory Workflows for Human-AI Research Notes
 status: sourced
 public_source: https://example.org/papers/calibrated-memory-workflows
@@ -69,10 +69,10 @@ contribution_candidates:
 collaborator_candidates:
   - name: Collaborator A
     evidence: co-author on this fictional paper
-    maturity: 1
+    relationship_maturity: R1_registered
   - name: Collaborator B
     evidence: co-author on this fictional paper
-    maturity: 1
+    relationship_maturity: R1_registered
 evidence_boundary: Based on metadata and abstract only; no full-paper claim audit yet.
 next_action: Ask the user which claims are safe to reuse in profile and talk cards.
 ```
@@ -81,7 +81,7 @@ next_action: Ask the user which claims are safe to reuse in profile and talk car
 
 ```yaml
 card_type: paper
-maturity: 3
+analysis_state: M3_cross_project_deepening
 title: Calibrated Memory Workflows for Human-AI Research Notes
 status: operational
 public_source: https://example.org/papers/calibrated-memory-workflows

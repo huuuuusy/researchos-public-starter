@@ -34,7 +34,7 @@ This is the first stage: one person, files on your own computer, decisions made 
 
 **Where your material goes.** Cards are ordinary files on your computer, in `personal_vault/` inside the downloaded repository folder. Git ignores that folder, so it is never committed or pushed to GitHub; but if the repository sits in a synced folder such as iCloud Desktop & Documents, OneDrive or Dropbox, the sync software uploads it anyway. Nothing backs it up either: deleting the repository folder deletes it, so include it in your usual backups. ResearchOS's command-line tools do not use the network, but the files your assistant reads and what you say in the conversation are sent to the assistant's provider (Anthropic or OpenAI) for processing. Labels such as `private` on a card decide only what `ros context` packs; they do not stop the assistant from opening a file.
 
-**What to keep away from the assistant.** Keep the following out of this folder and away from the assistant: raw participant or client data, case records that identify a person, interview recordings and transcripts, ethics applications and consent forms that contain personal information, manuscripts you are reviewing and others' unpublished manuscripts or data, and unpublished grant ideas you would not hand to the provider. When a card needs to mention such material, write only where it is and what it is (for example "ethics approval, on the university drive"), not its content. Where your institution or ethics board has rules on AI tools, those rules come first.
+**What to keep away from the assistant.** Keep the following out of this folder and away from the assistant: raw participant or client data, case records that identify a person, interview recordings and transcripts, ethics applications and consent forms that contain personal information, manuscripts you are reviewing and others' unpublished manuscripts or data, and unpublished grant ideas you would not hand to the provider. When a card needs to mention such material, write only where it is and what it is (for example "ethics approval, on the university drive"), not its content. Where your institution or ethics board has rules on AI tools, those rules come first. The [peer-review workflow](05_workflows/research_work/peer-review.md) follows the same rule: the assistant works from your own notes, not the manuscript.
 
 **Try it: one sentence to your AI assistant.** Open the assistant and send:
 
@@ -42,9 +42,11 @@ This is the first stage: one person, files on your own computer, decisions made 
 Set up ResearchOS for me from https://github.com/huuuuusy/researchos-public-starter and walk me through the First Run section of its AGENTS.md. I do not code, so tell me in plain words what each step does.
 ```
 
-The assistant downloads it, shows you in a few sentences what it does on a fictional example, then asks for your publication list (a homepage, Google Scholar, or a pasted list all work), a few of your papers, your collaborators and one current project, and sets up your own vault from them. It takes fifteen to thirty minutes and you do not need to read anything first. It shows you the list of cards before writing them, and writes them only into that git-ignored folder on your computer. If git is not installed, the assistant can download the ZIP from the same page instead.
+The assistant downloads it, shows you in a few sentences what it does on a fictional example, then asks for your publication list (a homepage, Google Scholar, or a pasted list all work), a few of your papers, your collaborators and one current project, and sets up your own vault from them. It takes about thirty minutes to an hour and you do not need to read anything first. It shows you the list of cards before writing them, and writes them only into that git-ignored folder on your computer. If git is not installed, the assistant can download the ZIP from the same page instead.
 
 Already downloaded it? Open the folder in Codex or Claude Code and say one sentence: “Read AGENTS.md and walk me through its First Run.”
+
+Only have ChatGPT or Claude in a browser, with no terminal? [Without a terminal](docs/user-manual.en.md#without-a-terminal-a-browser-chat) in Section 2 of the User Manual says what still works.
 
 **Or do it yourself in 10 minutes**
 
@@ -84,7 +86,7 @@ Your own material goes in `personal_vault/`, a folder inside your clone that Git
 python3 scripts/ros_demo.py --init personal_vault
 ```
 
-You then replace the fictional commitments and cards with one of your own and run `python3 scripts/ros.py --root personal_vault today`. The [first-run guide](08_exports/public_starter/onboarding-step-by-step.md) gives each step and what you should see; [Section 5 of the User Manual](docs/user-manual.en.md#5-your-own-material) is the reference for the fields. An optional Dashboard reads the same folder. Never push a clone that contains real material to a public remote.
+You then replace the fictional commitments and cards with one of your own and run `python3 scripts/ros.py --root personal_vault today`. The [first-run guide](08_exports/public_starter/onboarding-step-by-step.md) gives each step and what you should see; [Section 5 of the User Manual](docs/user-manual.en.md#5-your-own-material) is the reference for the fields. [Example cards](examples/starter-cards/en/README.md) show each kind of card filled in, from a research identity page and a direction summary to project, paper, decision, heuristic, person and meeting cards, and [`09_templates/basic/`](09_templates/basic/README.md) has the blank skeletons. An optional Dashboard reads the same folder. Never push a clone that contains real material to a public remote.
 
 ## What is in the folder
 
@@ -102,7 +104,7 @@ The technical report ([English source](docs/technical-report.en.md) · [English 
 
 ## Status
 
-This is V1.1, released as `v1.1.0` on 2026-11-11 (see the [V1.1 release notes](docs/releases/v1.1.0.md) and the [changelog](CHANGELOG.md)). The 1.x series is the first stage of ResearchOS: one researcher, local files, decisions at the terminal.
+This is V1.2, release candidate `v1.2.0-rc.1` (see the [V1.2 release notes](docs/releases/v1.2.0.md) and the [changelog](CHANGELOG.md)); the last release is `v1.1.0`, 2026-11-11. The 1.x series is the first stage of ResearchOS: one researcher, local files, decisions at the terminal.
 
 ## How to cite
 

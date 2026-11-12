@@ -10,18 +10,19 @@
 
 ## 首次上手
 
-新用户通常是把 README 里的安装提示粘贴到这个客户端里来的。他们还没读过任何文件，也不需要去读；很多人没用过终端、Python 或 AI 编程助手，研究领域也未必和计算机有关。带他们走下面七步，每次一步：先用一句话说这一步做什么，再运行命令或展示要写的内容，最后用平常话告诉他们发生了什么。不要把 `ros` 的输出原样贴给用户，用一两句话说清它对用户意味着什么；承诺、候选、判断这类词第一次出现时，用一句话解释（手册第 1 节「你会遇到的词」）。需要用户本人在终端里输入命令时，给出完整的一行，以 `cd` 进入本文件夹开头，并说明为什么必须由本人输入。对中文用户全程用中文：第 1 步的两条 `ros_demo.py` 命令加上 `--lang zh-CN`，建好的库会记住中文，之后给用户在终端输入的 `ros.py` 命令不用再加。首次上手期间按这里的步骤做，不用下文「默认行为」里的回复格式，也不用报告「Token 使用默认规则」里的读取级别。命令行打印的 `ros …` 都指 `python3 scripts/ros.py --root <文件夹> …`。
+新用户通常是把 README 里的安装提示粘贴到这个客户端里来的。用户还没读过任何文件，也不需要去读；很多人没用过终端、Python 或 AI 编程助手，研究领域也未必和计算机有关。带用户走下面八步，每次一步：先用一句话说这一步做什么，再运行命令或展示要写的内容，最后用平常话告诉用户发生了什么。不要把 `ros` 的输出原样贴给用户，用一两句话说清它对用户意味着什么；承诺、候选、判断这类词第一次出现时，用一句话解释（手册第 1 节「你会遇到的词」）。需要用户本人在终端里输入命令时，给出完整的一行，以 `cd` 进入本文件夹开头，并说明为什么必须由本人输入。对中文用户全程用中文：第 1 步的两条 `ros_demo.py` 命令加上 `--lang zh-CN`，建好的库会记住中文，之后给用户在终端输入的 `ros.py` 命令不用再加。首次上手期间按这里的步骤做，不用下文「默认行为」里的回复格式，也不用报告「Token 使用默认规则」里的读取档。命令行打印的 `ros …` 都指 `python3 scripts/ros.py --root <文件夹> …`。
 
-第 2 步之前，先跟用户讲一次材料会去哪里：卡片留在用户电脑上一个 Git 忽略的文件夹里，但你读到的内容和用户对你说的话会发给你的服务商；`private` 标签只限制 `ros context` 打包什么，管不住你直接打开文件。请用户不要交给你被试或来访者的原始数据、能认出具体个人的个案记录、录音或逐字稿、含个人信息的伦理材料或知情同意书、正在审的稿件，以及别人尚未公开的工作；卡片可以写这类材料在哪里、是什么，不写内容。
+第 2 步之前，先跟用户讲一次材料会去哪里：卡片留在用户电脑上一个 Git 忽略的文件夹里，但你读到的内容和用户对你说的话会发给你的服务商；`sensitivity` 标签只限制 `ros context` 打包什么，管不住你直接打开文件。请用户不要交给你被试或来访者的原始数据、能认出具体个人的个案记录、录音或逐字稿、含个人信息的伦理材料或知情同意书、正在审的稿件，以及别人尚未公开的工作；卡片可以写这类材料在哪里、是什么，不写内容。
 
 1. **讲清楚是什么。** 运行 `python3 --version`（须为 3.10 或更新；Mac 上版本偏旧时，帮用户从 python.org 安装；Windows 上只能在 WSL 里继续，原生 Windows Python 缺少所需的文件锁）。再运行 `python3 scripts/ros_demo.py --lang zh-CN`，它在一份临时的虚构副本上运行，不改动任何东西。用三四句话说清它演示了什么：一份来源变了，ResearchOS 标出了依赖它的判断，由研究者选择这条判断仍成立、需要修改还是暂缓（输出里的 A、B、C 三项），没有研究者的决定，什么都不会成为长期记忆。「还没有准入回执」「复制回退」这类说法在本仓库里是正常的，不是报错。然后运行 `python3 scripts/ros_demo.py --init personal_vault --lang zh-CN`，在 Git 忽略的 `personal_vault/` 里建好用户自己的库。
-2. **个人档案。** 请用户给发表清单，什么形式都可以：公开主页、Google Scholar、ORCID、学校或知网的个人页面，或者直接粘贴一份列表；愿意的话再给一份简历。只读用户给的、公开能访问的内容；Google Scholar 常常拦截自动读取，读不到时请用户粘贴列表，不要绕过登录或拦截。用 `09_templates/person-template.md` 在 `personal_vault/00_identity/profile.md` 起草一张用户自己的卡片，`relationship_type: self`：姓名、单位、研究方向和几项代表作。简历只取科研经历，电话、住址、证件号、推荐人以及与科研无关的内容都不写。
-3. **论文和其他来源。** 请用户挑三到五篇与眼下工作最相关的论文或其他来源，比如档案目录、校勘本或数据集说明，给链接、DOI 或 PDF。每篇用 `09_templates/paper-template.md` 在 `personal_vault/01_knowledge/papers/<简短英文名>.md` 起草一张卡片：标题、作者、发表处与年份、主要结论、依据的证据，以及公开边界（已发表、预印本或未发表）。只写论文里写了的；自己推断的内容标为候选。
-4. **合作者。** 从这几篇论文的作者中，列出出现两次及以上的人，问用户保留哪些，再问有没有漏掉的密切合作者，比如导师或其他机构的合作方。每位选中的人用 `09_templates/person-template.md` 在 `personal_vault/04_people/collaborators/<简短英文名>.md` 起草一张卡片，`relationship_type: candidate`，只写论文能说明的或用户亲口说的：一起发表过哪几篇，或用户自己描述的关系。不推断师生、同组、资历或私交。
-5. **一个当前项目。** 问用户现在最想管起来的一个项目：简短的名字、自己主导还是协助、还没解决的问题、下一步具体做什么、建立在上面哪几篇论文之上，以及用户眼下对它的看法。在 `personal_vault/06_active_context/research-portfolio.md` 里保留开头的 frontmatter 和标题，把两项虚构承诺换成按回答写成的一项：`id`（简短英文标识）、`responsibility`（`lead` 或 `support`）、`accountable_owner`、`role_summary`、`lifecycle_phase`、`state: mainline`、`priority: P0`、`question`、`next_step`、`last_verified`（今天）、`stale_after_days: 14` 和 `source_path: 01_knowledge/projects/<id>.md`。`lifecycle_phase` 由你来选，再用一个词告诉用户：问题还在成形时用 `scoping`；伦理审批或预注册用 `planned`；招募和数据收集用 `experiment_preparation`；论文或基金申请在写时用 `writing`；投出之后用 `submitted`、`under_review` 或 `decision`，并写 `activation_trigger`，例如「收到审稿意见」（全部取值见 `docs/user-manual.zh.md` 第 5 节）。删掉两张虚构卡片 `personal_vault/01_knowledge/projects/occlusion-tracking.md` 和 `personal_vault/01_knowledge/papers/example-benchmark.md`，再用 `09_templates/project-template.md` 在 `source_path` 处起草项目卡片：`project_name` 和 `# ` 标题填项目名，`related_papers` 指向它所依据的论文卡片。
+2. **个人档案。** 请用户给发表清单，什么形式都可以：公开主页、Google Scholar、ORCID、学校或知网的个人页面，或者直接粘贴一份列表；愿意的话再给一份简历。只读用户给的、公开能访问的内容；Google Scholar 常常拦截自动读取，读不到时请用户粘贴列表，不要绕过登录或拦截。用 `09_templates/basic/person.zh.md` 在 `personal_vault/00_identity/profile.md` 起草一张用户自己的卡片，`relationship_type: self`：姓名、单位、研究方向和几项代表作。简历只取科研经历，电话、住址、证件号、推荐人以及与科研无关的内容都不写。
+3. **论文和其他来源。** 请用户挑三到五篇与眼下工作最相关的论文或其他来源，比如档案目录、校勘本或数据集说明，给链接、DOI 或 PDF。每篇用 `09_templates/basic/paper.zh.md` 在 `personal_vault/01_knowledge/papers/<简短英文名>.md` 起草一张卡片：标题、作者、发表处与年份、读的是哪个版本、主要结论、依据的证据，以及公开边界（已发表、预印本或未发表）。只写论文里写了的；自己推断的内容标为候选。
+4. **合作者。** 从这几篇论文的作者中，列出出现两次及以上的人，问用户保留哪些，再问有没有漏掉的密切合作者，比如导师或其他机构的合作方。每位选中的人用 `09_templates/basic/person.zh.md` 在 `personal_vault/04_people/collaborators/<简短英文名>.md` 起草一张卡片，`relationship_type: candidate`，只写论文能说明的或用户亲口说的：一起发表过哪几篇，或用户自己描述的关系。不推断师生、同组、资历或私交。
+5. **一个当前项目。** 问用户现在最想管起来的一个项目：简短的名字、自己主导还是协助、还没解决的问题、下一步具体做什么、建立在上面哪几篇论文之上，以及用户眼下对它的看法。在 `personal_vault/06_active_context/research-portfolio.md` 里保留开头的 frontmatter 和标题，把两项虚构承诺换成按回答写成的一项：`id`（简短英文标识）、`responsibility`（`lead` 或 `support`）、`accountable_owner`、`role_summary`、`lifecycle_phase`、`state: mainline`、`priority: P0`、`question`、`next_step`、`last_verified`（今天）、`stale_after_days: 14` 和 `source_path: 01_knowledge/projects/<id>.md`。`lifecycle_phase` 由你来选，再用一个词告诉用户：问题还在成形时用 `scoping`；伦理审批或预注册用 `planned`；招募和数据收集用 `experiment_preparation`；数据已经收齐、正在分析，或成果正在制作时用 `production`；论文或基金申请在写时用 `writing`；投出之后用 `submitted`、`under_review` 或 `decision`，并写 `activation_trigger`，例如「收到审稿意见」（全部取值见 `docs/user-manual.zh.md` 第 5 节）。删掉两张虚构卡片 `personal_vault/01_knowledge/projects/occlusion-tracking.md` 和 `personal_vault/01_knowledge/papers/example-benchmark.md`，再用 `09_templates/basic/project.zh.md` 在 `source_path` 处起草项目卡片：`title` 和 `# ` 标题填项目名，`related_papers` 指向它所依据的论文卡片。
+6. **两张入口页。** 起草以后每次会话助手最先读的两页：用 `09_templates/basic/research-identity.zh.md` 在 `personal_vault/00_identity/research-identity.md` 写研究身份摘要（研究方向、以这个项目为当前主线、用户亲口说的做研究习惯），用 `09_templates/basic/capsule.zh.md` 在 `personal_vault/01_knowledge/capsules/<id>.md` 写方向摘要，列出项目、论文和合作者卡片，以及做什么任务读哪张。这两页都写 `sensitivity: internal`。每张卡的 `Agent Summary` 要能单独读懂，并写明什么时候读这张卡；「证据边界」写明原件在哪里，原件默认不读。每类卡填好的样子见 [examples/starter-cards/zh-CN/](../../examples/starter-cards/zh-CN/README.md)。
 
-   第 2 到 5 步的内容写入之前，先把要建的每张卡片和这项承诺列成一张简短清单给用户看，每项一行。用户同意后再写；除非用户说某张卡可以公开，`sensitivity` 一律设为 private，而且只写在 `personal_vault/` 里。
-6. **一条判断。** 把用户眼下的看法写成一个判断块，以后某张论文卡片一变，它就会回来等复核；没有判断，`today` 就没有东西可以标出。在仓库之外写一个草稿文件（比如系统的临时文件夹），依据写它所依赖的卡片：
+   第 2 到 6 步的内容写入之前，先把要建的每张卡片和这项承诺列成一张简短清单给用户看，每项一行。用户同意后再写，只写在 `personal_vault/` 里。除非用户另有决定，论文、项目和摘要卡写 `sensitivity: internal`，个人档案和合作者卡写 `sensitivity: sensitive`。`ros context` 会把 internal 的卡打包给你；sensitive 的卡不交给你，用户可以在自己的终端里把它打印出来，只把任务需要的部分复制给你；private 的卡从不打包；所以只有用户不想让你拿到的卡才用 `private`。
+7. **一条判断。** 把用户眼下的看法写成一个判断块，以后某张论文卡片一变，它就会回来等复核；没有判断，`today` 就没有东西可以标出。在仓库之外写一个草稿文件（比如系统的临时文件夹），依据写它所依赖的卡片：
 
    ```text
    > [!judgment] j-<简短英文标识>
@@ -30,11 +31,25 @@
    ```
 
    依据里不要写 `commitment:<id>`：承诺的版本包含它的日期和下一步，写了它，每次更新这些内容，判断都会回来等复核。运行 `python3 scripts/ros.py --root personal_vault propose judgment --file <草稿> --target commitment:<id>`（此时它提示今天没有开着的会话，是正常的），再运行 `python3 scripts/ros.py --root personal_vault admit <候选编号>`。在本仓库里 `admit` 不写入任何东西，只打印它会做的改动，依据的版本已经填好。把结论给用户看，用户同意后，把打印出的改动原样应用到 `research-portfolio.md`，再删掉草稿。
-7. **确认能用。** 运行 `python3 scripts/ros.py --root personal_vault today`：「待判断」下应当只有用户自己的项目，并显示那条新判断尚未确认；`［未安排］` 是正常的。请用户在自己的终端运行 `python3 scripts/ros.py --root personal_vault admit --confirm <判断编号>` 并回答 `y`；由你代为运行只记为代理转述，确认请求仍然开着。回复里会说这条判断是直接写进文件的，记为事后确认，不算准入；告诉用户，本仓库对所有手工贴进去的改动都这样记录，不是用户做错了什么。「任务总表问题」下若有条目，每条都写明字段和可用的值，照着改；再运行 `python3 scripts/ros.py --root personal_vault rules --check`，直到报告「问题 0 条」，最后用 `python3 scripts/ros.py --root personal_vault close` 结束。
+8. **确认能用。** 运行 `python3 scripts/ros.py --root personal_vault today`：「待判断」下应当只有用户自己的项目，并显示那条新判断尚未确认；`［未安排］` 是正常的。请用户在自己的终端运行 `python3 scripts/ros.py --root personal_vault admit --confirm <判断编号>` 并回答 `y`；由你代为运行只记为代理转述，确认请求仍然开着。回复里会说这条判断是直接写进文件的，记为事后确认，不算准入；告诉用户，本仓库对所有手工贴进去的改动都这样记录，不是用户做错了什么。「任务总表问题」下若有条目，每条都写明字段和可用的值，照着改；再运行 `python3 scripts/ros.py --root personal_vault rules --check`，直到报告「问题 0 条」，最后用 `python3 scripts/ros.py --root personal_vault close` 结束。
 
 然后用四句话讲日常怎么用：开始时让这个客户端运行 `today`；来源变了，比如元分析纳入的某项研究被撤稿、研究方案做了修订、档案馆发布了更正后的目录，就请这个客户端更新那张卡片，`today` 会把依赖它的判断交回来；判断仍成立还是需要修改由用户决定，两种情况下本仓库都打印出改动，用户同意后由你应用，再由用户在终端确认 `today` 或 `close` 随后列出的事项；结束时运行 `close`。真遇到来源变化时，照 `docs/user-manual.zh.md` 第 3 节「来源变了怎么办」去做：那里写了保留、替换或延期一条判断的步骤，以及手工改了 `state`、`priority`、`question`、`responsibility` 或 `judgments` 字段之后要做的确认。用户想浏览自己的卡片时，最后再提可选的 Dashboard：在后台启动 `python3 scripts/start_researchos.py --mode personal-vault --port 8881`，告诉用户「资料」（Library）里是档案、论文和合作者，「现在」（Now）里是这个项目，它会一直运行，直到被停止（在它的终端按 Ctrl-C，或请你停掉）。
 
-第一次保持小规模：一份档案、几篇论文、反复出现的合作者、一个项目和一条判断。更多论文、人物和项目以后照同样的方式慢慢加，每次几个。不要把用户的材料加入受跟踪的文件，也不要把它或含有它的 clone 推送到任何地方。某一步出错时，[首次上手说明](../../08_exports/public_starter/onboarding-step-by-step.zh.md)写明了每一步应当打印什么、不一样时怎么办，到那时再读它。不想建库的用户，也可以在这个客户端里直接给一个目标和一份来源：结果是回答、成果或候选，用户批准前不写入长期记忆（手册第 2 节）。
+第一次保持小规模：一份档案、几篇论文、反复出现的合作者、一个项目、它的两张入口页和一条判断。更多论文、人物和项目以后照同样的方式慢慢加，每次几个。不要把用户的材料加入受跟踪的文件，也不要把它或含有它的 clone 推送到任何地方。某一步出错时，[首次上手说明](../../08_exports/public_starter/onboarding-step-by-step.zh.md)写明了每一步应当打印什么、不一样时怎么办，到那时再读它。不想建库的用户，也可以在这个客户端里直接给一个目标和一份来源：结果是回答、成果或候选，用户批准前不写入长期记忆（手册第 2 节）。
+
+## 首次上手之后的每次会话
+
+请求涉及用户的项目、承诺或卡片时，会话的开头和结尾都用 `ros`；只是改几句话或问代码问题，就都不用。开始时运行 `python3 scripts/ros.py --root personal_vault today`，这次只谈某一项承诺时加 `--for <承诺 id>`，再用一两句话告诉用户有哪些事等用户来定。哪件事什么时候做，由用户决定，不由你排。
+
+动手之前运行 `python3 scripts/plan_context.py <路线> --vault personal_vault --mode quick`（路线 id 见下文路线表），按它列出的顺序读；它跟着库的语言走，不用加 `--lang`。说得出 quick 读完还缺什么，才换 `--mode standard`；有一个说得出的核对问题，才换 `--mode evidence`。读取档 quick 列出这项任务的风格卡，没有时列研究身份摘要。standard 列出研究身份摘要、风格卡、方向摘要和这项任务的工作流程，再单独列出方向摘要点名的卡；打包方向摘要只交出这一页，所以任务要用的卡还得一张张取。evidence 只多一句提示：只打开这些卡「证据边界」里写明的原件，而且要有一个说得出的核对问题。还没写的卡会列出名字和对应的骨架。
+
+取卡片用 `python3 scripts/ros.py --root personal_vault context <卡片路径>`，它会按卡片的敏感性标签处理。它报告某张卡被排除时，把它为这张卡打印的原因告诉用户；sensitive 的卡，比如人物卡或会议卡，因为记的是别人，所以不交给你。不要改为直接打开文件。任务确实需要一张 sensitive 的卡时，请用户在自己的终端运行 `python3 scripts/ros.py --root personal_vault context <卡片路径>`，回答 `y`，再只把任务需要的部分复制给你。
+
+事实可以直接写：卡片的正文、状态和证据，以及承诺的 `current_stage`、`last_verified` 和 `next_step`。判断不能直接写：判断块，以及承诺的 `question`、`judgments`、`responsibility`、`state` 和 `priority`。一次会话最多起草三条判断，每条用 `python3 scripts/ros.py --root personal_vault propose judgment --file <草稿> --target <卡片或 commitment:id>` 登记；用户在自己的终端确认之后它才算数，做法同上面第 7、8 步和手册第 3 节「来源变了怎么办」。风格卡、启发式卡和研究身份摘要写的是用户怎么做研究：先起草、给用户看，用户同意后再写。
+
+用户纠正你某件事该怎么写、怎么审或怎么讲时，把这次纠正起草成这类任务风格卡（`personal_vault/03_cognition/style/<任务>.md`）里的一条：规则、为什么、怎么用、出处（例如今天的日期和改了什么），先给用户看，用户同意后才加进去；风格卡就是这样长起来的。对外的任务，比如回复外部请求、写申请、做报告、审稿或导出，动手前先读 `personal_vault/00_identity/boundaries.md`（有的话），照它办；这些路线的 `plan_context` 会把它排在最前。正式写作和申请到了 evidence 档，会再加成果与使用边界（`01_knowledge/papers/outputs-index.md`）和论文作者角色（`01_knowledge/papers/author-roles.md`）两张索引：用到的每个说法都要确认可以对外讲，写到的每项贡献都要有出处。作者角色索引是 sensitive 的卡，只能按上面说的办法交给你。
+
+结束时运行 `python3 scripts/ros.py --root personal_vault close`（开头用了 `--for` 的，这里也加同样的 `--for`），再用一句话告诉用户还有哪些事没了结。
 
 ## 核心理解
 
@@ -79,11 +94,11 @@ ResearchOS 以用户素材为基础。不要暗示只靠提示词就能让空库
 
 1. L-1 no-read triage：先判断请求是否需要仓库上下文。
 2. L0 route：使用已自动加载的 `AGENTS.md`；如果没有，最多选择一个路由文件。
-3. L1 / quick：先用 frontmatter 和 `Agent Summary`，不要直接读全文；然后只读一个任务主文件、capsule 或精确目标。
-4. L2 / standard：只加入能解决明确缺口的 workflow、template、case 或 script。
-5. L3 / evidence：只为已说明的核验问题加入精确证据或检查项，例如发布审计、bug 修复或用户明确要求的完整检查。
+3. L1 / quick：先用 frontmatter 和 `Agent Summary`，不要直接读全文；然后只读一个任务主文件、方向摘要（capsule）或精确目标。在用户的库里，读取档 quick 读 `personal_vault/03_cognition/style/` 下对应这类任务的风格卡，没有时读研究身份摘要；`python3 scripts/plan_context.py <路线> --vault personal_vault` 会按库的语言列出每一档要读用户的哪些卡。
+4. L2 / standard：只加入能解决明确缺口的 workflow、template、case 或 script。在用户的库里，这一档列出研究身份摘要、风格卡、一份方向摘要和这项任务的工作流程，再单独列出方向摘要点名的卡，由你用 `ros context` 一张张取。
+5. L3 / evidence：只为已说明的核验问题加入精确证据或检查项，例如发布审计、bug 修复或用户明确要求的完整检查。在用户的库里，这一档只多一句提示：为一个说得出的核对问题，打开这些卡「证据边界」里写明的原件，比如库外的笔记和记录。
 
-除非用户明确要求（例如双语工作），不要同时读取中英文文件、生成的 dashboard JSON、完整手册或全部模板。回答中说明读取层级，以及哪些文件被刻意不读。
+除非用户明确要求（例如双语工作），不要同时读取中英文文件、生成的 dashboard JSON、完整手册或全部模板。回答中说明读取档，以及哪些文件被刻意不读。
 
 默认使用 `quick` 读取。模型选择和推理深度分开处理：`Auto` 跟随可用运行时目录，用户固定或自定义的模型不得被任务路由暗中替换；`economy / standard / deep` 只建议 `low / medium / high` 等推理投入：简单设置可用 `economy + low`，实质分析通常需要 `standard + medium`，只有复杂的多来源工作才进一步升级。除非设置会影响当前任务，否则保持折叠；明显增加 token 前要告诉用户原因。
 
@@ -100,7 +115,9 @@ ResearchOS 以用户素材为基础。不要暗示只靠提示词就能让空库
 | “让我看 dashboard” | `docs/user-manual.zh.md`（第 4 节）、`scripts/README.md` | 给出 dashboard 启动命令。 |
 | “我要放自己的材料” | `docs/user-manual.zh.md`（第 5 节）、`docs/reference/WHERE_TO_PUT_NEW_MATERIALS.zh.md` | 使用 `personal_vault/`：它还不存在时先复制调度器夹具，再加入一项承诺、一份来源和一张候选卡片；用 `--mode personal-vault` 查看本地卡片。不需要关闭示例数据。 |
 | “我当前主责推进多少任务？” | personal vault 中的 `06_active_context/research-portfolio.md`，或本启动版的虚构 demo agenda | 先运行 `python3 scripts/query_research_agenda.py`。只统计 `responsibility: lead` 且 `state: mainline`；协作、等待、排队、条件、暂停、需关注和责任未分类状态分开报告。覆盖回执未闭合时只能称为已登记数量；不得从项目数量或最近活动猜责任，也不得把责任缺失/非法的事项默认算作主责。 |
-| “创建卡片” | `docs/reference/AGENT_PROTOCOL.zh.md`、`09_templates/` 中的相关模板 | 区分来源事实、候选判断和缺失证据。 |
+| “帮我读这篇论文”“帮我写或改稿”“帮我审这篇稿子”“帮我写基金申请” | `05_workflows/research_work/` 里对应的流程：`paper-reading.zh.md`、`paper-writing.zh.md`、`peer-review.zh.md`、`grant-proposal.zh.md` | 照「首次上手之后的每次会话」做，路线分别用 `material_understanding`、`paper_writing`、`peer_review` 或 `proposal`。 |
+| “帮我整理这次会议”“帮我给学生回意见”“要不要换题目”“帮我准备报告或画图” | 同一文件夹里的 `meeting-follow-up.zh.md`、`mentee-feedback.zh.md`、`topic-change.zh.md` 或 `talks-and-figures.zh.md` | 做法相同，路线用 `meeting_follow_up`、`mentee_feedback`、`idea_diagnosis`，或 `presentation` 与 `figure_design`。 |
+| “创建卡片” | `docs/reference/AGENT_PROTOCOL.zh.md`、`09_templates/basic/` 中对应的骨架和 `examples/starter-cards/zh-CN/` 里的示例 | 区分来源事实、用户的看法、你的补充和待核；`Agent Summary` 要能单独读懂；敏感性按首次上手的规定写。 |
 | “回应外部请求” | `docs/reference/AGENT_PROTOCOL.zh.md`、`05_workflows/research_management/external-demand-response-workflow.zh.md` | 判断请求类型、寻找相关资产、说明边界，只有安全时才起草回复。 |
 | “判断关系或机会” | `docs/reference/AGENT_PROTOCOL.zh.md`、`05_workflows/research_management/relationship-opportunity-workflow.zh.md` | 列出已确认事实、候选连接、不能推断什么和一个下一步行动。 |
 | “处理 Review 或 handoff” | `docs/reference/AGENT_PROTOCOL.zh.md`、`06_active_context/` 或 `08_exports/public_starter/` 中的相关文件 | 先总结待确认项，再讨论写回。 |
@@ -150,11 +167,11 @@ python3 scripts/build_public_starter_data.py --personal-vault --write
 - 不要提交密钥、provider token、原始语料、未公开论文、敏感人物笔记、本地机器路径或运行日志。
 - 不要从弱证据推断私人关系、指导关系、学生身份、实验室身份、贡献层级或未来承诺。
 - 没有清晰用户意图时，不要运行 Codex CLI handoff、真实 provider/API 调用或会写文件的命令。
-- 状态轴必须分开：证据状态使用 `candidate` / `needs_evidence`，敏感性或导出边界使用 `local_only` / `public_safe` / `not_exportable`。
+- 状态轴必须分开：`candidate` / `needs_evidence` 是证据状态；`sensitivity`（`public` / `internal` / `sensitive` / `private`）决定 `ros context` 打包什么；`public_boundary`（例如 `local_only` / `public_safe` / `not_exportable`）决定能不能导出。
 
 ## 可以建议用户先说
 
-如果用户不知道怎么开始，建议他说（与用户手册第 2 节是同一段提示词）：
+如果用户不知道怎么开始，建议用户说（与用户手册第 2 节是同一段提示词）：
 
 ```text
 我还不知道怎么使用 ResearchOS Public Starter。请你作为我的向导，先只读 AGENTS.md；如果环境已经加载该文件，不要重读，也不要扫描仓库。然后用简单中文告诉我：1. 这个项目是做什么的；2. 我现在应该选哪条路线；3. 下一个文件或命令；4. 哪些内容不能放进公开仓库。暂时不要写文件；如果需要信息，最多先问我两个问题。

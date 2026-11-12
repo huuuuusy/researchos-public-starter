@@ -56,6 +56,88 @@ def route_for(task_id: str, language: str) -> dict[str, object] | None:
     )
 
 
+LEVELS = ("quick", "standard", "evidence")
+
+
+def vault_reads(task: dict[str, object], vault: Path, mode: str, generic: list[str], file_limit: int,
+                language: str) -> dict[str, object]:
+    """Resolve a route's reading levels against the user's own vault (the user's cards come first).
+
+    quick reads the route's first card (the boundary card before outward tasks, else the working-style
+    card for this kind of task, else the research identity page); standard adds the identity page, the
+    task's workflow, one direction summary and the vault files the route names; evidence adds the
+    route's index cards and opens only originals named in the evidence boundaries of these cards."""
+    slots = task.get("vault_reads") or {}
+    suffix = ".zh.md" if language == "zh-CN" else ".md"
+    identity = vault / "00_identity" / "research-identity.md"
+    style = vault / "03_cognition" / "style" / f"{slots['style']}.md" if slots.get("style") else None
+    capsules = sorted((vault / "01_knowledge" / "capsules").glob("*.md"))
+    upto = LEVELS[: LEVELS.index(mode) + 1]
+    wanted = {level: [vault / relative for relative in slots.get(level, [])] for level in upto}
+    missing: list[dict[str, str]] = []
+    expected = [(identity, "research-identity"), *([(style, "style")] if style is not None else []),
+                *((path, path.stem) for level in upto for path in wanted[level] if not path.name.endswith("/") and path.suffix)]
+    for path, skeleton in expected:
+        if not path.is_file():
+            missing.append({"path": path.as_posix(), "template": f"09_templates/basic/{skeleton}{suffix}"})
+    if not capsules:
+        missing.append({"path": (vault / "01_knowledge" / "capsules" / "<project>.md").as_posix(),
+                        "template": f"09_templates/basic/capsule{suffix}"})
+    first = [path.as_posix() for path in (*wanted["quick"], style, identity) if path is not None and path.is_file()][:1]
+    if mode == "quick":
+        return {"read_now": first or generic[:1], "direction_summaries": [], "named_cards": [], "missing": missing}
+    named: list[str] = []
+    for level in upto[1:]:
+        for relative in slots.get(level, []):
+            target = vault / relative
+            named.extend(path.as_posix() for path in (sorted(target.glob("*.md")) if relative.endswith("/") else [target])
+                         if path.is_file())
+    own = list(dict.fromkeys([*first, *(path.as_posix() for path in (identity, style) if path is not None and path.is_file()),
+                              *named]))
+    # One direction summary is read; when there are several, the task picks one, and that choice takes one place.
+    summary_places = 1 if capsules else 0
+    room = max(file_limit - summary_places, 0)
+    read_now = list(dict.fromkeys([*own, *generic]))[:room]
+    named_cards: list[str] = []
+    if len(capsules) == 1:
+        read_now.insert(min(len(own), len(read_now)), capsules[0].as_posix())
+        sources = parse_list_field(capsules[0], "source_files")
+        named_cards = [card.as_posix() for card in (vault / item for item in sources)
+                       if card.is_file() and card.as_posix() not in read_now]
+    return {"read_now": read_now, "direction_summaries": [path.as_posix() for path in capsules] if len(capsules) > 1 else [],
+            "named_cards": named_cards, "missing": missing}
+
+
+def parse_list_field(card: Path, key: str) -> list[str]:
+    """One YAML list field of a card's frontmatter (`key:` followed by `- item` lines)."""
+    lines = card.read_text(encoding="utf-8").split("\n---\n", 1)[0].splitlines()
+    items: list[str] = []
+    inside = False
+    for line in lines:
+        if line.startswith(f"{key}:"):
+            inside = True
+        elif inside and line.strip().startswith("- "):
+            items.append(line.strip()[2:].strip())
+        elif inside:
+            break
+    return items
+
+
+DO_NOT_READ = {
+    "en": [
+        "files in the other language",
+        "dashboard/data/ and 08_exports/public_starter/generated-public-starter-data.json",
+        "the ros run records under the vault's work_state folder",
+    ],
+    "zh-CN": [
+        "另一种语言的文件",
+        "dashboard/data/ 与 08_exports/public_starter/generated-public-starter-data.json",
+        "库里 work_state 文件夹下 ros 的运行记录",
+    ],
+}
+ESCALATE = {"quick": "standard", "standard": "evidence", "evidence": "none"}
+
+
 def selected_tier(task: dict[str, object], mode: str) -> dict[str, object]:
     tiers = task.get("read_tiers", [])
     return next((tier for tier in tiers if tier.get("id") == mode), tiers[0])
@@ -86,6 +168,11 @@ def route_payload(
         "sensitivity_default": task.get("sensitivity_default", "local_only"),
         "authority": task["authority"],
         "confirmation_boundary": task["authority"]["summary"],
+        "do_not_read": [*DO_NOT_READ[language if language in DO_NOT_READ else "en"],
+                        *([] if tier["id"] == "evidence" else [
+                            "原件：卡片「证据边界」里写明的原文、笔记和记录" if language == "zh-CN"
+                            else "originals named in a card's Evidence boundary"])],
+        "escalate_to": ESCALATE[str(tier["id"])],
     }
     if task.get("extension_id"):
         payload["extension"] = {
@@ -179,9 +266,17 @@ def as_text(payload: dict[str, object], language: str) -> str:
         "output": "输出" if zh else "Output",
         "workspace": "工作区" if zh else "Workspace",
         "result": "结果协议" if zh else "Result protocol",
-        "sensitivity": "默认敏感度" if zh else "Sensitivity default",
         "boundary": "确认边界" if zh else "Confirmation boundary",
+        "skip": "默认不要读" if zh else "Do not read by default",
+        "escalate": "出现明确缺口后才升级" if zh else "Escalate only after a named gap",
     }
+    sensitivity = (
+        "敏感性: 新卡按类型标注（论文、项目、摘要 internal，人物、会议 sensitive）；标签只决定 ros context 打包什么，"
+        "助手读到的和你说的都会发给服务商"
+        if zh else
+        "Sensitivity: new cards are labelled by type (paper, project, summary internal; person, meeting sensitive); "
+        "the label decides only what ros context packs, and what the assistant reads or you say goes to the provider"
+    )
     lines = [
         f"{labels['task']}: {payload['name']} ({payload['task_id']})",
         f"{labels['language']}: {payload['active_language']}",
@@ -191,13 +286,41 @@ def as_text(payload: dict[str, object], language: str) -> str:
         f"{labels['read']}:",
         *(f"- {path}" for path in payload["read_now"]),
         "",
+        *vault_lines(payload, zh),
+        f"{labels['skip']}:",
+        *(f"- {item}" for item in payload["do_not_read"]),
+        "",
+        f"{labels['escalate']}: {payload['escalate_to']}",
         f"{labels['output']}: {payload['expected_output']}",
         f"{labels['workspace']}: {payload['workspace']}",
         f"{labels['result']}: {', '.join(payload['result_modes'])}; default={payload['default_result_mode']}",
-        f"{labels['sensitivity']}: {payload['sensitivity_default']}",
+        sensitivity,
         f"{labels['boundary']}: {payload['confirmation_boundary']}",
     ]
     return "\n".join(lines)
+
+
+def vault_lines(payload: dict[str, object], zh: bool) -> list[str]:
+    entry = payload.get("vault_entry")
+    if not entry:
+        return []
+    lines = []
+    if entry["direction_summaries"]:
+        lines.append("方向摘要（按任务选其中一份，占一个名额；再按它的表用 ros context 取卡）：" if zh else
+                     "Direction summaries (pick the one this task needs, it takes one place; then fetch its cards with ros context):")
+        lines.extend(f"- {path}" for path in entry["direction_summaries"])
+    if entry.get("named_cards") and payload["mode"] != "quick":
+        lines.append("方向摘要点名的卡（任务需要哪张，就用 ros context 取哪张）：" if zh else
+                     "Cards the direction summary names (fetch the ones the task needs with ros context):")
+        lines.extend(f"- {path}" for path in entry["named_cards"])
+    if payload["mode"] == "evidence":
+        lines.append("原件：只打开这些卡「证据边界」里写明的原件，而且要有一个说得出的核对问题。" if zh else
+                     "Originals: open only those named in the Evidence boundary of these cards, and only for a stated check.")
+    if entry["missing"]:
+        lines.append("你的库里还没有（本次跳过；想写时从模板开始）：" if zh else
+                     "Not in your vault yet (skipped this time; start from the template when you want it):")
+        lines.extend(f"- {item['path']} ← {item['template']}" for item in entry["missing"])
+    return [*lines, ""] if lines else []
 
 
 def main() -> int:
@@ -217,7 +340,8 @@ def main() -> int:
         metavar="TASK_ID",
         help="Registered task ID, alias, or enabled extension ID.",
     )
-    parser.add_argument("--lang", choices=("en", "zh-CN"), default="en")
+    parser.add_argument("--lang", choices=("en", "zh-CN"), default=None,
+                        help="Default: the language of the --vault folder (its config/ros.json), otherwise en.")
     parser.add_argument("--mode", choices=("quick", "standard", "evidence"), default="quick")
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--headless-json", action="store_true")
@@ -225,8 +349,13 @@ def main() -> int:
     parser.add_argument("--prior-receipt-json", help="Reuse a prior route receipt only within its bounded identity.")
     parser.add_argument("--expected-extension-version", help="Fail closed when resuming a missing or changed task extension.")
     parser.add_argument("--list", action="store_true")
+    parser.add_argument("--vault", metavar="FOLDER", help="Read the user's own cards in this vault first: the working-style card or research identity page at quick, plus the direction summary and named cards at standard.")
     parser.add_argument("--reroute-intent", action="store_true", help="Explicitly reclassify an intent in this runtime; discard prior profile classification and identity, never grant effects.")
     args = parser.parse_args()
+    if args.lang is None:
+        config = Path(args.vault or "") / "config" / "ros.json"
+        language = json.loads(config.read_text(encoding="utf-8")).get("language") if args.vault and config.is_file() else ""
+        args.lang = "zh-CN" if language == "zh-CN" else "en"
     if args.reroute_intent and (not args.intent_json or args.prior_receipt_json):
         parser.error("--reroute-intent requires --intent-json and cannot reuse a prior receipt")
     if args.expected_extension_version and (args.list or args.intent_json or not args.task):
@@ -261,6 +390,13 @@ def main() -> int:
         args.mode,
         include_legacy_client_fields=not args.headless_json,
     )
+    if args.vault:
+        vault = Path(args.vault)
+        if not vault.is_dir():
+            raise SystemExit(f"No vault folder at {args.vault}")
+        entry = vault_reads(task, vault, str(payload["mode"]), list(payload["read_now"]), int(payload["file_limit"]), args.lang)
+        payload["read_now"] = entry.pop("read_now")
+        payload["vault_entry"] = entry
     print(json.dumps(payload, ensure_ascii=False, indent=2) if args.json or args.headless_json else as_text(payload, args.lang))
     return 0
 

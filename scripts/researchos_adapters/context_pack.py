@@ -15,20 +15,35 @@ import uuid
 from pathlib import Path
 
 from researchos_kernel.context_receipt import AXIS_STATES, CONTEXT_RECEIPT_SCHEMA_ID, normalize_context_receipt
+from researchos_kernel.messages import t
 
 from .markdown_repo import UNLABELED, split_frontmatter
 
 DELIVERABLE = {"public", "internal"}
 
 
-def terminal_confirms(ref: str, label: str, destination: str = "the session Agent") -> bool:
+def terminal_confirms(ref: str, label: str, destination: str, lang: str) -> bool:
     """Soul §4: sensitive material needs the researcher's own confirmation on this machine. A flag
     the session Agent types is not that; an interactive terminal answer is."""
     if not (sys.stdin.isatty() and sys.stderr.isatty()):
         return False
-    sys.stderr.write(f"Deliver sensitive source {ref} ({label}) to {destination}? [y/N] ")
+    sys.stderr.write(t(lang, "context.ask", ref=ref, label=label, destination=destination or t(lang, "context.session_agent")))
     sys.stderr.flush()
     return sys.stdin.readline().strip().lower() in {"y", "yes"}
+
+
+def excluded_notes(lang: str, excluded: list) -> str:
+    """One line per excluded source saying why, for the text output; the receipt and JSON are unchanged.
+    A source over the 20-source limit is already counted in the footer."""
+    lines = []
+    for row in excluded:
+        reason = row["reason"]
+        if reason.startswith("capacity:"):
+            continue
+        kind = reason.split(":")[1] if reason.startswith("sensitivity:") else "budget"
+        kind = kind if kind in {"budget", "sensitive", "private"} else "unlabeled"  # any other label is not recognised
+        lines.append("\n  " + t(lang, f"context.why.{kind}", ref=row["ref"]))
+    return "".join(lines)
 
 
 def receipt_axes(**states) -> dict:
@@ -55,7 +70,7 @@ def portfolio_sensitivity(root: Path, snapshot) -> tuple:
 
 def build_context_pack(result, ledger, root: Path, config: dict, runtime_scope: str, target: str, *,
                        service: str, service_source: str, surface: str, delivery: str,
-                       destination: str = "the session Agent", run_id: str = "", task_id: str = "",
+                       destination: str = "", run_id: str = "", task_id: str = "",
                        episode_id: str = "") -> dict:
     """The bounded pack for ``target`` over the boundary ``result`` and its receipt; ``ledger``
     records what left and where."""
@@ -116,7 +131,7 @@ def build_context_pack(result, ledger, root: Path, config: dict, runtime_scope: 
     for kind, ref, label, sensitivity, text in sources:
         grant = f"session_scope:{sensitivity}" if sensitivity in DELIVERABLE else \
             ("source_declared_fields:" + ",".join(released) if sensitivity == "declared_fields" else "")
-        if sensitivity == "sensitive" and terminal_confirms(ref, label, destination):
+        if sensitivity == "sensitive" and terminal_confirms(ref, label, destination, config.get("language", "zh-CN")):
             grant = "researcher_terminal_confirmation"
         if not grant:
             why = f"sensitivity:{sensitivity}"

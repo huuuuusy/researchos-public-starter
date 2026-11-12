@@ -27,7 +27,7 @@ This example shows how a collaborator card may be proposed from a paper author l
 ```yaml
 card_type: person
 subtype: collaborator_candidate
-maturity: 1
+relationship_maturity: R1_registered
 name: Collaborator A
 status: candidate
 source_materials:
@@ -49,7 +49,7 @@ next_confirmation_question: Should this co-author become a confirmed collaborato
 ```yaml
 card_type: person
 subtype: collaborator
-maturity: 2
+relationship_maturity: R2_evidence_linked
 name: Collaborator A
 status: sourced
 public_anchor: https://example.org/collaborator-a
@@ -68,7 +68,7 @@ next_action: Ask the user whether future outreach or project planning should inc
 ```yaml
 card_type: person
 subtype: collaborator
-maturity: 3
+relationship_maturity: R3_cross_project
 name: Collaborator A
 status: operational
 public_anchor: https://example.org/collaborator-a

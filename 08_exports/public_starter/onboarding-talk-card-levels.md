@@ -25,7 +25,7 @@ This example starts after the user registers one public talk page, slide deck, l
 
 ```yaml
 card_type: talk
-maturity: 1
+analysis_state: M1_registered
 title: From Notes to Confirmed Research Memory
 status: candidate
 source_materials:
@@ -44,7 +44,7 @@ next_action: Verify talk date, audience, and public source.
 
 ```yaml
 card_type: talk
-maturity: 2
+analysis_state: M2_refined_read
 title: From Notes to Confirmed Research Memory
 status: sourced
 date: 2026-04-18
@@ -64,7 +64,7 @@ next_action: Ask whether this talk can be used as the first public explanation o
 
 ```yaml
 card_type: talk
-maturity: 3
+analysis_state: M3_cross_project_deepening
 title: From Notes to Confirmed Research Memory
 status: operational
 public_source: https://example.org/talks/confirmed-research-memory

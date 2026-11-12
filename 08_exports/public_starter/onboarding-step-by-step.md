@@ -104,14 +104,16 @@ Candidates returned or proposed since this session started that are neither admi
 3. Delete the two fictional cards, `personal_vault/01_knowledge/projects/occlusion-tracking.md` and `personal_vault/01_knowledge/papers/example-benchmark.md`, and create your own card at the `source_path` you wrote, starting from a template:
 
    ```bash
-   cp 09_templates/project-template.md personal_vault/01_knowledge/projects/thesis-ch2.md
+   cp 09_templates/basic/project.md personal_vault/01_knowledge/projects/thesis-ch2.md
    ```
 
-   Fill in `project_name` and replace the `# Project Name` heading with the same name; `ros` shows the card under that heading. Then record the source boundary, the evidence state and one missing fact. For a paper, start from `09_templates/paper-template.md` instead. If you would rather start from a short profile, ask the assistant to draft an intake note like the [material-intake note example](onboarding-intake-note-example.md) first.
+   Fill in `title` and replace the `# Project name` heading with the same name; `ros` shows the card under that title. Write the `Agent Summary` so it makes sense on its own, record the results with their sources, one thing still to verify, and where the originals are under "Evidence boundary"; then delete the "How to fill in" note. For a paper, start from `09_templates/basic/paper.md` instead. `examples/starter-cards/en/` shows every kind of card filled in. If you would rather start from a short profile, ask the assistant to draft an intake note like the [material-intake note example](onboarding-intake-note-example.md) first.
 
-   Around the project, a few more cards give the vault your own context: a profile card at `personal_vault/00_identity/profile.md` from `09_templates/person-template.md` with `relationship_type: self` (name, affiliation, themes, representative works, taken from your homepage, Google Scholar, ORCID or DBLP page or the research part of your CV), three to five paper cards under `personal_vault/01_knowledge/papers/` from `09_templates/paper-template.md`, and a card in the vault's people folder, under `collaborators/`, for each coauthor who appears on two or more of those papers, with `relationship_type: candidate` and only the papers you share. Point the project card's `related_papers` to the papers it builds on. This is the walk-through an assistant follows from the "First Run" section of `AGENTS.md`; keep their `sensitivity` set to private unless you decide otherwise.
+   Around the project, a few more cards give the vault your own context: a profile card at `personal_vault/00_identity/profile.md` from `09_templates/basic/person.md` with `relationship_type: self` (name, affiliation, themes, representative works, taken from your homepage, Google Scholar, ORCID or DBLP page or the research part of your CV), three to five paper cards under `personal_vault/01_knowledge/papers/` from `09_templates/basic/paper.md`, and a card in the vault's people folder, under `collaborators/`, for each coauthor who appears on two or more of those papers, with `relationship_type: candidate` and only the papers you share. Point the project card's `related_papers` to the papers it builds on.
 
-4. Check the vault:
+4. Add the two entry pages an assistant reads first in every later session: `personal_vault/00_identity/research-identity.md` from `09_templates/basic/research-identity.md`, and a direction summary under `personal_vault/01_knowledge/capsules/` from `09_templates/basic/capsule.md` that says which card to read for which task. This is the walk-through an assistant follows in steps 2 to 6 of the "First Run" section of `AGENTS.md`. Set `sensitivity` to `internal` on the paper, project and summary cards and to `sensitive` on the profile and collaborator cards: `ros context` hands internal cards to the assistant, leaves a sensitive one out unless you run it in your own terminal and confirm (it then prints there, for you to copy what the task needs), and never packs a private one.
+
+5. Check the vault:
 
    ```bash
    python3 scripts/ros.py --root personal_vault today
@@ -120,7 +122,7 @@ Candidates returned or proposed since this session started that are neither admi
    You should see your commitment, and only yours, under "To decide":
 
    ```text
-   To decide (1: unscheduled, needing a next step, or due for review)
+   To decide (1 commitment(s): unscheduled, needing a next step, or due for review)
      ■ Thesis chapter 2  [unscheduled]
        (nothing to review; carry on with the next step)
    ```

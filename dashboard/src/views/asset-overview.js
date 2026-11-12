@@ -228,7 +228,8 @@
     </section>`;
   }
 
-  function renderAssetCardBoxWorkbench({ boxes = [], focusCard = null, publicMode = false } = {}, deps = {}) {
+  // personal-vault mode passes hideCreatePanel: the demo panel there would be fictional and its form writes no file.
+  function renderAssetCardBoxWorkbench({ boxes = [], focusCard = null, publicMode = false, hideCreatePanel = false } = {}, deps = {}) {
     const { escapeHtml, shortText, translate } = normalizeDeps(deps);
     const activeFocusId = focusCard?.id || "";
     const activeRelationIds = new Set(Array.isArray(focusCard?.relation_ids) ? focusCard.relation_ids : []);
@@ -250,7 +251,7 @@
               <small data-asset-card-global-search-status>${escapeHtml(translate("assetsCardGlobalSearchIdle"))}</small>
             </label>
             <small>${escapeHtml(`${visibleBoxes.length} ${translate("assetsCardBoxUnit")} · ${totalCards} ${translate("assetsCardUnit")} · ${translate("assetsCardBoxCompactRule")}`)}</small>
-            <button type="button" data-action-kind="navigation" data-asset-open-intake>${escapeHtml(translate(publicMode ? "researchPortfolioPublicDemoLabel" : "assetCreateEntry"))}</button>
+            ${hideCreatePanel ? "" : `<button type="button" data-action-kind="navigation" data-asset-open-intake>${escapeHtml(translate(publicMode ? "researchPortfolioPublicDemoLabel" : "assetCreateEntry"))}</button>`}
           </div>
         </header>
         <div class="asset-card-workspace-layout">
@@ -457,7 +458,7 @@
             </details>
           </aside>
         </div>
-        <details class="asset-create-panel" data-asset-create-panel>
+        ${hideCreatePanel ? "" : `<details class="asset-create-panel" data-asset-create-panel>
           <summary>
             <span>${escapeHtml(translate(publicMode ? "researchPortfolioPublicDemoLabel" : "assetCreateTitle"))}</span>
             <small>${escapeHtml(translate(publicMode ? "onboardingPublicBody" : "assetCreateHint"))}</small>
@@ -504,7 +505,7 @@
               <output data-asset-create-status>${escapeHtml(translate("assetCreateSafeHint"))}</output>
             </footer>
           </form>
-        </details>
+        </details>`}
       </section>
     `;
   }
@@ -529,6 +530,7 @@
     cardBoxes = [],
     focusCard = null,
     publicMode = false,
+    hideCreatePanel = false,
     publicDemoToggleHtml = "",
     workSessionTrayHtml = "",
     intakePanelHtml = "",
@@ -539,7 +541,7 @@
       workSessionTrayHtml,
       publicDemoToggleHtml,
       intakePanelHtml,
-      renderAssetCardBoxWorkbench({ boxes: cardBoxes, focusCard, publicMode }, deps),
+      renderAssetCardBoxWorkbench({ boxes: cardBoxes, focusCard, publicMode, hideCreatePanel }, deps),
     ].join("");
   }
 

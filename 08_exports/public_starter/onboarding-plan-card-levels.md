@@ -26,7 +26,7 @@ This example shows how a plan card matures after person, paper, talk, and collab
 
 ```yaml
 card_type: plan
-maturity: 1
+project_maturity: I1_sandbox
 title: Build the first five ResearchOS onboarding cards
 status: idea
 source_materials:
@@ -45,7 +45,7 @@ next_action: Convert this idea into a scoped plan with outputs and checks.
 
 ```yaml
 card_type: plan
-maturity: 2
+project_maturity: I2_active_mount
 title: Build the first five ResearchOS onboarding cards
 status: scoped
 objective: Create public-safe onboarding examples that show which sources to register and how cards mature.
@@ -72,7 +72,7 @@ blockers:
 
 ```yaml
 card_type: plan
-maturity: 3
+project_maturity: I3_independent_project
 title: Build the first five ResearchOS onboarding cards
 status: operational
 owner: repository maintainer

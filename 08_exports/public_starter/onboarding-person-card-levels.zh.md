@@ -26,7 +26,7 @@ exportable_to:
 
 ```yaml
 card_type: person
-maturity: 1
+relationship_maturity: R1_registered
 name: Sue 博士
 status: candidate
 source_materials:
@@ -47,7 +47,7 @@ next_confirmation_question: 哪份公开简历或简历摘要应作为来源记�
 
 ```yaml
 card_type: person
-maturity: 2
+relationship_maturity: R2_evidence_linked
 name: Sue 博士
 status: sourced
 public_anchors:
@@ -69,7 +69,7 @@ next_action: 阅读第一篇代表论文，并把它连接到个人画像。
 
 ```yaml
 card_type: person
-maturity: 3
+relationship_maturity: R3_cross_project
 name: Sue 博士
 status: operational
 public_positioning: 虚构研究者，构建带有明确证据边界的人类确认式 AI 研究工作流。

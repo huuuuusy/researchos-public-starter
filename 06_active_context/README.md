@@ -21,3 +21,5 @@ Do not place real project state, private tasks, collaborator strategy, reviewer 
 Bounded presentation, meeting, application, analysis, or revision artifacts may live here only in a user's private/local vault while they have a named consumer, next action, or concrete waiting event. At closeout, follow the [Derived Work Artifact Lifecycle](../05_workflows/research_management/derived-work-artifact-lifecycle.md): distill durable content first, then archive only independently valuable history under `07_archive/task_artifacts/`.
 
 This repository does not ship empty Dashboard inboxes. Personal-vault actions create local `ui-*` runtime files on demand; `.gitignore` keeps them out of the repository.
+
+In your own vault, `personal_vault/06_active_context/` holds the commitment list (`research-portfolio.md`) and short-lived records such as meetings under `meetings/`. Skeleton: [`09_templates/basic/meeting.md`](../09_templates/basic/meeting.md); example: [meeting card](../examples/starter-cards/en/06_active_context/meetings/2026-09-22-benchmark-sync.md).

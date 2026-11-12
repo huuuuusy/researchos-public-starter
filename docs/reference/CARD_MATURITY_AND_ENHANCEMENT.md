@@ -8,14 +8,16 @@ This reference explains how ResearchOS displays card maturity and turns a reques
 
 ## One Level Does Not Fit Every Card
 
-Each Library card may show one primary maturity axis with a plain-language label:
+Each Library card may show one primary maturity axis with a plain-language label, read from the frontmatter field its type uses:
 
-| Card | Axis | Meaning |
-| --- | --- | --- |
-| Paper, talk, source, or note | `M1–M3` | How deeply the material has been understood |
-| Idea or project | `I0–I3` | How far it has moved from assessment to an independent project |
-| Person | `R0–R3` | How complete the sourced working-relationship context is |
-| Card group or direction | `G0–G2 / Research mainline` | How far separate cards have become a reusable composition |
+| Card | Field | Axis | What it tracks |
+| --- | --- | --- | --- |
+| Paper, talk, source, or note | `analysis_state` | `M1–M3` | How deeply the material has been understood |
+| Idea or project | `project_maturity` | `I0–I3` | How far it has moved from assessment to an independent project |
+| Person or collaborator | `relationship_maturity` | `R0–R3` | How complete the sourced working-relationship context is |
+| Card group or direction summary | `group_level` | `G0–G2 / Research mainline` | How far separate cards have become a reusable composition |
+
+Heuristic and working-style cards carry no level: heuristics carry `confidence` and `status`, working-style cards only `status`. What levels 1, 2 and 3 mean, and which value each card type writes for them, is explained once, in the [Card Maturity Rubric](../../08_exports/public_starter/onboarding-card-maturity-rubric.md). `I0_assessment` and `R0` mark a card that still has to be checked, before level 1.
 
 `P0–P3` is project priority, not maturity. Lifecycle, schedule, relation confidence, and context budget are separate. ResearchOS never ranks a person's value: an R label describes the completeness of the relationship record only.
 

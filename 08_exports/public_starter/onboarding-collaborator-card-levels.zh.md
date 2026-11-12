@@ -27,7 +27,7 @@ exportable_to:
 ```yaml
 card_type: person
 subtype: collaborator_candidate
-maturity: 1
+relationship_maturity: R1_registered
 name: 合作者 A
 status: candidate
 source_materials:
@@ -49,7 +49,7 @@ next_confirmation_question: 是否应该把这位共同作者升级为你 Resear
 ```yaml
 card_type: person
 subtype: collaborator
-maturity: 2
+relationship_maturity: R2_evidence_linked
 name: 合作者 A
 status: sourced
 public_anchor: https://example.org/collaborator-a
@@ -68,7 +68,7 @@ next_action: 询问用户未来联系或项目计划是否应包含这位合作�
 ```yaml
 card_type: person
 subtype: collaborator
-maturity: 3
+relationship_maturity: R3_cross_project
 name: 合作者 A
 status: operational
 public_anchor: https://example.org/collaborator-a

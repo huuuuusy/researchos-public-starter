@@ -54,6 +54,9 @@ def _specs(language: str) -> list[dict[str, Any]]:
     suffix = ".zh.md" if zh else ".md"
     guide_suffix = ".zh.md" if zh else ".en.md"
     prompt_template = "09_templates/standard-agent-prompts.zh.md" if zh else "09_templates/standard-agent-prompts.en.md"
+
+    def workflow(name: str) -> str:
+        return f"05_workflows/research_work/{name}{suffix}"
     return [
         {
             "id": "first_run_onboarding",
@@ -73,7 +76,7 @@ def _specs(language: str) -> list[dict[str, Any]]:
             "output": "M1 登记卡 + 证据边界 + 下一步升级建议" if zh else "M1 card + evidence boundary + next upgrade suggestion",
             "read_first": [f"docs/reference/WHERE_TO_PUT_NEW_MATERIALS{suffix}", "05_workflows/research_management/material-intake-workflow.md", f"08_exports/public_starter/onboarding-intake-note-example{suffix}"],
             "primary_read": "05_workflows/research_management/material-intake-workflow.md",
-            "standard_extra": ["09_templates/paper-template.md", "09_templates/project-template.md"],
+            "standard_extra": [f"09_templates/basic/paper{suffix}", f"09_templates/basic/project{suffix}"],
         },
         {
             "id": "card_upgrade",
@@ -105,6 +108,7 @@ def _specs(language: str) -> list[dict[str, Any]]:
             "primary_read": f"05_workflows/research_management/external-demand-response-workflow{suffix}",
             "evidence_extra": [f"docs/reference/SAFE_EXPORT_POLICY{suffix}"],
             "standard_extra": [f"docs/reference/AGENT_PROTOCOL{suffix}", prompt_template],
+            "vault": {"quick": ["00_identity/boundaries.md"]},
         },
         {
             "id": "relationship_opportunity",
@@ -114,7 +118,7 @@ def _specs(language: str) -> list[dict[str, Any]]:
             "output": "已确认事实 + 候选连接 + 机会路线 + 不能推断内容 + 下一步" if zh else "Confirmed facts + candidate links + opportunity routes + non-inferences + next action",
             "read_first": ["AGENTS.md", f"05_workflows/research_management/relationship-opportunity-workflow{suffix}"],
             "primary_read": f"05_workflows/research_management/relationship-opportunity-workflow{suffix}",
-            "standard_extra": [f"docs/reference/AGENT_PROTOCOL{suffix}", "09_templates/person-template.md", "09_templates/project-template.md"],
+            "standard_extra": [f"docs/reference/AGENT_PROTOCOL{suffix}", f"09_templates/basic/person{suffix}", f"09_templates/basic/project{suffix}"],
         },
         {
             "id": "maintenance_check",
@@ -133,8 +137,8 @@ def _specs(language: str) -> list[dict[str, Any]]:
             "goal": "基于用户指定来源区分事实、推断、未知与下一步。" if zh else "Separate facts, inferences, unknowns, and next steps from user-selected sources.",
             "user_input_hint": "提供精确材料路径、链接或粘贴内容，并说明你要回答的问题。" if zh else "Provide an exact source path, link, or pasted content and the question it should answer.",
             "output": "来源回执 + 核心现象 + 事实/推断/未知 + 下一步" if zh else "Source receipt + core phenomenon + facts/inferences/unknowns + next step",
-            "read_first": [f"docs/reference/AGENT_PROTOCOL{suffix}", "05_workflows/research_management/material-analysis-lifecycle-standard.md"],
-            "primary_read": f"docs/reference/AGENT_PROTOCOL{suffix}",
+            "read_first": [workflow("paper-reading"), f"docs/reference/AGENT_PROTOCOL{suffix}"],
+            "primary_read": workflow("paper-reading"),
             "standard_extra": ["05_workflows/research_management/material-analysis-lifecycle-standard.md"],
         },
         {
@@ -143,9 +147,10 @@ def _specs(language: str) -> list[dict[str, Any]]:
             "goal": "用最强简单基线、反例、证据缺口和停止条件诊断一个研究想法。" if zh else "Diagnose one research idea with the strongest simple baseline, counterexample, evidence gap, and stop rule.",
             "user_input_hint": "说明研究问题、现有证据、目标结果和主要约束。" if zh else "State the question, current evidence, desired outcome, and main constraints.",
             "output": "问题机制 + 竞争基线 + 可证伪判断 + 最小实验 + 停止条件" if zh else "Problem mechanism + competing baseline + falsifiable judgment + smallest experiment + stop rule",
-            "read_first": [prompt_template, f"docs/reference/AGENT_PROTOCOL{suffix}"],
-            "primary_read": prompt_template,
+            "read_first": [workflow("topic-change"), prompt_template],
+            "primary_read": workflow("topic-change"),
             "standard_extra": [f"docs/reference/AGENT_PROTOCOL{suffix}"],
+            "vault": {"standard": ["03_cognition/heuristics/"]},
         },
         {
             "id": "new_project_intake",
@@ -153,8 +158,8 @@ def _specs(language: str) -> list[dict[str, Any]]:
             "goal": "把用户的新方向整理成候选项目，而不推断责任、承诺或长期状态。" if zh else "Structure a new direction as a project candidate without inferring responsibility, commitment, or durable state.",
             "user_input_hint": "说明项目来源、目标、已有材料、你的角色和目前未知。" if zh else "Provide origin, goal, current material, your role, and known unknowns.",
             "output": "候选项目卡 + 责任边界 + 证据缺口 + 首个可验证里程碑" if zh else "Project candidate + responsibility boundary + evidence gaps + first verifiable milestone",
-            "read_first": ["09_templates/project-template.md", f"docs/reference/AGENT_PROTOCOL{suffix}"],
-            "primary_read": "09_templates/project-template.md",
+            "read_first": [f"09_templates/basic/project{suffix}", f"docs/reference/AGENT_PROTOCOL{suffix}"],
+            "primary_read": f"09_templates/basic/project{suffix}",
             "standard_extra": [f"docs/reference/AGENT_PROTOCOL{suffix}"],
         },
         {
@@ -166,6 +171,7 @@ def _specs(language: str) -> list[dict[str, Any]]:
             "read_first": [f"docs/reference/SAFE_EXPORT_POLICY{suffix}", f"docs/reference/AGENT_PROTOCOL{suffix}"],
             "primary_read": f"docs/reference/SAFE_EXPORT_POLICY{suffix}",
             "standard_extra": [f"docs/reference/AGENT_PROTOCOL{suffix}"],
+            "vault": {"quick": ["00_identity/boundaries.md"]},
         },
         {
             "id": "collaborative_alignment",
@@ -192,8 +198,9 @@ def _specs(language: str) -> list[dict[str, Any]]:
             "goal": "把一次有边界的 episode 转成因果教训、可证伪 gate 与唯一候选 owner。" if zh else "Turn one bounded episode into a causal lesson, falsifiable gate, and one candidate owner.",
             "user_input_hint": "提供 episode 目标、实际结果、失败或纠正证据和当前规则 owner。" if zh else "Provide the episode goal, observed outcome, failure or correction evidence, and current rule owner.",
             "output": "原因而非时间线 + 反例 + 候选规则 + 可执行 gate + 吸收 owner" if zh else "Cause not chronology + counterexample + candidate rule + executable gate + absorption owner",
-            "read_first": [f"docs/system-reference{guide_suffix}"],
-            "primary_read": f"docs/system-reference{guide_suffix}",
+            "read_first": [workflow("retrospective"), f"docs/system-reference{guide_suffix}"],
+            "primary_read": workflow("retrospective"),
+            "vault": {"standard": ["03_cognition/heuristics/"]},
         },
         {
             "id": "research_self_model",
@@ -211,9 +218,10 @@ def _specs(language: str) -> list[dict[str, Any]]:
             "goal": "基于精确稿件和证据完成有边界的论文写作或修改。" if zh else "Draft or revise a bounded manuscript move from the exact manuscript and evidence.",
             "user_input_hint": "提供稿件、目标段落、证据、引用和作者约束。" if zh else "Provide the manuscript, target passage, evidence, citations, and author constraints.",
             "output": "修改判断 + 候选文本 + claim-evidence/citation 检查 + 作者确认点" if zh else "Revision judgment + candidate text + claim-evidence/citation check + author confirmation",
-            "read_first": [prompt_template, f"docs/reference/AGENT_PROTOCOL{suffix}"],
-            "primary_read": prompt_template,
+            "read_first": [workflow("paper-writing"), prompt_template],
+            "primary_read": workflow("paper-writing"),
             "standard_extra": [f"docs/reference/AGENT_PROTOCOL{suffix}"],
+            "vault": {"style": "writing", "evidence": ["01_knowledge/papers/outputs-index.md", "01_knowledge/papers/author-roles.md"]},
         },
         {
             "id": "proposal",
@@ -221,9 +229,10 @@ def _specs(language: str) -> list[dict[str, Any]]:
             "goal": "把用户提供的 call 和研究证据转成可行、可评估的 proposal 候选。" if zh else "Turn a user-supplied call and research evidence into a feasible, evaluable proposal candidate.",
             "user_input_hint": "提供 call、截止时间、已有证据、资源和不能承诺的内容。" if zh else "Provide the call, deadline, evidence, resources, and commitments that cannot be made.",
             "output": "适配判断 + 贡献 + 可行路径 + 评估 + 未知 + 候选叙事" if zh else "Fit judgment + contribution + feasible path + evaluation + unknowns + candidate narrative",
-            "read_first": [prompt_template, f"docs/reference/AGENT_PROTOCOL{suffix}"],
-            "primary_read": prompt_template,
+            "read_first": [workflow("grant-proposal"), prompt_template],
+            "primary_read": workflow("grant-proposal"),
             "standard_extra": [f"docs/reference/AGENT_PROTOCOL{suffix}"],
+            "vault": {"style": "proposal", "standard": ["00_identity/boundaries.md"], "evidence": ["01_knowledge/papers/outputs-index.md", "01_knowledge/papers/author-roles.md"]},
         },
         {
             "id": "presentation",
@@ -231,9 +240,10 @@ def _specs(language: str) -> list[dict[str, Any]]:
             "goal": "把已确认的研究 claim、受众和时间约束转成报告结构候选。" if zh else "Turn confirmed research claims, audience, and duration into a presentation candidate.",
             "user_input_hint": "提供受众、时长、现有材料、核心 claim 和外发边界。" if zh else "Provide the audience, duration, source material, central claim, and release boundary.",
             "output": "叙事弧 + 逐页角色 + claim-evidence 映射 + 视觉 QA 计划" if zh else "Narrative arc + slide roles + claim-evidence map + visual QA plan",
-            "read_first": [prompt_template, f"docs/reference/AGENT_PROTOCOL{suffix}"],
-            "primary_read": prompt_template,
+            "read_first": [workflow("talks-and-figures"), prompt_template],
+            "primary_read": workflow("talks-and-figures"),
             "standard_extra": [f"docs/reference/AGENT_PROTOCOL{suffix}"],
+            "vault": {"style": "figures-talks", "standard": ["00_identity/boundaries.md"]},
         },
         {
             "id": "figure_design",
@@ -241,9 +251,42 @@ def _specs(language: str) -> list[dict[str, Any]]:
             "goal": "把一个研究机制和证据边界转成语义清晰的图表候选。" if zh else "Translate one research mechanism and evidence boundary into a semantically clear figure candidate.",
             "user_input_hint": "提供核心 claim、变量/角色、关系、证据、受众和输出格式。" if zh else "Provide the claim, variables or roles, relations, evidence, audience, and format.",
             "output": "图表语法 + 元素映射 + caption 候选 + 反误读检查" if zh else "Figure grammar + element mapping + caption candidate + misreading check",
-            "read_first": [prompt_template, f"docs/reference/AGENT_PROTOCOL{suffix}"],
-            "primary_read": prompt_template,
+            "read_first": [workflow("talks-and-figures"), prompt_template],
+            "primary_read": workflow("talks-and-figures"),
             "standard_extra": [f"docs/reference/AGENT_PROTOCOL{suffix}"],
+            "vault": {"style": "figures-talks"},
+        },
+        {
+            "id": "peer_review",
+            "name": "审稿" if zh else "Peer review",
+            "goal": "对一份你在审的稿件写出公平、具体、能被作者采纳的意见。" if zh else "Write fair, specific comments that the authors of a manuscript you review can act on.",
+            "user_input_hint": "说明期刊或会议的审稿要求、你的总体判断和最关心的两三处；稿件本身留在原处，不放进库里。" if zh else "Give the venue's review criteria, your overall view and the two or three points that matter most; keep the manuscript itself where it is, never in the vault.",
+            "output": "总体判断 + 主要问题（各附依据）+ 次要问题 + 给编辑的意见" if zh else "Overall assessment + major issues with grounds + minor issues + note to the editor",
+            "read_first": [workflow("peer-review"), prompt_template],
+            "primary_read": workflow("peer-review"),
+            "standard_extra": [f"09_templates/basic/review{suffix}"],
+            "vault": {"style": "review", "standard": ["00_identity/boundaries.md"]},
+        },
+        {
+            "id": "meeting_follow_up",
+            "name": "会议跟进" if zh else "Meeting follow-up",
+            "goal": "把一次会议整理成结论、未决问题、行动项和要写回卡片的事实。" if zh else "Turn one meeting into decisions, open questions, action items and the facts to write back to cards.",
+            "user_input_hint": "粘贴会议记录或要点，说明涉及哪个项目；别人的原话只记必要的。" if zh else "Paste the notes or key points and name the project; record other people's words only where needed.",
+            "output": "结论 + 未决问题 + 行动项（谁、交什么、何时）+ 卡片写回候选" if zh else "Decisions + open questions + action items (who, what, when) + card writeback candidates",
+            "read_first": [workflow("meeting-follow-up"), f"09_templates/basic/meeting{suffix}"],
+            "primary_read": workflow("meeting-follow-up"),
+            "standard_extra": [f"09_templates/basic/decision{suffix}"],
+        },
+        {
+            "id": "mentee_feedback",
+            "name": "给学生反馈" if zh else "Mentee feedback",
+            "goal": "根据学生或合作者给出的材料，指出最主要的一个问题和可检查的下一步。" if zh else "From what a student or mentee has shown, name the one main issue and a checkable next step.",
+            "user_input_hint": "提供对方的材料或进展、你的观察和这次反馈的目的。" if zh else "Provide their material or progress, your observations and the purpose of this feedback.",
+            "output": "做得好的地方 + 一个主要问题 + 下一步 + 怎样检查" if zh else "What works + one main issue + next step + how it will be checked",
+            "read_first": [workflow("mentee-feedback"), f"09_templates/basic/feedback{suffix}"],
+            "primary_read": workflow("mentee-feedback"),
+            "standard_extra": [f"09_templates/basic/feedback{suffix}"],
+            "vault": {"style": "mentoring"},
         },
     ]
 
@@ -268,5 +311,6 @@ def public_tasks_for_language(language: str) -> list[dict[str, Any]]:
             "next_steps": [spec["output"]],
             "read_first": list(read_tiers[0]["read"]),
             "read_tiers": read_tiers,
+            "vault_reads": dict(spec.get("vault", {})),
         }, language))
     return tasks

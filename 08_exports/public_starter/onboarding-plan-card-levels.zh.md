@@ -26,7 +26,7 @@ exportable_to:
 
 ```yaml
 card_type: plan
-maturity: 1
+project_maturity: I1_sandbox
 title: 建立前五张 ResearchOS 接入卡片
 status: idea
 source_materials:
@@ -45,7 +45,7 @@ next_action: 把这个想法转成有输出和检查的范围化计划。
 
 ```yaml
 card_type: plan
-maturity: 2
+project_maturity: I2_active_mount
 title: 建立前五张 ResearchOS 接入卡片
 status: scoped
 objective: 创建公开安全的接入示例，展示应该登记什么来源以及卡片如何成熟。
@@ -72,7 +72,7 @@ blockers:
 
 ```yaml
 card_type: plan
-maturity: 3
+project_maturity: I3_independent_project
 title: 建立前五张 ResearchOS 接入卡片
 status: operational
 owner: 仓库维护者

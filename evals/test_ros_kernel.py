@@ -2835,7 +2835,7 @@ class RosKernelTest(unittest.TestCase):
         self.assertIn("unrecognized arguments", self.run_ros("context", "commitment:alpha", "--allow-sensitive",
                                                          expect=SystemExit)[2])
         from unittest import mock
-        with mock.patch.object(context_pack, "terminal_confirms", lambda ref, label, destination="": True):
+        with mock.patch.object(context_pack, "terminal_confirms", lambda ref, label, destination, lang: True):
             confirmed = self.context("commitment:alpha", "--service", "claude")
         self.assertIn("01_knowledge/papers/touchy.md", confirmed["delivered"])
         touchy = next(row for row in confirmed["context_receipt"]["sources"]
@@ -3051,6 +3051,110 @@ class RosKernelTest(unittest.TestCase):
                                              expect=SystemExit)
             self.assertIn(declined, refusal)
             self.assertEqual(asked, question)
+
+    # wording that novice walk-throughs of the public starter could not read -----------------------
+    def test_context_says_why_each_card_was_left_out_and_asks_in_the_vault_language(self) -> None:
+        self.context_fixture()
+        self.write("01_knowledge/papers/odd.md", "---\ntitle: Odd\nsensitivity: confidential\n---\n# Odd\n")
+        self.write("01_knowledge/papers/k.md", "---\ntitle: K\n---\n> [!judgment] j-k\n> 结论：y\n"
+                   "> 依据：01_knowledge/papers/odd.md\n> 承诺：alpha\n")
+        footer = self.run_ros("context", "commitment:alpha", json_out=False, lang="en")[1].split("\n[delivered ", 1)[1]
+        self.assertIn("excluded 01_knowledge/papers/touchy.md: a sensitive card is delivered only through the "
+                      "researcher's own terminal. If the task needs it, run the same command in your own terminal "
+                      "and answer y; the card prints there", footer)
+        self.assertIn("excluded 01_knowledge/papers/secret.md: a private card is never packed", footer)
+        self.assertIn("excluded 01_knowledge/papers/odd.md: it has no recognised sensitivity label", footer)
+        zh = self.run_ros("context", "commitment:alpha", json_out=False, lang="zh-CN")[1]
+        self.assertIn("已排除 01_knowledge/papers/touchy.md：敏感卡片只经研究者本人的终端交付", zh)
+        self.assertIn("已排除 01_knowledge/papers/secret.md：私密卡片从不打包", zh)
+        data = self.context("commitment:alpha")
+        self.assertEqual(set(data), {"delivered", "excluded", "service", "service_claim", "receipt_id",
+                                     "withheld_fields", "context_receipt", "pack"}, "the JSON keeps its fields")
+        self.assertTrue(all(set(row) == {"ref", "reason"} for row in data["excluded"]))
+        for lang, question in (("en", "Deliver sensitive source 01_knowledge/papers/touchy.md (Touchy) to the session Agent? [y/N] "),
+                               ("zh-CN", "把敏感来源 01_knowledge/papers/touchy.md（Touchy）交给本会话的 Agent？[y/N] ")):
+            self.assertEqual(self.run_ros("context", "commitment:alpha", lang=lang, answer="n")[2], question)
+
+    def test_close_points_a_removed_block_to_the_researchers_own_backup(self) -> None:
+        self.add_alpha_judgment()
+        self.ros("admit", "--confirm", "j-alpha-scope", answer="y")
+        self.ros("today")
+        self.write("01_knowledge/papers/j.md", "---\ntitle: Notes\n---\n# Notes\n")
+        text = self.run_ros("close", json_out=False, lang="en")[1]
+        self.assertIn("removals need no confirmation; if unintended, restore it from your own backup "
+                      "(personal_vault/ is not in Git)", text, "a personal vault is git-ignored")
+        self.assertNotIn("Git or", text)
+        self.assertIn("personal_vault/ 不在 Git 里", ros.t("zh-CN", "close.removed"))
+
+    def test_today_counts_agree_with_the_items_listed_below_them(self) -> None:
+        view, text = self.capture_ros("--lang", "en", "today")
+        listed = {row["issue_id"] for group in view["today"] + view["decision"] for row in group["items"]}
+        unfinished = view["completion"]["unfinished"]
+        rest = sum(row["issue_id"] not in listed for row in unfinished)
+        self.assertTrue(rest, "the fixture has work in a commitment that is not listed under To decide")
+        line = next(row for row in text.splitlines() if row.startswith("This session: "))
+        self.assertTrue(line.startswith(f"This session: {len(unfinished)} open item(s) to do ({rest} of them in other "
+                                        "commitments; ros today --all lists them), "), line)
+        self.assertIn(f"To decide ({len(view['decision'])} commitment(s): ", text, "the heading counts commitments")
+        self.assertNotIn("not counted in this session", line, "a clause with nothing to report stays out")
+        everything = self.run_ros("today", "--all", json_out=False, lang="en")[1]
+        self.assertIn("; not counted in this session: 0 open outside it (in other commitments, or on cards and "
+                      "judgments added after it started), 0 whose place in the vault is not defined", everything)
+        self.assertIn("Not known yet (counted in open items): 0 that more evidence can settle, ", everything)
+        zh = self.run_ros("today", json_out=False, lang="zh-CN")[1]
+        self.assertIn(f"本次会话：待办 {len(unfinished)} 条（其中 {rest} 条在其他承诺里，ros today --all 会列出）", zh)
+        self.assertIn(f"待判断（{len(view['decision'])} 项承诺：", zh)
+
+    def test_replacing_a_judgment_by_hand_names_its_field_confirmation_and_settles_the_candidate(self) -> None:
+        """Option B after a source change, in the public starter: the judgments line edited by hand is a
+        judgment-class change of its own (HJ-12) that no block confirmation covers, so admit and close name
+        its confirmation by its real id; the candidate applied by hand and confirmed is not listed as undecided."""
+        from researchos_kernel.rules import PURPOSE_VERSION
+        self.edit_config(runtime_scope="public_starter")
+        pin = self.boundary().snapshot.resolve("01_knowledge/projects/alpha.md")[1][:8]
+        path = self.tmp / "06_active_context/research-portfolio.md"
+        old_block = f"> [!judgment] j-old\n> 结论：Compare first\n> 依据：01_knowledge/projects/alpha.md@{pin}\n"
+        self.write("06_active_context/research-portfolio.md", path.read_text(encoding="utf-8").replace(
+            "- source_path: 01_knowledge/projects/alpha.md\n",
+            f"- source_path: 01_knowledge/projects/alpha.md\n- judgments: j-old\n\n{old_block}", 1))
+        self.ros("admit", "--confirm", "j-old", answer="y")
+        self.ros("today")
+        self.write("draft.md", self.RUN_DRAFT.format(id="new", pin=pin))
+        candidate = self.ros("propose", "judgment", "--file", str(self.tmp / "draft.md"),
+                             "--target", "commitment:alpha")["candidates"][0]
+        field_id = digest(["field:alpha#judgments", PURPOSE_VERSION])[:10]
+        shown = self.run_ros("admit", candidate, json_out=False, lang="en")[1]
+        self.assertIn(f"The change also edits the judgments: line of commitment alpha, a judgment-class field that "
+                      f"is confirmed on its own: once close lists it, run ros decide {field_id} confirm", shown)
+        new_block = f"> [!judgment] j-new\n> 结论：Occlusion results do not transfer yet\n> 依据：01_knowledge/projects/alpha.md@{pin}\n"
+        self.write("06_active_context/research-portfolio.md", path.read_text(encoding="utf-8").replace(
+            "- judgments: j-old", "- judgments: j-new").replace(old_block, new_block))
+        self.ros("admit", "--confirm", "j-new", answer="y")
+        closed, text = self.capture_ros("--lang", "en", "close")
+        self.assertEqual(closed["judgment_fields"],
+                         [{"commitment_id": "alpha", "field": "judgments", "before": "j-old", "after": "j-new"}])
+        self.assertIn(field_id, [row["short_id"] for row in closed["completion"]["unfinished"]],
+                      "by design: the hand edit, which also withdrew j-old, waits for its own confirmation")
+        self.assertIn(f"commitment alpha judgments: j-old → j-new → written directly, not through an admission, so "
+                      f"it needs its own confirmation (confirming a judgment block does not cover this line): run "
+                      f"ros decide {field_id} confirm in your own terminal", text)
+        self.assertEqual(closed["pending_candidates"], [], "applied by hand and confirmed: not undecided")
+        self.assertEqual(closed["confirmed_candidates"], [{"candidate_id": candidate, "judgment_id": "j-new"}])
+        self.assertIn(f"whose judgment you then confirmed at the terminal (not an admission; nothing more to do):\n"
+                      f"  · candidate {candidate}: judgment j-new", text)
+        self.ros("today")
+        self.ros("decide", field_id, "confirm", answer="y")
+        self.assertNotIn(field_id, [row["short_id"] for row in self.ros("today")["completion"]["unfinished"]])
+
+    def test_the_option_that_keeps_a_recheck_open_is_not_called_narrow(self) -> None:
+        """Narrow means narrowing a judgment; this option only leaves the item waiting (enum unchanged)."""
+        question = self.question_of(self.undecidable())
+        text = self.run_ros("today", json_out=False, lang="en")[1]
+        self.assertIn(f"B keep this item open until the next version (deferred) → ros answer {question['short_id']} narrow", text)
+        zh = self.run_ros("today", json_out=False, lang="zh-CN")[1]
+        self.assertIn(f"B 这条事项保持未关闭，留到下一个版本（延期） → ros answer {question['short_id']} narrow", zh)
+        self.assertNotIn("narrow", ros.t("en", "answer.narrow"))
+        self.assertNotIn("收窄", ros.t("zh-CN", "answer.narrow"))
 
     def test_rule_descriptors_are_valid(self) -> None:
         self.assertIn("basis_recheck", self.run_ros("rules", "--check", json_out=False)[1])

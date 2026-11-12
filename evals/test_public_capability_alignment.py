@@ -135,7 +135,7 @@ class PublicCapabilityAlignmentTests(unittest.TestCase):
             "system_evolution_review", "material_understanding", "idea_diagnosis",
             "new_project_intake", "safe_export", "collaborative_alignment", "research_audit",
             "system_reflection", "research_self_model", "paper_writing", "proposal",
-            "presentation", "figure_design",
+            "presentation", "figure_design", "peer_review", "meeting_follow_up", "mentee_feedback",
         }
         self.assertEqual({str(item["id"]) for item in plan_context.task_routes("en")}, expected)
         aliases = {

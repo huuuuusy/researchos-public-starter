@@ -4,4 +4,4 @@
 
 # 蒸馏说明
 
-保存公开安全的简短方法说明或演示摘要，不保存非公开长期记忆。
+在原型里，这个文件夹存放已经确认的做法。本仓库里确认过的做法放在 `03_cognition/style/`，标 `status: confirmed`（见[认知方法层](../03_cognition/README.zh.md)），所以 `distilled/` 保持为空。

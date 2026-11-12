@@ -49,7 +49,7 @@ ResearchOS Public Starter 是一个面向个人科研人员的小型文件化工
 | 复制回退、只复制 | 本仓库只准备好文字，由你复制到自己的助手里，它自己不运行、也不写入任何东西。 |
 | `personal_vault/` | 下载下来的仓库里一个 Git 会忽略的文件夹，放你自己的材料。 |
 | 库、研究图、夹具（vault、research graph、fixture） | `--root` 指向的那个装着卡片和任务总表的文件夹：`personal_vault/` 是你自己的，`examples/scheduler-demo/`（夹具）是虚构的。 |
-| public、internal、sensitive、private | 卡片的 `sensitivity` 标签。`ros context` 打包 public 和 internal 的卡片，sensitive 的要你本人在终端确认后才打包，private 和没写标签的不打包；它输出末尾的 `[交付 1 项；排除 1 项]` 数的就是没打包的。随附的任务总表标为 internal，项目的问题和判断会被打包；没写标签的卡片或任务总表不打包。标签管不住助手自己直接打开文件。 |
+| public、internal、sensitive、private | 卡片的 `sensitivity` 标签。`ros context` 把 public 和 internal 的卡片打包给助手，sensitive、private 和没写标签的不打包；它输出末尾的 `[交付 1 项；排除 1 项]` 数的就是没打包的，它下面每张卡一行，说明为什么没打包。随附的任务总表标为 internal，项目的问题和判断会被打包；没写标签的卡片或任务总表不打包。助手说某张卡被排除时，那是一张 sensitive 的卡，比如人物卡或会议卡，因为记的是别人，所以不交给助手，助手也不该改为直接打开文件；任务确实需要时，你在自己的终端运行 `python3 scripts/ros.py --root personal_vault context <卡片>`，回答 `y`，再只把任务需要的部分复制给助手。标签管不住助手自己直接打开文件。 |
 
 演示输出里有三种说法由这些词而来，都不是报错。「还没有准入回执」是说夹具里的判断是直接写进文件的：没有人准入过它，所以没有准入的回执，`today` 会请你确认它。「已事后确认」后面跟着「不算准入」或「未经准入」，是说你对一条已经写进去的判断点了头；这只关闭「请确认」这个请求，并没有准入任何东西。「复制回退」是说 `ros` 把 `admit` 会做的改动以 diff 的形式打印出来，什么都没写。
 
@@ -98,6 +98,12 @@ ResearchOS Public Starter 是一个面向个人科研人员的小型文件化工
 | `Evidence` | 最多 8 个定向文件 | 约 60k | 正式 claim 或公开输出需要核证。 |
 
 默认从 `Quick` 开始；给出精确论文、草稿或目标路径时，Quick 直接从那里开始。Standard 可以加入一个 workflow、项目页和少量 canonical 文件；Evidence 只加入能回答当前核验问题的 audit、reading note 或来源文件。只有能说清缺少哪个事实或判断时才升档；文件数或 token 将要超限时，缩小文件子集并分批处理。这样能减少 token 和无关信息，同时保留长期资料库的完整性。读取档位与推理投入解决不同问题：缺少上下文时提高读取档位，判断链复杂时在 Agent 客户端提高推理投入。模型与推理投入属于 Agent 客户端或已配置的本地运行时；输出类型（回答、成果或写回候选）由任务和结果协议自动判断，不需要你预先分类。开放讨论、推理和起草直接在助手里按仓库说明进行，不需要交接。
+
+在你自己的库里，给 `python3 scripts/plan_context.py <路线> --mode quick`（或 `standard`、`evidence`）加上 `--vault personal_vault`，它会按读取档列出助手要读你的哪些卡。它跟着库的语言走，不用加 `--lang`。quick 读这类任务的风格卡，没有时读你的研究身份摘要。standard 列出研究身份摘要、风格卡、方向摘要和这项任务的工作流程，再单独列出方向摘要点名的卡，由助手用 `ros context` 一张张取。evidence 列出的和 standard 一样，只多一句提示：只打开这些卡「证据边界」里写明的原件，而且要有一个说得出的核对问题。还没写的卡也会列出名字，并给出从哪份骨架开始；在它写好之前，助手先跳过。
+
+### 没有终端：只在浏览器里聊天
+
+如果你在浏览器里用 ChatGPT 或 Claude，没法运行命令，`ros` 就跑不起来，来源变了把判断交回来复核的这一圈也就用不上。这是第一阶段的限制。三层读法仍然有用。打开仓库的 GitHub 页面 <https://github.com/huuuuusy/researchos-public-starter>，点 **Code**，再点 **Download ZIP**，下载后解压。要用的骨架是 `09_templates/basic/research-identity.zh.md` 和 `09_templates/basic/capsule.zh.md`，填好的样子在 `examples/starter-cards/zh-CN/`。把骨架和你的发表清单一起贴进聊天，请 AI 帮你起草；方向摘要里「做什么任务读哪张卡」那张表，只列你会上传的卡。把这两页贴进聊天里项目的说明（project instructions），这是第一层；做某项任务时，只上传它需要的一两张卡，这是第二层；PDF、数据、原始笔记这类原件默认不放进聊天，这是第三层，只有要核对某个具体数字或引文时才上传一份。你贴进去和上传的内容都会发给服务商，所以 README 里「哪些不要交给助手」清单上的东西一律不要上传。
 
 ### 报告里的例子：来源被纠正后保住什么
 
@@ -176,7 +182,7 @@ python3 scripts/ros.py --root examples/scheduler-demo close
 判断所依据的卡片你更新了，比如某项研究被撤稿、研究方案做了修订、档案馆发布了更正后的目录，下一次 `today` 会把这条判断列在「待判断」下，给出三个选项。它是否仍然成立由你决定，系统判断不了。输出里的 `ros …`，在终端里要输入 `python3 scripts/ros.py --root personal_vault …`。
 
 - **A，仍然成立。** 运行它给出的 `ros admit --reconfirm <判断编号>`。本仓库会打印出改用新版本依据的改动；照原样应用（或请助手代为应用），再在你自己的终端运行 `ros admit --confirm <判断编号>`，回答 `y`。
-- **B，需要修改。** 用新的 id 起草替代的判断，用 `ros propose judgment --file <草稿> --target commitment:<id>` 登记，再应用 `ros admit <候选编号>` 打印出的改动。然后删掉旧的判断块，以及承诺 `judgments` 一行里的旧 id。之后 `today` 会列出两项要你在终端确认的事：新判断（`ros admit --confirm <新编号>`）和旧判断的复核（`ros answer <编号> cancel --reason …`）。旧复核用 `cancel` 回答：它的 `narrow` 选项收窄的是那项检查，不是你的判断。改过的 `judgments` 字段（`ros decide <编号> confirm`）由 `close` 和下一次 `today` 列出。
+- **B，需要修改。** 用新的 id 起草替代的判断，用 `ros propose judgment --file <草稿> --target commitment:<id>` 登记，再应用 `ros admit <候选编号>` 打印出的改动。然后删掉旧的判断块，以及承诺 `judgments` 一行里的旧 id。之后 `today` 会列出两项要你在终端确认的事：新判断（`ros admit --confirm <新编号>`）和旧判断的复核（`ros answer <编号> cancel --reason …`）。旧复核用 `cancel` 回答；它的 `narrow` 选项只是让这条事项保持未关闭、留到下一个版本。你改过的 `judgments` 一行是判断类字段，要单独确认，确认新判断块并不包括它：`admit` 会打印带真实编号的 `ros decide <编号> confirm`，`close` 和下一次 `today` 也会列出它。你已应用并确认的那个候选，`close` 会单独列出，不用再处理。
 - **C，以后再定。** `ros decide <编号> defer --until <日期>` 让这项复核延期到那一天。
 
 手工改承诺字段也是一样。`today` 读过这项承诺之后，你若改了 `state`、`priority`、`question`、`responsibility` 或 `judgments`，`close` 会把这次写入列为待确认的判断类字段，之后每次 `today` 也会列出；在你自己的终端运行 `ros decide <编号> confirm` 并回答 `y`。由助手转述的调用只记为代理转述。`last_verified`、`current_stage`、`next_step` 这类事实不用确认。
@@ -191,7 +197,7 @@ python3 scripts/ros.py --root examples/scheduler-demo close
 - `run` 只接受 `--executor copy_packet`，拒绝所有 provider。personal-vault 模式（第 5 节）不改变这一点。
 - `admit <candidate>` 和 `admit --reconfirm` 不先询问，直接通过复制回退显示拟议差异，因此不向长期来源准入任何东西。
 - `admit --confirm` 只有你在自己的终端回答时，才会在 git 忽略的本地账里记一笔事后确认；由 Agent 转述时只记为转述（asserted），确认要求保持开着。两种情况都不写来源，也不算准入。
-- `close` 列出会话开始以来回收或登记、尚未决定的候选。这里它们始终尚未决定，因为 `admit` 既不准入，也不记录拒绝。
+- `close` 列出会话开始以来回收或登记、尚未决定的候选。这里它们始终尚未决定，因为 `admit` 既不准入，也不记录拒绝；你手工应用、又确认了其判断的候选单独列出，不用再处理。
 
 准入与派发的代码随本仓提供，但默认关闭。只有 `config/ros.json` 显式写明 `runtime_scope: "private"` 才会开启；缺这个键、拼错或写成其他值，都按只复制模式运行。技术报告里的原型是开启准入与派发运行的。从夹具复制出来的库保留夹具的 `config/ros.json`，所以同样按只复制运行。
 
@@ -200,7 +206,7 @@ python3 scripts/ros.py --root examples/scheduler-demo close
 | 命令 | 本仓库里的行为 |
 | --- | --- |
 | `today` | 只复制：列出变化与待处理要求并开启会话，但不随附注意力安排，所有承诺都读作未排期 |
-| `close` | 与报告中的原型同语义；列出的候选始终尚未决定 |
+| `close` | 与报告中的原型同语义；列出的候选始终尚未决定，你手工应用并确认过的除外 |
 | `propose judgment`、`episode-close`、`rule` | 同语义：登记候选 |
 | `admit` | 只显示拟议改动：`<candidate>` 与 `--reconfirm` 显示拟议差异；`--confirm` 只记确认、不写入，且只有你在自己的终端回答时才生效；`--rollback` 被拒绝，因为这里不写来源，也就不回滚来源 |
 | `decide` | 同语义：记下决定；`cancel` 与 `confirm` 只有你在自己的终端回答时才生效 |
@@ -229,7 +235,7 @@ python3 scripts/start_researchos.py --mode dashboard --port 8880
 
 ![公开 Dashboard：打开事项，预览并取消关注日期，预览交接；什么都不保存，也不运行。](figures/readme/dashboard-zh.gif)
 
-然后打开 `http://127.0.0.1:8880/`。这里显示 `08_exports/public_starter/demo-research-agenda.zh.md` 里的六个虚构议程事项，与第 3 节的调度器夹具是两个不同的虚构世界，不需要真实 API key。演示设在一个固定的虚构日期 2026-08-11，页面状态栏会显示这个日期，所以无论哪天打开，它的日历和时效读起来都一样。普通启动直接读取随仓发布的公开安全投影，不重写受 Git 跟踪的文件；只有投影缺失时才自动恢复。维护者修改 demo 来源后，用 `python3 scripts/build_public_starter_data.py --write` 显式重建。启动器只在 `/session-config` 确认运行时身份匹配时复用已有服务，因此公开 demo 不会被误认为 personal-vault、报告中的原型或占用同一端口的其他程序；遇到这种情况会停止并建议另一个端口。`--mode public-starter` 只报告本仓库的运行状态，不启动服务器。其余模式：
+然后打开 `http://127.0.0.1:8880/`。这里显示 `08_exports/public_starter/demo-research-agenda.zh.md` 里的六个虚构议程事项，与第 3 节的调度器夹具是两个不同的虚构世界，不需要真实 API key。在 personal-vault 模式下（第 5 节），它显示你的论文、人物、项目和报告；决策、启发式、风格卡、方向摘要和会议卡不在这里显示，要通过助手来读。演示设在一个固定的虚构日期 2026-08-11，页面状态栏会显示这个日期，所以无论哪天打开，它的日历和时效读起来都一样。普通启动直接读取随仓发布的公开安全投影，不重写受 Git 跟踪的文件；只有投影缺失时才自动恢复。维护者修改 demo 来源后，用 `python3 scripts/build_public_starter_data.py --write` 显式重建。启动器只在 `/session-config` 确认运行时身份匹配时复用已有服务，因此公开 demo 不会被误认为 personal-vault、报告中的原型或占用同一端口的其他程序；遇到这种情况会停止并建议另一个端口。`--mode public-starter` 只报告本仓库的运行状态，不启动服务器。其余模式：
 
 ```bash
 python3 scripts/start_researchos.py --mode public-starter --check --provider codex
@@ -299,7 +305,7 @@ Agent 路线与 Dashboard 依赖同一套 Markdown 和确认规则，本仓库�
 
 ## 5. 用自己的材料
 
-你自己的材料放在 clone 里的 `personal_vault/` 文件夹。Git 忽略它，所以里面的东西不会被提交；`ros` 和 Dashboard 的 personal-vault 模式都读它。即便如此，含有真实材料的 clone 也不要推送到公开远程仓库。想给库做版本管理，就另建一个没有公开远程的私人仓库副本，并在那个副本的 `.gitignore` 里删掉 `personal_vault/`。无论哪种做法，下面都用同样的 `personal_vault/` 布局。
+你自己的材料放在 clone 里的 `personal_vault/` 文件夹。Git 忽略它，所以里面的东西不会被提交；`ros` 和 Dashboard 的 personal-vault 模式都读它。正因为 `personal_vault/` 不在 Git 里，你要自己备份它（复制整个文件夹，或放进你自己的私人备份）：删掉的判断块或卡片没法从本仓库恢复。即便如此，含有真实材料的 clone 也不要推送到公开远程仓库。想给库做版本管理，就另建一个没有公开远程的私人仓库副本，并在那个副本的 `.gitignore` 里删掉 `personal_vault/`。无论哪种做法，下面都用同样的 `personal_vault/` 布局。
 
 ### 开始自己的
 
@@ -332,7 +338,7 @@ Agent 路线与 Dashboard 依赖同一套 Markdown 和确认规则，本仓库�
 
    `responsibility` 取 `lead` 或 `support`；`state` 取 `mainline`、`queued`、`conditional`、`waiting`、`paused` 或 `closed` 之一；`last_verified` 写成 `YYYY-MM-DD` 日期，`source_path` 相对于 `personal_vault/`。`lifecycle_phase` 取 `scoping`、`planned`、`experiment_preparation`、`production`、`gated_operation`、`writing`、`release_preparation`、`submitted`、`under_review`、`rebuttal`、`decision`、`revision`、`accepted`、`published`、`paused`、`completed` 之一；取 `submitted`、`under_review` 或 `decision` 时还要写 `activation_trigger`，即让这一项重新回到眼前的事件。id 和路径由你自己定。`ros` 用不了的值会列在 `today` 的「任务总表问题」和 `ros rules --check` 里，这项承诺不会悄悄从检查中消失。`ros` 不读 `lifecycle_phase` 和 `activation_trigger`，阶段写错或缺少触发条件，只会在 Dashboard 的 personal-vault 投影里标出。
 
-3. 把 `personal_vault/01_knowledge/` 下的两张虚构卡片换成你自己的一张，放在 `source_path` 指向的路径。从 `09_templates/` 里的模板起步，例如 `project-template.md` 或 `paper-template.md`；模板里已有卡片需要的 frontmatter、Agent Summary 和证据边界各节。`ros` 用 frontmatter 的 `title` 作为卡片的显示名，没有时用第一个 `#` 标题；Dashboard 还接受模板里的 `name` 或 `project_name`。所以填好 `project_name` 并替换模板的 `# Project Name` 标题，或者加一行 `title:`。
+3. 把 `personal_vault/01_knowledge/` 下的两张虚构卡片换成你自己的一张，放在 `source_path` 指向的路径。从 `09_templates/basic/` 里的骨架起步，例如 `project.zh.md` 或 `paper.zh.md`；每份骨架都有 frontmatter、Agent Summary、事实与看法各节和证据边界，并附一段简短说明，写明文件放在哪里、每个值是什么意思。[examples/starter-cards/zh-CN/](../examples/starter-cards/zh-CN/README.md) 里是每类卡填好的样子：同一个虚构故事串起研究身份摘要、方向摘要、项目卡、论文卡、决策卡、启发式卡、风格卡、人物卡和会议卡，并讲了三层读法、成熟度和敏感性。`ros` 用 frontmatter 的 `title` 作为卡片的显示名，没有时用第一个 `#` 标题。首次上手已经建好研究身份摘要（`00_identity/research-identity.md`）和 `01_knowledge/capsules/` 下的一份方向摘要；新的方向照同样方式再加一份。助手会先读它们（`python3 scripts/plan_context.py <任务> --vault personal_vault` 会把它们列在任务文件前面）。大多数卡写 `sensitivity: internal`，人物和记录别人说话的卡写 `sensitive`；`private` 的卡 `ros context` 从不打包。`09_templates/` 里的完整模板（`project-template.md` 等）多了后期用得上的治理小节。
 
 4. 在你的库上运行调度器：
 
@@ -355,6 +361,8 @@ Agent 路线与 Dashboard 依赖同一套 Markdown 和确认规则，本仓库�
 ### 让库慢慢长大
 
 候选卡片是解释，写下它并不使它成为长期记忆或公开事实。从一个来源和一张卡片开始，卡片写明来源边界、证据状态和一个缺失的事实；核对第一版结果之后，再按需要补项目历史、报告、决策理由和其他来源。需要理解 M/I/R/G 标签，或把卡片缺口变成有边界的 Work 任务时，再读[卡片成熟度与增强](reference/CARD_MATURITY_AND_ENHANCEMENT.zh.md)。
+
+某类工作反复出现时，从 `09_templates/basic/` 加上对应的卡。风格卡用 `style.zh.md`，放在 `personal_vault/03_cognition/style/<任务>.md`，记的是你做某一类任务的习惯，`<任务>` 取 `writing`、`review`、`proposal`、`figures-talks` 或 `mentoring` 之一；助手在读取档 quick 先读对应的那一张。每一条写规则、为什么、怎么用和出处；你纠正助手时，它把这次纠正起草成一条，你同意后才加进去（[示例](../examples/starter-cards/zh-CN/03_cognition/style/writing.md)）。边界卡 `personal_vault/00_identity/boundaries.md`（`boundaries.zh.md`）用你自己的话写哪些材料从不交给助手、哪些事对外不说、机构或期刊对 AI 工具的规定、发出去前要谁点头；对外的任务先读它。写论文和申请到了 evidence 档，会再读两张索引：成果与使用边界（`outputs-index.zh.md`，放在 `01_knowledge/papers/`）和论文作者角色（`author-roles.zh.md`，也放在 `01_knowledge/papers/`），用来核对说法能不能对外讲、贡献有没有出处。同一文件夹里还有审稿意见、基金申请、学术邮件、给学生的反馈和心智模型的骨架（`review.zh.md`、`grant.zh.md`、`message.zh.md`、`feedback.zh.md`、`mental-model.zh.md`），每份的填写说明里写了放在哪里。
 
 在 `personal_vault/` 里，简短当前状态放入 `06_active_context/`，有来源的摘要放入 `01_knowledge/`，决策与取舍放入 `02_decisions/`，人物上下文放入 `04_people/`，可复用方法放入 `05_workflows/`。完整的放置表见[新材料放置规则](reference/WHERE_TO_PUT_NEW_MATERIALS.zh.md)。原始材料留在原处、放在仓库之外：卡片记下路径，很多时候已经足够，不要为了让 Dashboard 看见而复制原始文件。库里的任何内容，不经[安全导出规则](reference/SAFE_EXPORT_POLICY.zh.md)下的单独复查，都不会公开。
 

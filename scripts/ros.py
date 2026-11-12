@@ -41,7 +41,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from researchos_adapters.context_pack import build_context_pack  # noqa: E402
+from researchos_adapters.context_pack import build_context_pack, excluded_notes  # noqa: E402
 from researchos_adapters.dispatch import (launched_nothing, provider_for, run_ledger, run_lifecycle,  # noqa: E402
                                           run_record)
 from researchos_adapters.markdown_repo import build_snapshot, load_config, portfolio_problems  # noqa: E402
@@ -55,12 +55,12 @@ from researchos_kernel.judgments import parse_judgments  # noqa: E402
 from researchos_kernel.atomic_files import atomic_write_text  # noqa: E402
 from researchos_kernel.ledger import (OPEN_STATUSES, SCOPE_INTENT, binding, digest, landed_or_undone,  # noqa: E402
                                      now_iso, requirement_binding)
-from researchos_kernel.messages import MESSAGES, language, t  # noqa: E402
+from researchos_kernel.messages import MESSAGES, language, t, unknowns_line  # noqa: E402
 from researchos_kernel.admission_state import initial_admission_state, transition_admission_state  # noqa: E402
 from researchos_kernel.candidate_envelope import normalize_candidate_envelope  # noqa: E402
 from researchos_adapters.filesystem_staging import (FilesystemStagingError, begin_canonical_staging,  # noqa: E402
                                                   rollback_artifact_mutation)
-from researchos_kernel.rules import load_rules, write_class  # noqa: E402
+from researchos_kernel.rules import PURPOSE_VERSION, load_rules, write_class  # noqa: E402
 from researchos_kernel import scope as scope_axis  # noqa: E402
 from researchos_kernel.triage import triage  # noqa: E402
 
@@ -190,16 +190,6 @@ def _episode_spec(ctx: "Context", result, intent: str, scope_detail: dict) -> di
         cutoff=now_iso(), decision_point=getattr(result, "point_id", ""))
 
 
-def _unknowns_line(lang: str, report: dict) -> str:
-    """CC-11: the three unknowns side by side, each with its own count; none stands in for another."""
-    kinds = report.get("unknown_kinds", {})
-    return t(lang, "unknowns.line", decidable=kinds.get("evidence_decidable", 0),
-             researcher=kinds.get("evidence_researcher", 0),
-             unclassified=kinds.get("evidence_unclassified", 0), run=kinds.get("run_observation", 0),
-             uneval=kinds.get("coverage_unevaluated", 0), unowned=kinds.get("own_undefined", 0),
-             outside=kinds.get("out_of_scope", 0))
-
-
 def _budget_line(lang: str, budget: dict, spent: dict, spent_out: list) -> str:
     parts = ", ".join(f"{key} {spent.get(key, 0)}/{budget[key]}" for key in BUDGET_COMPONENTS if key in budget)
     if budget.get("boundaries_source") == "kernel_default":
@@ -269,7 +259,6 @@ def _register_field_confirmations(ctx: "Context", field_changes: list) -> list:
     until the researcher confirms it. Listing the change once at close is not confirmation — the same
     rule as a judgment block written without admission (HJ-8); only the object differs. The record
     carries the value that was written, so a later edit is a new generation and opens it again."""
-    from researchos_kernel.rules import PURPOSE_VERSION
     registered = []
     states = ctx.boundary().states["issues"]
     registry = ctx.boundary().requirements
@@ -500,9 +489,12 @@ def _render_today(ctx: Context, data: dict, *, shown: dict, coverage: dict, cont
     elif data["spec_changes_pending"]:
         # CC-6: the running episode keeps the spec it froze; a changed spec is the next episode's.
         lines.append("  ! " + t(L, "today.spec_changed", parts=", ".join(data["spec_changes_pending"])))
+    listed = {row["issue_id"] for group in data["today"] + data["decision"] for row in group["items"]}  # the rest are under other commitments
     lines.append(t(L, "today.completion", unfinished=len(status["unfinished"]), held=len(status["held"]),
-                   waiting=len(status["waiting"]), outside=status["out_of_scope_open"], unowned=status["unowned_open"]))
-    lines += ["  " + _unknowns_line(L, status)] * (show_all or any(status.get("unknown_kinds", {}).values()))
+                   waiting=len(status["waiting"]), rest=t(L, "today.completion.rest", n=rest) if (rest := sum(row["issue_id"] not in listed for row in status["unfinished"])) else "",
+                   outside=t(L, "today.completion.outside", outside=status["out_of_scope_open"], unowned=status["unowned_open"])
+                   if show_all or status["out_of_scope_open"] or status["unowned_open"] else ""))
+    lines += ["  " + unknowns_line(L, status)] * (show_all or any(status.get("unknown_kinds", {}).values()))
     lines += ["  ↻ " + t(L, "unknowns.run", run=run_id) for run_id in status["runs_unknown"]]
     if (shown or {}).get("narrowed_by"):
         lines.append("  " + t(L, "today.narrowed", intent=shown["narrowed_by"]))
@@ -836,6 +828,9 @@ def cmd_close(ctx: Context, args) -> int:
     pending = [{"candidate_id": cid, "target": candidates[cid]["payload"].get("target", "")} for cid in returned
                if cid in candidates and not landed_or_undone(candidates[cid]["payload"])
                and (candidates[cid]["payload"].get("admission_state") or {}).get("decision_state") != "rejected"]
+    # Applied by hand and its block then confirmed at the terminal: settled, though not an admission.
+    by_hand = [{"candidate_id": row["candidate_id"], "judgment_id": jid} for row in pending if (jid := candidates[row["candidate_id"]]["payload"].get("judgment", {}).get("id")) and now["judgments"].get(jid) in confirmed.get(jid, set())]
+    pending = [row for row in pending if row["candidate_id"] not in {r["candidate_id"] for r in by_hand}]
     change_details = {"baseline": "session_start", "baseline_available": not bool(cache_note),
                       "scope": "observed_graph", "files": None if cache_note else file_changes,
                       "removed_commitments": None if cache_note else removed_commitments}
@@ -862,7 +857,7 @@ def cmd_close(ctx: Context, args) -> int:
             "pending_questions": pending_questions, "open_runs": report["runs_unknown"], "note": held_note,
             "scope": scope_detail, "coverage": coverage, "fact_files": fact_files, "fact_fields": fact_fields,
             "judgment_changes": judgment_changes, "judgment_fields": field_changes, "judgment_paths": judgment_paths,
-            "declined_candidates": declined, "pending_candidates": pending}
+            "declined_candidates": declined, "pending_candidates": pending, "confirmed_candidates": by_hand}
     return emit(args, data, _render_close(ctx, data, _budget_line(ctx.lang, session_budget, spent, spent_out)))
 
 
@@ -876,7 +871,7 @@ def _render_close(ctx: Context, data: dict, budget_line: str) -> str:
                cross=len(scope.get("cross_scope_keys", [])), uncovered=coverage.get("coverage_unknown_in_scope", 0),
                unowned=coverage.get("coverage_unknown_unowned", 0), evaluated=coverage.get("evaluated_match_count", 0),
                domain=coverage.get("in_scope_match_count", 0), outside=report["out_of_scope_open"], undefined=report["unowned_open"]),
-             ] + [_unknowns_line(L, report)] * any(report.get("unknown_kinds", {}).values()) + [budget_line] * bool(data.get("budget_exhausted"))
+             ] + [unknowns_line(L, report)] * any(report.get("unknown_kinds", {}).values()) + [budget_line] * bool(data.get("budget_exhausted"))
     if data["note"]:
         lines.append("  ! " + data["note"])
     if report.get("next_episode"):
@@ -913,9 +908,10 @@ def _render_close(ctx: Context, data: dict, budget_line: str) -> str:
             hint = f"ros admit --confirm {row['judgment_id']}"
         lines.append("  · " + t(L, "close.block", id=row["judgment_id"], change=t(L, f"change.{row['change']}"),
                                  conclusion=row.get("conclusion", ""), hint=hint))
-    for row in data["judgment_fields"]:
-        lines.append("  · " + t(L, "close.field", id=row["commitment_id"], field=row["field"],
-                                 before=row["before"] or t(L, "empty"), after=row["after"] or t(L, "empty")))
+    for row in data["judgment_fields"]:  # HJ-12: its own confirmation, by the id _register_field_confirmations gave it
+        lines.append("  · " + t(L, "close.field.confirm", id=row["commitment_id"], field=row["field"],
+                                 before=row["before"] or t(L, "empty"), after=row["after"] or t(L, "empty"),
+                                 issue=digest([f"field:{row['commitment_id']}#{row['field']}", PURPOSE_VERSION])[:10]))
     for ref in data["judgment_paths"]:
         lines.append("  · " + t(L, "close.path", path=ref))
     if data["declined_candidates"]:
@@ -926,6 +922,8 @@ def _render_close(ctx: Context, data: dict, budget_line: str) -> str:
         lines += ["", t(L, "close.pending")]
         lines += ["  · " + t(L, "close.pending_row", candidate=row["candidate_id"], target=row["target"])
                   for row in data["pending_candidates"]]
+    if data["confirmed_candidates"]:
+        lines += ["", t(L, "close.confirmed_by_hand")] + ["  · " + t(L, "close.confirmed_row", candidate=row["candidate_id"], judgment=row["judgment_id"]) for row in data["confirmed_candidates"]]
     lines += ["", t(L, "close.template")]
     return "\n".join(lines)
 
@@ -1337,7 +1335,7 @@ def _write_through_staging(ctx: Context, relative: str, new_text: str, *, run_id
         raise
 
 
-def _copy_fallback(ctx: Context, args, how: str, relative: str, new_text: str, judgment_id: str = "") -> int | None:
+def _copy_fallback(ctx: Context, args, how: str, relative: str, new_text: str, judgment_id: str = "", field_of: str = "") -> int | None:
     """Soul §5: the public starter keeps canonical promotion off and offers a copy fallback.
     A write that would land in a source is shown as the planned change and not made; nothing
     is decided or recorded. Returns None where promotion is allowed."""
@@ -1349,8 +1347,9 @@ def _copy_fallback(ctx: Context, args, how: str, relative: str, new_text: str, j
     diff = "".join(difflib.unified_diff(before, new_text.splitlines(keepends=True),
                                         fromfile=f"a/{relative}", tofile=f"b/{relative}"))
     reason = "public_starter: copy fallback only; nothing was written to or admitted into the durable sources"
+    field = t(ctx.lang, "admit.copy_field", commitment=field_of, issue=digest([f"field:{field_of}#judgments", PURPOSE_VERSION])[:10]) if field_of else ""
     return emit(args, {"promoted": False, "how": how, "path": relative, "reason": reason, "planned_diff": diff},
-                t(ctx.lang, "admit.copy_fallback", how=how, path=relative) + "\n" + diff + ("\n" + t(ctx.lang, "admit.copy_next", path=relative, id=judgment_id) if judgment_id else ""))
+                t(ctx.lang, "admit.copy_fallback", how=how, path=relative) + "\n" + diff + ("\n" + t(ctx.lang, "admit.copy_next", path=relative, id=judgment_id, field=field) if judgment_id else ""))
 
 
 def _decision_channel(lang: str, how: str, object_id: str, declinable: bool = False) -> tuple:
@@ -1549,7 +1548,7 @@ def _admit_judgment_candidate(ctx: Context, args, candidate_id: str, snapshot) -
                 field_change = {"commitment_id": cid, "field": "judgments",
                                 "before_digest": digest(before[cid].get("judgments")),
                                 "after_digest": digest(after[cid].get("judgments"))}
-        fallback = _copy_fallback(ctx, args, "admit_candidate", relative, new_text, judgment.id)
+        fallback = _copy_fallback(ctx, args, "admit_candidate", relative, new_text, judgment.id, field_change.get("commitment_id", ""))
         if fallback is not None:
             return fallback
         decision = _record_decision(ctx, "admit_candidate", judgment.id, channel, candidate_id)
@@ -1828,6 +1827,7 @@ def cmd_context(ctx: Context, args) -> int:
                               delivery="ros_context:stdout")
     footer = "\n\n" + t(ctx.lang, "context.footer", delivered=len(data["delivered"]), excluded=len(data["excluded"]),
                          truncated=t(ctx.lang, "context.capacity", n=data["dropped"]) if data["dropped"] else "") + \
+        excluded_notes(ctx.lang, data["excluded"]) + \
         t(ctx.lang, "context.receipt", receipt=data["receipt_id"], service=service or t(ctx.lang, "context.no_service"))
     return emit(args, {key: value for key, value in data.items() if key != "dropped"}, data["pack"] + footer)
 

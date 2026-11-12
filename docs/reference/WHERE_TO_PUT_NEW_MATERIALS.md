@@ -36,8 +36,13 @@ Raw material stays where it is, in a local source folder outside the repository,
 | --- | --- | --- |
 | Raw PDF, slides, document, webpage dump | Local source folder outside the repository; the card records the path | Do not treat as confirmed memory. |
 | Paper note, material summary, project facts | `01_knowledge/` | Keep source links. |
+| Research identity page; direction summaries | `00_identity/research-identity.md`; `01_knowledge/capsules/` | Level-1 entry pages an assistant reads first; each links to cards and states nothing the cards do not. |
 | Tradeoff, confirmation, rejected option | `02_decisions/` | Sensitive by default if it involves people or strategy. |
-| Mental model, heuristic, writing principle | `03_cognition/` | Only after repeated or confirmed usefulness. |
+| Mental model, heuristic, writing principle | `03_cognition/`; a mental model in `03_cognition/mental_models/` | Only after repeated or confirmed usefulness. |
+| Working-style card: how you do writing, review, a proposal, figures and talks, or mentoring | `03_cognition/style/<task>.md`, one per kind of task | An assistant reads the matching one first; it describes how you work, so the assistant drafts it and writes it only after you agree. |
+| Review comments, grant application, academic message, feedback to a mentee | `06_active_context/reviews/`, `grants/` or `messages/`; feedback in `04_people/feedback/` | Start from `review.md`, `grant.md`, `message.md` or `feedback.md` in `09_templates/basic/`, which also has `style.md` and `mental-model.md`. |
+| Your limits: material never given to an assistant, things not said outside, rules on AI tools, who approves | `00_identity/boundaries.md` | Start from `09_templates/basic/boundaries.md`; outward tasks read it first. |
+| Which outputs may be cited outside, and who did what on each | `01_knowledge/papers/outputs-index.md` and `01_knowledge/papers/author-roles.md` | Start from `outputs-index.md` and `author-roles.md`; read at the evidence level for papers and proposals. |
 | Person or collaborator card | `04_people/` | Tracked starter files use fictional or public-safe examples only. |
 | Reusable workflow or SOP | `05_workflows/` | Keep generic, not one private project's full history. |
 | Current tasks, pending questions, handoff | `06_active_context/` | Short-lived operating state, not full history. |
