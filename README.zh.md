@@ -108,11 +108,11 @@ python3 scripts/ros_demo.py --init personal_vault --lang zh-CN
 
 ## 状态
 
-本仓库是 V1.2 的候选版 `v1.2.0-rc.1`（见 [V1.2 发布说明](docs/releases/v1.2.0.zh.md)与[更新记录](CHANGELOG.md)）；上一个正式版是 2026-11-11 的 `v1.1.0`。1.x 系列是 ResearchOS 的第一阶段：一位研究者、本机文件、终端上的决定。
+本仓库是 V1.2，已于 2026-11-12 以 `v1.2.0` 发布（见 [V1.2 发布说明](docs/releases/v1.2.0.zh.md)与[更新记录](CHANGELOG.md)）。1.x 系列是 ResearchOS 的第一阶段：一位研究者、本机文件、终端上的决定。
 
 ## 如何引用
 
-技术报告和本仓库一起存档在 Zenodo 的同一条记录里，Zenodo 把这条记录列为软件，标题是「ResearchOS Public Starter」。引用时请用 DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799)，它始终指向最新的存档版本；v1.1.0 还没有单独的版本 DOI，最近存档的 v1.0.4 是 [10.5281/zenodo.24038050](https://doi.org/10.5281/zenodo.24038050)。
+技术报告和本仓库一起存档在 Zenodo 的同一条记录里，Zenodo 把这条记录列为软件，标题是「ResearchOS Public Starter」。引用时请用 DOI [10.5281/zenodo.23769799](https://doi.org/10.5281/zenodo.23769799)，它始终指向最新的存档版本；v1.1.0 和 v1.2.0 还没有单独的版本 DOI，最近存档的 v1.0.4 是 [10.5281/zenodo.24038050](https://doi.org/10.5281/zenodo.24038050)。
 
 > Hu, S. (2026). *ReSearchOS: A Reference Architecture for Sustained Human–AI Research* (Technical report, version 1.1.0). Zenodo. https://doi.org/10.5281/zenodo.23769799
 
